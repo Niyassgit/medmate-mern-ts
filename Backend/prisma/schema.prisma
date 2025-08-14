@@ -1,0 +1,311 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Department {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  doctors Doctor[]
+  reps    MedicalRep[]
+}
+
+model UserLogin {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  email    String @unique
+  password String 
+  role     Role
+  refId    String @db.ObjectId
+  authProvider AuthProvider @default(NATIVE)
+  providerId String?
+  createAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+  superAdmin SuperAdmin?
+  doctor Doctor?
+  medicalRep MedicalRep?
+}
+
+enum Role {
+
+  SUPER_ADMIN
+  DOCTOR
+  MEDICAL_REP
+}
+enum AuthProvider {
+  NATIVE
+  GOOGLE
+}
+
+model Doctor {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  phone           String
+  departmentId    String?   @db.ObjectId
+  experienceYears Int?
+  hasOwnClinic    Boolean?
+  doctorClass     String?
+  territoryId     String?   @db.ObjectId
+  hospitalId      String
+  licenseImageUrl    String
+  opHours         String?
+  registrationId  String
+  about           String?
+  educations      String[]
+  certificates    String[]
+  createdAt       DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  department           Department?              @relation(fields: [departmentId], references: [id])
+  territory            Territory?               @relation(fields: [territoryId], references: [id])
+  interests            Interest[]
+  connections          Connection[]
+  doctorConn1          DoctorConnection[]      @relation("Doctor1")
+  doctorConn2          DoctorConnection[]      @relation("Doctor2")
+  referralsGiven       DoctorReferral[]        @relation("ReferringDoctor")
+  referralsReceived    DoctorReferral[]        @relation("ReferredDoctor")
+  // requirements         DoctorRequirementPost[]
+  notifications        Notification[]
+  conversations        Conversation[]
+  repReferralsReceived RepReferral[]           @relation("ReferredDoctorInRepReferral")
+
+  login UserLogin?@relation(fields: [loginId],references: [id])
+  loginId String?  @unique @db.ObjectId
+}
+
+model MedicalRep {
+  id                   String   @id @default(auto()) @map("_id") @db.ObjectId
+  name                 String
+  phone                String
+  companyName          String
+  companyLogoUrl       String?
+  employeeId           String
+  departmentId         String?   @db.ObjectId
+  about                String?
+  subscriptionPlanId   String?   @db.ObjectId
+  subscriptionStatus   String?
+  subscriptionStart    DateTime?
+  subscriptionEnd      DateTime?
+  maxConnectionsPerDay Int
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  department        Department?            @relation(fields: [departmentId], references: [id])
+  subscriptionPlan  SubscriptionPlan?      @relation(fields: [subscriptionPlanId], references: [id])
+  territories       MedicalRepTerritory[]
+  products          ProductPost[]
+  interests         Interest[]
+  connections       Connection[]
+  repConn1          RepConnection[]       @relation("Rep1")
+  repConn2          RepConnection[]       @relation("Rep2")
+  referralsGiven    RepReferral[]         @relation("ReferringRep")
+  referralsReceived RepReferral[]         @relation("ReferredRep")
+  notifications     Notification[]
+  conversations     Conversation[]
+
+  doctorReferralsReceived DoctorReferral[] @relation("ReferredRep")
+
+  login UserLogin? @relation(fields: [loginId],references: [id])
+  loginId String? @unique @db.ObjectId
+}
+
+model SuperAdmin {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  
+  login    UserLogin? @relation(fields: [loginId],references: [id])
+  loginId  String?   @unique @db.ObjectId
+}
+
+
+model SubscriptionPlan {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String
+  price       Float
+  tenure      String
+  features    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  reps MedicalRep[]
+}
+
+model Territory {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  region    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  doctors        Doctor[]
+  products       ProductPost[]
+  // requirements   DoctorRequirementPost[]
+  repTerritories MedicalRepTerritory[]
+}
+
+model ProductPost {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  repId        String   @db.ObjectId
+  title        String
+  description  String
+  imageUrl     String
+  brand        String
+  territoryId  String   @db.ObjectId
+  useCases     String[]
+  ingredients  String[]
+  termsOfUse   String
+  deliveryTime String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  rep       MedicalRep @relation(fields: [repId], references: [id])
+  territory Territory  @relation(fields: [territoryId], references: [id])
+  interests Interest[]
+}
+
+model Interest {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  doctorId  String   @db.ObjectId
+  repId     String   @db.ObjectId
+  productId String   @db.ObjectId
+  createdAt DateTime @default(now())
+
+  doctor  Doctor      @relation(fields: [doctorId], references: [id])
+  rep     MedicalRep  @relation(fields: [repId], references: [id])
+  product ProductPost @relation(fields: [productId], references: [id])
+}
+
+model Connection {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  doctorId  String   @db.ObjectId
+  repId     String   @db.ObjectId
+  status    String
+  createdAt DateTime @default(now())
+
+  doctor Doctor     @relation(fields: [doctorId], references: [id])
+  rep    MedicalRep @relation(fields: [repId], references: [id])
+}
+
+model DoctorConnection {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  doctorId1 String   @db.ObjectId
+  doctorId2 String   @db.ObjectId
+  status    String
+  createdAt DateTime @default(now())
+
+  doctor1 Doctor @relation("Doctor1", fields: [doctorId1], references: [id])
+  doctor2 Doctor @relation("Doctor2", fields: [doctorId2], references: [id])
+}
+
+model RepConnection {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  repId1    String   @db.ObjectId
+  repId2    String   @db.ObjectId
+  status    String
+  createdAt DateTime @default(now())
+
+  rep1 MedicalRep @relation("Rep1", fields: [repId1], references: [id])
+  rep2 MedicalRep @relation("Rep2", fields: [repId2], references: [id])
+}
+
+model DoctorReferral {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  referringDoctorId String   @db.ObjectId
+  referredRepId     String   @db.ObjectId
+  referredDoctorId  String   @db.ObjectId
+  note              String
+  status            String
+  createdAt         DateTime @default(now())
+
+  referringDoctor Doctor     @relation("ReferringDoctor", fields: [referringDoctorId], references: [id])
+  referredRep     MedicalRep @relation("ReferredRep", fields: [referredRepId], references: [id])
+  referredDoctor  Doctor     @relation("ReferredDoctor", fields: [referredDoctorId], references: [id])
+}
+
+model RepReferral {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  referringRepId   String   @db.ObjectId
+  referredDoctorId String   @db.ObjectId
+  referredRepId    String   @db.ObjectId
+  note             String
+  status           String
+  createdAt        DateTime @default(now())
+
+  referringRep   MedicalRep @relation("ReferringRep", fields: [referringRepId], references: [id])
+  referredDoctor Doctor     @relation("ReferredDoctorInRepReferral", fields: [referredDoctorId], references: [id])
+  referredRep    MedicalRep @relation("ReferredRep", fields: [referredRepId], references: [id])
+}
+
+// model DoctorRequirementPost {
+//   id              String   @id @default(auto()) @map("_id") @db.ObjectId
+//   doctorId        String   @db.ObjectId
+//   title           String
+//   description     String
+//   productCategory String
+//   quantity        Int
+//   urgencyLevel    String
+//   territoryId     String   @db.ObjectId
+//   status          String
+//   createdAt       DateTime @default(now())
+//   updatedAt       DateTime @updatedAt
+
+//   doctor    Doctor    @relation(fields: [doctorId], references: [id])
+//   territory Territory @relation(fields: [territoryId], references: [id])
+// }
+
+model Notification {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  doctorId  String?  @db.ObjectId
+  repId     String?  @db.ObjectId
+  type      String
+  content   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  doctor Doctor?     @relation(fields: [doctorId], references: [id])
+  rep    MedicalRep? @relation(fields: [repId], references: [id])
+}
+
+
+model MedicalRepTerritory {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  repId       String @db.ObjectId
+  territoryId String @db.ObjectId
+
+  rep       MedicalRep @relation(fields: [repId], references: [id])
+  territory Territory  @relation(fields: [territoryId], references: [id])
+}
+
+model Conversation {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  repId         String   @db.ObjectId
+  doctorId      String   @db.ObjectId
+  createdAt     DateTime @default(now())
+  lastMessageAt DateTime
+
+  rep      MedicalRep @relation(fields: [repId], references: [id])
+  doctor   Doctor     @relation(fields: [doctorId], references: [id])
+  messages Message[]
+}
+
+model Message {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  conversationId String   @db.ObjectId
+  senderId       String   @db.ObjectId
+  senderRole     String
+  content        String
+  messageType    String
+  isRead         Boolean
+  createdAt      DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id])
+}
