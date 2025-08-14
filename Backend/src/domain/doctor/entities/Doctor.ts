@@ -1,11 +1,11 @@
 export interface Doctor {
   id: string;
+  loginId:string|null;
   createdAt: Date;
   updatedAt: Date;
+
   name: string;
-  email: string;
   phone:string;
-  password: string;
   departmentId?: string | null; 
   experienceYears?: number | null;
   hasOwnClinic?: boolean | null;

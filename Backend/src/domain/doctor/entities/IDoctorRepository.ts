@@ -1,4 +1,4 @@
-import {Doctor} from "./entities/Doctor";
+import { Doctor } from "./Doctor";
 
 export interface IDoctorRepository{
     createDoctor(data:Omit<Doctor , "id"| "updatedAt" | "createdAt">):Promise<Doctor>;

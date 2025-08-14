@@ -20,12 +20,11 @@ model Department {
 model UserLogin {
   id       String @id @default(auto()) @map("_id") @db.ObjectId
   email    String @unique
-  password String 
+  password String? 
   role     Role
-  refId    String @db.ObjectId
   authProvider AuthProvider @default(NATIVE)
   providerId String?
-  createAt DateTime @default(now())
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
 
@@ -87,14 +86,14 @@ model MedicalRep {
   phone                String
   companyName          String
   companyLogoUrl       String?
-  employeeId           String
+  employeeId           String?
   departmentId         String?   @db.ObjectId
   about                String?
   subscriptionPlanId   String?   @db.ObjectId
   subscriptionStatus   String?
   subscriptionStart    DateTime?
   subscriptionEnd      DateTime?
-  maxConnectionsPerDay Int
+  maxConnectionsPerDay Int?
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 

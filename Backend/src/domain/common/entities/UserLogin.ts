@@ -15,8 +15,10 @@ export enum AuthProvider {
 export interface UserLogin{
     id:string;
     email:string;
-    passwordHash?:AuthProvider;
-    providerId:string;
+    password?:string | null;
+    authProvider:string | null;
+    providerId?:string | null;
+    role:Role;
     createdAt:Date;
     updatedAt:Date;
 }

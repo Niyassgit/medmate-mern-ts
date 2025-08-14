@@ -1,6 +1,6 @@
 import {Router} from "express";
-import {medicalRepController} from "../../../infrastructure/di/MedicalRepDI";
-import { validateMedicalRepRegisterSchema } from "../validators/repsSchemaValidator";
+import { medicalRepController } from "../../../infrastructure/di/MedicalRepDI";
+import { ValidateMedicalRepRegisterSchema } from "../validators/repsSchemaValidator";
 
 
 export class MedicalRepRoutes{
@@ -13,7 +13,7 @@ export class MedicalRepRoutes{
     }
 
     private initializeRoutes(){
-        this.router.post("/signup",validateMedicalRepRegisterSchema,medicalRepController.createMedicalRep);
+        this.router.post("/signup",ValidateMedicalRepRegisterSchema,medicalRepController.createMedicalRep);
         this.router.get("/:id",medicalRepController.getMedicalRepByProfileId);
     }
 }

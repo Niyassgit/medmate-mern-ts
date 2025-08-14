@@ -4,6 +4,7 @@ import { RegisterMedicalRepDTO } from "../../../domain/medicalRep/dto/RegisterMe
 import { GetMedicalRepByIdUseCase } from "../../../application/medicalRep/use-cases/GetMedicalRepByIdUseCase";
 import { GetMedicalRepByEmailUseCase } from "../../../application/medicalRep/use-cases/GetMedicalRepByEmailUseCase";
 
+
 export class MedicalRepController{
     constructor(
         private createMedicalRepUseCase :CreateMedicalRepUseCase,
