@@ -16,7 +16,7 @@ export interface UserLogin{
     id:string;
     email:string;
     password?:string | null;
-    authProvider:string | null;
+    authProvider:AuthProvider | null;
     providerId?:string | null;
     role:Role;
     createdAt:Date;

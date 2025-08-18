@@ -119,6 +119,7 @@ model MedicalRep {
 model SuperAdmin {
   id       String @id @default(auto()) @map("_id") @db.ObjectId
   name     String
+  phone    String?
   
   login    UserLogin? @relation(fields: [loginId],references: [id])
   loginId  String?   @unique @db.ObjectId

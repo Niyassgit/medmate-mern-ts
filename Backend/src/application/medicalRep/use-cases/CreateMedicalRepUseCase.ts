@@ -42,7 +42,8 @@ export class CreateMedicalRepUseCase{
         employeeId:data.employeeId,
         subscriptionStatus:"inactive",
         maxConnectionsPerDay:10,
-        loginId:login.id
+        loginId:login.id,
+        
       })
     
 }

@@ -4,6 +4,7 @@ import cors from "cors";
 import { connectDB } from "./config/db";
 import { MedicalRepRoutes } from "./presentation/http/routes/repRoutes";
 import { DoctorRoutes } from "./presentation/http/routes/doctorRoutes";
+import { superAdminRoutes } from "./presentation/http/routes/superAdminRoutes";
 
 dotenv.config();
 const app =express();
@@ -12,7 +13,8 @@ app.use(express.json());
 connectDB();
 
  app.use("/api/doctor",new DoctorRoutes().router);
- app.use("/api/rep",new MedicalRepRoutes().router)
+ app.use("/api/rep",new MedicalRepRoutes().router);
+ app.use("/api/admin",new superAdminRoutes().router);
 
 app.listen(process.env.PORT || 5000,()=>{
     console.log(`🚀 server running on port ${process.env.PORT || 5000}`);

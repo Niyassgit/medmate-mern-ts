@@ -4,10 +4,12 @@ import { CreateDoctorUseCase } from "../../application/doctor/use-cases/CreateDo
 import { GetDoctorProfileByIdUseCase } from "../../application/doctor/use-cases/GetDoctorProfileByIdUseCase";
 import { GetDoctorProfileByEmailUseCase } from "../../application/doctor/use-cases/GetDoctorProfileByEmailUseCase";
 import { DoctorController } from "../../presentation/http/controllers/DoctorController";
+import { UserLoginRepository } from "../repositories/UserLoginRepository";
 
 const doctorRepository=new DoctorRepository();
 const bycryptServices=new BcryptServices();
-const createDoctorUseCase=new CreateDoctorUseCase(doctorRepository,bycryptServices);
+const userLoginRepository=new UserLoginRepository()
+const createDoctorUseCase=new CreateDoctorUseCase(doctorRepository,bycryptServices,userLoginRepository);
 const getDoctorProfileByIdUseCase=new GetDoctorProfileByIdUseCase(doctorRepository);
 const getDoctorProfileByEmailUseCase=new GetDoctorProfileByEmailUseCase(doctorRepository);
 

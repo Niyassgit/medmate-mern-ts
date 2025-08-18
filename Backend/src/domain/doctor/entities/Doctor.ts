@@ -15,7 +15,8 @@ export interface Doctor {
   registrationId: string;       
   licenseImageUrl: string;  
   opHours?: string | null;
+
   about?: string | null;
-  educations: string[];
-  certificates: string[];
+  educations?: string[];
+  certificates?: string[];
 }

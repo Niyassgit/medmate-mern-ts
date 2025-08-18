@@ -1,9 +1,9 @@
 export interface RegisterDoctorDTO{
     name:string;
     email:string;
-    phone:string;
     password?:string;
-    department?:string | null;
+    phone:string;
+    departmentId?:string | null;
     territoryId?: string | null;
     hospitalId:string;
     registrationId:string;
