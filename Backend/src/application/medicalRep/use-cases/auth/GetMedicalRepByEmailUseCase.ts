@@ -1,5 +1,5 @@
-import { IMedicalRepRepository } from "../../../domain/medicalRep/entities/IMedicalRepRepository";
-import { MedicalRep } from "../../../domain/medicalRep/entities/medicalRep";
+import { IMedicalRepRepository } from "../../../../domain/medicalRep/entities/IMedicalRepRepository"; 
+import { MedicalRep } from "../../../../domain/medicalRep/entities/medicalRep";
 
 
 export class GetMedicalRepByEmailUseCase{

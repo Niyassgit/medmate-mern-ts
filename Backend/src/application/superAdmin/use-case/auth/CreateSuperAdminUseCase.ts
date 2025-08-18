@@ -1,10 +1,10 @@
-import { ISuperAdminRepository } from "../../domain/superAdmin/entities/ISuperAdminRepository";
-import { BcryptServices } from "../../infrastructure/security/BcryptService";
-import { SuperAdmin} from "../../domain/superAdmin/entities/superAdmin";
-import { UserLogin } from "../../domain/common/entities/UserLogin";
-import { UserLoginRepository } from "../../infrastructure/repositories/UserLoginRepository";
-import { RegisterSuperAdminDTO } from "../../domain/superAdmin/dto/RegisterSuperAdminDTO";
-import { AuthProvider,Role } from "../../domain/common/entities/UserLogin";
+import { ISuperAdminRepository } from "../../../../domain/superAdmin/entities/ISuperAdminRepository"; 
+import { BcryptServices } from "../../../../infrastructure/security/BcryptService"; 
+import { SuperAdmin } from "../../../../domain/superAdmin/entities/superAdmin"; 
+import { UserLogin } from "../../../../domain/common/entities/UserLogin";
+import { UserLoginRepository } from "../../../../infrastructure/repositories/UserLoginRepository"; 
+import { RegisterSuperAdminDTO } from "../../../../domain/superAdmin/dto/RegisterSuperAdminDTO"; 
+import { AuthProvider,Role } from "../../../../domain/common/entities/UserLogin"; 
 
 export class CreateSuperAdminUseCase{
     constructor(

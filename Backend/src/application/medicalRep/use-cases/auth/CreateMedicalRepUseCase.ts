@@ -1,9 +1,9 @@
-import { IMedicalRepRepository } from "../../../domain/medicalRep/entities/IMedicalRepRepository";
-import { BcryptServices } from "../../../infrastructure/security/BcryptService";
-import { MedicalRep } from "../../../domain/medicalRep/entities/medicalRep";
-import { IUserLoginRepository } from "../../../domain/common/entities/IUserLoginRepository";
-import { AuthProvider, Role } from "../../../domain/common/entities/UserLogin";
-import { RegisterMedicalRepDTO } from "../../../domain/medicalRep/dto/RegisterMedicalRepDTO";
+import { IMedicalRepRepository } from "../../../../domain/medicalRep/entities/IMedicalRepRepository"; 
+import { BcryptServices } from "../../../../infrastructure/security/BcryptService";  
+import { MedicalRep } from "../../../../domain/medicalRep/entities/medicalRep";  
+import { IUserLoginRepository } from "../../../../domain/common/entities/IUserLoginRepository"; 
+import { AuthProvider,Role } from "../../../../domain/common/entities/UserLogin"; 
+import { RegisterMedicalRepDTO } from "../../../../domain/medicalRep/dto/RegisterMedicalRepDTO"; 
 
 
 export class CreateMedicalRepUseCase{

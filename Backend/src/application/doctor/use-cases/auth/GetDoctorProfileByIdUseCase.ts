@@ -1,5 +1,5 @@
-import { IDoctorRepository } from "../../../domain/doctor/entities/IDoctorRepository";
-import {Doctor} from "../../../domain/doctor/entities/Doctor";
+import { IDoctorRepository } from "../../../../domain/doctor/entities/IDoctorRepository";
+import {Doctor} from "../../../../domain/doctor/entities/Doctor";
 
 
 export class GetDoctorProfileByIdUseCase{

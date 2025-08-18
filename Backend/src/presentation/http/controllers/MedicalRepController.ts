@@ -1,8 +1,8 @@
 import { Request,Response } from "express";
-import { CreateMedicalRepUseCase } from "../../../application/medicalRep/use-cases/CreateMedicalRepUseCase";
+import { CreateMedicalRepUseCase } from "../../../application/medicalRep/use-cases/auth/CreateMedicalRepUseCase";
 import { RegisterMedicalRepDTO } from "../../../domain/medicalRep/dto/RegisterMedicalRepDTO";
-import { GetMedicalRepByIdUseCase } from "../../../application/medicalRep/use-cases/GetMedicalRepByIdUseCase";
-import { GetMedicalRepByEmailUseCase } from "../../../application/medicalRep/use-cases/GetMedicalRepByEmailUseCase";
+import { GetMedicalRepByIdUseCase } from "../../../application/medicalRep/use-cases/auth/GetMedicalRepByIdUseCase"; 
+import { GetMedicalRepByEmailUseCase } from "../../../application/medicalRep/use-cases/auth/GetMedicalRepByEmailUseCase"; 
 
 
 export class MedicalRepController{

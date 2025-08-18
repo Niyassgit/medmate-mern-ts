@@ -1,5 +1,5 @@
-import { SuperAdmin } from "../../domain/superAdmin/entities/superAdmin";
-import { ISuperAdminRepository } from "../../domain/superAdmin/entities/ISuperAdminRepository";
+import { SuperAdmin } from "../../../../domain/superAdmin/entities/superAdmin";
+import { ISuperAdminRepository } from "../../../../domain/superAdmin/entities/ISuperAdminRepository";
 
 
 

@@ -1,6 +1,6 @@
 import { Request,Response } from "express";
-import { CreateSuperAdminUseCase } from "../../../application/superAdmin/CreateSuperAdminUseCase";
-import { GetSuperAdminByEmailIdUseCase } from "../../../application/superAdmin/GetSuperAdminByEmailIdUseCase";
+import { CreateSuperAdminUseCase } from "../../../application/superAdmin/use-case/auth/CreateSuperAdminUseCase"; 
+import { GetSuperAdminByEmailIdUseCase } from "../../../application/superAdmin/use-case/auth/GetSuperAdminByEmailIdUseCase"; 
 
 
 export class SuperAdminController{

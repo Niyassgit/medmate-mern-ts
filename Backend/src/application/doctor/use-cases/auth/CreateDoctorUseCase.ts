@@ -1,9 +1,9 @@
-import { IDoctorRepository } from "../../../domain/doctor/entities/IDoctorRepository";
-import {Doctor} from "../../../domain/doctor/entities/Doctor";
-import { BcryptServices } from "../../../infrastructure/security/BcryptService";
-import { RegisterDoctorDTO } from "../../../domain/doctor/dto/RegisterDoctorDTO";
-import { IUserLoginRepository } from "../../../domain/common/entities/IUserLoginRepository";
-import { AuthProvider,Role } from  "../../../domain/common/entities/UserLogin"
+import { IDoctorRepository } from "../../../../domain/doctor/entities/IDoctorRepository"; 
+import { Doctor } from "../../../../domain/doctor/entities/Doctor"; 
+import { BcryptServices } from "../../../../infrastructure/security/BcryptService"; 
+import { RegisterDoctorDTO } from "../../../../domain/doctor/dto/RegisterDoctorDTO";
+import { IUserLoginRepository } from "../../../../domain/common/entities/IUserLoginRepository"; 
+import { AuthProvider,Role } from  "../../../../domain/common/entities/UserLogin"
 
 export class CreateDoctorUseCase{
 

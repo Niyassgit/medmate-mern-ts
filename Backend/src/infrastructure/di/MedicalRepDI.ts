@@ -1,8 +1,8 @@
 import { MedicalRepController } from "../../presentation/http/controllers/MedicalRepController";
 import { BcryptServices } from "../security/BcryptService";
-import { CreateMedicalRepUseCase } from "../../application/medicalRep/use-cases/CreateMedicalRepUseCase";
-import { GetMedicalRepByIdUseCase } from "../../application/medicalRep/use-cases/GetMedicalRepByIdUseCase";
-import { GetMedicalRepByEmailUseCase } from "../../application/medicalRep/use-cases/GetMedicalRepByEmailUseCase";
+import { CreateMedicalRepUseCase } from "../../application/medicalRep/use-cases/auth/CreateMedicalRepUseCase"; 
+import { GetMedicalRepByIdUseCase } from "../../application/medicalRep/use-cases/auth/GetMedicalRepByIdUseCase"; 
+import { GetMedicalRepByEmailUseCase } from "../../application/medicalRep/use-cases/auth/GetMedicalRepByEmailUseCase"; 
 import { MedicalRepRepository } from "../repositories/MedicalRepRepository";
 import { UserLoginRepository } from "../repositories/UserLoginRepository";
 
