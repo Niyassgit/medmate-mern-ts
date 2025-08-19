@@ -4,10 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+     "start": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "backend":"npm run dev --prefix backend",
+    "frontend":"npm run dev --prefix frontend",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs"
+  "type": "commonjs",
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+  }
 }

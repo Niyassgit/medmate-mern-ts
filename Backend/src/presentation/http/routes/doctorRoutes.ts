@@ -3,6 +3,7 @@ import { validateRegisterDoctorSchema } from "../validators/doctorSchemaValidato
 import { doctorController } from "../../../infrastructure/di/DoctorDI";
 import { authController } from "../../../infrastructure/di/AuthDi";
 import { validateLoginSchema } from "../validators/LoginValidationSchema";
+import { upload } from "../../../infrastructure/storage/multer/multerConfig";
 
 export class DoctorRoutes{
      public router:Router;
@@ -13,7 +14,7 @@ export class DoctorRoutes{
     }
 
     private initializeRoutes(){
-     this.router.post("/signup",validateRegisterDoctorSchema,doctorController.createDoctor);
+     this.router.post("/signup",upload.single("licenseImageUrl"),validateRegisterDoctorSchema,doctorController.createDoctor);
      this.router.get("/:id",doctorController.getDoctorProfileById);
      this.router.post("/login",validateLoginSchema,authController.loginDoctor)
     }

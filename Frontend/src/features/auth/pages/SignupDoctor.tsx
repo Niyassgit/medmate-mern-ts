@@ -21,11 +21,11 @@ type DoctorRegisterValues = {
     phone: string,
     password: string,
     Cpassword: string,
-    department: string,
-    territory: string,
+    // departmentId: string,
+    // territoryId: string,
     hospitalId: string,
-    registerationNo: string,
-    license: File | null,
+    registrationId: string,
+    licenseImageUrl: File |null,
     opHours: string,
     hasOwnClinic: boolean
 }
@@ -41,10 +41,11 @@ const SignupDoctor = () => {
             phone: "",
             password: "", 
             Cpassword:"",
-            department:"",
-            territory:"",
+            // departmentId:"",
+            // territoryId:"",
             hospitalId:"",
-            license:null,
+            registrationId:"",
+            licenseImageUrl:null,
             opHours:"",
             hasOwnClinic:false
          
@@ -54,7 +55,11 @@ const SignupDoctor = () => {
 
     const onSubmit =async (values: DoctorRegisterValues) => {
 
-        console.log("Doctor Register values", values);
+
+        if(values.password !==values.Cpassword){
+            alert("Passwords do not match");
+            return;
+        }
 
         try {
             const formData=new FormData();
@@ -62,15 +67,17 @@ const SignupDoctor = () => {
             formData.append("email",values.email);
             formData.append("phone",values.phone);
             formData.append("password",values.password);
-            formData.append("Cpassword",values.Cpassword);
-            formData.append("department",values.department);
-            formData.append("territory",values.territory);
+            // formData.append("departmentId",values.departmentId);
+            // formData.append("territoryId",values.territoryId);
             formData.append("hospitalId",values.hospitalId);
-            formData.append("registerationNo",values.registerationNo);
-            if(values.license) formData.append("license",values.license);
+            formData.append("registrationId",values.registrationId);
+            if(values.licenseImageUrl) formData.append("licenseImageUrl",values.licenseImageUrl);
             formData.append("opHours",values.opHours);
             formData.append("hasOwnClinic",String(values.hasOwnClinic));
-
+            
+            for(let [key,value] of formData.entries()){
+                console.log(key,value);
+            }
             await registerDoctor(formData);
             alert ( "Doctor registered successfully🚀");
             
@@ -137,9 +144,9 @@ const SignupDoctor = () => {
                         )}
                     />
 
-                    <FormField
+                    {/* <FormField
                         control={form.control}
-                        name="department"
+                        name="departmentId"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Department</FormLabel>
@@ -149,7 +156,7 @@ const SignupDoctor = () => {
                                 <FormMessage />
                             </FormItem>
                         )}
-                    />
+                    /> */}
 
 
                 </div>
@@ -187,9 +194,9 @@ const SignupDoctor = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <FormField
+                    {/* <FormField
                         control={form.control}
-                        name="territory"
+                        name="territoryId"
                         render={({ field }) => (
                             <FormItem>
                                 <FormControl>
@@ -198,11 +205,11 @@ const SignupDoctor = () => {
                                 <FormMessage />
                             </FormItem>
                         )}
-                    />
+                    /> */}
 
                     <FormField
                         control={form.control}
-                        name="registerationNo"
+                        name="registrationId"
                         render={({ field }) => (
                             <FormItem>
                                 <FormControl>
@@ -215,7 +222,7 @@ const SignupDoctor = () => {
 
                     <FormField
                         control={form.control}
-                        name="license"
+                        name="licenseImageUrl"
                         render={({ field }) => (
                             <FormItem>
                                 <FormControl>
@@ -256,6 +263,7 @@ const SignupDoctor = () => {
                     />
 
                 </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 
                     <FormField
                         control={form.control}
@@ -268,7 +276,22 @@ const SignupDoctor = () => {
                                 <FormMessage />
                             </FormItem>
                         )}
-                    />     
+                    />   
+                          <FormField
+                        control={form.control}
+                        name="hospitalId"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormControl>
+                                    <Input placeholder="Hospital ID" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />   
+                        
+
+                    </div>  
                         <FormField
                         control={form.control}
                         name="hasOwnClinic"

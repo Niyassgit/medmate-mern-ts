@@ -13,7 +13,7 @@ export interface Doctor {
   territoryId?: string | null;
   hospitalId: string;           
   registrationId: string;       
-  licenseImageUrl: string;  
+  licenseImageUrl: File;  
   opHours?: string | null;
 
   about?: string | null;

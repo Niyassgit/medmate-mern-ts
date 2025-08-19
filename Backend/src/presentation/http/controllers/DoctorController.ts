@@ -13,7 +13,11 @@ export class DoctorController {
 
     createDoctor= async (req:Request,res:Response)=>{
         try {
-            const doctor=await this.createDoctorUseCase.execute(req.body);
+            const licenseImageUrl=req.file?.filename;
+            const doctor=await this.createDoctorUseCase.execute({
+                ...req.body,
+                licenseImageUrl
+            });
             res.status(201).json(doctor);
         } catch (error :any) {
             res.status(400).json({message:error.message});
