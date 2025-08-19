@@ -5,7 +5,7 @@ export interface RegisterMedicalRepDTO{
     phone:string;
     password?:string;
     companyName:string;
-    companyLogoUrl?:string;
+    companyLogoUrl?:File;
     employeeId:string;
     departmentId?:string;
 }

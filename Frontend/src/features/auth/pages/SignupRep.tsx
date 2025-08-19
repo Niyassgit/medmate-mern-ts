@@ -10,6 +10,9 @@ import {
     FormControl,
     FormMessage
 } from "@/components/ui/form";
+import { registerRep } from "../api";
+import { useNavigate } from "react-router-dom";
+
 
 interface RegisterMedicalRepDTO {
     name: string
@@ -18,17 +21,16 @@ interface RegisterMedicalRepDTO {
     password?: string
     Cpassword: string,
     companyName: string
-    territoryId: string
+    // territoryId: string
     companyLogoUrl?: File | null
     employeeId: string
-    departmentId?: string
+    // departmentId?: string
 }
-
-
 
 
 const SignupRep = () => {
 
+    const navigate = useNavigate()
     const form = useForm<RegisterMedicalRepDTO>({
         defaultValues: {
             name: "",
@@ -38,16 +40,47 @@ const SignupRep = () => {
             Cpassword: "",
             companyName: "",
             companyLogoUrl: null,
-            territoryId: "",
             employeeId: "",
-            departmentId: ""
+            // territoryId: "",
+            // departmentId: ""
 
         }
     })
 
-    const onSubmit = (data: RegisterMedicalRepDTO) => {
+    const onSubmit = async (data: RegisterMedicalRepDTO) => {
+
         console.log("Rep Registration Data:", data)
-        // Here you can send data to backend API
+
+        if (data.password !== data.Cpassword) {
+            alert("Password do not match");
+            return;
+        }
+
+        try {
+
+            const formData = new FormData();
+            formData.append("name", data.name);
+            formData.append("email", data.email);
+            formData.append("phone", data.phone);
+            formData.append("companyName", data.companyName);
+            formData.append("password", data.password);
+            formData.append("employeeId", data.employeeId);
+            if (data.companyLogoUrl) formData.append("companyLogoUrl", data.companyLogoUrl);
+
+            for (let [key, value] of formData.entries()) {
+                console.log(key, value);
+            }
+
+
+            await registerRep(formData);
+            alert("User has been Registered Successfully🚀");
+            navigate("/rep/login");
+        } catch (error :any) {
+            console.error(error);
+            alert(error.response?.data?.message || "Registration failed");
+        }
+
+
     }
 
 
@@ -164,7 +197,7 @@ const SignupRep = () => {
                         )}
                     />
 
-                    <FormField
+                    {/* <FormField
                         control={form.control}
                         name="departmentId"
                         render={({ field }) => (
@@ -176,25 +209,7 @@ const SignupRep = () => {
                                 <FormMessage />
                             </FormItem>
                         )}
-                    />
-                </div>
-
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Territory */}
-                    <FormField
-                        control={form.control}
-                        name="territoryId"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Territory</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Enter your territory" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                    /> */}
 
                     {/* Company Logo */}
                     <FormField
@@ -202,7 +217,7 @@ const SignupRep = () => {
                         name="companyLogoUrl"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Company Logo</FormLabel> 
+                                <FormLabel>Company Logo</FormLabel>
                                 <FormControl>
                                     <div>
                                         <input
@@ -235,7 +250,9 @@ const SignupRep = () => {
                             </FormItem>
                         )}
                     />
+
                 </div>
+
 
 
 

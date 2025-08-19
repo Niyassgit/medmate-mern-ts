@@ -75,9 +75,7 @@ const SignupDoctor = () => {
             formData.append("opHours",values.opHours);
             formData.append("hasOwnClinic",String(values.hasOwnClinic));
             
-            for(let [key,value] of formData.entries()){
-                console.log(key,value);
-            }
+           
             await registerDoctor(formData);
             alert ( "Doctor registered successfully🚀");
             

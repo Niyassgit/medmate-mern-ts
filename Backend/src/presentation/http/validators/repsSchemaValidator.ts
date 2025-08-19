@@ -7,8 +7,10 @@ const registerMedicalRepSchema=z.object({
    phone:z.string().regex(/^\+?\d{10,15}$/,"Invalid phone number").optional(),
    password:z.string().min(6,"Password must be atleast 6 characters").optional(),
    companyName:z.string().min(1),
-   companyLogoUrl:z.string().url().optional(),
-   departmentId: z.string().optional(),
+   companyLogoUrl:z.any(),
+   employeeId:z.string().min(1,"Employee Id required"),
+//    territoryId:z.string().min(1,"Territory required")
+//    departmentId: z.string().optional(),
 })
 
 export const  ValidateMedicalRepRegisterSchema=(req:Request,res:Response,next:NextFunction)=>{

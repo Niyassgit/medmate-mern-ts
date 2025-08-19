@@ -15,6 +15,13 @@ export const getDoctorProfile =(id:string)=>{
     return api.get(`/doctor/profile/${id}`);
 }
 
+export const registerRep=(values:FormData)=>{
+    return api.post("/rep/signup",values,{
+        headers:{
+            "Content-Type":"multipart/form-data"
+        },
+    })
+}
 export const repLogin=(values:{email:string,password:string})=>{
     return api.post("/rep/login",values);
 }
