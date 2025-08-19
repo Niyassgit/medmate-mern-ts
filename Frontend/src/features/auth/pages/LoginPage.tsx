@@ -1,33 +1,25 @@
 import ExampleForm from '@/components/example-form'
-import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link,useLocation } from 'react-router-dom'
+import { doctorLogin,repLogin } from '../api'
 
-const LoginDoctor = () => {
+
+const LoginPage = () => {
+  const location=useLocation();
+  const isDoctor=location.pathname.includes("/doctor");
 
   const handleLogin = async (values: { email: string; password: string }) => {
     console.log("Form values:", values)
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/doctor/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      })
-
-      const data = await res.json()
-
-      if (!res.ok) {
-        alert(data.message || "Login failed")
-        return
-      }
-
-      localStorage.setItem("token", data.token)
-
-      alert("Login successful 🚀")
-
-    } catch (error) {
+      const { data }=isDoctor ? await doctorLogin(values) : await repLogin(values);
+      localStorage.setItem("token",data.token)
+      
+      alert ("Login successfull 🚀");
+      window.location.href=isDoctor? "/doctor/dashboard" : "/rep/dashboard"
+ 
+    } catch (error :any) {
       console.error(error)
-      alert("Something went wrong")
+      alert(error.response?.data?.message || "Something went wrong")
     }
 
   
@@ -52,7 +44,7 @@ const LoginDoctor = () => {
           />
         </div>
 
-        {/* Right Side Form */}
+       
         <div className="w-full md:w-1/2 flex flex-col justify-center p-8 sm:p-10">
           <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-gray-800 text-center md:text-left">
             Login Doccure
@@ -84,4 +76,4 @@ const LoginDoctor = () => {
 
 }
 
-export default LoginDoctor
+export default LoginPage

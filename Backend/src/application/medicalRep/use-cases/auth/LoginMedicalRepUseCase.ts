@@ -1,7 +1,7 @@
-import { IUserLoginRepository } from "../../domain/common/entities/IUserLoginRepository";
-import { jwtService } from "../../infrastructure/security/jwtService";
-import { BcryptServices } from "../../infrastructure/security/BcryptService";
-import { UserLogin } from "../../domain/common/entities/UserLogin";
+import { IUserLoginRepository } from "../../../../domain/common/entities/IUserLoginRepository";
+import { jwtService } from "../../../../infrastructure/security/jwtService";
+import { BcryptServices } from "../../../../infrastructure/security/BcryptService";
+import { UserLogin } from "../../../../domain/common/entities/UserLogin";
 
 
 

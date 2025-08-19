@@ -12,8 +12,8 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
-
-
+import { registerDoctor } from "../api";
+import { useNavigate } from "react-router-dom";
 
 type DoctorRegisterValues = {
     name: string,
@@ -25,13 +25,14 @@ type DoctorRegisterValues = {
     territory: string,
     hospitalId: string,
     registerationNo: string,
-    liscense: File | null,
+    license: File | null,
     opHours: string,
     hasOwnClinic: boolean
 }
 
 
 const SignupDoctor = () => {
+    const navigate=useNavigate()
 
     const form = useForm<DoctorRegisterValues>({
         defaultValues: { 
@@ -43,7 +44,7 @@ const SignupDoctor = () => {
             department:"",
             territory:"",
             hospitalId:"",
-            liscense:null,
+            license:null,
             opHours:"",
             hasOwnClinic:false
          
@@ -51,9 +52,36 @@ const SignupDoctor = () => {
         },
     });
 
-    const onSubmit = (values: DoctorRegisterValues) => {
+    const onSubmit =async (values: DoctorRegisterValues) => {
 
         console.log("Doctor Register values", values);
+
+        try {
+            const formData=new FormData();
+            formData.append("name",values.name);
+            formData.append("email",values.email);
+            formData.append("phone",values.phone);
+            formData.append("password",values.password);
+            formData.append("Cpassword",values.Cpassword);
+            formData.append("department",values.department);
+            formData.append("territory",values.territory);
+            formData.append("hospitalId",values.hospitalId);
+            formData.append("registerationNo",values.registerationNo);
+            if(values.license) formData.append("license",values.license);
+            formData.append("opHours",values.opHours);
+            formData.append("hasOwnClinic",String(values.hasOwnClinic));
+
+            await registerDoctor(formData);
+            alert ( "Doctor registered successfully🚀");
+            
+            navigate("/login/doctor");
+
+        } catch (error : any) {
+            console.error(error);
+            alert(error.response?.data?.message || "Registration failed");
+        }
+
+
     }
 
     return (
@@ -187,7 +215,7 @@ const SignupDoctor = () => {
 
                     <FormField
                         control={form.control}
-                        name="liscense"
+                        name="license"
                         render={({ field }) => (
                             <FormItem>
                                 <FormControl>
