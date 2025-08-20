@@ -1,4 +1,4 @@
-import {prisma} from "../database/prismaClient";
+import {prisma} from "../database/PrismaClient";
 import { IUserLoginRepository } from "../../domain/common/entities/IUserLoginRepository";
 import { UserLogin } from "../../domain/common/entities/UserLogin";
 import { UserLoginMapper } from "../mappers/UserLoginMapper";

@@ -1,20 +1,20 @@
 import { Request,Response } from "express";
-import { CreateDoctorUseCase } from "../../../application/doctor/use-cases/auth/CreateDoctorUseCase";
-import { GetDoctorProfileByIdUseCase } from "../../../application/doctor/use-cases/auth/GetDoctorProfileByIdUseCase"; 
-import { GetDoctorProfileByEmailUseCase } from "../../../application/doctor/use-cases/auth/GetDoctorProfileByEmailUseCase"; 
+import { CreateDoctorUseCase } from "../../../application/doctor/auth/CreateDoctorUseCase";
+import { GetDoctorProfileByIdUseCase } from "../../../application/doctor/auth/GetDoctorProfileByIdUseCase"; 
+import { GetDoctorProfileByEmailUseCase } from "../../../application/doctor/auth/GetDoctorProfileByEmailUseCase"; 
 
 
 export class DoctorController {
     constructor(
-        private createDoctorUseCase: CreateDoctorUseCase,
-        private getDoctorProfileByIdUseCase : GetDoctorProfileByIdUseCase,
-        private getDoctorProfileByEmailUseCase :GetDoctorProfileByEmailUseCase
+        private _createDoctorUseCase: CreateDoctorUseCase,
+        private _getDoctorProfileByIdUseCase : GetDoctorProfileByIdUseCase,
+        private _getDoctorProfileByEmailUseCase :GetDoctorProfileByEmailUseCase
     ){}
 
     createDoctor= async (req:Request,res:Response)=>{
         try {
-            const licenseImageUrl=req.file?.filename;
-            const doctor=await this.createDoctorUseCase.execute({
+            const licenseImageUrl=req.file?`/uploads/licenses/${req.file.filename}`:null;
+            const doctor=await this._createDoctorUseCase.execute({
                 ...req.body,
                 licenseImageUrl
             });
@@ -25,7 +25,7 @@ export class DoctorController {
     }
     getDoctorProfileById=async(req:Request,res:Response)=>{
         try {
-            const doctor=await this.getDoctorProfileByIdUseCase.execute(req.params.id);
+            const doctor=await this._getDoctorProfileByIdUseCase.execute(req.params.id);
 
             if(!doctor){
                 return res.status(404).json({message:"Doctor not found"});
@@ -39,7 +39,7 @@ export class DoctorController {
         
         try {
             const {email}=req.params;
-            const doctor=await this.getDoctorProfileByEmailUseCase.execute(email);
+            const doctor=await this._getDoctorProfileByEmailUseCase.execute(email);
 
             if(!doctor){
                 return res.status(404).json({message:"Doctor not found"});

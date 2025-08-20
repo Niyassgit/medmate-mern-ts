@@ -7,7 +7,7 @@ export interface RegisterDoctorDTO{
     territoryId?: string | null;
     hospitalId:string;
     registrationId:string;
-    licenseImageUrl: File;
+    licenseImageUrl: string;
     opHours:string;
     hasOwnClinic?:boolean |null;  
 }

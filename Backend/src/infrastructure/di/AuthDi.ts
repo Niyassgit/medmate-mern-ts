@@ -1,7 +1,7 @@
 import { AuthController } from "../../presentation/http/controllers/AuthController";
-import { LoginDoctorUseCase } from "../../application/doctor/use-cases/auth/LoginDoctorUseCase";
-import { LoginMedicalRepUseCase } from "../../application/medicalRep/use-cases/auth/LoginMedicalRepUseCase";
-import { LoginSuperAdminUseCase } from "../../application/superAdmin/use-case/auth/LoginSuperAdminUseCase";
+import { LoginDoctorUseCase } from "../../application/doctor/auth/LoginDoctorUseCase";
+import { LoginMedicalRepUseCase } from "../../application/medicalRep/auth/LoginMedicalRepUseCase";
+import { LoginSuperAdminUseCase } from "../../application/superAdmin/auth/LoginSuperAdminUseCase";
 import { UserLoginRepository } from "../repositories/UserLoginRepository";
 import { BcryptServices } from "../security/BcryptService";
 

@@ -1,4 +1,4 @@
-import {prisma} from "../database/prismaClient";
+import {prisma} from "../database/PrismaClient";
 import { IDoctorRepository } from "../../domain/doctor/entities/IDoctorRepository";
 import { Doctor } from "../../domain/doctor/entities/Doctor";
 

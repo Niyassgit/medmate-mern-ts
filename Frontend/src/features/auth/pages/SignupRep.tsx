@@ -74,7 +74,7 @@ const SignupRep = () => {
 
             await registerRep(formData);
             alert("User has been Registered Successfully🚀");
-            navigate("/rep/login");
+          
         } catch (error :any) {
             console.error(error);
             alert(error.response?.data?.message || "Registration failed");

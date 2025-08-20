@@ -1,8 +1,8 @@
 import { DoctorRepository } from "../repositories/DoctorRepository";
 import { BcryptServices } from "../security/BcryptService";
-import { CreateDoctorUseCase } from "../../application/doctor/use-cases/auth/CreateDoctorUseCase"; 
-import { GetDoctorProfileByIdUseCase } from "../../application/doctor/use-cases/auth/GetDoctorProfileByIdUseCase"; 
-import { GetDoctorProfileByEmailUseCase } from "../../application/doctor/use-cases/auth/GetDoctorProfileByEmailUseCase"; 
+import { CreateDoctorUseCase } from "../../application/doctor/auth/CreateDoctorUseCase"; 
+import { GetDoctorProfileByIdUseCase } from "../../application/doctor/auth/GetDoctorProfileByIdUseCase"; 
+import { GetDoctorProfileByEmailUseCase } from "../../application/doctor/auth/GetDoctorProfileByEmailUseCase"; 
 import { DoctorController } from "../../presentation/http/controllers/DoctorController";
 import { UserLoginRepository } from "../repositories/UserLoginRepository";
 

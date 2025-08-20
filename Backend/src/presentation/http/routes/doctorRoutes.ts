@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { validateRegisterDoctorSchema } from "../validators/doctorSchemaValidator";
+import { validateRegisterDoctorSchema } from "../validators/DoctorSchemaValidator"; 
 import { doctorController } from "../../../infrastructure/di/DoctorDI";
 import { authController } from "../../../infrastructure/di/AuthDi";
 import { validateLoginSchema } from "../validators/LoginValidationSchema";
-import { upload } from "../../../infrastructure/storage/multer/multerConfig";
+import { upload } from "../../../infrastructure/storage/multer/MulterConfig";
 
 export class DoctorRoutes{
      public router:Router;

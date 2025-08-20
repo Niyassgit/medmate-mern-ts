@@ -2,9 +2,9 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import { connectDB } from "./config/db";
-import { MedicalRepRoutes } from "./presentation/http/routes/repRoutes";
-import { DoctorRoutes } from "./presentation/http/routes/doctorRoutes";
-import { superAdminRoutes } from "./presentation/http/routes/superAdminRoutes";
+import { MedicalRepRoutes } from "./presentation/http/routes/RepRoutes";
+import { DoctorRoutes } from "./presentation/http/routes/DoctorRoutes";
+import { superAdminRoutes } from "./presentation/http/routes/SuperAdminRoutes";
 
 dotenv.config();
 const app =express();

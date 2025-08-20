@@ -1,4 +1,4 @@
-import { SuperAdmin } from "./superAdmin";
+import { SuperAdmin } from "./SuperAdmin";
 
 
 export interface ISuperAdminRepository{

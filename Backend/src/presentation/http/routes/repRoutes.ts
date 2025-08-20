@@ -1,9 +1,9 @@
 import {Router} from "express";
 import { medicalRepController } from "../../../infrastructure/di/MedicalRepDI";
-import { ValidateMedicalRepRegisterSchema } from "../validators/repsSchemaValidator";
+import { ValidateMedicalRepRegisterSchema } from "../validators/RepSchemaValidator";
 import { authController } from "../../../infrastructure/di/AuthDi";
 import { validateLoginSchema } from "../validators/LoginValidationSchema";
-import { upload } from "../../../infrastructure/storage/multer/multerConfig";
+import { upload } from "../../../infrastructure/storage/multer/MulterConfig";
 
 export class MedicalRepRoutes{
 

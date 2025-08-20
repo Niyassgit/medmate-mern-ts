@@ -8,7 +8,7 @@ export interface MedicalRep{
     name:string;
     phone:string;
     companyName:string;
-    companyLogoUrl?:File| null;
+    companyLogoUrl?:string| null;
     employeeId?:string | null;
     departmentId?:string| null;
     about?:string | null;

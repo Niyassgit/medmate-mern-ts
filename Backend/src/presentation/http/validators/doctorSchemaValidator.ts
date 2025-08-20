@@ -26,6 +26,7 @@ export const RegisterDoctorSchema = z.object({
 export const validateRegisterDoctorSchema = (req: Request, res: Response, next: NextFunction) => {
 
 
+
   const dataToValidate = {
     ...req.body,
     licenseImageUrl: req.file

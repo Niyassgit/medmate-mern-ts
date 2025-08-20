@@ -1,4 +1,4 @@
-import { MedicalRep } from "./medicalRep";
+import { MedicalRep } from "./MedicalRep";
 
 
  export interface IMedicalRepRepository {

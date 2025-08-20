@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { superAdminController } from "../../../infrastructure/di/SuperAdminDI";
-import { validateSuperAdminSchema } from "../validators/superAdminSchemaValidator";
+import { validateSuperAdminSchema } from "../validators/SuperAdminSchemaValidator";
 import { authController } from "../../../infrastructure/di/AuthDi";
 import { validateLoginSchema } from "../validators/LoginValidationSchema";
 

@@ -1,6 +1,6 @@
-import {prisma} from "../database/prismaClient";
+import {prisma} from "../database/PrismaClient";
 import { IMedicalRepRepository } from "../../domain/medicalRep/entities/IMedicalRepRepository";
-import { MedicalRep } from "../../domain/medicalRep/entities/medicalRep";
+import { MedicalRep } from "../../domain/medicalRep/entities/MedicalRep";
 
 
 export class MedicalRepRepository implements IMedicalRepRepository{

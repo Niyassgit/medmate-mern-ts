@@ -6,13 +6,13 @@ import { AuthProvider,Role,UserLogin } from "../../domain/common/entities/UserLo
 export class CreateUserLoginUseCase{
 
     constructor(
-        private userLoginRepository:IUserLoginRepository,
-        private bcryptServices:BcryptServices
+        private _userLoginRepository:IUserLoginRepository,
+        private _bcryptServices:BcryptServices
     ){}
 
     async execute(data:Omit<UserLogin,"id" | "createdAt" | "updatedAt">):Promise<UserLogin>{
 
-        const existUser=await this.userLoginRepository.findByEmail(data.email);
+        const existUser=await this._userLoginRepository.findByEmail(data.email);
 
         if(existUser) throw new Error(`User with ${data.email} already exists`);
 
@@ -20,8 +20,8 @@ export class CreateUserLoginUseCase{
             throw new Error("Password is required for NATIVE signup");
         }
         
-        const hashedPassword=data.password ? await this.bcryptServices.hashPassword(data.password):null;
-        return this.userLoginRepository.createUserLogin({
+        const hashedPassword=data.password ? await this._bcryptServices.hashPassword(data.password):null;
+        return this._userLoginRepository.createUserLogin({
             ...data,
             password:hashedPassword
         })

@@ -1,6 +1,6 @@
 import { ISuperAdminRepository } from "../../domain/superAdmin/entities/ISuperAdminRepository";
-import { SuperAdmin } from "../../domain/superAdmin/entities/superAdmin";
-import {prisma} from "../database/prismaClient";
+import { SuperAdmin } from "../../domain/superAdmin/entities/SuperAdmin";
+import {prisma} from "../database/PrismaClient";
 
 
 

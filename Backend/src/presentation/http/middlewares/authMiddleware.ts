@@ -1,6 +1,6 @@
-import { jwtService } from "../../../infrastructure/security/jwtService";
+import { jwtService } from "../../../infrastructure/security/JwtService";
 import {Request,Response,NextFunction} from "express";
-import { JwtPayload } from "../../../domain/common/dto/jwtPayload";
+import { JwtPayload } from "../../../domain/common/dto/JwtPayload"; 
 
 interface AuthenticatedRequest extends Request {
     user?:JwtPayload;
