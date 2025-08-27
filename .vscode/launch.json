@@ -1,0 +1,28 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Backend (Express + TSX)",
+      "runtimeExecutable": "npx",
+      "args": ["tsx", "watch", "src/index.ts"],
+      "cwd": "${workspaceFolder}/backend",
+      "envFile": "${workspaceFolder}/backend/.env"
+    },
+    {
+      "type": "pwa-chrome",
+      "request": "launch",
+      "name": "Frontend (React + Vite)",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/frontend",
+      "userDataDir": "${workspaceFolder}/.vscode/chrome"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "MedMate (Frontend + Backend)",
+      "configurations": ["Backend (Express + TSX)", "Frontend (React + Vite)"]
+    }
+  ]
+}

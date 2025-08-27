@@ -1,0 +1,12 @@
+# Ignore node_modules globally
+node_modules/
+
+# Ignore environment files globally
+.env
+
+# Ignore OS / system files
+.DS_Store
+Thumbs.db
+
+# Ignore VS Code temporary files
+.vscode/chrome/        # Chrome debug cache

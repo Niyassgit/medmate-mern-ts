@@ -1,0 +1,588 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/features/auth/pages/SignupDoctor.tsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=86e211bf"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+let prevRefreshReg;
+let prevRefreshSig;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  prevRefreshReg = window.$RefreshReg$;
+  prevRefreshSig = window.$RefreshSig$;
+  window.$RefreshReg$ = RefreshRuntime.getRefreshReg("C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx");
+  window.$RefreshSig$ = RefreshRuntime.createSignatureFunctionForTransform;
+}
+var _s = $RefreshSig$();
+import { Button } from "/src/components/ui/button.tsx";
+import { Input } from "/src/components/ui/input.tsx";
+import { Checkbox } from "/src/components/ui/checkbox.tsx";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage
+} from "/src/components/ui/form.tsx";
+import { useForm } from "/node_modules/.vite/deps/react-hook-form.js?v=86e211bf";
+import { registerDoctor } from "/src/features/auth/api.ts";
+import { useNavigate } from "/node_modules/.vite/deps/react-router-dom.js?v=86e211bf";
+const SignupDoctor = () => {
+  _s();
+  const navigate = useNavigate();
+  const form = useForm({
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      password: "",
+      Cpassword: "",
+      // departmentId:"",
+      // territoryId:"",
+      hospitalId: "",
+      registrationId: "",
+      licenseImageUrl: null,
+      opHours: "",
+      hasOwnClinic: false
+    }
+  });
+  const onSubmit = async (values) => {
+    if (values.password !== values.Cpassword) {
+      alert("Passwords do not match");
+      return;
+    }
+    try {
+      const formData = new FormData();
+      formData.append("name", values.name);
+      formData.append("email", values.email);
+      formData.append("phone", values.phone);
+      formData.append("password", values.password);
+      formData.append("hospitalId", values.hospitalId);
+      formData.append("registrationId", values.registrationId);
+      if (values.licenseImageUrl) formData.append("licenseImageUrl", values.licenseImageUrl);
+      formData.append("opHours", values.opHours);
+      formData.append("hasOwnClinic", String(values.hasOwnClinic));
+      await registerDoctor(formData);
+      alert("Doctor registered successfully🚀");
+      navigate("/login/doctor");
+    } catch (error) {
+      console.error(error);
+      alert(error.response?.data?.message || "Registration failed");
+    }
+  };
+  return /* @__PURE__ */ jsxDEV(Form, { ...form, children: /* @__PURE__ */ jsxDEV("form", { onSubmit: form.handleSubmit(onSubmit), className: "space-y-4", children: [
+    /* @__PURE__ */ jsxDEV("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-4", children: [
+      /* @__PURE__ */ jsxDEV(
+        FormField,
+        {
+          control: form.control,
+          name: "name",
+          render: ({ field }) => /* @__PURE__ */ jsxDEV(FormItem, { children: [
+            /* @__PURE__ */ jsxDEV(FormLabel, { children: "Name" }, void 0, false, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+              lineNumber: 124,
+              columnNumber: 33
+            }, this),
+            /* @__PURE__ */ jsxDEV(FormControl, { children: /* @__PURE__ */ jsxDEV(Input, { placeholder: "Enter your name", ...field }, void 0, false, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+              lineNumber: 126,
+              columnNumber: 37
+            }, this) }, void 0, false, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+              lineNumber: 125,
+              columnNumber: 33
+            }, this),
+            /* @__PURE__ */ jsxDEV(FormMessage, {}, void 0, false, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+              lineNumber: 128,
+              columnNumber: 33
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+            lineNumber: 123,
+            columnNumber: 13
+          }, this)
+        },
+        void 0,
+        false,
+        {
+          fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+          lineNumber: 119,
+          columnNumber: 21
+        },
+        this
+      ),
+      /* @__PURE__ */ jsxDEV(
+        FormField,
+        {
+          control: form.control,
+          name: "email",
+          render: ({ field }) => /* @__PURE__ */ jsxDEV(FormItem, { children: [
+            /* @__PURE__ */ jsxDEV(FormLabel, { children: "Email" }, void 0, false, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+              lineNumber: 138,
+              columnNumber: 33
+            }, this),
+            /* @__PURE__ */ jsxDEV(FormControl, { children: /* @__PURE__ */ jsxDEV(Input, { placeholder: "Enter your email", ...field }, void 0, false, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+              lineNumber: 140,
+              columnNumber: 37
+            }, this) }, void 0, false, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+              lineNumber: 139,
+              columnNumber: 33
+            }, this),
+            /* @__PURE__ */ jsxDEV(FormMessage, {}, void 0, false, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+              lineNumber: 142,
+              columnNumber: 33
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+            lineNumber: 137,
+            columnNumber: 13
+          }, this)
+        },
+        void 0,
+        false,
+        {
+          fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+          lineNumber: 133,
+          columnNumber: 21
+        },
+        this
+      )
+    ] }, void 0, true, {
+      fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+      lineNumber: 117,
+      columnNumber: 17
+    }, this),
+    /* @__PURE__ */ jsxDEV("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-4", children: /* @__PURE__ */ jsxDEV(
+      FormField,
+      {
+        control: form.control,
+        name: "phone",
+        render: ({ field }) => /* @__PURE__ */ jsxDEV(FormItem, { children: [
+          /* @__PURE__ */ jsxDEV(FormLabel, { children: "Phone" }, void 0, false, {
+            fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+            lineNumber: 155,
+            columnNumber: 33
+          }, this),
+          /* @__PURE__ */ jsxDEV(FormControl, { children: /* @__PURE__ */ jsxDEV(Input, { placeholder: "Enter your phone number", ...field }, void 0, false, {
+            fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+            lineNumber: 157,
+            columnNumber: 37
+          }, this) }, void 0, false, {
+            fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+            lineNumber: 156,
+            columnNumber: 33
+          }, this),
+          /* @__PURE__ */ jsxDEV(FormMessage, {}, void 0, false, {
+            fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+            lineNumber: 159,
+            columnNumber: 33
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+          lineNumber: 154,
+          columnNumber: 13
+        }, this)
+      },
+      void 0,
+      false,
+      {
+        fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+        lineNumber: 150,
+        columnNumber: 21
+      },
+      this
+    ) }, void 0, false, {
+      fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+      lineNumber: 149,
+      columnNumber: 17
+    }, this),
+    /* @__PURE__ */ jsxDEV("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-4", children: [
+      /* @__PURE__ */ jsxDEV(
+        FormField,
+        {
+          control: form.control,
+          name: "password",
+          render: ({ field }) => /* @__PURE__ */ jsxDEV(FormItem, { children: [
+            /* @__PURE__ */ jsxDEV(FormLabel, { children: "Password" }, void 0, false, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+              lineNumber: 189,
+              columnNumber: 33
+            }, this),
+            /* @__PURE__ */ jsxDEV(FormControl, { children: /* @__PURE__ */ jsxDEV(Input, { placeholder: "Enter your password", ...field }, void 0, false, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+              lineNumber: 191,
+              columnNumber: 37
+            }, this) }, void 0, false, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+              lineNumber: 190,
+              columnNumber: 33
+            }, this),
+            /* @__PURE__ */ jsxDEV(FormMessage, {}, void 0, false, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+              lineNumber: 193,
+              columnNumber: 33
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+            lineNumber: 188,
+            columnNumber: 13
+          }, this)
+        },
+        void 0,
+        false,
+        {
+          fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+          lineNumber: 184,
+          columnNumber: 21
+        },
+        this
+      ),
+      /* @__PURE__ */ jsxDEV(
+        FormField,
+        {
+          control: form.control,
+          name: "Cpassword",
+          render: ({ field }) => /* @__PURE__ */ jsxDEV(FormItem, { children: [
+            /* @__PURE__ */ jsxDEV(FormLabel, { children: "Comfirm Password" }, void 0, false, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+              lineNumber: 202,
+              columnNumber: 33
+            }, this),
+            /* @__PURE__ */ jsxDEV(FormControl, { children: /* @__PURE__ */ jsxDEV(Input, { placeholder: "Repeat your password", ...field }, void 0, false, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+              lineNumber: 204,
+              columnNumber: 37
+            }, this) }, void 0, false, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+              lineNumber: 203,
+              columnNumber: 33
+            }, this),
+            /* @__PURE__ */ jsxDEV(FormMessage, {}, void 0, false, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+              lineNumber: 206,
+              columnNumber: 33
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+            lineNumber: 201,
+            columnNumber: 13
+          }, this)
+        },
+        void 0,
+        false,
+        {
+          fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+          lineNumber: 197,
+          columnNumber: 21
+        },
+        this
+      )
+    ] }, void 0, true, {
+      fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+      lineNumber: 181,
+      columnNumber: 17
+    }, this),
+    /* @__PURE__ */ jsxDEV("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-3", children: [
+      /* @__PURE__ */ jsxDEV(
+        FormField,
+        {
+          control: form.control,
+          name: "registrationId",
+          render: ({ field }) => /* @__PURE__ */ jsxDEV(FormItem, { children: [
+            /* @__PURE__ */ jsxDEV(FormControl, { children: /* @__PURE__ */ jsxDEV(Input, { placeholder: "Registration number", ...field }, void 0, false, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+              lineNumber: 233,
+              columnNumber: 37
+            }, this) }, void 0, false, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+              lineNumber: 232,
+              columnNumber: 33
+            }, this),
+            /* @__PURE__ */ jsxDEV(FormMessage, {}, void 0, false, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+              lineNumber: 235,
+              columnNumber: 33
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+            lineNumber: 231,
+            columnNumber: 13
+          }, this)
+        },
+        void 0,
+        false,
+        {
+          fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+          lineNumber: 227,
+          columnNumber: 21
+        },
+        this
+      ),
+      /* @__PURE__ */ jsxDEV(
+        FormField,
+        {
+          control: form.control,
+          name: "licenseImageUrl",
+          render: ({ field }) => /* @__PURE__ */ jsxDEV(FormItem, { children: [
+            /* @__PURE__ */ jsxDEV(FormControl, { children: /* @__PURE__ */ jsxDEV("div", { children: [
+              /* @__PURE__ */ jsxDEV(
+                "input",
+                {
+                  id: "liscense-upload",
+                  type: "file",
+                  accept: "image/*",
+                  className: "hidden",
+                  onChange: (e) => {
+                    const file = e.target.files?.[0] || null;
+                    field.onChange(file);
+                  }
+                },
+                void 0,
+                false,
+                {
+                  fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+                  lineNumber: 248,
+                  columnNumber: 41
+                },
+                this
+              ),
+              /* @__PURE__ */ jsxDEV(
+                "label",
+                {
+                  htmlFor: "liscense-upload",
+                  className: "flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 w-fit",
+                  children: [
+                    /* @__PURE__ */ jsxDEV("img", { src: "/ImgAdd.png", alt: "upload", className: "w-5 h-5" }, void 0, false, {
+                      fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+                      lineNumber: 265,
+                      columnNumber: 45
+                    }, this),
+                    /* @__PURE__ */ jsxDEV("span", { children: "License" }, void 0, false, {
+                      fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+                      lineNumber: 266,
+                      columnNumber: 45
+                    }, this)
+                  ]
+                },
+                void 0,
+                true,
+                {
+                  fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+                  lineNumber: 260,
+                  columnNumber: 41
+                },
+                this
+              ),
+              field.value && /* @__PURE__ */ jsxDEV("p", { className: "text-sm mt-1 text-gray-600", children: [
+                "Selected: ",
+                field.value.name
+              ] }, void 0, true, {
+                fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+                lineNumber: 271,
+                columnNumber: 19
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+              lineNumber: 246,
+              columnNumber: 37
+            }, this) }, void 0, false, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+              lineNumber: 245,
+              columnNumber: 33
+            }, this),
+            /* @__PURE__ */ jsxDEV(FormMessage, {}, void 0, false, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+              lineNumber: 277,
+              columnNumber: 33
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+            lineNumber: 244,
+            columnNumber: 13
+          }, this)
+        },
+        void 0,
+        false,
+        {
+          fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+          lineNumber: 240,
+          columnNumber: 21
+        },
+        this
+      )
+    ] }, void 0, true, {
+      fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+      lineNumber: 213,
+      columnNumber: 17
+    }, this),
+    /* @__PURE__ */ jsxDEV("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-4", children: [
+      /* @__PURE__ */ jsxDEV(
+        FormField,
+        {
+          control: form.control,
+          name: "opHours",
+          render: ({ field }) => /* @__PURE__ */ jsxDEV(FormItem, { children: [
+            /* @__PURE__ */ jsxDEV(FormControl, { children: /* @__PURE__ */ jsxDEV(Input, { placeholder: "Choose your op time", ...field }, void 0, false, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+              lineNumber: 291,
+              columnNumber: 37
+            }, this) }, void 0, false, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+              lineNumber: 290,
+              columnNumber: 33
+            }, this),
+            /* @__PURE__ */ jsxDEV(FormMessage, {}, void 0, false, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+              lineNumber: 293,
+              columnNumber: 33
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+            lineNumber: 289,
+            columnNumber: 13
+          }, this)
+        },
+        void 0,
+        false,
+        {
+          fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+          lineNumber: 285,
+          columnNumber: 21
+        },
+        this
+      ),
+      /* @__PURE__ */ jsxDEV(
+        FormField,
+        {
+          control: form.control,
+          name: "hospitalId",
+          render: ({ field }) => /* @__PURE__ */ jsxDEV(FormItem, { children: [
+            /* @__PURE__ */ jsxDEV(FormControl, { children: /* @__PURE__ */ jsxDEV(Input, { placeholder: "Hospital ID", ...field }, void 0, false, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+              lineNumber: 303,
+              columnNumber: 37
+            }, this) }, void 0, false, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+              lineNumber: 302,
+              columnNumber: 33
+            }, this),
+            /* @__PURE__ */ jsxDEV(FormMessage, {}, void 0, false, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+              lineNumber: 305,
+              columnNumber: 33
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+            lineNumber: 301,
+            columnNumber: 13
+          }, this)
+        },
+        void 0,
+        false,
+        {
+          fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+          lineNumber: 297,
+          columnNumber: 27
+        },
+        this
+      )
+    ] }, void 0, true, {
+      fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+      lineNumber: 283,
+      columnNumber: 19
+    }, this),
+    /* @__PURE__ */ jsxDEV(
+      FormField,
+      {
+        control: form.control,
+        name: "hasOwnClinic",
+        render: ({ field }) => /* @__PURE__ */ jsxDEV(FormItem, { className: "flex flex-row items-center space-x-3 space-y-0 rounded-md p-3", children: [
+          /* @__PURE__ */ jsxDEV(FormControl, { children: /* @__PURE__ */ jsxDEV(
+            Checkbox,
+            {
+              checked: field.value,
+              onCheckedChange: field.onChange
+            },
+            void 0,
+            false,
+            {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+              lineNumber: 319,
+              columnNumber: 36
+            },
+            this
+          ) }, void 0, false, {
+            fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+            lineNumber: 318,
+            columnNumber: 33
+          }, this),
+          /* @__PURE__ */ jsxDEV(FormLabel, { className: "text-sm font-normal text-gray-600 hover:text-black", children: "Do you own a clinic?" }, void 0, false, {
+            fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+            lineNumber: 324,
+            columnNumber: 34
+          }, this),
+          /* @__PURE__ */ jsxDEV(FormMessage, {}, void 0, false, {
+            fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+            lineNumber: 325,
+            columnNumber: 33
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+          lineNumber: 316,
+          columnNumber: 11
+        }, this)
+      },
+      void 0,
+      false,
+      {
+        fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+        lineNumber: 312,
+        columnNumber: 25
+      },
+      this
+    ),
+    /* @__PURE__ */ jsxDEV(Button, { type: "submit", className: "w-full bg-[#3fa8e9] hover:bg-[#349cd9]", children: "Register as Doctor" }, void 0, false, {
+      fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+      lineNumber: 330,
+      columnNumber: 17
+    }, this)
+  ] }, void 0, true, {
+    fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+    lineNumber: 115,
+    columnNumber: 13
+  }, this) }, void 0, false, {
+    fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx",
+    lineNumber: 113,
+    columnNumber: 5
+  }, this);
+};
+_s(SignupDoctor, "+sfT3He0U6CIIUGoTpcvTYVpHBE=", false, function() {
+  return [useNavigate, useForm];
+});
+_c = SignupDoctor;
+export default SignupDoctor;
+var _c;
+$RefreshReg$(_c, "SignupDoctor");
+if (import.meta.hot && !inWebWorker) {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+if (import.meta.hot && !inWebWorker) {
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/features/auth/pages/SignupDoctor.tsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+
+//# sourceMappingURL=data:application/json;base64,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QUEsSUFHVix1QkFBQyxVQUFPLE1BQUssVUFBUyxXQUFVLDBDQUEwQyxrQ0FBMUU7QUFBQTtBQUFBO0FBQUE7QUFBQSxXQUVBO0FBQUEsT0F6Tko7QUFBQTtBQUFBO0FBQUE7QUFBQSxTQTJOQSxLQTdOSjtBQUFBO0FBQUE7QUFBQTtBQUFBLFNBOE5BO0FBR1I7QUFBQ2pDLEdBN1JLRCxjQUFZO0FBQUEsVUFDQ0QsYUFFRkYsT0FBTztBQUFBO0FBQUF1QyxLQUhsQnBDO0FBK1JOLGVBQWVBO0FBQWEsSUFBQW9DO0FBQUFDLGFBQUFELElBQUEiLCJuYW1lcyI6WyJCdXR0b24iLCJJbnB1dCIsIkNoZWNrYm94IiwiRm9ybSIsIkZvcm1GaWVsZCIsIkZvcm1JdGVtIiwiRm9ybUxhYmVsIiwiRm9ybUNvbnRyb2wiLCJGb3JtTWVzc2FnZSIsInVzZUZvcm0iLCJyZWdpc3RlckRvY3RvciIsInVzZU5hdmlnYXRlIiwiU2lnbnVwRG9jdG9yIiwiX3MiLCJuYXZpZ2F0ZSIsImZvcm0iLCJkZWZhdWx0VmFsdWVzIiwibmFtZSIsImVtYWlsIiwicGhvbmUiLCJwYXNzd29yZCIsIkNwYXNzd29yZCIsImhvc3BpdGFsSWQiLCJyZWdpc3RyYXRpb25JZCIsImxpY2Vuc2VJbWFnZVVybCIsIm9wSG91cnMiLCJoYXNPd25DbGluaWMiLCJvblN1Ym1pdCIsInZhbHVlcyIsImFsZXJ0IiwiZm9ybURhdGEiLCJGb3JtRGF0YSIsImFwcGVuZCIsIlN0cmluZyIsImVycm9yIiwiY29uc29sZSIsInJlc3BvbnNlIiwiZGF0YSIsIm1lc3NhZ2UiLCJoYW5kbGVTdWJtaXQiLCJjb250cm9sIiwiZmllbGQiLCJlIiwiZmlsZSIsInRhcmdldCIsImZpbGVzIiwib25DaGFuZ2UiLCJ2YWx1ZSIsIl9jIiwiJFJlZnJlc2hSZWckIl0sImlnbm9yZUxpc3QiOltdLCJzb3VyY2VzIjpbIlNpZ251cERvY3Rvci50c3giXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFJlYWN0IGZyb20gXCJyZWFjdFwiO1xyXG5pbXBvcnQgeyBCdXR0b24gfSBmcm9tIFwiQC9jb21wb25lbnRzL3VpL2J1dHRvblwiO1xyXG5pbXBvcnQgeyBJbnB1dCB9IGZyb20gXCJAL2NvbXBvbmVudHMvdWkvaW5wdXRcIjtcclxuaW1wb3J0IHsgQ2hlY2tib3ggfSBmcm9tIFwiQC9jb21wb25lbnRzL3VpL2NoZWNrYm94XCI7XHJcblxyXG5pbXBvcnQge1xyXG4gICAgRm9ybSxcclxuICAgIEZvcm1GaWVsZCxcclxuICAgIEZvcm1JdGVtLFxyXG4gICAgRm9ybUxhYmVsLFxyXG4gICAgRm9ybUNvbnRyb2wsXHJcbiAgICBGb3JtTWVzc2FnZSxcclxufSBmcm9tIFwiQC9jb21wb25lbnRzL3VpL2Zvcm1cIjtcclxuaW1wb3J0IHsgdXNlRm9ybSB9IGZyb20gXCJyZWFjdC1ob29rLWZvcm1cIjtcclxuaW1wb3J0IHsgcmVnaXN0ZXJEb2N0b3IgfSBmcm9tIFwiLi4vYXBpXCI7XHJcbmltcG9ydCB7IHVzZU5hdmlnYXRlIH0gZnJvbSBcInJlYWN0LXJvdXRlci1kb21cIjtcclxuXHJcbnR5cGUgRG9jdG9yUmVnaXN0ZXJWYWx1ZXMgPSB7XHJcbiAgICBuYW1lOiBzdHJpbmcsXHJcbiAgICBlbWFpbDogc3RyaW5nLFxyXG4gICAgcGhvbmU6IHN0cmluZyxcclxuICAgIHBhc3N3b3JkOiBzdHJpbmcsXHJcbiAgICBDcGFzc3dvcmQ6IHN0cmluZyxcclxuICAgIC8vIGRlcGFydG1lbnRJZDogc3RyaW5nLFxyXG4gICAgLy8gdGVycml0b3J5SWQ6IHN0cmluZyxcclxuICAgIGhvc3BpdGFsSWQ6IHN0cmluZyxcclxuICAgIHJlZ2lzdHJhdGlvbklkOiBzdHJpbmcsXHJcbiAgICBsaWNlbnNlSW1hZ2VVcmw6IEZpbGUgfG51bGwsXHJcbiAgICBvcEhvdXJzOiBzdHJpbmcsXHJcbiAgICBoYXNPd25DbGluaWM6IGJvb2xlYW5cclxufVxyXG5cclxuXHJcbmNvbnN0IFNpZ251cERvY3RvciA9ICgpID0+IHtcclxuICAgIGNvbnN0IG5hdmlnYXRlPXVzZU5hdmlnYXRlKClcclxuXHJcbiAgICBjb25zdCBmb3JtID0gdXNlRm9ybTxEb2N0b3JSZWdpc3RlclZhbHVlcz4oe1xyXG4gICAgICAgIGRlZmF1bHRWYWx1ZXM6IHsgXHJcbiAgICAgICAgICAgIG5hbWU6IFwiXCIsXHJcbiAgICAgICAgICAgIGVtYWlsOiBcIlwiLFxyXG4gICAgICAgICAgICBwaG9uZTogXCJcIixcclxuICAgICAgICAgICAgcGFzc3dvcmQ6IFwiXCIsIFxyXG4gICAgICAgICAgICBDcGFzc3dvcmQ6XCJcIixcclxuICAgICAgICAgICAgLy8gZGVwYXJ0bWVudElkOlwiXCIsXHJcbiAgICAgICAgICAgIC8vIHRlcnJpdG9yeUlkOlwiXCIsXHJcbiAgICAgICAgICAgIGhvc3BpdGFsSWQ6XCJcIixcclxuICAgICAgICAgICAgcmVnaXN0cmF0aW9uSWQ6XCJcIixcclxuICAgICAgICAgICAgbGljZW5zZUltYWdlVXJsOm51bGwsXHJcbiAgICAgICAgICAgIG9wSG91cnM6XCJcIixcclxuICAgICAgICAgICAgaGFzT3duQ2xpbmljOmZhbHNlXHJcbiAgICAgICAgIFxyXG4gICAgICAgIFxyXG4gICAgICAgIH0sXHJcbiAgICB9KTtcclxuXHJcbiAgICBjb25zdCBvblN1Ym1pdCA9YXN5bmMgKHZhbHVlczogRG9jdG9yUmVnaXN0ZXJWYWx1ZXMpID0+IHtcclxuXHJcblxyXG4gICAgICAgIGlmKHZhbHVlcy5wYXNzd29yZCAhPT12YWx1ZXMuQ3Bhc3N3b3JkKXtcclxuICAgICAgICAgICAgYWxlcnQoXCJQYXNzd29yZHMgZG8gbm90IG1hdGNoXCIpO1xyXG4gICAgICAgICAgICByZXR1cm47XHJcbiAgICAgICAgfVxyXG5cclxuICAgICAgICB0cnkge1xyXG4gICAgICAgICAgICBjb25zdCBmb3JtRGF0YT1uZXcgRm9ybURhdGEoKTtcclxuICAgICAgICAgICAgZm9ybURhdGEuYXBwZW5kKFwibmFtZVwiLHZhbHVlcy5uYW1lKTtcclxuICAgICAgICAgICAgZm9ybURhdGEuYXBwZW5kKFwiZW1haWxcIix2YWx1ZXMuZW1haWwpO1xyXG4gICAgICAgICAgICBmb3JtRGF0YS5hcHBlbmQoXCJwaG9uZVwiLHZhbHVlcy5waG9uZSk7XHJcbiAgICAgICAgICAgIGZvcm1EYXRhLmFwcGVuZChcInBhc3N3b3JkXCIsdmFsdWVzLnBhc3N3b3JkKTtcclxuICAgICAgICAgICAgLy8gZm9ybURhdGEuYXBwZW5kKFwiZGVwYXJ0bWVudElkXCIsdmFsdWVzLmRlcGFydG1lbnRJZCk7XHJcbiAgICAgICAgICAgIC8vIGZvcm1EYXRhLmFwcGVuZChcInRlcnJpdG9yeUlkXCIsdmFsdWVzLnRlcnJpdG9yeUlkKTtcclxuICAgICAgICAgICAgZm9ybURhdGEuYXBwZW5kKFwiaG9zcGl0YWxJZFwiLHZhbHVlcy5ob3NwaXRhbElkKTtcclxuICAgICAgICAgICAgZm9ybURhdGEuYXBwZW5kKFwicmVnaXN0cmF0aW9uSWRcIix2YWx1ZXMucmVnaXN0cmF0aW9uSWQpO1xyXG4gICAgICAgICAgICBpZih2YWx1ZXMubGljZW5zZUltYWdlVXJsKSBmb3JtRGF0YS5hcHBlbmQoXCJsaWNlbnNlSW1hZ2VVcmxcIix2YWx1ZXMubGljZW5zZUltYWdlVXJsKTtcclxuICAgICAgICAgICAgZm9ybURhdGEuYXBwZW5kKFwib3BIb3Vyc1wiLHZhbHVlcy5vcEhvdXJzKTtcclxuICAgICAgICAgICAgZm9ybURhdGEuYXBwZW5kKFwiaGFzT3duQ2xpbmljXCIsU3RyaW5nKHZhbHVlcy5oYXNPd25DbGluaWMpKTtcclxuICAgICAgICAgICAgXHJcbiAgICAgICAgICAgXHJcbiAgICAgICAgICAgIGF3YWl0IHJlZ2lzdGVyRG9jdG9yKGZvcm1EYXRhKTtcclxuICAgICAgICAgICAgYWxlcnQgKCBcIkRvY3RvciByZWdpc3RlcmVkIHN1Y2Nlc3NmdWxsefCfmoBcIik7XHJcbiAgICAgICAgICAgIFxyXG4gICAgICAgICAgICBuYXZpZ2F0ZShcIi9sb2dpbi9kb2N0b3JcIik7XHJcblxyXG4gICAgICAgIH0gY2F0Y2ggKGVycm9yIDogYW55KSB7XHJcbiAgICAgICAgICAgIGNvbnNvbGUuZXJyb3IoZXJyb3IpO1xyXG4gICAgICAgICAgICBhbGVydChlcnJvci5yZXNwb25zZT8uZGF0YT8ubWVzc2FnZSB8fCBcIlJlZ2lzdHJhdGlvbiBmYWlsZWRcIik7XHJcbiAgICAgICAgfVxyXG5cclxuXHJcbiAgICB9XHJcblxyXG4gICAgcmV0dXJuIChcclxuXHJcbiAgICAgICAgPEZvcm0gey4uLmZvcm19PlxyXG5cclxuICAgICAgICAgICAgPGZvcm0gb25TdWJtaXQ9e2Zvcm0uaGFuZGxlU3VibWl0KG9uU3VibWl0KX0gY2xhc3NOYW1lPVwic3BhY2UteS00XCI+XHJcblxyXG4gICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJncmlkIGdyaWQtY29scy0xIG1kOmdyaWQtY29scy0yIGdhcC00XCI+XHJcblxyXG4gICAgICAgICAgICAgICAgICAgIDxGb3JtRmllbGRcclxuICAgICAgICAgICAgICAgICAgICAgICAgY29udHJvbD17Zm9ybS5jb250cm9sfVxyXG4gICAgICAgICAgICAgICAgICAgICAgICBuYW1lPVwibmFtZVwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgIHJlbmRlcj17KHsgZmllbGQgfSkgPT4gKFxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPEZvcm1JdGVtPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxGb3JtTGFiZWw+TmFtZTwvRm9ybUxhYmVsPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxGb3JtQ29udHJvbD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPElucHV0IHBsYWNlaG9sZGVyPVwiRW50ZXIgeW91ciBuYW1lXCIgey4uLmZpZWxkfSAvPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvRm9ybUNvbnRyb2w+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPEZvcm1NZXNzYWdlIC8+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L0Zvcm1JdGVtPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICApfVxyXG4gICAgICAgICAgICAgICAgICAgIC8+XHJcblxyXG4gICAgICAgICAgICAgICAgICAgIDxGb3JtRmllbGRcclxuICAgICAgICAgICAgICAgICAgICAgICAgY29udHJvbD17Zm9ybS5jb250cm9sfVxyXG4gICAgICAgICAgICAgICAgICAgICAgICBuYW1lPVwiZW1haWxcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICByZW5kZXI9eyh7IGZpZWxkIH0pID0+IChcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxGb3JtSXRlbT5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8Rm9ybUxhYmVsPkVtYWlsPC9Gb3JtTGFiZWw+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPEZvcm1Db250cm9sPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8SW5wdXQgcGxhY2Vob2xkZXI9XCJFbnRlciB5b3VyIGVtYWlsXCIgey4uLmZpZWxkfSAvPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvRm9ybUNvbnRyb2w+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPEZvcm1NZXNzYWdlIC8+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L0Zvcm1JdGVtPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICApfVxyXG4gICAgICAgICAgICAgICAgICAgIC8+XHJcblxyXG4gICAgICAgICAgICAgICAgPC9kaXY+XHJcblxyXG4gICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJncmlkIGdyaWQtY29scy0xIG1kOmdyaWQtY29scy0yIGdhcC00XCI+XHJcbiAgICAgICAgICAgICAgICAgICAgPEZvcm1GaWVsZFxyXG4gICAgICAgICAgICAgICAgICAgICAgICBjb250cm9sPXtmb3JtLmNvbnRyb2x9XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIG5hbWU9XCJwaG9uZVwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgIHJlbmRlcj17KHsgZmllbGQgfSkgPT4gKFxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPEZvcm1JdGVtPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxGb3JtTGFiZWw+UGhvbmU8L0Zvcm1MYWJlbD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8Rm9ybUNvbnRyb2w+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxJbnB1dCBwbGFjZWhvbGRlcj1cIkVudGVyIHlvdXIgcGhvbmUgbnVtYmVyXCIgey4uLmZpZWxkfSAvPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvRm9ybUNvbnRyb2w+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPEZvcm1NZXNzYWdlIC8+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L0Zvcm1JdGVtPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICApfVxyXG4gICAgICAgICAgICAgICAgICAgIC8+XHJcblxyXG4gICAgICAgICAgICAgICAgICAgIHsvKiA8Rm9ybUZpZWxkXHJcbiAgICAgICAgICAgICAgICAgICAgICAgIGNvbnRyb2w9e2Zvcm0uY29udHJvbH1cclxuICAgICAgICAgICAgICAgICAgICAgICAgbmFtZT1cImRlcGFydG1lbnRJZFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgIHJlbmRlcj17KHsgZmllbGQgfSkgPT4gKFxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPEZvcm1JdGVtPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxGb3JtTGFiZWw+RGVwYXJ0bWVudDwvRm9ybUxhYmVsPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxGb3JtQ29udHJvbD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPElucHV0IHBsYWNlaG9sZGVyPVwiRGVwYXJ0bWVudFwiIHsuLi5maWVsZH0gLz5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L0Zvcm1Db250cm9sPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxGb3JtTWVzc2FnZSAvPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPC9Gb3JtSXRlbT5cclxuICAgICAgICAgICAgICAgICAgICAgICAgKX1cclxuICAgICAgICAgICAgICAgICAgICAvPiAqL31cclxuXHJcblxyXG4gICAgICAgICAgICAgICAgPC9kaXY+XHJcblxyXG4gICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJncmlkIGdyaWQtY29scy0xIG1kOmdyaWQtY29scy0yIGdhcC00XCI+XHJcblxyXG5cclxuICAgICAgICAgICAgICAgICAgICA8Rm9ybUZpZWxkXHJcbiAgICAgICAgICAgICAgICAgICAgICAgIGNvbnRyb2w9e2Zvcm0uY29udHJvbH1cclxuICAgICAgICAgICAgICAgICAgICAgICAgbmFtZT1cInBhc3N3b3JkXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgcmVuZGVyPXsoeyBmaWVsZCB9KSA9PiAoXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8Rm9ybUl0ZW0+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPEZvcm1MYWJlbD5QYXNzd29yZDwvRm9ybUxhYmVsPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxGb3JtQ29udHJvbD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPElucHV0IHBsYWNlaG9sZGVyPVwiRW50ZXIgeW91ciBwYXNzd29yZFwiIHsuLi5maWVsZH0gLz5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L0Zvcm1Db250cm9sPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxGb3JtTWVzc2FnZSAvPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPC9Gb3JtSXRlbT5cclxuICAgICAgICAgICAgICAgICAgICAgICAgKX1cclxuICAgICAgICAgICAgICAgICAgICAvPlxyXG4gICAgICAgICAgICAgICAgICAgIDxGb3JtRmllbGRcclxuICAgICAgICAgICAgICAgICAgICAgICAgY29udHJvbD17Zm9ybS5jb250cm9sfVxyXG4gICAgICAgICAgICAgICAgICAgICAgICBuYW1lPVwiQ3Bhc3N3b3JkXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgcmVuZGVyPXsoeyBmaWVsZCB9KSA9PiAoXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8Rm9ybUl0ZW0+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPEZvcm1MYWJlbD5Db21maXJtIFBhc3N3b3JkPC9Gb3JtTGFiZWw+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPEZvcm1Db250cm9sPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8SW5wdXQgcGxhY2Vob2xkZXI9XCJSZXBlYXQgeW91ciBwYXNzd29yZFwiIHsuLi5maWVsZH0gLz5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L0Zvcm1Db250cm9sPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxGb3JtTWVzc2FnZSAvPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPC9Gb3JtSXRlbT5cclxuICAgICAgICAgICAgICAgICAgICAgICAgKX1cclxuICAgICAgICAgICAgICAgICAgICAvPlxyXG5cclxuICAgICAgICAgICAgICAgIDwvZGl2PlxyXG5cclxuICAgICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZ3JpZCBncmlkLWNvbHMtMSBtZDpncmlkLWNvbHMtMyBnYXAtM1wiPlxyXG4gICAgICAgICAgICAgICAgICAgIHsvKiA8Rm9ybUZpZWxkXHJcbiAgICAgICAgICAgICAgICAgICAgICAgIGNvbnRyb2w9e2Zvcm0uY29udHJvbH1cclxuICAgICAgICAgICAgICAgICAgICAgICAgbmFtZT1cInRlcnJpdG9yeUlkXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgcmVuZGVyPXsoeyBmaWVsZCB9KSA9PiAoXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8Rm9ybUl0ZW0+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPEZvcm1Db250cm9sPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8SW5wdXQgcGxhY2Vob2xkZXI9XCJUZXJyaXRvcnlcIiB7Li4uZmllbGR9IC8+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPC9Gb3JtQ29udHJvbD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8Rm9ybU1lc3NhZ2UgLz5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvRm9ybUl0ZW0+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICl9XHJcbiAgICAgICAgICAgICAgICAgICAgLz4gKi99XHJcblxyXG4gICAgICAgICAgICAgICAgICAgIDxGb3JtRmllbGRcclxuICAgICAgICAgICAgICAgICAgICAgICAgY29udHJvbD17Zm9ybS5jb250cm9sfVxyXG4gICAgICAgICAgICAgICAgICAgICAgICBuYW1lPVwicmVnaXN0cmF0aW9uSWRcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICByZW5kZXI9eyh7IGZpZWxkIH0pID0+IChcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxGb3JtSXRlbT5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8Rm9ybUNvbnRyb2w+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxJbnB1dCBwbGFjZWhvbGRlcj1cIlJlZ2lzdHJhdGlvbiBudW1iZXJcIiB7Li4uZmllbGR9IC8+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPC9Gb3JtQ29udHJvbD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8Rm9ybU1lc3NhZ2UgLz5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvRm9ybUl0ZW0+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICl9XHJcbiAgICAgICAgICAgICAgICAgICAgLz5cclxuXHJcbiAgICAgICAgICAgICAgICAgICAgPEZvcm1GaWVsZFxyXG4gICAgICAgICAgICAgICAgICAgICAgICBjb250cm9sPXtmb3JtLmNvbnRyb2x9XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIG5hbWU9XCJsaWNlbnNlSW1hZ2VVcmxcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICByZW5kZXI9eyh7IGZpZWxkIH0pID0+IChcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxGb3JtSXRlbT5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8Rm9ybUNvbnRyb2w+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxkaXY+XHJcblxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPGlucHV0XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaWQ9XCJsaXNjZW5zZS11cGxvYWRcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHR5cGU9XCJmaWxlXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBhY2NlcHQ9XCJpbWFnZS8qXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbGFzc05hbWU9XCJoaWRkZW5cIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG9uQ2hhbmdlPXsoZSkgPT4ge1xyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb25zdCBmaWxlID0gZS50YXJnZXQuZmlsZXM/LlswXSB8fCBudWxsO1xyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBmaWVsZC5vbkNoYW5nZShmaWxlKTtcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9fVxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLz5cclxuXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxsYWJlbFxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGh0bWxGb3I9XCJsaXNjZW5zZS11cGxvYWRcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsYXNzTmFtZT1cImZsZXggaXRlbXMtY2VudGVyIGdhcC0yIHB4LTQgcHktMiBib3JkZXIgYm9yZGVyLWdyYXktMzAwIHJvdW5kZWQtbGcgY3Vyc29yLXBvaW50ZXIgaG92ZXI6YmctZ3JheS01MCB3LWZpdFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA+XHJcbiAgICAgICAgICAgICAgICAgICAgXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPGltZyBzcmM9XCIvSW1nQWRkLnBuZ1wiIGFsdD1cInVwbG9hZFwiIGNsYXNzTmFtZT1cInctNSBoLTVcIiAvPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxzcGFuPkxpY2Vuc2U8L3NwYW4+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L2xhYmVsPlxyXG5cclxuICAgICAgICAgXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB7ZmllbGQudmFsdWUgJiYgKFxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cInRleHQtc20gbXQtMSB0ZXh0LWdyYXktNjAwXCI+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFNlbGVjdGVkOiB7ZmllbGQudmFsdWUubmFtZX1cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L3A+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICApfVxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L0Zvcm1Db250cm9sPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxGb3JtTWVzc2FnZSAvPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPC9Gb3JtSXRlbT5cclxuICAgICAgICAgICAgICAgICAgICAgICAgKX1cclxuICAgICAgICAgICAgICAgICAgICAvPlxyXG5cclxuICAgICAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImdyaWQgZ3JpZC1jb2xzLTEgbWQ6Z3JpZC1jb2xzLTIgZ2FwLTRcIj5cclxuICAgICAgICAgICAgICAgIFxyXG4gICAgICAgICAgICAgICAgICAgIDxGb3JtRmllbGRcclxuICAgICAgICAgICAgICAgICAgICAgICAgY29udHJvbD17Zm9ybS5jb250cm9sfVxyXG4gICAgICAgICAgICAgICAgICAgICAgICBuYW1lPVwib3BIb3Vyc1wiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgIHJlbmRlcj17KHsgZmllbGQgfSkgPT4gKFxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPEZvcm1JdGVtPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxGb3JtQ29udHJvbD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPElucHV0IHBsYWNlaG9sZGVyPVwiQ2hvb3NlIHlvdXIgb3AgdGltZVwiIHsuLi5maWVsZH0gLz5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L0Zvcm1Db250cm9sPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxGb3JtTWVzc2FnZSAvPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPC9Gb3JtSXRlbT5cclxuICAgICAgICAgICAgICAgICAgICAgICAgKX1cclxuICAgICAgICAgICAgICAgICAgICAvPiAgIFxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgIDxGb3JtRmllbGRcclxuICAgICAgICAgICAgICAgICAgICAgICAgY29udHJvbD17Zm9ybS5jb250cm9sfVxyXG4gICAgICAgICAgICAgICAgICAgICAgICBuYW1lPVwiaG9zcGl0YWxJZFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgIHJlbmRlcj17KHsgZmllbGQgfSkgPT4gKFxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPEZvcm1JdGVtPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxGb3JtQ29udHJvbD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPElucHV0IHBsYWNlaG9sZGVyPVwiSG9zcGl0YWwgSURcIiB7Li4uZmllbGR9IC8+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPC9Gb3JtQ29udHJvbD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8Rm9ybU1lc3NhZ2UgLz5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvRm9ybUl0ZW0+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICl9XHJcbiAgICAgICAgICAgICAgICAgICAgLz4gICBcclxuICAgICAgICAgICAgICAgICAgICAgICAgXHJcblxyXG4gICAgICAgICAgICAgICAgICAgIDwvZGl2PiAgXHJcbiAgICAgICAgICAgICAgICAgICAgICAgIDxGb3JtRmllbGRcclxuICAgICAgICAgICAgICAgICAgICAgICAgY29udHJvbD17Zm9ybS5jb250cm9sfVxyXG4gICAgICAgICAgICAgICAgICAgICAgICBuYW1lPVwiaGFzT3duQ2xpbmljXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgcmVuZGVyPXsoeyBmaWVsZCB9KSA9PiAoXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8Rm9ybUl0ZW0gY2xhc3NOYW1lPVwiZmxleCBmbGV4LXJvdyBpdGVtcy1jZW50ZXIgc3BhY2UteC0zIHNwYWNlLXktMCByb3VuZGVkLW1kIHAtM1wiPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPEZvcm1Db250cm9sPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxDaGVja2JveCBcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjaGVja2VkID17ZmllbGQudmFsdWV9XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgb25DaGVja2VkQ2hhbmdlID17ZmllbGQub25DaGFuZ2V9XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLz5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L0Zvcm1Db250cm9sPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8Rm9ybUxhYmVsIGNsYXNzTmFtZT1cInRleHQtc20gZm9udC1ub3JtYWwgdGV4dC1ncmF5LTYwMCBob3Zlcjp0ZXh0LWJsYWNrXCI+RG8geW91IG93biBhIGNsaW5pYz88L0Zvcm1MYWJlbD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8Rm9ybU1lc3NhZ2UgLz5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvRm9ybUl0ZW0+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICl9XHJcbiAgICAgICAgICAgICAgICAgICAgLz4gICBcclxuXHJcbiAgICAgICAgICAgICAgICA8QnV0dG9uIHR5cGU9XCJzdWJtaXRcIiBjbGFzc05hbWU9XCJ3LWZ1bGwgYmctWyMzZmE4ZTldIGhvdmVyOmJnLVsjMzQ5Y2Q5XVwiID5cclxuICAgICAgICAgICAgICAgICAgICBSZWdpc3RlciBhcyBEb2N0b3JcclxuICAgICAgICAgICAgICAgIDwvQnV0dG9uPlxyXG5cclxuICAgICAgICAgICAgPC9mb3JtPlxyXG4gICAgICAgIDwvRm9ybT5cclxuXHJcbiAgICApXHJcbn1cclxuXHJcbmV4cG9ydCBkZWZhdWx0IFNpZ251cERvY3RvcjtcclxuIl0sImZpbGUiOiJDOi9Vc2Vycy9OaXlhcy9PbmVEcml2ZS9EZXNrdG9wL01lZE1hdGUvRnJvbnRlbmQvc3JjL2ZlYXR1cmVzL2F1dGgvcGFnZXMvU2lnbnVwRG9jdG9yLnRzeCJ9

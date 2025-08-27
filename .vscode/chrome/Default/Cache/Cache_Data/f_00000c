@@ -1,0 +1,249 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/example-form.tsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=86e211bf"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+let prevRefreshReg;
+let prevRefreshSig;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  prevRefreshReg = window.$RefreshReg$;
+  prevRefreshSig = window.$RefreshSig$;
+  window.$RefreshReg$ = RefreshRuntime.getRefreshReg("C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/example-form.tsx");
+  window.$RefreshSig$ = RefreshRuntime.createSignatureFunctionForTransform;
+}
+"use client";
+var _s = $RefreshSig$();
+import { useForm } from "/node_modules/.vite/deps/react-hook-form.js?v=86e211bf";
+import { Card, CardContent, CardHeader, CardTitle } from "/src/components/ui/card.tsx";
+import { Input } from "/src/components/ui/input.tsx";
+import { Button } from "/src/components/ui/button.tsx";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage
+} from "/src/components/ui/form.tsx";
+export default function ExampleForm({ onSubmit, onGoogleLogin }) {
+  _s();
+  const form = useForm({
+    defaultValues: {
+      email: "",
+      password: ""
+    }
+  });
+  return /* @__PURE__ */ jsxDEV(Card, { className: "w-[400px] shadow-lg", children: [
+    /* @__PURE__ */ jsxDEV(CardHeader, { children: /* @__PURE__ */ jsxDEV(CardTitle, { className: "text-center", children: "Login" }, void 0, false, {
+      fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/example-form.tsx",
+      lineNumber: 56,
+      columnNumber: 9
+    }, this) }, void 0, false, {
+      fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/example-form.tsx",
+      lineNumber: 55,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV(CardContent, { children: [
+      /* @__PURE__ */ jsxDEV(Form, { ...form, children: /* @__PURE__ */ jsxDEV("form", { onSubmit: form.handleSubmit(onSubmit), className: "space-y-4", children: [
+        /* @__PURE__ */ jsxDEV(
+          FormField,
+          {
+            control: form.control,
+            name: "email",
+            render: ({ field }) => /* @__PURE__ */ jsxDEV(FormItem, { children: [
+              /* @__PURE__ */ jsxDEV(FormLabel, { children: "Email" }, void 0, false, {
+                fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/example-form.tsx",
+                lineNumber: 67,
+                columnNumber: 19
+              }, this),
+              /* @__PURE__ */ jsxDEV(FormControl, { children: /* @__PURE__ */ jsxDEV(Input, { placeholder: "Enter your email", ...field }, void 0, false, {
+                fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/example-form.tsx",
+                lineNumber: 69,
+                columnNumber: 21
+              }, this) }, void 0, false, {
+                fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/example-form.tsx",
+                lineNumber: 68,
+                columnNumber: 19
+              }, this),
+              /* @__PURE__ */ jsxDEV(FormMessage, {}, void 0, false, {
+                fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/example-form.tsx",
+                lineNumber: 71,
+                columnNumber: 19
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/example-form.tsx",
+              lineNumber: 66,
+              columnNumber: 15
+            }, this)
+          },
+          void 0,
+          false,
+          {
+            fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/example-form.tsx",
+            lineNumber: 62,
+            columnNumber: 13
+          },
+          this
+        ),
+        /* @__PURE__ */ jsxDEV(
+          FormField,
+          {
+            control: form.control,
+            name: "password",
+            render: ({ field }) => /* @__PURE__ */ jsxDEV(FormItem, { children: [
+              /* @__PURE__ */ jsxDEV(FormLabel, { children: "Password" }, void 0, false, {
+                fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/example-form.tsx",
+                lineNumber: 82,
+                columnNumber: 19
+              }, this),
+              /* @__PURE__ */ jsxDEV(FormControl, { children: /* @__PURE__ */ jsxDEV(Input, { type: "password", placeholder: "********", ...field }, void 0, false, {
+                fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/example-form.tsx",
+                lineNumber: 84,
+                columnNumber: 21
+              }, this) }, void 0, false, {
+                fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/example-form.tsx",
+                lineNumber: 83,
+                columnNumber: 19
+              }, this),
+              /* @__PURE__ */ jsxDEV(FormMessage, {}, void 0, false, {
+                fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/example-form.tsx",
+                lineNumber: 86,
+                columnNumber: 19
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/example-form.tsx",
+              lineNumber: 81,
+              columnNumber: 15
+            }, this)
+          },
+          void 0,
+          false,
+          {
+            fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/example-form.tsx",
+            lineNumber: 77,
+            columnNumber: 13
+          },
+          this
+        ),
+        /* @__PURE__ */ jsxDEV(
+          Button,
+          {
+            type: "submit",
+            className: "w-full bg-[#3fa8e9] hover:bg-[#349cd9] text-white",
+            children: "Login"
+          },
+          void 0,
+          false,
+          {
+            fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/example-form.tsx",
+            lineNumber: 92,
+            columnNumber: 13
+          },
+          this
+        )
+      ] }, void 0, true, {
+        fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/example-form.tsx",
+        lineNumber: 60,
+        columnNumber: 11
+      }, this) }, void 0, false, {
+        fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/example-form.tsx",
+        lineNumber: 59,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "flex items-center my-4", children: [
+        /* @__PURE__ */ jsxDEV("div", { className: "flex-grow border-t border-gray-300" }, void 0, false, {
+          fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/example-form.tsx",
+          lineNumber: 103,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("span", { className: "mx-2 text-gray-500 text-sm", children: "OR" }, void 0, false, {
+          fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/example-form.tsx",
+          lineNumber: 104,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "flex-grow border-t border-gray-300" }, void 0, false, {
+          fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/example-form.tsx",
+          lineNumber: 105,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/example-form.tsx",
+        lineNumber: 102,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV(
+        Button,
+        {
+          type: "button",
+          variant: "outline",
+          className: "w-full flex items-center justify-center space-x-2",
+          onClick: onGoogleLogin,
+          children: [
+            /* @__PURE__ */ jsxDEV(
+              "img",
+              {
+                src: "https://png.pngtree.com/png-clipart/20230916/original/pngtree-google-logo-vector-png-image_12256710.png",
+                alt: "Google",
+                className: "w-5 h-5"
+              },
+              void 0,
+              false,
+              {
+                fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/example-form.tsx",
+                lineNumber: 115,
+                columnNumber: 11
+              },
+              this
+            ),
+            /* @__PURE__ */ jsxDEV("span", { children: "Continue with Google" }, void 0, false, {
+              fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/example-form.tsx",
+              lineNumber: 120,
+              columnNumber: 11
+            }, this)
+          ]
+        },
+        void 0,
+        true,
+        {
+          fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/example-form.tsx",
+          lineNumber: 109,
+          columnNumber: 9
+        },
+        this
+      )
+    ] }, void 0, true, {
+      fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/example-form.tsx",
+      lineNumber: 58,
+      columnNumber: 7
+    }, this)
+  ] }, void 0, true, {
+    fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/example-form.tsx",
+    lineNumber: 54,
+    columnNumber: 5
+  }, this);
+}
+_s(ExampleForm, "woqMTX6igxsX6/9vX4dQZlxR7yY=", false, function() {
+  return [useForm];
+});
+_c = ExampleForm;
+var _c;
+$RefreshReg$(_c, "ExampleForm");
+if (import.meta.hot && !inWebWorker) {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+if (import.meta.hot && !inWebWorker) {
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/example-form.tsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/example-form.tsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+
+//# sourceMappingURL=data:application/json;base64,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QUFBO0FBQUE7QUFBQTtBQUFBLGVBQStDO0FBQUEsUUFDL0MsdUJBQUMsU0FBSSxXQUFVLHdDQUFmO0FBQUE7QUFBQTtBQUFBO0FBQUEsZUFBb0Q7QUFBQSxXQUh0RDtBQUFBO0FBQUE7QUFBQTtBQUFBLGFBSUE7QUFBQSxNQUdBO0FBQUEsUUFBQztBQUFBO0FBQUEsVUFDQyxNQUFLO0FBQUEsVUFDTCxTQUFRO0FBQUEsVUFDUixXQUFVO0FBQUEsVUFDVixTQUFTUDtBQUFBQSxVQUVUO0FBQUE7QUFBQSxjQUFDO0FBQUE7QUFBQSxnQkFDQyxLQUFJO0FBQUEsZ0JBQ0osS0FBSTtBQUFBLGdCQUNKLFdBQVU7QUFBQTtBQUFBLGNBSFo7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBLFlBR3FCO0FBQUEsWUFFckIsdUJBQUMsVUFBSyxvQ0FBTjtBQUFBO0FBQUE7QUFBQTtBQUFBLG1CQUEwQjtBQUFBO0FBQUE7QUFBQSxRQVg1QjtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUEsTUFZQTtBQUFBLFNBL0RGO0FBQUE7QUFBQTtBQUFBO0FBQUEsV0FnRUE7QUFBQSxPQXBFRjtBQUFBO0FBQUE7QUFBQTtBQUFBLFNBcUVBO0FBRUo7QUFBQ2pCLEdBaEZ1QmUsYUFBVztBQUFBLFVBQ3BCYixPQUFPO0FBQUE7QUFBQXVCLEtBREVWO0FBQVcsSUFBQVU7QUFBQUMsYUFBQUQsSUFBQSIsIm5hbWVzIjpbIl9zIiwiJFJlZnJlc2hTaWckIiwidXNlRm9ybSIsIkNhcmQiLCJDYXJkQ29udGVudCIsIkNhcmRIZWFkZXIiLCJDYXJkVGl0bGUiLCJJbnB1dCIsIkJ1dHRvbiIsIkZvcm0iLCJGb3JtRmllbGQiLCJGb3JtSXRlbSIsIkZvcm1MYWJlbCIsIkZvcm1Db250cm9sIiwiRm9ybU1lc3NhZ2UiLCJFeGFtcGxlRm9ybSIsIm9uU3VibWl0Iiwib25Hb29nbGVMb2dpbiIsImZvcm0iLCJkZWZhdWx0VmFsdWVzIiwiZW1haWwiLCJwYXNzd29yZCIsImhhbmRsZVN1Ym1pdCIsImNvbnRyb2wiLCJmaWVsZCIsIl9jIiwiJFJlZnJlc2hSZWckIl0sImlnbm9yZUxpc3QiOltdLCJzb3VyY2VzIjpbImV4YW1wbGUtZm9ybS50c3giXSwic291cmNlc0NvbnRlbnQiOlsiXCJ1c2UgY2xpZW50XCJcclxuXHJcbmltcG9ydCB7IHVzZUZvcm0gfSBmcm9tIFwicmVhY3QtaG9vay1mb3JtXCJcclxuaW1wb3J0IHsgQ2FyZCwgQ2FyZENvbnRlbnQsIENhcmRIZWFkZXIsIENhcmRUaXRsZSB9IGZyb20gXCJAL2NvbXBvbmVudHMvdWkvY2FyZFwiXHJcbmltcG9ydCB7IElucHV0IH0gZnJvbSBcIkAvY29tcG9uZW50cy91aS9pbnB1dFwiXHJcbmltcG9ydCB7IEJ1dHRvbiB9IGZyb20gXCJAL2NvbXBvbmVudHMvdWkvYnV0dG9uXCJcclxuaW1wb3J0IHtcclxuICBGb3JtLFxyXG4gIEZvcm1GaWVsZCxcclxuICBGb3JtSXRlbSxcclxuICBGb3JtTGFiZWwsXHJcbiAgRm9ybUNvbnRyb2wsXHJcbiAgRm9ybU1lc3NhZ2UsXHJcbn0gZnJvbSBcIkAvY29tcG9uZW50cy91aS9mb3JtXCJcclxuXHJcbnR5cGUgTG9naW5Gb3JtVmFsdWVzID0ge1xyXG4gIGVtYWlsOiBzdHJpbmdcclxuICBwYXNzd29yZDogc3RyaW5nXHJcbn1cclxuXHJcbmludGVyZmFjZSBFeGFtcGxlRm9ybVByb3BzIHtcclxuICBvblN1Ym1pdDogKHZhbHVlczogTG9naW5Gb3JtVmFsdWVzKSA9PiB2b2lkXHJcbiAgb25Hb29nbGVMb2dpbj86ICgpID0+IHZvaWQgICAvLyBvcHRpb25hbCBwcm9wIGZvciBHb29nbGUgbG9naW5cclxufVxyXG5cclxuZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24gRXhhbXBsZUZvcm0oeyBvblN1Ym1pdCwgb25Hb29nbGVMb2dpbiB9OiBFeGFtcGxlRm9ybVByb3BzKSB7XHJcbiAgY29uc3QgZm9ybSA9IHVzZUZvcm08TG9naW5Gb3JtVmFsdWVzPih7XHJcbiAgICBkZWZhdWx0VmFsdWVzOiB7XHJcbiAgICAgIGVtYWlsOiBcIlwiLFxyXG4gICAgICBwYXNzd29yZDogXCJcIixcclxuICAgIH0sXHJcbiAgfSlcclxuXHJcbiAgcmV0dXJuIChcclxuICAgIDxDYXJkIGNsYXNzTmFtZT1cInctWzQwMHB4XSBzaGFkb3ctbGdcIj5cclxuICAgICAgPENhcmRIZWFkZXI+XHJcbiAgICAgICAgPENhcmRUaXRsZSBjbGFzc05hbWU9XCJ0ZXh0LWNlbnRlclwiPkxvZ2luPC9DYXJkVGl0bGU+XHJcbiAgICAgIDwvQ2FyZEhlYWRlcj5cclxuICAgICAgPENhcmRDb250ZW50PlxyXG4gICAgICAgIDxGb3JtIHsuLi5mb3JtfT5cclxuICAgICAgICAgIDxmb3JtIG9uU3VibWl0PXtmb3JtLmhhbmRsZVN1Ym1pdChvblN1Ym1pdCl9IGNsYXNzTmFtZT1cInNwYWNlLXktNFwiPlxyXG4gICAgICAgICAgICB7LyogRW1haWwgKi99XHJcbiAgICAgICAgICAgIDxGb3JtRmllbGRcclxuICAgICAgICAgICAgICBjb250cm9sPXtmb3JtLmNvbnRyb2x9XHJcbiAgICAgICAgICAgICAgbmFtZT1cImVtYWlsXCJcclxuICAgICAgICAgICAgICByZW5kZXI9eyh7IGZpZWxkIH0pID0+IChcclxuICAgICAgICAgICAgICAgIDxGb3JtSXRlbT5cclxuICAgICAgICAgICAgICAgICAgPEZvcm1MYWJlbD5FbWFpbDwvRm9ybUxhYmVsPlxyXG4gICAgICAgICAgICAgICAgICA8Rm9ybUNvbnRyb2w+XHJcbiAgICAgICAgICAgICAgICAgICAgPElucHV0IHBsYWNlaG9sZGVyPVwiRW50ZXIgeW91ciBlbWFpbFwiIHsuLi5maWVsZH0gLz5cclxuICAgICAgICAgICAgICAgICAgPC9Gb3JtQ29udHJvbD5cclxuICAgICAgICAgICAgICAgICAgPEZvcm1NZXNzYWdlIC8+XHJcbiAgICAgICAgICAgICAgICA8L0Zvcm1JdGVtPlxyXG4gICAgICAgICAgICAgICl9XHJcbiAgICAgICAgICAgIC8+XHJcblxyXG4gICAgICAgICAgICB7LyogUGFzc3dvcmQgKi99XHJcbiAgICAgICAgICAgIDxGb3JtRmllbGRcclxuICAgICAgICAgICAgICBjb250cm9sPXtmb3JtLmNvbnRyb2x9XHJcbiAgICAgICAgICAgICAgbmFtZT1cInBhc3N3b3JkXCJcclxuICAgICAgICAgICAgICByZW5kZXI9eyh7IGZpZWxkIH0pID0+IChcclxuICAgICAgICAgICAgICAgIDxGb3JtSXRlbT5cclxuICAgICAgICAgICAgICAgICAgPEZvcm1MYWJlbD5QYXNzd29yZDwvRm9ybUxhYmVsPlxyXG4gICAgICAgICAgICAgICAgICA8Rm9ybUNvbnRyb2w+XHJcbiAgICAgICAgICAgICAgICAgICAgPElucHV0IHR5cGU9XCJwYXNzd29yZFwiIHBsYWNlaG9sZGVyPVwiKioqKioqKipcIiB7Li4uZmllbGR9IC8+XHJcbiAgICAgICAgICAgICAgICAgIDwvRm9ybUNvbnRyb2w+XHJcbiAgICAgICAgICAgICAgICAgIDxGb3JtTWVzc2FnZSAvPlxyXG4gICAgICAgICAgICAgICAgPC9Gb3JtSXRlbT5cclxuICAgICAgICAgICAgICApfVxyXG4gICAgICAgICAgICAvPlxyXG5cclxuICAgICAgICAgICAgey8qIFN1Ym1pdCBCdXR0b24gKi99XHJcbiAgICAgICAgICAgIDxCdXR0b25cclxuICAgICAgICAgICAgICB0eXBlPVwic3VibWl0XCJcclxuICAgICAgICAgICAgICBjbGFzc05hbWU9XCJ3LWZ1bGwgYmctWyMzZmE4ZTldIGhvdmVyOmJnLVsjMzQ5Y2Q5XSB0ZXh0LXdoaXRlXCJcclxuICAgICAgICAgICAgPlxyXG4gICAgICAgICAgICAgIExvZ2luXHJcbiAgICAgICAgICAgIDwvQnV0dG9uPlxyXG4gICAgICAgICAgPC9mb3JtPlxyXG4gICAgICAgIDwvRm9ybT5cclxuXHJcbiAgICAgICAgey8qIERpdmlkZXIgKi99XHJcbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJmbGV4IGl0ZW1zLWNlbnRlciBteS00XCI+XHJcbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImZsZXgtZ3JvdyBib3JkZXItdCBib3JkZXItZ3JheS0zMDBcIj48L2Rpdj5cclxuICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cIm14LTIgdGV4dC1ncmF5LTUwMCB0ZXh0LXNtXCI+T1I8L3NwYW4+XHJcbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImZsZXgtZ3JvdyBib3JkZXItdCBib3JkZXItZ3JheS0zMDBcIj48L2Rpdj5cclxuICAgICAgICA8L2Rpdj5cclxuXHJcbiAgICAgICAgey8qIEdvb2dsZSBBdXRoIEJ1dHRvbiAqL31cclxuICAgICAgICA8QnV0dG9uXHJcbiAgICAgICAgICB0eXBlPVwiYnV0dG9uXCJcclxuICAgICAgICAgIHZhcmlhbnQ9XCJvdXRsaW5lXCJcclxuICAgICAgICAgIGNsYXNzTmFtZT1cInctZnVsbCBmbGV4IGl0ZW1zLWNlbnRlciBqdXN0aWZ5LWNlbnRlciBzcGFjZS14LTJcIlxyXG4gICAgICAgICAgb25DbGljaz17b25Hb29nbGVMb2dpbn1cclxuICAgICAgICA+XHJcbiAgICAgICAgICA8aW1nXHJcbiAgICAgICAgICAgIHNyYz1cImh0dHBzOi8vcG5nLnBuZ3RyZWUuY29tL3BuZy1jbGlwYXJ0LzIwMjMwOTE2L29yaWdpbmFsL3BuZ3RyZWUtZ29vZ2xlLWxvZ28tdmVjdG9yLXBuZy1pbWFnZV8xMjI1NjcxMC5wbmdcIlxyXG4gICAgICAgICAgICBhbHQ9XCJHb29nbGVcIlxyXG4gICAgICAgICAgICBjbGFzc05hbWU9XCJ3LTUgaC01XCJcclxuICAgICAgICAgIC8+XHJcbiAgICAgICAgICA8c3Bhbj5Db250aW51ZSB3aXRoIEdvb2dsZTwvc3Bhbj5cclxuICAgICAgICA8L0J1dHRvbj5cclxuICAgICAgPC9DYXJkQ29udGVudD5cclxuICAgIDwvQ2FyZD5cclxuICApXHJcbn1cclxuIl0sImZpbGUiOiJDOi9Vc2Vycy9OaXlhcy9PbmVEcml2ZS9EZXNrdG9wL01lZE1hdGUvRnJvbnRlbmQvc3JjL2NvbXBvbmVudHMvZXhhbXBsZS1mb3JtLnRzeCJ9

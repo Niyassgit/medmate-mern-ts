@@ -1,0 +1,21 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "npm: dev backend",
+      "type": "npm",
+      "script": "dev",
+      "problemMatcher": [],
+      "isBackground": true,
+      "cwd": "${workspaceFolder}/backend"
+    },
+    {
+      "label": "npm: dev frontend",
+      "type": "npm",
+      "script": "dev",
+      "problemMatcher": [],
+      "isBackground": true,
+      "cwd": "${workspaceFolder}/frontend"
+    }
+  ]
+}

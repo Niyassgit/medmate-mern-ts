@@ -1,0 +1,240 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/ui/form.tsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=86e211bf"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+let prevRefreshReg;
+let prevRefreshSig;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  prevRefreshReg = window.$RefreshReg$;
+  prevRefreshSig = window.$RefreshSig$;
+  window.$RefreshReg$ = RefreshRuntime.getRefreshReg("C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/ui/form.tsx");
+  window.$RefreshSig$ = RefreshRuntime.createSignatureFunctionForTransform;
+}
+var _s = $RefreshSig$(), _s2 = $RefreshSig$(), _s3 = $RefreshSig$(), _s4 = $RefreshSig$(), _s5 = $RefreshSig$(), _s6 = $RefreshSig$();
+import __vite__cjsImport3_react from "/node_modules/.vite/deps/react.js?v=86e211bf"; const React = ((m$2) => m$2?.__esModule ? m$2 : {	...typeof m$2 === "object" && !Array.isArray(m$2) || typeof m$2 === "function" ? m$2 : {},	default: m$2})(__vite__cjsImport3_react);
+import { Slot } from "/node_modules/.vite/deps/@radix-ui_react-slot.js?v=86e211bf";
+import {
+  Controller,
+  FormProvider,
+  useFormContext,
+  useFormState
+} from "/node_modules/.vite/deps/react-hook-form.js?v=86e211bf";
+import { cn } from "/src/lib/utils.ts";
+import { Label } from "/src/components/ui/label.tsx";
+const Form = FormProvider;
+const FormFieldContext = React.createContext(
+  {}
+);
+const FormField = ({
+  ...props
+}) => {
+  return /* @__PURE__ */ jsxDEV(FormFieldContext.Provider, { value: { name: props.name }, children: /* @__PURE__ */ jsxDEV(Controller, { ...props }, void 0, false, {
+    fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/ui/form.tsx",
+    lineNumber: 57,
+    columnNumber: 7
+  }, this) }, void 0, false, {
+    fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/ui/form.tsx",
+    lineNumber: 56,
+    columnNumber: 5
+  }, this);
+};
+_c = FormField;
+const useFormField = () => {
+  _s();
+  const fieldContext = React.useContext(FormFieldContext);
+  const itemContext = React.useContext(FormItemContext);
+  const { getFieldState } = useFormContext();
+  const formState = useFormState({ name: fieldContext.name });
+  const fieldState = getFieldState(fieldContext.name, formState);
+  if (!fieldContext) {
+    throw new Error("useFormField should be used within <FormField>");
+  }
+  const { id } = itemContext;
+  return {
+    id,
+    name: fieldContext.name,
+    formItemId: `${id}-form-item`,
+    formDescriptionId: `${id}-form-item-description`,
+    formMessageId: `${id}-form-item-message`,
+    ...fieldState
+  };
+};
+_s(useFormField, "uYMhrJS1fbT4Yzmfu2feET1emX0=", false, function() {
+  return [useFormContext];
+});
+const FormItemContext = React.createContext(
+  {}
+);
+function FormItem({ className, ...props }) {
+  _s2();
+  const id = React.useId();
+  return /* @__PURE__ */ jsxDEV(FormItemContext.Provider, { value: { id }, children: /* @__PURE__ */ jsxDEV(
+    "div",
+    {
+      "data-slot": "form-item",
+      className: cn("grid gap-2", className),
+      ...props
+    },
+    void 0,
+    false,
+    {
+      fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/ui/form.tsx",
+      lineNumber: 98,
+      columnNumber: 7
+    },
+    this
+  ) }, void 0, false, {
+    fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/ui/form.tsx",
+    lineNumber: 97,
+    columnNumber: 5
+  }, this);
+}
+_s2(FormItem, "WhsuKpSQZEWeFcB7gWlfDRQktoQ=");
+_c2 = FormItem;
+function FormLabel({
+  className,
+  ...props
+}) {
+  _s3();
+  const { error, formItemId } = useFormField();
+  return /* @__PURE__ */ jsxDEV(
+    Label,
+    {
+      "data-slot": "form-label",
+      "data-error": !!error,
+      className: cn("data-[error=true]:text-destructive", className),
+      htmlFor: formItemId,
+      ...props
+    },
+    void 0,
+    false,
+    {
+      fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/ui/form.tsx",
+      lineNumber: 114,
+      columnNumber: 5
+    },
+    this
+  );
+}
+_s3(FormLabel, "Z4R+rKjylfAcqmbRnqWEg1TfTcg=", false, function() {
+  return [useFormField];
+});
+_c3 = FormLabel;
+function FormControl({ ...props }) {
+  _s4();
+  const { error, formItemId, formDescriptionId, formMessageId } = useFormField();
+  return /* @__PURE__ */ jsxDEV(
+    Slot,
+    {
+      "data-slot": "form-control",
+      id: formItemId,
+      "aria-describedby": !error ? `${formDescriptionId}` : `${formDescriptionId} ${formMessageId}`,
+      "aria-invalid": !!error,
+      ...props
+    },
+    void 0,
+    false,
+    {
+      fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/ui/form.tsx",
+      lineNumber: 128,
+      columnNumber: 5
+    },
+    this
+  );
+}
+_s4(FormControl, "mI3rlmONcPPBVtOc6UefMrXAJ6w=", false, function() {
+  return [useFormField];
+});
+_c4 = FormControl;
+function FormDescription({ className, ...props }) {
+  _s5();
+  const { formDescriptionId } = useFormField();
+  return /* @__PURE__ */ jsxDEV(
+    "p",
+    {
+      "data-slot": "form-description",
+      id: formDescriptionId,
+      className: cn("text-muted-foreground text-sm", className),
+      ...props
+    },
+    void 0,
+    false,
+    {
+      fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/ui/form.tsx",
+      lineNumber: 146,
+      columnNumber: 5
+    },
+    this
+  );
+}
+_s5(FormDescription, "573aRXA8dloSrMaQM9SdAF4A9NI=", false, function() {
+  return [useFormField];
+});
+_c5 = FormDescription;
+function FormMessage({ className, ...props }) {
+  _s6();
+  const { error, formMessageId } = useFormField();
+  const body = error ? String(error?.message ?? "") : props.children;
+  if (!body) {
+    return null;
+  }
+  return /* @__PURE__ */ jsxDEV(
+    "p",
+    {
+      "data-slot": "form-message",
+      id: formMessageId,
+      className: cn("text-destructive text-sm", className),
+      ...props,
+      children: body
+    },
+    void 0,
+    false,
+    {
+      fileName: "C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/ui/form.tsx",
+      lineNumber: 164,
+      columnNumber: 5
+    },
+    this
+  );
+}
+_s6(FormMessage, "WONNS8VCMr8LShuUovb8QgOmMVY=", false, function() {
+  return [useFormField];
+});
+_c6 = FormMessage;
+export {
+  useFormField,
+  Form,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+  FormField
+};
+var _c, _c2, _c3, _c4, _c5, _c6;
+$RefreshReg$(_c, "FormField");
+$RefreshReg$(_c2, "FormItem");
+$RefreshReg$(_c3, "FormLabel");
+$RefreshReg$(_c4, "FormControl");
+$RefreshReg$(_c5, "FormDescription");
+$RefreshReg$(_c6, "FormMessage");
+if (import.meta.hot && !inWebWorker) {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+if (import.meta.hot && !inWebWorker) {
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/ui/form.tsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/Niyas/OneDrive/Desktop/MedMate/Frontend/src/components/ui/form.tsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+
+//# sourceMappingURL=data:application/json;base64,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RUEsU0FDRTtBQUFBLElBQUM7QUFBQTtBQUFBLE1BQ0MsYUFBVTtBQUFBLE1BQ1YsSUFBSWxCO0FBQUFBLE1BQ0osV0FBV3RCLEdBQUcsNEJBQTRCd0IsU0FBUztBQUFBLE1BQ25ELEdBQUlsQjtBQUFBQSxNQUVIa0M7QUFBQUE7QUFBQUEsSUFOSDtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUEsRUFPQTtBQUVKO0FBQUNELElBbEJRRCxhQUFXO0FBQUEsVUFDZTdCLFlBQVk7QUFBQTtBQUFBbUMsTUFEdENOO0FBb0JUO0FBQUEsRUFDRTdCO0FBQUFBLEVBQ0FQO0FBQUFBLEVBQ0FxQjtBQUFBQSxFQUNBSztBQUFBQSxFQUNBSTtBQUFBQSxFQUNBRztBQUFBQSxFQUNBRztBQUFBQSxFQUNBakM7QUFBQUE7QUFDRCxJQUFBRyxJQUFBbUIsS0FBQUksS0FBQUcsS0FBQUcsS0FBQU87QUFBQUMsYUFBQXJDLElBQUE7QUFBQXFDLGFBQUFsQixLQUFBO0FBQUFrQixhQUFBZCxLQUFBO0FBQUFjLGFBQUFYLEtBQUE7QUFBQVcsYUFBQVIsS0FBQTtBQUFBUSxhQUFBRCxLQUFBIiwibmFtZXMiOlsiUmVhY3QiLCJTbG90IiwiQ29udHJvbGxlciIsIkZvcm1Qcm92aWRlciIsInVzZUZvcm1Db250ZXh0IiwidXNlRm9ybVN0YXRlIiwiY24iLCJMYWJlbCIsIkZvcm0iLCJGb3JtRmllbGRDb250ZXh0IiwiY3JlYXRlQ29udGV4dCIsIkZvcm1GaWVsZCIsInByb3BzIiwibmFtZSIsIl9jIiwidXNlRm9ybUZpZWxkIiwiX3MiLCJmaWVsZENvbnRleHQiLCJ1c2VDb250ZXh0IiwiaXRlbUNvbnRleHQiLCJGb3JtSXRlbUNvbnRleHQiLCJnZXRGaWVsZFN0YXRlIiwiZm9ybVN0YXRlIiwiZmllbGRTdGF0ZSIsIkVycm9yIiwiaWQiLCJmb3JtSXRlbUlkIiwiZm9ybURlc2NyaXB0aW9uSWQiLCJmb3JtTWVzc2FnZUlkIiwiRm9ybUl0ZW0iLCJjbGFzc05hbWUiLCJfczIiLCJ1c2VJZCIsIl9jMiIsIkZvcm1MYWJlbCIsIl9zMyIsImVycm9yIiwiX2MzIiwiRm9ybUNvbnRyb2wiLCJfczQiLCJfYzQiLCJGb3JtRGVzY3JpcHRpb24iLCJfczUiLCJfYzUiLCJGb3JtTWVzc2FnZSIsIl9zNiIsImJvZHkiLCJTdHJpbmciLCJtZXNzYWdlIiwiY2hpbGRyZW4iLCJfYzYiLCIkUmVmcmVzaFJlZyQiXSwiaWdub3JlTGlzdCI6W10sInNvdXJjZXMiOlsiZm9ybS50c3giXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0ICogYXMgUmVhY3QgZnJvbSBcInJlYWN0XCJcbmltcG9ydCAqIGFzIExhYmVsUHJpbWl0aXZlIGZyb20gXCJAcmFkaXgtdWkvcmVhY3QtbGFiZWxcIlxuaW1wb3J0IHsgU2xvdCB9IGZyb20gXCJAcmFkaXgtdWkvcmVhY3Qtc2xvdFwiXG5pbXBvcnQge1xuICBDb250cm9sbGVyLFxuICBGb3JtUHJvdmlkZXIsXG4gIHVzZUZvcm1Db250ZXh0LFxuICB1c2VGb3JtU3RhdGUsXG4gIHR5cGUgQ29udHJvbGxlclByb3BzLFxuICB0eXBlIEZpZWxkUGF0aCxcbiAgdHlwZSBGaWVsZFZhbHVlcyxcbn0gZnJvbSBcInJlYWN0LWhvb2stZm9ybVwiXG5cbmltcG9ydCB7IGNuIH0gZnJvbSBcIkAvbGliL3V0aWxzXCJcbmltcG9ydCB7IExhYmVsIH0gZnJvbSBcIkAvY29tcG9uZW50cy91aS9sYWJlbFwiXG5cbmNvbnN0IEZvcm0gPSBGb3JtUHJvdmlkZXJcblxudHlwZSBGb3JtRmllbGRDb250ZXh0VmFsdWU8XG4gIFRGaWVsZFZhbHVlcyBleHRlbmRzIEZpZWxkVmFsdWVzID0gRmllbGRWYWx1ZXMsXG4gIFROYW1lIGV4dGVuZHMgRmllbGRQYXRoPFRGaWVsZFZhbHVlcz4gPSBGaWVsZFBhdGg8VEZpZWxkVmFsdWVzPixcbj4gPSB7XG4gIG5hbWU6IFROYW1lXG59XG5cbmNvbnN0IEZvcm1GaWVsZENvbnRleHQgPSBSZWFjdC5jcmVhdGVDb250ZXh0PEZvcm1GaWVsZENvbnRleHRWYWx1ZT4oXG4gIHt9IGFzIEZvcm1GaWVsZENvbnRleHRWYWx1ZVxuKVxuXG5jb25zdCBGb3JtRmllbGQgPSA8XG4gIFRGaWVsZFZhbHVlcyBleHRlbmRzIEZpZWxkVmFsdWVzID0gRmllbGRWYWx1ZXMsXG4gIFROYW1lIGV4dGVuZHMgRmllbGRQYXRoPFRGaWVsZFZhbHVlcz4gPSBGaWVsZFBhdGg8VEZpZWxkVmFsdWVzPixcbj4oe1xuICAuLi5wcm9wc1xufTogQ29udHJvbGxlclByb3BzPFRGaWVsZFZhbHVlcywgVE5hbWU+KSA9PiB7XG4gIHJldHVybiAoXG4gICAgPEZvcm1GaWVsZENvbnRleHQuUHJvdmlkZXIgdmFsdWU9e3sgbmFtZTogcHJvcHMubmFtZSB9fT5cbiAgICAgIDxDb250cm9sbGVyIHsuLi5wcm9wc30gLz5cbiAgICA8L0Zvcm1GaWVsZENvbnRleHQuUHJvdmlkZXI+XG4gIClcbn1cblxuY29uc3QgdXNlRm9ybUZpZWxkID0gKCkgPT4ge1xuICBjb25zdCBmaWVsZENvbnRleHQgPSBSZWFjdC51c2VDb250ZXh0KEZvcm1GaWVsZENvbnRleHQpXG4gIGNvbnN0IGl0ZW1Db250ZXh0ID0gUmVhY3QudXNlQ29udGV4dChGb3JtSXRlbUNvbnRleHQpXG4gIGNvbnN0IHsgZ2V0RmllbGRTdGF0ZSB9ID0gdXNlRm9ybUNvbnRleHQoKVxuICBjb25zdCBmb3JtU3RhdGUgPSB1c2VGb3JtU3RhdGUoeyBuYW1lOiBmaWVsZENvbnRleHQubmFtZSB9KVxuICBjb25zdCBmaWVsZFN0YXRlID0gZ2V0RmllbGRTdGF0ZShmaWVsZENvbnRleHQubmFtZSwgZm9ybVN0YXRlKVxuXG4gIGlmICghZmllbGRDb250ZXh0KSB7XG4gICAgdGhyb3cgbmV3IEVycm9yKFwidXNlRm9ybUZpZWxkIHNob3VsZCBiZSB1c2VkIHdpdGhpbiA8Rm9ybUZpZWxkPlwiKVxuICB9XG5cbiAgY29uc3QgeyBpZCB9ID0gaXRlbUNvbnRleHRcblxuICByZXR1cm4ge1xuICAgIGlkLFxuICAgIG5hbWU6IGZpZWxkQ29udGV4dC5uYW1lLFxuICAgIGZvcm1JdGVtSWQ6IGAke2lkfS1mb3JtLWl0ZW1gLFxuICAgIGZvcm1EZXNjcmlwdGlvbklkOiBgJHtpZH0tZm9ybS1pdGVtLWRlc2NyaXB0aW9uYCxcbiAgICBmb3JtTWVzc2FnZUlkOiBgJHtpZH0tZm9ybS1pdGVtLW1lc3NhZ2VgLFxuICAgIC4uLmZpZWxkU3RhdGUsXG4gIH1cbn1cblxudHlwZSBGb3JtSXRlbUNvbnRleHRWYWx1ZSA9IHtcbiAgaWQ6IHN0cmluZ1xufVxuXG5jb25zdCBGb3JtSXRlbUNvbnRleHQgPSBSZWFjdC5jcmVhdGVDb250ZXh0PEZvcm1JdGVtQ29udGV4dFZhbHVlPihcbiAge30gYXMgRm9ybUl0ZW1Db250ZXh0VmFsdWVcbilcblxuZnVuY3Rpb24gRm9ybUl0ZW0oeyBjbGFzc05hbWUsIC4uLnByb3BzIH06IFJlYWN0LkNvbXBvbmVudFByb3BzPFwiZGl2XCI+KSB7XG4gIGNvbnN0IGlkID0gUmVhY3QudXNlSWQoKVxuXG4gIHJldHVybiAoXG4gICAgPEZvcm1JdGVtQ29udGV4dC5Qcm92aWRlciB2YWx1ZT17eyBpZCB9fT5cbiAgICAgIDxkaXZcbiAgICAgICAgZGF0YS1zbG90PVwiZm9ybS1pdGVtXCJcbiAgICAgICAgY2xhc3NOYW1lPXtjbihcImdyaWQgZ2FwLTJcIiwgY2xhc3NOYW1lKX1cbiAgICAgICAgey4uLnByb3BzfVxuICAgICAgLz5cbiAgICA8L0Zvcm1JdGVtQ29udGV4dC5Qcm92aWRlcj5cbiAgKVxufVxuXG5mdW5jdGlvbiBGb3JtTGFiZWwoe1xuICBjbGFzc05hbWUsXG4gIC4uLnByb3BzXG59OiBSZWFjdC5Db21wb25lbnRQcm9wczx0eXBlb2YgTGFiZWxQcmltaXRpdmUuUm9vdD4pIHtcbiAgY29uc3QgeyBlcnJvciwgZm9ybUl0ZW1JZCB9ID0gdXNlRm9ybUZpZWxkKClcblxuICByZXR1cm4gKFxuICAgIDxMYWJlbFxuICAgICAgZGF0YS1zbG90PVwiZm9ybS1sYWJlbFwiXG4gICAgICBkYXRhLWVycm9yPXshIWVycm9yfVxuICAgICAgY2xhc3NOYW1lPXtjbihcImRhdGEtW2Vycm9yPXRydWVdOnRleHQtZGVzdHJ1Y3RpdmVcIiwgY2xhc3NOYW1lKX1cbiAgICAgIGh0bWxGb3I9e2Zvcm1JdGVtSWR9XG4gICAgICB7Li4ucHJvcHN9XG4gICAgLz5cbiAgKVxufVxuXG5mdW5jdGlvbiBGb3JtQ29udHJvbCh7IC4uLnByb3BzIH06IFJlYWN0LkNvbXBvbmVudFByb3BzPHR5cGVvZiBTbG90Pikge1xuICBjb25zdCB7IGVycm9yLCBmb3JtSXRlbUlkLCBmb3JtRGVzY3JpcHRpb25JZCwgZm9ybU1lc3NhZ2VJZCB9ID0gdXNlRm9ybUZpZWxkKClcblxuICByZXR1cm4gKFxuICAgIDxTbG90XG4gICAgICBkYXRhLXNsb3Q9XCJmb3JtLWNvbnRyb2xcIlxuICAgICAgaWQ9e2Zvcm1JdGVtSWR9XG4gICAgICBhcmlhLWRlc2NyaWJlZGJ5PXtcbiAgICAgICAgIWVycm9yXG4gICAgICAgICAgPyBgJHtmb3JtRGVzY3JpcHRpb25JZH1gXG4gICAgICAgICAgOiBgJHtmb3JtRGVzY3JpcHRpb25JZH0gJHtmb3JtTWVzc2FnZUlkfWBcbiAgICAgIH1cbiAgICAgIGFyaWEtaW52YWxpZD17ISFlcnJvcn1cbiAgICAgIHsuLi5wcm9wc31cbiAgICAvPlxuICApXG59XG5cbmZ1bmN0aW9uIEZvcm1EZXNjcmlwdGlvbih7IGNsYXNzTmFtZSwgLi4ucHJvcHMgfTogUmVhY3QuQ29tcG9uZW50UHJvcHM8XCJwXCI+KSB7XG4gIGNvbnN0IHsgZm9ybURlc2NyaXB0aW9uSWQgfSA9IHVzZUZvcm1GaWVsZCgpXG5cbiAgcmV0dXJuIChcbiAgICA8cFxuICAgICAgZGF0YS1zbG90PVwiZm9ybS1kZXNjcmlwdGlvblwiXG4gICAgICBpZD17Zm9ybURlc2NyaXB0aW9uSWR9XG4gICAgICBjbGFzc05hbWU9e2NuKFwidGV4dC1tdXRlZC1mb3JlZ3JvdW5kIHRleHQtc21cIiwgY2xhc3NOYW1lKX1cbiAgICAgIHsuLi5wcm9wc31cbiAgICAvPlxuICApXG59XG5cbmZ1bmN0aW9uIEZvcm1NZXNzYWdlKHsgY2xhc3NOYW1lLCAuLi5wcm9wcyB9OiBSZWFjdC5Db21wb25lbnRQcm9wczxcInBcIj4pIHtcbiAgY29uc3QgeyBlcnJvciwgZm9ybU1lc3NhZ2VJZCB9ID0gdXNlRm9ybUZpZWxkKClcbiAgY29uc3QgYm9keSA9IGVycm9yID8gU3RyaW5nKGVycm9yPy5tZXNzYWdlID8/IFwiXCIpIDogcHJvcHMuY2hpbGRyZW5cblxuICBpZiAoIWJvZHkpIHtcbiAgICByZXR1cm4gbnVsbFxuICB9XG5cbiAgcmV0dXJuIChcbiAgICA8cFxuICAgICAgZGF0YS1zbG90PVwiZm9ybS1tZXNzYWdlXCJcbiAgICAgIGlkPXtmb3JtTWVzc2FnZUlkfVxuICAgICAgY2xhc3NOYW1lPXtjbihcInRleHQtZGVzdHJ1Y3RpdmUgdGV4dC1zbVwiLCBjbGFzc05hbWUpfVxuICAgICAgey4uLnByb3BzfVxuICAgID5cbiAgICAgIHtib2R5fVxuICAgIDwvcD5cbiAgKVxufVxuXG5leHBvcnQge1xuICB1c2VGb3JtRmllbGQsXG4gIEZvcm0sXG4gIEZvcm1JdGVtLFxuICBGb3JtTGFiZWwsXG4gIEZvcm1Db250cm9sLFxuICBGb3JtRGVzY3JpcHRpb24sXG4gIEZvcm1NZXNzYWdlLFxuICBGb3JtRmllbGQsXG59XG4iXSwiZmlsZSI6IkM6L1VzZXJzL05peWFzL09uZURyaXZlL0Rlc2t0b3AvTWVkTWF0ZS9Gcm9udGVuZC9zcmMvY29tcG9uZW50cy91aS9mb3JtLnRzeCJ9
