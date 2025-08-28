@@ -1,7 +1,7 @@
-import { SuperAdmin } from "./SuperAdmin";
+import { ISuperAdmin } from "./ISuperAdmin";
 
 
 export interface ISuperAdminRepository{
-     createSuperAdmin(data:Omit<SuperAdmin, "id" | "createdAt" | "updatedAt">):Promise<SuperAdmin>;
-     getSuperAdminByEmail(email:string):Promise<SuperAdmin | null>;
+     createSuperAdmin(data:Omit<ISuperAdmin, "id" | "createdAt" | "updatedAt">):Promise<ISuperAdmin>;
+     getSuperAdminByEmail(email:string):Promise<ISuperAdmin | null>;
 }

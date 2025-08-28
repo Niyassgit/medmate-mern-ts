@@ -1,7 +1,7 @@
 import { IUserLoginRepository } from "../../domain/common/entities/IUserLoginRepository";
 import { BcryptServices } from "../../infrastructure/security/BcryptService";
-import { AuthProvider,Role,UserLogin } from "../../domain/common/entities/UserLogin";
-
+import { AuthProvider,IUserLogin } from "../../domain/common/entities/IUserLogin";
+import { ConflictError,BadRequestError } from "../../domain/common/errors";
 
 export class CreateUserLoginUseCase{
 
@@ -10,14 +10,14 @@ export class CreateUserLoginUseCase{
         private _bcryptServices:BcryptServices
     ){}
 
-    async execute(data:Omit<UserLogin,"id" | "createdAt" | "updatedAt">):Promise<UserLogin>{
+    async execute(data:Omit<IUserLogin,"id" | "createdAt" | "updatedAt">):Promise<IUserLogin>{
 
         const existUser=await this._userLoginRepository.findByEmail(data.email);
 
-        if(existUser) throw new Error(`User with ${data.email} already exists`);
+        if(existUser)   throw new ConflictError("Email already exists");
 
         if(data.authProvider===AuthProvider.NATIVE && !data.password) {
-            throw new Error("Password is required for NATIVE signup");
+            throw new BadRequestError("Password is required");
         }
         
         const hashedPassword=data.password ? await this._bcryptServices.hashPassword(data.password):null;

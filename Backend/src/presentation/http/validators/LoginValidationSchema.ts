@@ -8,7 +8,7 @@ const validateLogin=z.object({
 });
 
 
-export const validateLoginSchema=async(req:Request,res:Response,next:NextFunction)=>{
+export const validateLoginSchema=(req:Request,res:Response,next:NextFunction)=>{
     
 
     const result=validateLogin.safeParse(req.body);

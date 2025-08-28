@@ -1,11 +1,11 @@
 import {prisma} from "../database/PrismaClient";
 import { IMedicalRepRepository } from "../../domain/medicalRep/entities/IMedicalRepRepository";
-import { MedicalRep } from "../../domain/medicalRep/entities/MedicalRep";
+import { IMedicalRep } from "../../domain/medicalRep/entities/IMedicalRep";
 
 
 export class MedicalRepRepository implements IMedicalRepRepository{
 
-     async createMedicalRep(data: Omit<MedicalRep, "id" | "createdAt" | "updatedAt">): Promise<MedicalRep> {
+     async createMedicalRep(data: Omit<IMedicalRep, "id" | "createdAt" | "updatedAt">): Promise<IMedicalRep> {
          const created= await prisma.medicalRep.create({
             data:{
                 ...data,
@@ -14,11 +14,11 @@ export class MedicalRepRepository implements IMedicalRepRepository{
          return created;
      }
 
-     async getMedicalRepById(id: string): Promise<MedicalRep | null> {
+     async getMedicalRepById(id: string): Promise<IMedicalRep | null> {
          return prisma.medicalRep.findUnique({where:{id}});
      }
 
-     async getMedicalRepByEmail(email: string): Promise<MedicalRep | null> {
+     async getMedicalRepByEmail(email: string): Promise<IMedicalRep | null> {
         
        const userLogin=await prisma.userLogin.findUnique({
         where:{email},

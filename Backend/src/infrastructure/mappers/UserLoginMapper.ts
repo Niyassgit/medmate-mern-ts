@@ -1,10 +1,10 @@
-import {Role,AuthProvider,UserLogin} from "../../domain/common/entities/UserLogin";
-import { Prisma } from "@prisma/client";
+import {Role,AuthProvider,IUserLogin} from "../../domain/common/entities/IUserLogin";
+import { Prisma,UserLogin } from "@prisma/client";
 
 
 export class UserLoginMapper{
 
-  static toDomain(user:any):UserLogin{
+  static toDomain(user:UserLogin):IUserLogin{
 
     return {
 
@@ -19,7 +19,7 @@ export class UserLoginMapper{
     }
   }
 
-    static toPersisitance(domain:Omit<UserLogin, "id" | "createdAt" | "updatedAt">) : Prisma.UserLoginCreateInput{
+    static toPersisitance(domain:Omit<IUserLogin, "id" | "createdAt" | "updatedAt">) : Prisma.UserLoginCreateInput{
 
         return {
             email:domain.email,

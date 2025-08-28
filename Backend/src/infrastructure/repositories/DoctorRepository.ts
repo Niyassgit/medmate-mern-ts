@@ -1,11 +1,11 @@
 import {prisma} from "../database/PrismaClient";
 import { IDoctorRepository } from "../../domain/doctor/entities/IDoctorRepository";
-import { Doctor } from "../../domain/doctor/entities/Doctor";
+import { IDoctor } from "../../domain/doctor/entities/IDoctor";
 
 
 export class DoctorRepository implements IDoctorRepository{
 
-    async createDoctor(data: Omit<Doctor, "id" | "updatedAt" | "createdAt">): Promise<Doctor> {
+    async createDoctor(data: Omit<IDoctor, "id" | "updatedAt" | "createdAt">): Promise<IDoctor> {
         return prisma.doctor.create({
             data:{
                 ...data,
@@ -13,11 +13,11 @@ export class DoctorRepository implements IDoctorRepository{
         })
     }
 
-     async getDoctorById(id: string): Promise<Doctor | null> {
+     async getDoctorById(id: string): Promise<IDoctor | null> {
         return prisma.doctor.findUnique({where:{id}});
     }
     
-    async getDoctorByEmail(email: string): Promise<Doctor | null> {
+    async getDoctorByEmail(email: string): Promise<IDoctor | null> {
 
          const userLogin=await  prisma.userLogin.findUnique({
              where:{email},

@@ -1,9 +1,8 @@
 import { IUserLoginRepository } from "../../../domain/common/entities/IUserLoginRepository";
 import { jwtService } from "../../../infrastructure/security/JwtService";
 import { BcryptServices } from "../../../infrastructure/security/BcryptService";
-import { UserLogin } from "../../../domain/common/entities/UserLogin";
-
-
+import { IUserLogin } from "../../../domain/common/entities/IUserLogin";
+import { UnautharizedError ,BadRequestError} from "../../../domain/common/errors";
 
 export class  LoginMedicalRepUseCase{
 
@@ -13,15 +12,15 @@ export class  LoginMedicalRepUseCase{
     ){}
 
 
-    async execute(email:string,password:string):Promise<{token:string,user:UserLogin}>{
+    async execute(email:string,password:string):Promise<{token:string,user:IUserLogin}>{
 
         const user=await this._userLoginRepository.findByEmail(email);
-        if(!user) throw new Error("User not found");
+        if(!user) throw new UnautharizedError("User not found");
 
-        if(!user.password) throw new Error("Password not set");
+        if(!user.password) throw new BadRequestError("Password is Required");
 
         const isValid=await this._bcryptSercvices.comparePassword(password,user.password);
-        if(!isValid) throw new Error("Invalid password");
+        if(!isValid) throw new UnautharizedError("Invalid password");
 
         const token=jwtService.generateToken({
             id:user.id,

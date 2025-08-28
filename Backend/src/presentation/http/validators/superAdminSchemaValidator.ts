@@ -10,7 +10,7 @@ const superAdminRegisterSchema=z.object({
 });
 
 
-export const validateSuperAdminSchema=async(req:Request,res:Response,next:NextFunction)=>{
+export const validateSuperAdminSchema=(req:Request,res:Response,next:NextFunction)=>{
 
     const result=superAdminRegisterSchema.safeParse(req.body);
     if(!result.success){

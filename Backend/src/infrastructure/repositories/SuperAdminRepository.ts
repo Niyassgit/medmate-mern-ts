@@ -1,12 +1,12 @@
 import { ISuperAdminRepository } from "../../domain/superAdmin/entities/ISuperAdminRepository";
-import { SuperAdmin } from "../../domain/superAdmin/entities/SuperAdmin";
+import { ISuperAdmin } from "../../domain/superAdmin/entities/ISuperAdmin";
 import {prisma} from "../database/PrismaClient";
 
 
 
 export class SuperAdminRepository implements ISuperAdminRepository{
  
-    async createSuperAdmin(data: Omit<SuperAdmin, "id" | "createdAt" | "updatedAt">): Promise<SuperAdmin> {
+    async createSuperAdmin(data: Omit<ISuperAdmin, "id" | "createdAt" | "updatedAt">): Promise<ISuperAdmin> {
         const created=await prisma.superAdmin.create({
             data:{
                 ...data,
@@ -15,7 +15,7 @@ export class SuperAdminRepository implements ISuperAdminRepository{
         return created;
     }
 
-    async getSuperAdminByEmail(email: string): Promise<SuperAdmin | null> {
+    async getSuperAdminByEmail(email: string): Promise<ISuperAdmin | null> {
         const userLogin=await prisma.userLogin.findUnique({
             where:{email},
             include:{superAdmin:true}

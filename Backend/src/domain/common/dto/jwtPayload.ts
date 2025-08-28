@@ -1,4 +1,4 @@
-import { Role } from "../entities/UserLogin";
+import { Role } from "../entities/IUserLogin";
 
 
 export interface JwtPayload{

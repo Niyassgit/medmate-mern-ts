@@ -1,4 +1,4 @@
-import { SuperAdmin } from "../../../domain/superAdmin/entities/SuperAdmin";
+import { ISuperAdmin } from "../../../domain/superAdmin/entities/ISuperAdmin";
 import { ISuperAdminRepository } from "../../../domain/superAdmin/entities/ISuperAdminRepository";
 
 
@@ -9,7 +9,7 @@ export class GetSuperAdminByEmailIdUseCase{
         private _superAdminRepository:ISuperAdminRepository
      ){}
 
-     async execute(email:string):Promise <SuperAdmin | null>{
+     async execute(email:string):Promise <ISuperAdmin | null>{
          return await this._superAdminRepository.getSuperAdminByEmail(email);
      }
     

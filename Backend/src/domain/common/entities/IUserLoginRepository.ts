@@ -1,9 +1,9 @@
-import { UserLogin } from "./UserLogin";
+import { IUserLogin } from "./IUserLogin";
 
 
 
 export interface IUserLoginRepository{
 
-    createUserLogin(data:Omit<UserLogin , "id" | "createdAt" | "updatedAt">):Promise <UserLogin>;
-    findByEmail(email:string): Promise<UserLogin | null>;
+    createUserLogin(data:Omit<IUserLogin , "id" | "createdAt" | "updatedAt">):Promise <IUserLogin>;
+    findByEmail(email:string): Promise<IUserLogin | null>;
 } 

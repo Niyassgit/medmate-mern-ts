@@ -1,16 +1,16 @@
 import { IMedicalRepRepository } from "../../../domain/medicalRep/entities/IMedicalRepRepository"; 
-import { MedicalRep } from "../../../domain/medicalRep/entities/MedicalRep";
-
+import { IMedicalRep } from "../../../domain/medicalRep/entities/IMedicalRep";
+import { UnautharizedError } from "../../../domain/common/errors";
 
 export class GetMedicalRepByEmailUseCase{
     constructor(private _medicalRepRepository:IMedicalRepRepository){}
 
-    async execute(email:string):Promise<MedicalRep>{
+    async execute(email:string):Promise<IMedicalRep>{
 
       const rep=await this._medicalRepRepository.getMedicalRepByEmail(email);
 
       if(!rep){
-        throw new Error(`Medical rep with email ${email} not found`);
+        throw new UnautharizedError(`Medical rep with email ${email} not found`);
       }
       return rep;
 }

@@ -1,24 +1,14 @@
-export enum Role{
-    SUPER_ADMIN = 'SUPER_ADMIN',
-    DOCTOR = 'DOCTOR',
-    MEDICAL_REP='MEDICAL_REP'
-}
+import { IUserLogin,Role,AuthProvider } from "./IUserLogin";
 
-
-export enum AuthProvider {
-    NATIVE = 'NATIVE',
-    GOOGLE ='GOOGLE'
-}
-
-
-
-export interface UserLogin{
-    id:string;
-    email:string;
-    password?:string | null;
-    authProvider:AuthProvider | null;
-    providerId?:string | null;
-    role:Role;
-    createdAt:Date;
-    updatedAt:Date;
+export class UserLogin implements IUserLogin{
+    constructor(
+            public id:string,
+            public email:string,
+            public authProvider:AuthProvider | null,
+            public role:Role,
+            public createdAt:Date,
+            public updatedAt:Date,
+            public password?:string | null,
+            public providerId?:string | null,
+    ){}
 }

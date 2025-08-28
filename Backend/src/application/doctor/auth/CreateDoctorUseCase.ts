@@ -1,10 +1,10 @@
 import { IDoctorRepository } from "../../../domain/doctor/entities/IDoctorRepository"; 
-import { Doctor } from "../../../domain/doctor/entities/Doctor"; 
+import { IDoctor } from "../../../domain/doctor/entities/IDoctor"; 
 import { BcryptServices } from "../../../infrastructure/security/BcryptService"; 
 import { RegisterDoctorDTO } from "../../../domain/doctor/dto/RegisterDoctorDTO";
 import { IUserLoginRepository } from "../../../domain/common/entities/IUserLoginRepository"; 
-import { AuthProvider,Role } from  "../../../domain/common/entities/UserLogin"
-
+import { AuthProvider,Role } from  "../../../domain/common/entities/IUserLogin"
+import { ConflictError,BadRequestError } from "../../../domain/common/errors";
 export class CreateDoctorUseCase{
 
     constructor(
@@ -13,12 +13,12 @@ export class CreateDoctorUseCase{
         private _userLoginRepository:IUserLoginRepository
     ){}
 
-    async execute(data:RegisterDoctorDTO):Promise<Doctor>{
+    async execute(data:RegisterDoctorDTO):Promise<IDoctor>{
 
         const userExist=await this._doctorRepository.getDoctorByEmail(data.email);
         if(userExist) throw new Error(`Doctor with ${data.email} already exist`);
         
-        if(!data.password) throw new Error("Password is requred for signup");
+        if(!data.password) throw new BadRequestError("Password is requred for signup");
 
         const hashedPassword= await this._bcryptServices.hashPassword(data.password);
 

@@ -1,10 +1,10 @@
 import { ISuperAdminRepository } from "../../../domain/superAdmin/entities/ISuperAdminRepository"; 
 import { BcryptServices } from "../../../infrastructure/security/BcryptService"; 
-import { SuperAdmin } from "../../../domain/superAdmin/entities/SuperAdmin"; 
-import { UserLogin } from "../../../domain/common/entities/UserLogin";
+import { ISuperAdmin } from "../../../domain/superAdmin/entities/ISuperAdmin"; 
 import { UserLoginRepository } from "../../../infrastructure/repositories/UserLoginRepository"; 
 import { RegisterSuperAdminDTO } from "../../../domain/superAdmin/dto/RegisterSuperAdminDTO"; 
-import { AuthProvider,Role } from "../../../domain/common/entities/UserLogin"; 
+import { AuthProvider,Role } from "../../../domain/common/entities/IUserLogin"; 
+import { ConflictError,BadRequestError,UnautharizedError } from "../../../domain/common/errors";
 
 export class CreateSuperAdminUseCase{
     constructor(
@@ -13,16 +13,16 @@ export class CreateSuperAdminUseCase{
         private _bcryptServices:BcryptServices
     ){}
 
-    async execute(data:RegisterSuperAdminDTO):Promise<SuperAdmin>{
+    async execute(data:RegisterSuperAdminDTO):Promise<ISuperAdmin>{
        
         const existAdmin=await this._superAdminRepository.getSuperAdminByEmail(data.email);
-        if(existAdmin) throw new Error(`Admin with ${data.email} already exist`);
+        if(existAdmin) throw new ConflictError(`User already exists`);
 
         if(!data.password){
-             throw new Error("Password is Required for signup");
+             throw new BadRequestError("Password is Required for signup");
         }
 
-        let hashedPassword= await this._bcryptServices.hashPassword(data.password);
+        const hashedPassword= await this._bcryptServices.hashPassword(data.password);
 
         const login =await this._userLoginRepository.createUserLogin({
             email:data.email,

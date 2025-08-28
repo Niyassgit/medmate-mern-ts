@@ -1,4 +1,3 @@
-// eslint.config.js
 import js from "@eslint/js";
 import globals from "globals";
 import tseslint from "typescript-eslint";
@@ -6,32 +5,40 @@ import { defineConfig } from "eslint/config";
 
 export default defineConfig([
   {
-    files: ["**/*.{js,mjs,cjs,ts,mts,cts}"],
+    ignores: [
+      "eslint.config.js",
+      "tsconfig.json",
+      "dist/**",
+      "node_modules/**"
+    ]
+  },
+  {
+    files: ["**/*.{ts,tsx}"],   
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
         ecmaVersion: "latest",
         sourceType: "module",
-        project: "./tsconfig.json",
+        project: "./tsconfig.json"
       },
       globals: {
-        ...globals.node,   
-        ...globals.es2021,
-      },
+        ...globals.node,
+        ...globals.es2021
+      }
     },
     plugins: {
-      "@typescript-eslint": tseslint.plugin,
+      "@typescript-eslint": tseslint.plugin
     },
     extends: [
       js.configs.recommended,
       ...tseslint.configs.recommended,
-      ...tseslint.configs.recommendedTypeChecked,
+      ...tseslint.configs.recommendedTypeChecked
     ],
     rules: {
       "no-console": "warn",
-      "no-unused-vars": "warn",
+      "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": ["warn"],
-      "@typescript-eslint/explicit-module-boundary-types": "off",
-    },
-  },
+      "@typescript-eslint/explicit-module-boundary-types": "off"
+    }
+  }
 ]);

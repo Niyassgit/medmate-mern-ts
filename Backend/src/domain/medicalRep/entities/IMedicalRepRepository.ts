@@ -1,10 +1,10 @@
-import { MedicalRep } from "./MedicalRep";
+import { IMedicalRep } from "./IMedicalRep";
 
 
  export interface IMedicalRepRepository {
      
-    createMedicalRep(data:Omit<MedicalRep,"id" | "createdAt" | "updatedAt">):Promise<MedicalRep>;
-    getMedicalRepById(id:string):Promise<MedicalRep | null>;
+    createMedicalRep(data:Omit<IMedicalRep,"id" | "createdAt" | "updatedAt">):Promise<IMedicalRep>;
+    getMedicalRepById(id:string):Promise<IMedicalRep | null>;
     // getMedicalRepByLoginId(loginId:string):Promise<MedicalRep | null>;
-    getMedicalRepByEmail(email:string):Promise<MedicalRep | null>;
+    getMedicalRepByEmail(email:string):Promise<IMedicalRep | null>;
 }

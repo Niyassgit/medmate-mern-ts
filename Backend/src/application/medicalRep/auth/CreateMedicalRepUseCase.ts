@@ -1,10 +1,10 @@
 import { IMedicalRepRepository } from "../../../domain/medicalRep/entities/IMedicalRepRepository"; 
 import { BcryptServices } from "../../../infrastructure/security/BcryptService";  
-import { MedicalRep } from "../../../domain/medicalRep/entities/MedicalRep";  
+import { IMedicalRep } from "../../../domain/medicalRep/entities/IMedicalRep";  
 import { IUserLoginRepository } from "../../../domain/common/entities/IUserLoginRepository"; 
-import { AuthProvider,Role } from "../../../domain/common/entities/UserLogin"; 
+import { AuthProvider,Role } from "../../../domain/common/entities/IUserLogin"; 
 import { RegisterMedicalRepDTO } from "../../../domain/medicalRep/dto/RegisterMedicalRepDTO"; 
-
+import { ConflictError,BadRequestError } from "../../../domain/common/errors";
 
 export class CreateMedicalRepUseCase{
  
@@ -14,15 +14,15 @@ export class CreateMedicalRepUseCase{
     
     ){}
     
-    async execute(data:RegisterMedicalRepDTO):Promise <MedicalRep>{
+    async execute(data:RegisterMedicalRepDTO):Promise <IMedicalRep>{
 
       const existingRep=await this._medicalRepRepository.getMedicalRepByEmail(data.email);
       if(existingRep){
-        throw new Error(`The user ${data.email} is already exist`);
+        throw new ConflictError(`User already exists`);
       }
 
       if(!data.password){
-        throw new Error("Password is required for signup");
+        throw new BadRequestError("Password is required for signup");
       }
       const hashedPassword=await this._bcryptServices.hashPassword(data.password);
       

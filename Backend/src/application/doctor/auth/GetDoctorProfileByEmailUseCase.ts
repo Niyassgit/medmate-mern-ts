@@ -1,11 +1,11 @@
 import { IDoctorRepository } from "../../../domain/doctor/entities/IDoctorRepository";
-import {Doctor} from "../../../domain/doctor/entities/Doctor";
+import {IDoctor} from "../../../domain/doctor/entities/IDoctor";
 
 export class GetDoctorProfileByEmailUseCase{
 
     constructor(private _doctorRepository:IDoctorRepository){}
 
-    async execute(email:string):Promise<Doctor | null>{
+    async execute(email:string):Promise<IDoctor | null>{
         return this._doctorRepository.getDoctorByEmail(email);
     }
 }

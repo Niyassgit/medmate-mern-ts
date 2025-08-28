@@ -7,15 +7,28 @@ import { DoctorRoutes } from "./presentation/http/routes/DoctorRoutes";
 import { superAdminRoutes } from "./presentation/http/routes/SuperAdminRoutes";
 
 dotenv.config();
-const app =express();
+const app = express();
 app.use(cors());
 app.use(express.json());
-connectDB();
 
- app.use("/api/doctor",new DoctorRoutes().router);
- app.use("/api/rep",new MedicalRepRoutes().router);
- app.use("/api/admin",new superAdminRoutes().router);
+const startServer = async () => {
+  try {
+    await connectDB();
 
-app.listen(process.env.PORT || 5000,()=>{
-    console.log(`🚀 server running on port ${process.env.PORT || 5000}`);
-})
+    app.use("/api/doctor", new DoctorRoutes().router);
+    app.use("/api/rep", new MedicalRepRoutes().router);
+    app.use("/api/admin", new superAdminRoutes().router);
+
+    app.listen(process.env.PORT || 5000, () => {
+      console.log(` server running on port ${process.env.PORT || 5000}`);
+    });
+  } catch (err) {
+    console.error("Failed to start server:", err);
+    process.exit(1);
+  }
+};
+
+startServer().catch((err) => {
+  console.error("Failed to start app:", err);
+  process.exit(1);
+});
