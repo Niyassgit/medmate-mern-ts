@@ -1,7 +1,7 @@
 import { IDoctorRepository } from "../../../domain/doctor/entities/IDoctorRepository"; 
 import { IDoctor } from "../../../domain/doctor/entities/IDoctor"; 
 import { BcryptServices } from "../../../infrastructure/security/BcryptService"; 
-import { RegisterDoctorDTO } from "../../../domain/doctor/dto/RegisterDoctorDTO";
+import { RegisterDoctorDTO } from "../dto/RegisterDoctorDTO";
 import { IUserLoginRepository } from "../../../domain/common/entities/IUserLoginRepository"; 
 import { AuthProvider,Role } from  "../../../domain/common/entities/IUserLogin"
 import { ConflictError,BadRequestError } from "../../../domain/common/errors";
@@ -16,7 +16,7 @@ export class CreateDoctorUseCase{
     async execute(data:RegisterDoctorDTO):Promise<IDoctor>{
 
         const userExist=await this._doctorRepository.getDoctorByEmail(data.email);
-        if(userExist) throw new Error(`Doctor with ${data.email} already exist`);
+        if(userExist) throw new ConflictError(`User already exists`);
         
         if(!data.password) throw new BadRequestError("Password is requred for signup");
 

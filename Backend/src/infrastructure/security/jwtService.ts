@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { JwtPayload } from "../../domain/common/dto/JwtPayload";
+import { JwtPayload } from "../../application/common/dto/JwtPayload";
 
 const JWT_SECRET=process.env.JWT_SECRET || "supersecret";
 

@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { validateRegisterDoctorSchema } from "../validators/DoctorSchemaValidator"; 
 import { doctorController } from "../../../infrastructure/di/DoctorDI";
 import { authController } from "../../../infrastructure/di/AuthDi";
-import { validateLoginSchema } from "../validators/LoginValidationSchema";
+import { ValidateSchema } from "../middlewares/ValidateSchema";
+import { validateLogin } from "../validators/LoginValidationSchema";
 import { upload } from "../../../infrastructure/storage/multer/MulterConfig";
+import { RegisterDoctorSchema } from "../validators/DoctorSchemaValidator";
 
 export class DoctorRoutes{
      public router:Router;
@@ -14,8 +15,8 @@ export class DoctorRoutes{
     }
 
     private initializeRoutes(){
-     this.router.post("/signup",upload.single("licenseImageUrl"),validateRegisterDoctorSchema,doctorController.createDoctor);
+     this.router.post("/signup",upload.single("licenseImageUrl"),ValidateSchema(RegisterDoctorSchema),doctorController.createDoctor);
+     this.router.post("/login",ValidateSchema(validateLogin),authController.loginDoctor);
      this.router.get("/:id",doctorController.getDoctorProfileById);
-     this.router.post("/login",validateLoginSchema,authController.loginDoctor)
     }
 }

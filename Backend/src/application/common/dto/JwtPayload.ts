@@ -1,4 +1,4 @@
-import { Role } from "../entities/IUserLogin";
+import { Role } from "../../../domain/common/entities/IUserLogin";
 
 
 export interface JwtPayload{

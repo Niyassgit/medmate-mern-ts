@@ -2,9 +2,9 @@ import { ISuperAdminRepository } from "../../../domain/superAdmin/entities/ISupe
 import { BcryptServices } from "../../../infrastructure/security/BcryptService"; 
 import { ISuperAdmin } from "../../../domain/superAdmin/entities/ISuperAdmin"; 
 import { UserLoginRepository } from "../../../infrastructure/repositories/UserLoginRepository"; 
-import { RegisterSuperAdminDTO } from "../../../domain/superAdmin/dto/RegisterSuperAdminDTO"; 
+import { RegisterSuperAdminDTO } from "../dto/RegisterSuperAdminDTO"; 
 import { AuthProvider,Role } from "../../../domain/common/entities/IUserLogin"; 
-import { ConflictError,BadRequestError,UnautharizedError } from "../../../domain/common/errors";
+import { ConflictError,BadRequestError} from "../../../domain/common/errors";
 
 export class CreateSuperAdminUseCase{
     constructor(

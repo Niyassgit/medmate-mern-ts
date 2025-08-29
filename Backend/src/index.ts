@@ -5,6 +5,7 @@ import { connectDB } from "./config/db";
 import { MedicalRepRoutes } from "./presentation/http/routes/RepRoutes";
 import { DoctorRoutes } from "./presentation/http/routes/DoctorRoutes";
 import { superAdminRoutes } from "./presentation/http/routes/SuperAdminRoutes";
+import { ErrorHandler } from "./presentation/http/middlewares/errorHandler";
 
 dotenv.config();
 const app = express();
@@ -19,6 +20,8 @@ const startServer = async () => {
     app.use("/api/rep", new MedicalRepRoutes().router);
     app.use("/api/admin", new superAdminRoutes().router);
 
+
+    app.use(ErrorHandler);
     app.listen(process.env.PORT || 5000, () => {
       console.log(` server running on port ${process.env.PORT || 5000}`);
     });

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Request, Response, NextFunction } from "express";
+
 
 
 export const RegisterDoctorSchema = z.object({
@@ -31,22 +31,4 @@ export const RegisterDoctorSchema = z.object({
     .default(false)
 });
 
-export const validateRegisterDoctorSchema = (req: Request, res: Response, next: NextFunction) => {
 
-  const body: unknown = req.body;
-
-   const dataToValidate = {
-    ...(body as Record<string, unknown>),
-    licenseImageUrl: req.file, 
-  }
-
-  const result = RegisterDoctorSchema.safeParse(dataToValidate);
-
-  if (!result.success) {
-    return res.status(400).json({ message: "Validation failed", errors: result.error.issues });
-  }
-  req.body = result.data;
-  next();
-
-
-};

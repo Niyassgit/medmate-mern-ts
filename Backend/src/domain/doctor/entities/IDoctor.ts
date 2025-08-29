@@ -13,7 +13,7 @@ export interface IDoctor {
   territoryId?: string | null;
   hospitalId: string;           
   registrationId: string;       
-  licenseImageUrl: string;  
+  licenseImageUrl: string | null;  
   opHours?: string | null;
 
   about?: string | null;

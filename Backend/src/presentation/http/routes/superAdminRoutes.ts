@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { superAdminController } from "../../../infrastructure/di/SuperAdminDI";
-import { validateSuperAdminSchema } from "../validators/SuperAdminSchemaValidator";
+import { ValidateSchema } from "../middlewares/ValidateSchema";
 import { authController } from "../../../infrastructure/di/AuthDi";
-import { validateLoginSchema } from "../validators/LoginValidationSchema";
-
+import { SuperAdminRegisterSchema } from "../validators/SuperAdminSchemaValidator";
+import { validateLogin } from "../validators/LoginValidationSchema";
 export class superAdminRoutes{
 
     public router:Router;
@@ -13,8 +13,8 @@ export class superAdminRoutes{
         this.initializeRoutes();
     }
      private initializeRoutes(){
-         this.router.post("/signup",validateSuperAdminSchema,superAdminController.createSuperAdmin);
+         this.router.post("/signup",ValidateSchema(SuperAdminRegisterSchema),superAdminController.createSuperAdmin);
          this.router.get("/:id",superAdminController.getSuperAdminByEmial);
-         this.router.post("/login",validateLoginSchema,authController.loginAdmin);
+         this.router.post("/login",ValidateSchema(validateLogin),authController.loginAdmin);
     }
 }
