@@ -2,10 +2,12 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import { connectDB } from "./config/db";
+import { LoginRoute } from "./presentation/http/routes/LoginRoute";
 import { MedicalRepRoutes } from "./presentation/http/routes/RepRoutes";
 import { DoctorRoutes } from "./presentation/http/routes/DoctorRoutes";
 import { superAdminRoutes } from "./presentation/http/routes/SuperAdminRoutes";
-import { ErrorHandler } from "./presentation/http/middlewares/errorHandler";
+import { ErrorHandler } from "./presentation/http/middlewares/ErrorHandler";
+
 
 dotenv.config();
 const app = express();
@@ -19,7 +21,7 @@ const startServer = async () => {
     app.use("/api/doctor", new DoctorRoutes().router);
     app.use("/api/rep", new MedicalRepRoutes().router);
     app.use("/api/admin", new superAdminRoutes().router);
-
+    app.use("/api/auth", new LoginRoute().router);
 
     app.use(ErrorHandler);
     app.listen(process.env.PORT || 5000, () => {

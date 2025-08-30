@@ -23,6 +23,7 @@ model UserLogin {
   password String? 
   role     Role
   authProvider AuthProvider @default(NATIVE)
+  refreshToken String?
   providerId String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

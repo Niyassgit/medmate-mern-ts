@@ -1,7 +1,7 @@
 import { SuperAdminController } from "../../presentation/http/controllers/SuperAdminController";
 import { CreateSuperAdminUseCase } from "../../application/superAdmin/auth/CreateSuperAdminUseCase"; 
 import { GetSuperAdminByEmailIdUseCase } from "../../application/superAdmin/auth/GetSuperAdminByEmailIdUseCase"; 
-import { BcryptServices } from "../security/BcryptService";
+import { BcryptServices } from "../services/BcryptService";
 import { SuperAdminRepository } from "../repositories/SuperAdminRepository";
 import { UserLoginRepository } from "../repositories/UserLoginRepository";
 

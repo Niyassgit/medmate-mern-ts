@@ -1,6 +1,6 @@
 import { IDoctorRepository } from "../../../domain/doctor/entities/IDoctorRepository"; 
 import { IDoctor } from "../../../domain/doctor/entities/IDoctor"; 
-import { BcryptServices } from "../../../infrastructure/security/BcryptService"; 
+import { BcryptServices } from "../../../infrastructure/services/BcryptService"; 
 import { RegisterDoctorDTO } from "../dto/RegisterDoctorDTO";
 import { IUserLoginRepository } from "../../../domain/common/entities/IUserLoginRepository"; 
 import { AuthProvider,Role } from  "../../../domain/common/entities/IUserLogin"

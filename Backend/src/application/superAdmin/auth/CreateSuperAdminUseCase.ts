@@ -1,5 +1,5 @@
 import { ISuperAdminRepository } from "../../../domain/superAdmin/entities/ISuperAdminRepository"; 
-import { BcryptServices } from "../../../infrastructure/security/BcryptService"; 
+import { BcryptServices } from "../../../infrastructure/services/BcryptService"; 
 import { ISuperAdmin } from "../../../domain/superAdmin/entities/ISuperAdmin"; 
 import { UserLoginRepository } from "../../../infrastructure/repositories/UserLoginRepository"; 
 import { RegisterSuperAdminDTO } from "../dto/RegisterSuperAdminDTO"; 

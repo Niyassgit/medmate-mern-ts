@@ -1,5 +1,5 @@
 import { MedicalRepController } from "../../presentation/http/controllers/MedicalRepController";
-import { BcryptServices } from "../security/BcryptService";
+import { BcryptServices } from "../services/BcryptService";
 import { CreateMedicalRepUseCase } from "../../application/medicalRep/auth/CreateMedicalRepUseCase"; 
 import { GetMedicalRepByIdUseCase } from "../../application/medicalRep/auth/GetMedicalRepByIdUseCase"; 
 import { GetMedicalRepByEmailUseCase } from "../../application/medicalRep/auth/GetMedicalRepByEmailUseCase"; 

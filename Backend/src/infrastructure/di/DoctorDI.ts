@@ -1,5 +1,5 @@
 import { DoctorRepository } from "../repositories/DoctorRepository";
-import { BcryptServices } from "../security/BcryptService";
+import { BcryptServices } from "../services/BcryptService";
 import { CreateDoctorUseCase } from "../../application/doctor/auth/CreateDoctorUseCase"; 
 import { GetDoctorProfileByIdUseCase } from "../../application/doctor/auth/GetDoctorProfileByIdUseCase"; 
 import { GetDoctorProfileByEmailUseCase } from "../../application/doctor/auth/GetDoctorProfileByEmailUseCase"; 

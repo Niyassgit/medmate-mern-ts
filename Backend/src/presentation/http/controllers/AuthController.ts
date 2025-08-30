@@ -1,42 +1,36 @@
 import { Request,Response } from "express";
-import { LoginDoctorUseCase } from "../../../application/doctor/auth/LoginDoctorUseCase"; 
-import { LoginMedicalRepUseCase } from "../../../application/medicalRep/auth/LoginMedicalRepUseCase"; 
-import { LoginSuperAdminUseCase } from "../../../application/superAdmin/auth/LoginSuperAdminUseCase";
+import { LoginUserUseCase } from "../../../application/common/LoginUserUseCase";
 import { LoginRequestBody } from "../validators/LoginValidationSchema";
 
 export class AuthController{
 
     constructor(
-        private _loginDoctorUseCase:LoginDoctorUseCase,
-        private _loginMedicalRepUseCase:LoginMedicalRepUseCase,
-        private _loginSuperAdmin:LoginSuperAdminUseCase
+        private _userLoginUseCase:LoginUserUseCase
     ){}
 
 
-   loginDoctor=async(req:Request,res:Response)=>{
 
+    loginUser=async(req:Request,res:Response)=>{
+        const {email,password}=req.body as LoginRequestBody;
+        const result=await this._userLoginUseCase.execute(email,password);
 
-          const {email,password}=req.body as LoginRequestBody;
-          const result=await this._loginDoctorUseCase.execute(email,password);  
-          res.status(200).json({success:true,data:result});
         
+            res.cookie("refreshtoken",result.refreshToken,{
+                httpOnly:true,
+                sameSite:"strict",
+                secure:process.env.NODE_ENV==='production',
+                maxAge:7*24*60*60*1000
+            });
 
-    }
+             res.json({
+                accessToken:result.accessToken,
+                user:{
+                    id:result.user.id,
+                    email:result.user.email,
+                    role:result.user.role
+                }
+            })
 
-    loginRep=async(req:Request,res:Response)=>{
- 
-            const {email,password}=req.body as LoginRequestBody;
-            const result =await this._loginMedicalRepUseCase.execute(email,password);
-            res.status(200).json({success:true,data:result});
-    
-    }
-
-    loginAdmin=async(req:Request,res:Response)=>{
-
-
-            const {email,password}=req.body as LoginRequestBody;
-            const result =await this._loginSuperAdmin.execute(email,password);
-            res.status(200).json({success:true,data:result});
     }
 
 }

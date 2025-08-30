@@ -1,5 +1,5 @@
 import { IMedicalRepRepository } from "../../../domain/medicalRep/entities/IMedicalRepRepository"; 
-import { BcryptServices } from "../../../infrastructure/security/BcryptService";  
+import { BcryptServices } from "../../../infrastructure/services/BcryptService";  
 import { IMedicalRep } from "../../../domain/medicalRep/entities/IMedicalRep";  
 import { IUserLoginRepository } from "../../../domain/common/entities/IUserLoginRepository"; 
 import { AuthProvider,Role } from "../../../domain/common/entities/IUserLogin"; 

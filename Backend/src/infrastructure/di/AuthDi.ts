@@ -1,17 +1,15 @@
 import { AuthController } from "../../presentation/http/controllers/AuthController";
-import { LoginDoctorUseCase } from "../../application/doctor/auth/LoginDoctorUseCase";
-import { LoginMedicalRepUseCase } from "../../application/medicalRep/auth/LoginMedicalRepUseCase";
-import { LoginSuperAdminUseCase } from "../../application/superAdmin/auth/LoginSuperAdminUseCase";
+import { LoginUserUseCase } from "../../application/common/LoginUserUseCase";
 import { UserLoginRepository } from "../repositories/UserLoginRepository";
-import { BcryptServices } from "../security/BcryptService";
-
+import { BcryptServices } from "../services/BcryptService";
+import { JWTServices } from "../services/JwtService";
 
 const userLoginRepository=new UserLoginRepository();
 const bcryptServices=new BcryptServices();
+const jwtService=new JWTServices()
 
 
-const loginDoctorUseCase=new LoginDoctorUseCase(userLoginRepository,bcryptServices);
-const loginMedicalRepUseCase=new LoginMedicalRepUseCase(userLoginRepository,bcryptServices);
-const loginSuperAdminUseCase=new LoginSuperAdminUseCase(userLoginRepository,bcryptServices);
+const loginUserUseCase=new LoginUserUseCase(userLoginRepository,bcryptServices,jwtService);
 
-export const authController=new AuthController(loginDoctorUseCase,loginMedicalRepUseCase,loginSuperAdminUseCase);
+
+export const authController=new AuthController(loginUserUseCase);
