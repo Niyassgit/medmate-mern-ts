@@ -20,7 +20,7 @@ const startServer = async () => {
 
     app.use("/api/doctor", new DoctorRoutes().router);
     app.use("/api/rep", new MedicalRepRoutes().router);
-    app.use("/api/admin", new superAdminRoutes().router);
+    app.use("/api/admin",new superAdminRoutes().router);
     app.use("/api/auth", new LoginRoute().router);
 
     app.use(ErrorHandler);

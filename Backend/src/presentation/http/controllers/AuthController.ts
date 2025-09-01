@@ -1,6 +1,8 @@
 import { Request,Response } from "express";
 import { LoginUserUseCase } from "../../../application/common/LoginUserUseCase";
 import { LoginRequestBody } from "../validators/LoginValidationSchema";
+import { AuthResponseDTO } from "../../dto/AuthResponseDTO";
+
 
 export class AuthController{
 
@@ -22,14 +24,16 @@ export class AuthController{
                 maxAge:7*24*60*60*1000
             });
 
-             res.json({
+
+            const response:AuthResponseDTO={
                 accessToken:result.accessToken,
                 user:{
                     id:result.user.id,
                     email:result.user.email,
                     role:result.user.role
                 }
-            })
+            }
+             res.json(response);
 
     }
 
