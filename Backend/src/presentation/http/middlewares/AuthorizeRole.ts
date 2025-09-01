@@ -6,7 +6,6 @@ export const AuthorizeRole=(roles:string[])=>{
             return res.status(401).json({ message: "Unauthorized" });
         }
  
-          console.log("role of the user:",req.user.role);
         if (!req.user.role || !roles.includes(req.user.role)) {
             return res.status(403).json({ message: "Forbidden" });
         }

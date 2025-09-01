@@ -1,29 +1,38 @@
 import ExampleForm from '@/components/example-form'
-import { Link,useLocation } from 'react-router-dom'
-import { doctorLogin,repLogin } from '../api'
+import { Link } from 'react-router-dom';
+import { loginUser } from '../api';
+import { Role } from '@/types/Role';
 
 
 const LoginPage = () => {
-  const location=useLocation();
-  const isDoctor=location.pathname.includes("/doctor");
+   
 
-  const handleLogin = async (values: { email: string; password: string }) => {
-    console.log("Form values:", values)
-
+  const handleLogin= async(values:{email:string,password:string})=>{
+         
     try {
-      const { data }=isDoctor ? await doctorLogin(values) : await repLogin(values);
-      localStorage.setItem("token",data.token)
-      
-      alert ("Login successfull 🚀");
-      window.location.href=isDoctor? "/doctor/dashboard" : "/rep/dashboard"
- 
-    } catch (error :any) {
-      console.error(error)
-      alert(error.response?.data?.message || "Something went wrong")
+      const {data} =await loginUser(values);
+
+      localStorage.setItem("accessToken",data.accessToken);
+      localStorage.setItem("role",data.user.role);
+
+      if(data.user.role ===Role.DOCTOR){
+        window.location.href='/doctor/dashboard'
+      }else if(data.user.role===Role.MEDICAL_REP){
+        window.location.href='/rep/dashboard'
+      }else if(data.user.role===Role.SUPER_ADMIN){
+        window.location.href='/admin/dashboard'
+      }else{
+        window.location.href='/';
+      }
+
+    } catch (error:any) {
+      alert(error.response?.data?.message|| "something went wrong")
     }
 
-  
+
   }
+
+  
       const handleGoogleLogin = () => {
     console.log("Google login clicked")
     // Redirect to your backend Google OAuth endpoint
@@ -59,7 +68,7 @@ const LoginPage = () => {
               Forgot password?
             </Link>
             <p className="text-sm text-gray-600">
-              Don’t have an account?{" "}
+              Don't have an account?{" "}
               <Link to="/signup" className="text-[#3fa8e9] hover:underline">
                 Sign up
               </Link>
@@ -71,9 +80,10 @@ const LoginPage = () => {
       </div>
     </div>
   )
-
-
-
 }
+
+
+
+
 
 export default LoginPage

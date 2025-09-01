@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import SignupRep from './SignupRep';
 import SignupDoctor from './SignupDoctor';
@@ -70,7 +70,7 @@ const RegisterPage = () => {
             <p className="text-sm text-gray-600">
               Already have an account?{" "}
               <Link
-                to={formType === "doctor" ? "/login/doctor" : "/login/rep"}
+               to={`/auth/login`}
                 className="text-[#3fa8e9] hover:underline"
               >
                 Login

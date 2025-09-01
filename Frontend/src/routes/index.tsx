@@ -1,6 +1,4 @@
 import { createBrowserRouter } from "react-router-dom";
-import PrivateRoute from "@/components/PrivateRoute";
-
 import LoginPage from "../features/auth/pages/LoginPage"
 import LandingPage from "../features/landing/pages/LandingPage";
 import RegisterPage from "@/features/auth/pages/RegisterPage";
@@ -13,11 +11,12 @@ export const router=createBrowserRouter([
     {path:"/",element:<LandingPage/>},
     {path:"/signup",element:<RegisterPage/>},
 
-    {path:"/login/doctor",element:<LoginPage/>},
-    {path:"/login/rep",element:<LoginPage/>},
+    {path:"/auth/login",element:<LoginPage/>},
+
      
-    {path:"/doctor/dashboard",element:<PrivateRoute role="DOCTOR"><DoctorDashboard/></PrivateRoute>},
-    {path:"/rep/dashboard",element:<PrivateRoute role="MEDICAL_REP"><RepDashboard/></PrivateRoute>}
+     
+    {path:"/doctor/dashboard",element:<DoctorDashboard/>},
+     {path:"/rep/dashboard",element:<RepDashboard/>},
  
    
 

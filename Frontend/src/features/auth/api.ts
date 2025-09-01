@@ -1,8 +1,16 @@
 import { api } from "@/services/api";
 
-export const doctorLogin=(values:{email:string,password:string})=>{
-    return api.post("/doctor/login",values);
-};
+
+interface loginPayload{
+   email:string,
+   password:string
+}
+
+export const loginUser=(values:loginPayload)=>{
+
+    return api.post("/auth/login",values)
+}
+
 export const registerDoctor=(values:FormData)=>{
     return api.post("/doctor/signup",values,{
         headers:{
@@ -11,17 +19,10 @@ export const registerDoctor=(values:FormData)=>{
     });
 }
 
-export const getDoctorProfile =(id:string)=>{
-    return api.get(`/doctor/profile/${id}`);
-}
-
 export const registerRep=(values:FormData)=>{
     return api.post("/rep/signup",values,{
         headers:{
             "Content-Type":"multipart/form-data"
         },
     })
-}
-export const repLogin=(values:{email:string,password:string})=>{
-    return api.post("/rep/login",values);
 }
