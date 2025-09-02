@@ -79,7 +79,7 @@ const SignupDoctor = () => {
             await registerDoctor(formData);
             alert ( "Doctor registered successfully🚀");
             
-            navigate("/login/doctor");
+            navigate("/auth/login",{ replace: true });
 
         } catch (error : any) {
             console.error(error);

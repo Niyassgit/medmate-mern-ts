@@ -1,4 +1,4 @@
-import { IDoctorRepository } from "../../../domain/doctor/entities/IDoctorRepository"; 
+import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRepository"; 
 import { IDoctor } from "../../../domain/doctor/entities/IDoctor"; 
 import { BcryptServices } from "../../../infrastructure/services/BcryptService"; 
 import { RegisterDoctorDTO } from "../dto/RegisterDoctorDTO";
@@ -26,7 +26,8 @@ export class CreateDoctorUseCase{
             email:data.email,
             password:hashedPassword,
             authProvider:AuthProvider.NATIVE,
-            role:Role.DOCTOR
+            role:Role.DOCTOR,
+            isBlocked:false,
         });
 
         return this._doctorRepository.createDoctor({

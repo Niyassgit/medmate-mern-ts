@@ -1,0 +1,16 @@
+import { IDoctorListItem } from "../../../domain/doctor/entities/IDoctorListItem";
+import { DoctorListDTO } from "../dto/DoctorListDTO";
+
+export class DoctorListMapper {
+  static toDoctorListDTO(entity: IDoctorListItem): DoctorListDTO {
+    return {
+      id: entity.id,
+      name: entity.name,
+      email: entity.email,
+      phone: entity.phone,
+      isBlocked: entity.isBlocked,
+      hospitalId: entity.hospitalId,
+      createdAt: entity.createdAt,
+    };
+  }
+}

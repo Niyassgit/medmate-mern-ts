@@ -30,7 +30,8 @@ export class CreateMedicalRepUseCase{
         email:data.email,
         password:hashedPassword,
         role:Role.MEDICAL_REP,
-        authProvider:AuthProvider.NATIVE
+        authProvider:AuthProvider.NATIVE,
+        isBlocked:false,
       });
 
 

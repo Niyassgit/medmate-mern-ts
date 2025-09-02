@@ -1,4 +1,4 @@
-import { ISuperAdminRepository } from "../../../domain/superAdmin/entities/ISuperAdminRepository"; 
+import { ISuperAdminRepository } from "../../../domain/superAdmin/repositories/ISuperAdminRepository"; 
 import { BcryptServices } from "../../../infrastructure/services/BcryptService"; 
 import { ISuperAdmin } from "../../../domain/superAdmin/entities/ISuperAdmin"; 
 import { UserLoginRepository } from "../../../infrastructure/repositories/UserLoginRepository"; 
@@ -29,6 +29,7 @@ export class CreateSuperAdminUseCase{
             password:hashedPassword,
             role:Role.SUPER_ADMIN,
             authProvider:AuthProvider.NATIVE,
+            isBlocked:false
         });
 
         return this._superAdminRepository.createSuperAdmin({

@@ -16,6 +16,7 @@ export interface IUserLogin{
     id:string;
     email:string;
     password?:string | null;
+    isBlocked:boolean;
     authProvider:AuthProvider | null;
     providerId?:string | null;
     role:Role;

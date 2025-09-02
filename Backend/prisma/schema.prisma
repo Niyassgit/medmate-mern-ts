@@ -23,7 +23,7 @@ model UserLogin {
   password String? 
   role     Role
   authProvider AuthProvider @default(NATIVE)
-  refreshToken String?
+  isBlocked Boolean  @default(false)
   providerId String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -55,7 +55,7 @@ model Doctor {
   doctorClass     String?
   territoryId     String?   @db.ObjectId
   hospitalId      String
-  licenseImageUrl    String
+  licenseImageUrl    String?
   opHours         String?
   registrationId  String
   about           String?

@@ -1,16 +1,12 @@
 import {prisma} from "../database/PrismaClient";
-import { IDoctorRepository } from "../../domain/doctor/entities/IDoctorRepository";
+import { IDoctorRepository } from "../../domain/doctor/repositories/IDoctorRepository";
 import { IDoctor } from "../../domain/doctor/entities/IDoctor";
-
+import { IDoctorListItem } from "../../domain/doctor/entities/IDoctorListItem";
 
 export class DoctorRepository implements IDoctorRepository{
 
     async createDoctor(data: Omit<IDoctor, "id" | "updatedAt" | "createdAt">): Promise<IDoctor> {
-        return prisma.doctor.create({
-            data:{
-                ...data,
-            }
-        })
+        return prisma.doctor.create({data})
     }
 
      async getDoctorById(id: string): Promise<IDoctor | null> {
@@ -49,5 +45,20 @@ export class DoctorRepository implements IDoctorRepository{
         }
 
 
+    }
+    async getAllDoctors(): Promise<IDoctorListItem[]> {
+        const doctors=await prisma.doctor.findMany({
+            include:{login:true}
+        });
+        
+        return doctors.map(d=>({
+            id:d.id,
+            name:d.name,
+            email:d.login?.email ?? null,
+            phone:d.phone,
+            isBlocked:d.login?.isBlocked ?? null,
+            createdAt:d.login?.createdAt ?? null,
+            hospitalId:d.hospitalId
+        }))
     }
 }

@@ -1,5 +1,5 @@
 import { Outlet,NavLink } from "react-router-dom"
-import { User,LayoutDashboard,UserCheck,ClipboardPlus,Handshake,MapPin,FilePen,Globe} from "lucide-react"
+import { User,LayoutDashboard,ClipboardPlus,Handshake,MapPin,FilePen,Globe} from "lucide-react"
 import { Avatar,AvatarImage,AvatarFallback } from "@/components/ui/avatar"
 
 
@@ -36,19 +36,7 @@ const AdminLayout = () => {
                 </NavLink>
               </li>
 
-              <li className="space-y-2">
-                 <NavLink to={"user-validation"} className={({isActive})=> `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
-                   isActive
-                   ?"bg-gray-200 text-black font-semibold"
-                   :"text-white hover:bg-[#a81519]"
-
-                 }`
-                 }>
-                  <UserCheck className="w-5 h-5"/>
-                  <span>User Validation</span> 
-                 </NavLink>
-                
-              </li>
+             
                
               <li className="space-y-2">
                  <NavLink to={"doctors-list"} className={({isActive})=> `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
@@ -123,9 +111,9 @@ const AdminLayout = () => {
 
        <div className="p-2 flex items-center gap-3 border-t border-[#b9181d]">
   <Avatar>
-    <AvatarImage src="/user-profile.jpg" alt="Admin" />
+    <AvatarImage src="" alt="Admin" />
     <AvatarFallback>
-      <User className="h-6 w-6" />
+      <User className="h-6 w-6 " />
     </AvatarFallback>
   </Avatar>
 

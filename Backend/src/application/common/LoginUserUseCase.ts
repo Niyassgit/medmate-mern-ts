@@ -2,7 +2,7 @@ import { IUserLoginRepository } from "../../domain/common/entities/IUserLoginRep
 import { IUserLogin} from "../../domain/common/entities/IUserLogin";
 import { BcryptServices } from "../../infrastructure/services/BcryptService";
 import { JWTServices } from "../../infrastructure/services/JwtService";
-import { UnautharizedError,BadRequestError} from "../../domain/common/errors";
+import { UnautharizedError,BadRequestError,ForbiddenError} from "../../domain/common/errors";
 
 export class LoginUserUseCase{
 
@@ -20,6 +20,7 @@ export class LoginUserUseCase{
      if(!user.password) throw new BadRequestError("Password is required");
      const isValidUser=await this._bcryptServices.comparePassword(password,user.password);
      if(!isValidUser) throw new UnautharizedError("Invalid password");
+     if(user.isBlocked) throw new ForbiddenError("User is blocked")
 
      const payload={id:user.id,role:user.role};
      const accessToken=this._jwtServices.signAccessToken(payload);

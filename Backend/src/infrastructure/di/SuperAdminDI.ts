@@ -4,15 +4,22 @@ import { GetSuperAdminByEmailIdUseCase } from "../../application/superAdmin/auth
 import { BcryptServices } from "../services/BcryptService";
 import { SuperAdminRepository } from "../repositories/SuperAdminRepository";
 import { UserLoginRepository } from "../repositories/UserLoginRepository";
+import { GetAllDoctorsUseCase } from "../../application/superAdmin/useCases/GetAllDoctorsUseCase";
+import { DoctorRepository } from "../repositories/DoctorRepository";
 
 
 const superAdminRepositories=new SuperAdminRepository();
 const userLoginRepository=new UserLoginRepository()
 const bycryptServices=new BcryptServices();
+const doctorRepository=new DoctorRepository();
+
+
 const createSuperAdminUseCase=new CreateSuperAdminUseCase(superAdminRepositories,userLoginRepository,bycryptServices);
 const getSuperAdminByEmailIdUseCase=new GetSuperAdminByEmailIdUseCase(superAdminRepositories);
+const getAllDoctorsUseCase=new GetAllDoctorsUseCase(doctorRepository)
 
 export const superAdminController=new SuperAdminController(
     createSuperAdminUseCase,
-    getSuperAdminByEmailIdUseCase
+    getSuperAdminByEmailIdUseCase,
+    getAllDoctorsUseCase
 );

@@ -1,4 +1,4 @@
-import { IDoctorRepository } from "../../../domain/doctor/entities/IDoctorRepository";
+import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRepository";
 import {IDoctor} from "../../../domain/doctor/entities/IDoctor";
 
 
