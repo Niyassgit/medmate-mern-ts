@@ -15,7 +15,7 @@ export interface IMedicalRep{
 
 
     subscriptionPlanId?:string | null;
-    subscriptionStatus?:string | null;
+    subscriptionStatus?:boolean| null;
     subscriptionStart?:Date | null;
     subscriptionEnd?:Date | null;
     maxConnectionsPerDay?:number | null;

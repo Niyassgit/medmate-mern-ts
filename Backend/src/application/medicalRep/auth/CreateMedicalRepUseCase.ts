@@ -1,4 +1,4 @@
-import { IMedicalRepRepository } from "../../../domain/medicalRep/entities/IMedicalRepRepository"; 
+import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository"; 
 import { BcryptServices } from "../../../infrastructure/services/BcryptService";  
 import { IMedicalRep } from "../../../domain/medicalRep/entities/IMedicalRep";  
 import { IUserLoginRepository } from "../../../domain/common/entities/IUserLoginRepository"; 
@@ -41,7 +41,7 @@ export class CreateMedicalRepUseCase{
         companyName:data.companyName,
         companyLogoUrl:data.companyLogoUrl ?? null,
         employeeId:data.employeeId,
-        subscriptionStatus:"inactive",
+        subscriptionStatus:false,
         maxConnectionsPerDay:10,
         loginId:login.id,
         

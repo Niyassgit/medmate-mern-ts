@@ -1,6 +1,8 @@
 import {prisma} from "../database/PrismaClient";
-import { IMedicalRepRepository } from "../../domain/medicalRep/entities/IMedicalRepRepository";
+import { IMedicalRepRepository } from "../../domain/medicalRep/repositories/IMedicalRepRepository";
 import { IMedicalRep } from "../../domain/medicalRep/entities/IMedicalRep";
+import { IRepListItem } from "../../domain/medicalRep/entities/IRepListItem";
+
 
 
 export class MedicalRepRepository implements IMedicalRepRepository{
@@ -49,6 +51,25 @@ export class MedicalRepRepository implements IMedicalRepRepository{
        }
 
       
+     }
+
+     async getAllMedicalReps(): Promise<IRepListItem[]> {
+         
+        const reps=await prisma.medicalRep.findMany({
+            include:{login:true}
+        });
+
+        return reps.map(r=>({
+            id:r.id,
+            name:r.name,
+            email:r.login?.email ?? null,
+            phone:r.phone,
+            employeeId:r.employeeId,
+            isBlocked:r.login?.isBlocked ?? null,
+            subscriptionStatus:r.subscriptionStatus ?? null,
+            createdAt:r.login?.createdAt ?? null
+
+        }))
      }
   
 }

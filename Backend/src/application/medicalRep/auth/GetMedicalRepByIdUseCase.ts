@@ -1,4 +1,4 @@
-import { IMedicalRepRepository } from "../../../domain/medicalRep/entities/IMedicalRepRepository";
+import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
 import { IMedicalRep } from "../../../domain/medicalRep/entities/IMedicalRep";
 import { UnautharizedError } from "../../../domain/common/errors";
 

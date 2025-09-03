@@ -1,4 +1,3 @@
-import React from "react";
 import { useForm } from "react-hook-form"
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -74,6 +73,7 @@ const SignupRep = () => {
 
             await registerRep(formData);
             alert("User has been Registered Successfully🚀");
+            navigate('/auth/login',{replace:true});
           
         } catch (error :any) {
             console.error(error);

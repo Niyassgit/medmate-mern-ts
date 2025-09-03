@@ -91,7 +91,7 @@ model MedicalRep {
   departmentId         String?   @db.ObjectId
   about                String?
   subscriptionPlanId   String?   @db.ObjectId
-  subscriptionStatus   String?
+  subscriptionStatus   Boolean?  @default(false)
   subscriptionStart    DateTime?
   subscriptionEnd      DateTime?
   maxConnectionsPerDay Int?
