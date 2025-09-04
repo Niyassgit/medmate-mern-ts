@@ -4,6 +4,8 @@ import { GetSuperAdminByEmailIdUseCase } from "../../../application/superAdmin/a
 import { RegisterSuperAdminDTO } from "../../../application/superAdmin/dto/RegisterSuperAdminDTO";
 import { GetAllDoctorsUseCase } from "../../../application/superAdmin/useCases/GetAllDoctorsUseCase";
 import { GetAllRepsUseCase } from "../../../application/superAdmin/useCases/GetAllRepsUseCase";
+import { BlockUserUseCase } from "../../../application/superAdmin/useCases/BlockUserUseCase";
+import { UnBlockUserUseCase } from "../../../application/superAdmin/useCases/UnblockUserUseCase";
 import { success } from "zod";
 
 export class SuperAdminController{
@@ -11,7 +13,9 @@ export class SuperAdminController{
         private _createSuperAdminUseCase:CreateSuperAdminUseCase,
         private _getSuperAdminByEmailIdUseCase:GetSuperAdminByEmailIdUseCase,
         private _getAllDoctorsUseCase:GetAllDoctorsUseCase,
-        private _getAllRepsUseCase:GetAllRepsUseCase
+        private _getAllRepsUseCase:GetAllRepsUseCase,
+        private _blockUserUseCase:BlockUserUseCase,
+        private _unblockUserUseCase:UnBlockUserUseCase
     ){}
 
      createSuperAdmin= async(req:Request,res:Response)=>{
@@ -39,4 +43,17 @@ export class SuperAdminController{
         const reps=await this._getAllRepsUseCase.execute();
         res.json({success:true,data:reps});
     }
+    blockUser=async(req:Request,res:Response)=>{
+        const {userId}=req.params;
+      const updatedUser=await this._blockUserUseCase.execute(userId);
+
+      return res.json({success:true,message:"User blocked successfully",updatedUser});
+    }
+    unBlockUser=async(req:Request,res:Response)=>{
+        const {userId}=req.params;
+        const updateUser=await this._unblockUserUseCase.execute(userId);
+
+        return res.json({success:true,message:"User unblocked successfully",updateUser});
+    }
+    
 }

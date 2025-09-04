@@ -2,7 +2,7 @@ import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRe
 import { IDoctor } from "../../../domain/doctor/entities/IDoctor"; 
 import { BcryptServices } from "../../../infrastructure/services/BcryptService"; 
 import { RegisterDoctorDTO } from "../dto/RegisterDoctorDTO";
-import { IUserLoginRepository } from "../../../domain/common/entities/IUserLoginRepository"; 
+import { IUserLoginRepository } from "../../../domain/common/repositories/IUserLoginRepository"; 
 import { AuthProvider,Role } from  "../../../domain/common/entities/IUserLogin"
 import { ConflictError,BadRequestError } from "../../../domain/common/errors";
 export class CreateDoctorUseCase{

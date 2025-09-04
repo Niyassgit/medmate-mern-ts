@@ -11,8 +11,9 @@ export class UserLoginMapper{
         id:user.id,
         email:user.email,
         password:user.password,
-        authProvider:user.authProvider ? user.authProvider as AuthProvider : null,
+        authProvider:user.authProvider as AuthProvider,
         role:user.role as Role,
+        isBlocked:user.isBlocked,
         providerId:user.providerId,
         createdAt:user.createdAt,
         updatedAt:user.updatedAt,
@@ -24,7 +25,7 @@ export class UserLoginMapper{
         return {
             email:domain.email,
             password:domain.password ?? undefined,
-            authProvider:domain.authProvider as AuthProvider,
+            authProvider:domain.authProvider,
             role:domain.role,
             providerId:domain.providerId,
         }

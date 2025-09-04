@@ -1,4 +1,4 @@
-import { IUserLoginRepository } from "../../domain/common/entities/IUserLoginRepository";
+import { IUserLoginRepository } from "../../domain/common/repositories/IUserLoginRepository";
 import { BcryptServices } from "../../infrastructure/services/BcryptService";
 import { AuthProvider,IUserLogin } from "../../domain/common/entities/IUserLogin";
 import { ConflictError,BadRequestError } from "../../domain/common/errors";

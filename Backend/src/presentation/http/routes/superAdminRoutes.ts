@@ -15,9 +15,10 @@ export class superAdminRoutes{
     }
      private initializeRoutes(){
          this.router.post("/signup",ValidateSchema(SuperAdminRegisterSchema),superAdminController.createSuperAdmin);
-         this.router.get("/reps",superAdminController.getAllReps);
          this.router.get("/:id",Authenticate,AuthorizeRole(["SUPER_ADMIN"]),superAdminController.getSuperAdminByEmial);
          this.router.get("/doctors",superAdminController.getAllDoctors);
-         
+         this.router.get("/reps",superAdminController.getAllReps);
+         this.router.patch("/block/:userId",superAdminController.blockUser);
+         this.router.patch("/unblock/:userId",superAdminController.unBlockUser)
     }
 }

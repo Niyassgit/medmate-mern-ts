@@ -1,7 +1,7 @@
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository"; 
 import { BcryptServices } from "../../../infrastructure/services/BcryptService";  
 import { IMedicalRep } from "../../../domain/medicalRep/entities/IMedicalRep";  
-import { IUserLoginRepository } from "../../../domain/common/entities/IUserLoginRepository"; 
+import { IUserLoginRepository } from "../../../domain/common/repositories/IUserLoginRepository"; 
 import { AuthProvider,Role } from "../../../domain/common/entities/IUserLogin"; 
 import { RegisterMedicalRepDTO } from "../dto/RegisterMedicalRepDTO"; 
 import { ConflictError,BadRequestError } from "../../../domain/common/errors";

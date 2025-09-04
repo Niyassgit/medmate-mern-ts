@@ -8,6 +8,8 @@ import { GetAllDoctorsUseCase } from "../../application/superAdmin/useCases/GetA
 import { DoctorRepository } from "../repositories/DoctorRepository";
 import { MedicalRepRepository } from "../repositories/MedicalRepRepository";
 import { GetAllRepsUseCase } from "../../application/superAdmin/useCases/GetAllRepsUseCase";
+import { BlockUserUseCase } from "../../application/superAdmin/useCases/BlockUserUseCase";
+import { UnBlockUserUseCase } from "../../application/superAdmin/useCases/UnblockUserUseCase";
 
 const superAdminRepositories=new SuperAdminRepository();
 const userLoginRepository=new UserLoginRepository()
@@ -19,10 +21,14 @@ const createSuperAdminUseCase=new CreateSuperAdminUseCase(superAdminRepositories
 const getSuperAdminByEmailIdUseCase=new GetSuperAdminByEmailIdUseCase(superAdminRepositories);
 const getAllDoctorsUseCase=new GetAllDoctorsUseCase(doctorRepository);
 const getAllRepUseCase=new GetAllRepsUseCase(medicalRepRepository);
+const blockUserUseCase=new BlockUserUseCase(userLoginRepository);
+const unblockUserUseCase=new UnBlockUserUseCase(userLoginRepository);
 
 export const superAdminController=new SuperAdminController(
     createSuperAdminUseCase,
     getSuperAdminByEmailIdUseCase,
     getAllDoctorsUseCase,
-    getAllRepUseCase
+    getAllRepUseCase,
+    blockUserUseCase,
+    unblockUserUseCase
 );
