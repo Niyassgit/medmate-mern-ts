@@ -8,7 +8,7 @@ const AdminLayout = () => {
    return (
     <div className="flex h-screen">
 
-      <aside className="flex flex-col justify-between w-64 bg-[#de3b40] text-white">
+      <aside className="flex flex-col justify-between w-64 bg-[#e6686c] text-white">
        
         <div className="p-2 flex items-center ">
         
@@ -20,7 +20,7 @@ const AdminLayout = () => {
          <span className="text-xl font-bold italic">MedMate</span>
          </div>
    
-          <nav className="flex-1 flex flex-col gap-3 p-4 bg-[#b9181d]">
+          <nav className="flex-1 flex flex-col gap-3 p-4 bg-[#ae3236]">
 
             <ul className="space-y-2"> 
               <li>
@@ -39,7 +39,7 @@ const AdminLayout = () => {
              
                
               <li className="space-y-2">
-                 <NavLink to={"doctors-list"} className={({isActive})=> `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
+                 <NavLink to={"doctors"} className={({isActive})=> `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
                    isActive
                    ?"bg-gray-200 text-black font-semibold"
                    :"text-white hover:bg-[#a81519]"
@@ -53,7 +53,7 @@ const AdminLayout = () => {
               </li>
               
                 <li className="space-y-2">
-                 <NavLink to={"reps-list"} className={({isActive})=>`flex items-center gap-2 px-3 py-2 ${
+                 <NavLink to={"reps"} className={({isActive})=>`flex items-center gap-2 px-3 py-2 ${
                   isActive
                   ?"bg-gray-200 text-black font-semibold"
                   :"text-white hover:bg-[#a81519]"

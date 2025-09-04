@@ -31,10 +31,10 @@ export class DoctorRepository implements IDoctorRepository{
             experienceYears:doc.experienceYears ?? null,
             hasOwnClinic:doc.hasOwnClinic ?? null,
             doctorClass:doc.doctorClass ?? null,
-            territoryId:doc.doctorClass ?? null,
+            territoryId:doc.territoryId?? null,
             loginId:doc.loginId ?? null,
             registrationId:doc.registrationId,
-            hospitalId:doc.registrationId,
+            hospital:doc.hospital,
             licenseImageUrl:doc.licenseImageUrl,
             opHours:doc.opHours ?? null,
             about:doc.about ?? null,
@@ -50,7 +50,7 @@ export class DoctorRepository implements IDoctorRepository{
         const doctors=await prisma.doctor.findMany({
             include:{login:true}
         });
-        
+
         return doctors.map(d=>({
             id:d.id,
             name:d.name,
@@ -58,7 +58,7 @@ export class DoctorRepository implements IDoctorRepository{
             phone:d.phone,
             isBlocked:d.login?.isBlocked ?? null,
             createdAt:d.login?.createdAt ?? null,
-            hospitalId:d.hospitalId
+            hospital:d.hospital
         }))
     }
 }

@@ -27,8 +27,8 @@ export const router=createBrowserRouter([
 
     {path:"dashboard",element:<AdminDashboard/>},
     {path:"user-validation", element:<UserValidation/>},
-    {path:"reps-list",element:<RepsList/>},
-    {path:"doctors-list",element:<DoctorsList/>}
+    {path:"reps",element:<RepsList/>},
+    {path:"doctors",element:<DoctorsList/>}
 
     ]},
  

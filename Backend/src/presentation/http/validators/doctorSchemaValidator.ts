@@ -10,7 +10,7 @@ export const RegisterDoctorSchema = z.object({
   password: z.string().min(6, "Password must be atleast 6 characters"),
   // departmentId: z.string().min(1, "Department is required"),
   // territoryId: z.string().min(1, "Territory is required"),
-  hospitalId: z.string().min(1, "Invalid hospital id"),
+  hospital: z.string().min(1, "Invalid hospital id"),
   registrationId: z.string().min(1, "Please insert valid registeration id"),
   opHours: z.string().min(3, "Please insert valid op hour"),
   licenseImageUrl: z

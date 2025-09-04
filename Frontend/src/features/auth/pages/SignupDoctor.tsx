@@ -23,7 +23,7 @@ type DoctorRegisterValues = {
     Cpassword: string,
     // departmentId: string,
     // territoryId: string,
-    hospitalId: string,
+    hospital: string,
     registrationId: string,
     licenseImageUrl: File |null,
     opHours: string,
@@ -43,7 +43,7 @@ const SignupDoctor = () => {
             Cpassword:"",
             // departmentId:"",
             // territoryId:"",
-            hospitalId:"",
+            hospital:"",
             registrationId:"",
             licenseImageUrl:null,
             opHours:"",
@@ -69,7 +69,7 @@ const SignupDoctor = () => {
             formData.append("password",values.password);
             // formData.append("departmentId",values.departmentId);
             // formData.append("territoryId",values.territoryId);
-            formData.append("hospitalId",values.hospitalId);
+            formData.append("hospitalId",values.hospital);
             formData.append("registrationId",values.registrationId);
             if(values.licenseImageUrl) formData.append("licenseImageUrl",values.licenseImageUrl);
             formData.append("opHours",values.opHours);
@@ -277,11 +277,11 @@ const SignupDoctor = () => {
                     />   
                           <FormField
                         control={form.control}
-                        name="hospitalId"
+                        name="hospital"
                         render={({ field }) => (
                             <FormItem>
                                 <FormControl>
-                                    <Input placeholder="Hospital ID" {...field} />
+                                    <Input placeholder="Hospital" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

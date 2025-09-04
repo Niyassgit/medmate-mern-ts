@@ -4,6 +4,6 @@ export interface DoctorListDTO{
   email: string | null;
   phone: string;
   isBlocked: boolean | null;
-  hospitalId: string;
+  hospital: string;
   createdAt: Date | null;
 }

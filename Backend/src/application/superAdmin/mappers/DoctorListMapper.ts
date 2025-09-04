@@ -9,7 +9,7 @@ export class DoctorListMapper {
       email: entity.email,
       phone: entity.phone,
       isBlocked: entity.isBlocked,
-      hospitalId: entity.hospitalId,
+      hospital: entity.hospital,
       createdAt: entity.createdAt,
     };
   }

@@ -54,7 +54,7 @@ model Doctor {
   hasOwnClinic    Boolean?
   doctorClass     String?
   territoryId     String?   @db.ObjectId
-  hospitalId      String
+  hospital      String
   licenseImageUrl    String?
   opHours         String?
   registrationId  String
