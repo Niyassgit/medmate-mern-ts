@@ -17,6 +17,7 @@ export class UserLoginMapper{
         providerId:user.providerId,
         createdAt:user.createdAt,
         updatedAt:user.updatedAt,
+        
     }
   }
 

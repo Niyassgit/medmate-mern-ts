@@ -1,7 +1,9 @@
 import AdminNavbar from "@/components/navbar/AdminNavbar";
 import { Button } from "@/components/ui/button";
 import useFetchList from "@/hooks/useFetchList";
-import { getAllReps } from "../api/superAdminApi";
+import { getAllReps,blockUser,unblockUser } from "../api/superAdminApi";
+import { useState } from "react";
+
 
 interface MedicalRep {
   id: string;
@@ -12,10 +14,40 @@ interface MedicalRep {
   isBlocked: boolean;
   employeeId: string;
   createdAt: Date;
+  loginId:string;
 }
 
 const RepsList = () => {
-  const { data: reps, loading, error } = useFetchList<MedicalRep>(getAllReps);
+  const { data: reps, loading, error,setData} = useFetchList<MedicalRep>(getAllReps);
+  const [blockLoading,setBlockLoading]=useState<string|null>(null);
+
+  const handleBlockToggle=async(rep:MedicalRep)=>{
+    
+    try {
+      setBlockLoading(rep.loginId);
+      
+      let userUpdated;
+      if(rep.isBlocked){
+        const res=await unblockUser(rep.loginId);
+        userUpdated=res.updatedUser;
+      }else{
+        const res=await blockUser(rep.loginId);
+        userUpdated=res.updatedUser;
+      }
+    
+      setData((prev)=>(
+        prev.map((doc)=>doc.loginId===rep.loginId?{...doc,isBlocked:userUpdated.isBlocked}:doc)
+      ))
+      
+    } catch (error) {
+      console.log("Block user Toggel error:",error);
+      alert("Something went wronn on updating block status");
+    }finally{
+        setBlockLoading(null);
+      }
+
+
+  }
 
   return (
     <>
@@ -79,6 +111,22 @@ const RepsList = () => {
                         {rep.isBlocked ? "Blocked" : "Active"}
                       </span>
                     </td>
+
+                    <td className="p-3 flex justify-center gap-2">
+                      <Button
+                      variant="outline"
+                      size="sm"
+                      >View</Button>
+                      <Button 
+                      variant={rep.isBlocked ? "default":"destructive"}
+                      size="sm"
+                      onClick={()=>handleBlockToggle(rep)}
+                      disabled={blockLoading===rep.loginId}
+                      >
+                        {rep.isBlocked?"Unblock":"Block"}
+                      </Button>
+                    </td>
+
                   </tr>
                 ))}
               </tbody>

@@ -11,7 +11,8 @@ export class RepListMapper {
       employeeId:entity.employeeId,
       isBlocked:entity.isBlocked,
       subscriptionStatus:entity.subscriptionStatus,
-      createdAt:entity.createdAt
+      createdAt:entity.createdAt,
+      loginId:entity.loginId
     };
   }
 }

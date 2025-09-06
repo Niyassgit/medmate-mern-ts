@@ -35,7 +35,7 @@ export class CreateDoctorUseCase{
             phone:data.phone,
             departmentId:data.departmentId,
             territoryId:data.territoryId,
-            hospitalId:data.hospitalId,
+            hospital:data.hospital,
             registrationId:data.registrationId,
             licenseImageUrl:data.licenseImageUrl,
             opHours:data.opHours,

@@ -21,7 +21,7 @@ export class UserLoginRepository implements IUserLoginRepository {
     userId: string,
     isBlocked: boolean
   ): Promise<IUserLogin | null> {
-    const user = await prisma.userLogin.update({
+      const user = await prisma.userLogin.update({
       where: { id: userId },
       data: { isBlocked },
     });

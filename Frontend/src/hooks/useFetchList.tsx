@@ -24,7 +24,7 @@ const useFetchList = <T,>(fetchFn:()=>Promise<T[]>) => {
   },[fetchFn])
 
 
- return {data,loading,error};
+ return {data,setData,loading,error};
   
 }
 

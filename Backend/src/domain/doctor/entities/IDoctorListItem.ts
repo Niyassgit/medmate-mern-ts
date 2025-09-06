@@ -6,4 +6,5 @@ export interface IDoctorListItem{
     isBlocked:boolean | null;
     hospital:string;
     createdAt:Date | null;
+    loginId:string| null
 }

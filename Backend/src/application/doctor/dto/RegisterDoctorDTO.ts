@@ -5,7 +5,7 @@ export interface RegisterDoctorDTO{
     phone:string;
     departmentId?:string | null;
     territoryId?: string | null;
-    hospitalId:string;
+    hospital:string;
     registrationId:string;
     licenseImageUrl: string |null;
     opHours:string;

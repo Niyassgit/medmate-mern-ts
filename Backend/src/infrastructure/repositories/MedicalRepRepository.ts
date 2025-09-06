@@ -56,7 +56,12 @@ export class MedicalRepRepository implements IMedicalRepRepository{
      async getAllMedicalReps(): Promise<IRepListItem[]> {
          
         const reps=await prisma.medicalRep.findMany({
-            include:{login:true}
+            include:{login:true},
+            orderBy:{
+                login:{
+                    createdAt:"desc"
+                }
+            }
         });
 
         return reps.map(r=>({
@@ -67,7 +72,8 @@ export class MedicalRepRepository implements IMedicalRepRepository{
             employeeId:r.employeeId,
             isBlocked:r.login?.isBlocked ?? null,
             subscriptionStatus:r.subscriptionStatus ?? null,
-            createdAt:r.login?.createdAt ?? null
+            createdAt:r.login?.createdAt ?? null,
+            loginId:r.loginId ?? null,
 
         }))
      }

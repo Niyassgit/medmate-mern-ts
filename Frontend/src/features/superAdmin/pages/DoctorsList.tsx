@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import AdminNavbar from "@/components/navbar/AdminNavbar";
 import useFetchList from "@/hooks/useFetchList";
-import { getAllDoctors } from "../api/superAdminApi";
+import { getAllDoctors ,blockUser,unblockUser} from "../api/superAdminApi";
+import { useState } from "react";
 
 interface Doctor {
   id: string;
@@ -11,11 +12,41 @@ interface Doctor {
   email: string;
   isBlocked: boolean;
   createdAt: string;
+  loginId:string;
 }
 
 const DoctorsList = () => {
-  const { data: doctors, loading, error } = useFetchList<Doctor>(getAllDoctors);
-  const handleBlockToggle = (id: string) => {};
+  const { data: doctors, loading, error,setData} = useFetchList<Doctor>(getAllDoctors);
+  const [blockLoading,setBlockLoading]=useState<string|null>(null);
+  const handleBlockToggle = async(doctor:Doctor) => {
+
+   console.log("blocking doctor details:",doctor);
+
+    try {
+        setBlockLoading(doctor.loginId);
+     let userUpdated;
+     if(doctor.isBlocked){
+      const res=await unblockUser(doctor.loginId);
+      userUpdated=res?.updatedUser;
+     }else{
+      const res=await blockUser(doctor.loginId);
+      userUpdated=res?.updatedUser;
+     }
+
+
+     setData((prev)=>(
+      prev.map((doc)=>doc.id===doctor.id?{...doc,isBlocked:userUpdated.isBlocked}:doc)
+     ));
+      
+    } catch (err) {
+      console.log("falied to toggle block button",err);
+      alert("Something went wrong while updating block status");
+    }finally{
+      setBlockLoading(null);
+    }
+
+   
+  };
 
   return (
     <>
@@ -66,7 +97,7 @@ const DoctorsList = () => {
                             : "bg-green-100 text-green-700"
                         }`}
                       >
-                        {doctor.isBlocked ? "Blocked" : "Active"}
+                        {doctor.isBlocked === undefined?"Unknown":doctor.isBlocked ? "Blocked" : "Active"}
                       </span>
                     </td>
                     <td className="p-3 flex justify-center gap-2">
@@ -82,7 +113,8 @@ const DoctorsList = () => {
                           doctor.isBlocked ? "default" : "destructive"
                         }
                         size="sm"
-                        onClick={() => handleBlockToggle(doctor.id)}
+                        disabled={blockLoading===doctor.loginId}
+                        onClick={() => handleBlockToggle(doctor)}
                       >
                         {doctor.isBlocked ? "Unblock" : "Block"}
                       </Button>

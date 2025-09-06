@@ -6,5 +6,6 @@ export interface IRepListItem{
     subscriptionStatus:boolean | null,
     isBlocked:boolean | null,
     employeeId:string | null,
-    createdAt:Date |null
+    createdAt:Date |null,
+    loginId:string|null
 }

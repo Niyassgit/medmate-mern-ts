@@ -11,11 +11,11 @@ export const getAllReps=async()=>{
     const response=await axios.get(`${BASE_URL}/admin/reps`);
     return response.data.data;
 }
-export const blockDoctor=async(doctorId:string)=>{
-    const response=await axios.patch(`${BASE_URL}/admin/block/${doctorId}`);
+export const blockUser=async(userId:string)=>{
+    const response=await axios.patch(`${BASE_URL}/admin/block/${userId}`);
     return response.data;
 }
-export const unblockDoctor=async(doctorId:string)=>{
-    const response=await axios.patch(`${BASE_URL}/admin/unblock/${doctorId}`);
+export const unblockUser=async(userId:string)=>{
+    const response=await axios.patch(`${BASE_URL}/admin/unblock/${userId}`);
     return response.data;
 }

@@ -6,6 +6,7 @@ export interface RepListDTO{
     subscriptionStatus:boolean | null,
     isBlocked:boolean| null,
     employeeId:string | null,
-    createdAt:Date | null
+    createdAt:Date | null,
+    loginId:string|null,
 
 }
