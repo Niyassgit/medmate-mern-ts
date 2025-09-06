@@ -1,8 +1,10 @@
-import { Button } from "@/components/ui/button";
+import { Button} from "@/components/ui/button";
 import AdminNavbar from "@/components/navbar/AdminNavbar";
 import useFetchList from "@/hooks/useFetchList";
 import { getAllDoctors ,blockUser,unblockUser} from "../api/superAdminApi";
 import { useState } from "react";
+import { Pagination,PaginationContent,PaginationEllipsis,PaginationItem,PaginationLink,PaginationNext,PaginationPrevious } from "@/components/ui/pagination";
+
 
 interface Doctor {
   id: string;
@@ -52,12 +54,12 @@ const DoctorsList = () => {
     <>
       <AdminNavbar />
 
-      <div className="h-screen bg-gray-50 p-4">
+      <div className=" bg-gray-50 p-4">
         <span className="font-bold text-2xl text-gray-600">
           Doctors Management
         </span>
 
-        <div className="p-6 bg-white rounded-xl shadow-md mt-3">
+        <div className="p-6  bg-white rounded-xl shadow-md mt-3">
           <h2 className="text-xl font-semibold mb-4">Registered Doctors</h2>
 
           {loading ? (
@@ -125,7 +127,34 @@ const DoctorsList = () => {
             </table>
           )}
         </div>
+ 
+         <div className="m-2">
+            <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious href="#"/>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href="#">1</PaginationLink>
+          </PaginationItem>
+           <PaginationItem>
+            <PaginationLink href="#">2</PaginationLink>
+          </PaginationItem>
+           <PaginationItem>
+            <PaginationLink href="#">3</PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationNext  href=""/>
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
+          </div>       
+    
       </div>
+
     </>
   );
 };

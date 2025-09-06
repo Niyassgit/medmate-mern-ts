@@ -46,17 +46,22 @@ export class DoctorRepository implements IDoctorRepository{
 
 
     }
-    async getAllDoctors(): Promise<IDoctorListItem[]> {
-        const doctors=await prisma.doctor.findMany({
-            include:{login:true},
-            orderBy:{
-                login:{
-                    createdAt:"desc"
-                }
-            }
-        });
+    async getAllDoctors(page:number,limit:number): Promise<{doctors:IDoctorListItem[],total:number}> {
 
-        return doctors.map(d=>({
+       const skip=(page-1)*limit;
+       const [doctors,total]=await Promise.all([
+        prisma.doctor.findMany({
+            include:{login:true},
+            orderBy:{login:{createdAt:"desc"}},
+            skip,
+            take:limit
+
+        }),
+        prisma.doctor.count()
+       ]);
+
+        return {
+            doctors: doctors.map(d=>({
             id:d.id,
             name:d.name,
             email:d.login?.email ?? null,
@@ -65,6 +70,10 @@ export class DoctorRepository implements IDoctorRepository{
             createdAt:d.login?.createdAt ?? null,
             hospital:d.hospital,
             loginId:d.login?.id ?? null
-        }))
+        })),
+        total
+
+    };
+
     }
 }

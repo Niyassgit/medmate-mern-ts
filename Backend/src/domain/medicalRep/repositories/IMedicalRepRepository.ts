@@ -6,5 +6,5 @@ import { IRepListItem } from "../entities/IRepListItem";
     createMedicalRep(data:Omit<IMedicalRep,"id" | "createdAt" | "updatedAt">):Promise<IMedicalRep>;
     getMedicalRepById(id:string):Promise<IMedicalRep | null>;
     getMedicalRepByEmail(email:string):Promise<IMedicalRep | null>;
-    getAllMedicalReps():Promise<IRepListItem[]>;
+    getAllMedicalReps(page:number,limit:number):Promise<{reps:IRepListItem[],total:number}>;
 }

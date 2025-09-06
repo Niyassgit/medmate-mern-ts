@@ -53,18 +53,23 @@ export class MedicalRepRepository implements IMedicalRepRepository{
       
      }
 
-     async getAllMedicalReps(): Promise<IRepListItem[]> {
-         
-        const reps=await prisma.medicalRep.findMany({
-            include:{login:true},
-            orderBy:{
-                login:{
-                    createdAt:"desc"
-                }
-            }
-        });
+     async getAllMedicalReps(page:number,limit:number): Promise<{reps:IRepListItem[],total:number}> {
+        
+        const skip=(page-1)*limit;
+        const [reps,total]= await Promise.all([
+            prisma.medicalRep.findMany({
+                include:{login:true},
+                orderBy:{login:{createdAt:"desc"}},
+                skip,
+                take:limit
+            }),
+            prisma.medicalRep.count()
+        ]);
 
-        return reps.map(r=>({
+    
+        return {
+            
+            reps:reps.map(r=>({
             id:r.id,
             name:r.name,
             email:r.login?.email ?? null,
@@ -75,7 +80,10 @@ export class MedicalRepRepository implements IMedicalRepRepository{
             createdAt:r.login?.createdAt ?? null,
             loginId:r.loginId ?? null,
 
-        }))
+        })),
+
+        total
+    }
      }
   
 }
