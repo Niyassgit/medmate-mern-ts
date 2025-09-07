@@ -8,10 +8,13 @@ export class GetAllDoctorsUseCase{
         private _doctorRepository:IDoctorRepository
     ){}
     
-    async execute(page:number,limit:number):Promise<DoctorListDTO[]>{
+    async execute(page:number,limit:number):Promise<{doctors:DoctorListDTO[],total:number}>{
 
-        const doctor=await this._doctorRepository.getAllDoctors(page,limit);
-        return doctor.doctors.map((doc)=>DoctorListMapper.toDoctorListDTO(doc));
+        const {doctors,total}=await this._doctorRepository.getAllDoctors(page,limit);
+        return {
+            doctors:doctors.map((doc)=>DoctorListMapper.toDoctorListDTO(doc)),
+            total
+        }
     }
 
 }

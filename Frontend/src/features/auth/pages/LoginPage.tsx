@@ -1,50 +1,40 @@
-import ExampleForm from '@/components/example-form'
-import { Link } from 'react-router-dom';
-import { loginUser } from '../api';
-import { Role } from '@/types/Role';
-
+import ExampleForm from "@/components/example-form";
+import { Link } from "react-router-dom";
+import { loginUser } from "../api";
+import { Role } from "@/types/Role";
 
 const LoginPage = () => {
-   
-
-  const handleLogin= async(values:{email:string,password:string})=>{
-         
+  const handleLogin = async (values: { email: string; password: string }) => {
     try {
-      const {data} =await loginUser(values);
+      const { data } = await loginUser(values);
 
-      localStorage.setItem("accessToken",data.accessToken);
-      localStorage.setItem("role",data.user.role);
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("role", data.user.role);
 
-      if(data.user.role ===Role.DOCTOR){
-        window.location.href='/doctor/dashboard'
-      }else if(data.user.role===Role.MEDICAL_REP){
-        window.location.href='/rep/dashboard'
-      }else if(data.user.role===Role.SUPER_ADMIN){
-        window.location.href='/admin/dashboard'
-      }else{
-        window.location.href='/';
+      if (data.user.role === Role.DOCTOR) {
+        window.location.href = "/doctor/dashboard";
+      } else if (data.user.role === Role.MEDICAL_REP) {
+        window.location.href = "/rep/dashboard";
+      } else if (data.user.role === Role.SUPER_ADMIN) {
+        window.location.href = "/admin/dashboard";
+      } else {
+        window.location.href = "/";
       }
-
-    } catch (error:any) {
-      alert(error.response?.data?.message|| "something went wrong")
+    } catch (error: any) {
+      alert(error.response?.data?.message || "something went wrong");
     }
+  };
 
-
-  }
-
-  
-      const handleGoogleLogin = () => {
-    console.log("Google login clicked")
+  const handleGoogleLogin = () => {
+    console.log("Google login clicked");
     // Redirect to your backend Google OAuth endpoint
-  }
+  };
 
   return (
     <div className="relative min-h-screen w-full flex justify-center items-center ">
-
       <div className="absolute inset-0 "></div>
 
       <div className="relative z-10 flex w-full max-w-4xl min-h-[500px] md:min-h-[600px] rounded-2xl shadow-2xl overflow-hidden bg-white">
-
         <div className="hidden md:flex w-1/2">
           <img
             src="/LoginImg.png"
@@ -53,12 +43,14 @@ const LoginPage = () => {
           />
         </div>
 
-       
         <div className="w-full md:w-1/2 flex flex-col justify-center p-8 sm:p-10">
           <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-gray-800 text-center md:text-left">
             Login Doccure
           </h2>
-          <ExampleForm onSubmit={handleLogin} onGoogleLogin={handleGoogleLogin} />
+          <ExampleForm
+            onSubmit={handleLogin}
+            onGoogleLogin={handleGoogleLogin}
+          />
 
           <div className="flex flex-col items-center mt-4 space-y-2">
             <Link
@@ -74,16 +66,10 @@ const LoginPage = () => {
               </Link>
             </p>
           </div>
-
-    
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-
-
-
-
-export default LoginPage
+export default LoginPage;

@@ -2,7 +2,8 @@ import AdminNavbar from "@/components/navbar/AdminNavbar";
 import { Button } from "@/components/ui/button";
 import useFetchList from "@/hooks/useFetchList";
 import { getAllReps,blockUser,unblockUser } from "../api/superAdminApi";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import AppPagination from "@/components/AppPagination";
 
 
 interface MedicalRep {
@@ -17,9 +18,24 @@ interface MedicalRep {
   loginId:string;
 }
 
+type MedicalRepResponse={
+  reps:MedicalRep[],
+  page:number,
+  total:number,
+  limit:number
+}
+
 const RepsList = () => {
-  const { data: reps, loading, error,setData} = useFetchList<MedicalRep>(getAllReps);
+  const [page,setPage]=useState(1);
+  const limit=10;
+  const fetchFn=useCallback(()=>getAllReps(page,limit),[page,limit]);
+  const { data,loading, error,setData} = useFetchList<MedicalRepResponse>(fetchFn);
   const [blockLoading,setBlockLoading]=useState<string|null>(null);
+
+
+  const reps=data?.reps ?? [];
+  const total=data?.total ?? 0;
+  const totalPage=Math.ceil(total/limit);
 
   const handleBlockToggle=async(rep:MedicalRep)=>{
     
@@ -36,7 +52,11 @@ const RepsList = () => {
       }
     
       setData((prev)=>(
-        prev.map((doc)=>doc.loginId===rep.loginId?{...doc,isBlocked:userUpdated.isBlocked}:doc)
+         prev?{
+          ...prev,
+          reps:prev.reps.map((doc)=>doc.id===rep.id ? {...doc,isBlocked:userUpdated.isBlocked}:doc)
+         }:prev
+       
       ))
       
     } catch (error) {
@@ -133,6 +153,13 @@ const RepsList = () => {
             </table>
           )}
         </div>
+
+
+        <AppPagination 
+        page={page}
+        totalPages={totalPage}
+        onPageChange={setPage}
+        />
       </div>
     </>
   );

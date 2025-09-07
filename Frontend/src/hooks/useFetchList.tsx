@@ -2,9 +2,9 @@ import {useState,useEffect} from 'react'
 
 
 
-const useFetchList = <T,>(fetchFn:()=>Promise<T[]>) => {
+const useFetchList = <T,>(fetchFn:()=>Promise<T>) => {
 
-  const [data,setData]=useState<T[]>([]);
+  const [data,setData]=useState<T| null>(null);
   const [loading,setLoading]=useState(true);
   const [error,setError]=useState<string | null>(null);
 

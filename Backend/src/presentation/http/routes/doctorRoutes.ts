@@ -9,7 +9,7 @@ import { AuthorizeRole } from "../middlewares/AuthorizeRole";
 export class DoctorRoutes{
      public router:Router;
 
-    constructor(){
+    constructor(){  
         this.router=Router()
         this.initializeRoutes()
     }

@@ -3,12 +3,12 @@ import axios from "axios";
 
 const BASE_URL=import.meta.env.VITE_API_URL;
 
-export const getAllDoctors=async()=>{
-    const response=await axios.get(`${BASE_URL}/admin/doctors`);
+export const getAllDoctors=async(page:number=1,limit:number=10)=>{
+    const response=await axios.get(`${BASE_URL}/admin/doctors?page=${page}&limit=${limit}`);
     return response.data.data;
 }
-export const getAllReps=async()=>{
-    const response=await axios.get(`${BASE_URL}/admin/reps`);
+export const getAllReps=async(page:number=1,limit:number=10)=>{
+    const response=await axios.get(`${BASE_URL}/admin/reps?page=${page}&limit=${limit}`);
     return response.data.data;
 }
 export const blockUser=async(userId:string)=>{

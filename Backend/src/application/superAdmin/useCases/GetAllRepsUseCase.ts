@@ -7,8 +7,12 @@ export class GetAllRepsUseCase{
         private _medicalRepRepository:IMedicalRepRepository
     ){}
 
-    async execute(page:number,limit:number):Promise<RepListDTO[]>{
-        const medicalRep=await this._medicalRepRepository.getAllMedicalReps(page,limit);
-        return medicalRep.reps.map((rep)=>RepListMapper.toRepListDTO(rep));
+    async execute(page:number,limit:number):Promise<{reps:RepListDTO[],total:number}>{
+        const {reps,total}=await this._medicalRepRepository.getAllMedicalReps(page,limit);
+        return{
+              reps:reps.map((rep)=>RepListMapper.toRepListDTO(rep)),
+              total    
+
+        }
     }
 }

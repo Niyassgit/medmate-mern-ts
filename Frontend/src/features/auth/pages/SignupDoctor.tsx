@@ -1,4 +1,3 @@
-import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -69,7 +68,7 @@ const SignupDoctor = () => {
             formData.append("password",values.password);
             // formData.append("departmentId",values.departmentId);
             // formData.append("territoryId",values.territoryId);
-            formData.append("hospitalId",values.hospital);
+            formData.append("hospital",values.hospital);
             formData.append("registrationId",values.registrationId);
             if(values.licenseImageUrl) formData.append("licenseImageUrl",values.licenseImageUrl);
             formData.append("opHours",values.opHours);

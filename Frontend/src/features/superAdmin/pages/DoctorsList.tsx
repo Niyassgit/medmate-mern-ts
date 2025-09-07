@@ -2,8 +2,8 @@ import { Button} from "@/components/ui/button";
 import AdminNavbar from "@/components/navbar/AdminNavbar";
 import useFetchList from "@/hooks/useFetchList";
 import { getAllDoctors ,blockUser,unblockUser} from "../api/superAdminApi";
-import { useState } from "react";
-import { Pagination,PaginationContent,PaginationEllipsis,PaginationItem,PaginationLink,PaginationNext,PaginationPrevious } from "@/components/ui/pagination";
+import { useCallback, useState } from "react";
+import AppPagination from "@/components/AppPagination";
 
 
 interface Doctor {
@@ -17,12 +17,27 @@ interface Doctor {
   loginId:string;
 }
 
+type DoctorResponse={
+  doctors:Doctor[],
+  total:number,
+  page:number,
+  limit:number
+}
+
 const DoctorsList = () => {
-  const { data: doctors, loading, error,setData} = useFetchList<Doctor>(getAllDoctors);
+  const [page,setPage]=useState(1);
+  const limit=10;
+  const fetchFn=useCallback(()=>getAllDoctors(page,limit),[page,limit]);
+  const { data, loading, error,setData} = useFetchList<DoctorResponse>(fetchFn);
   const [blockLoading,setBlockLoading]=useState<string|null>(null);
+
+  
+  const doctors=data?.doctors ?? [];
+  const total=data?.total ?? 0;
+  const totalPage=Math.ceil(total/10);
+
   const handleBlockToggle = async(doctor:Doctor) => {
 
-   console.log("blocking doctor details:",doctor);
 
     try {
         setBlockLoading(doctor.loginId);
@@ -37,8 +52,13 @@ const DoctorsList = () => {
 
 
      setData((prev)=>(
-      prev.map((doc)=>doc.id===doctor.id?{...doc,isBlocked:userUpdated.isBlocked}:doc)
-     ));
+      prev ? { 
+        ...prev,
+        doctors:prev.doctors.map((doc)=>doc.id===doctor.id?{...doc,isBlocked:userUpdated.isBlocked}:doc)
+      } :prev
+    )
+  );
+      
       
     } catch (err) {
       console.log("falied to toggle block button",err);
@@ -54,7 +74,7 @@ const DoctorsList = () => {
     <>
       <AdminNavbar />
 
-      <div className=" bg-gray-50 p-4">
+      <div className="min-h-screen bg-gray-50 p-4">
         <span className="font-bold text-2xl text-gray-600">
           Doctors Management
         </span>
@@ -127,32 +147,13 @@ const DoctorsList = () => {
             </table>
           )}
         </div>
- 
-         <div className="m-2">
-            <Pagination>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious href="#"/>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">1</PaginationLink>
-          </PaginationItem>
-           <PaginationItem>
-            <PaginationLink href="#">2</PaginationLink>
-          </PaginationItem>
-           <PaginationItem>
-            <PaginationLink href="#">3</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext  href=""/>
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
-          </div>       
-    
+        
+        <AppPagination 
+        page={page}
+        totalPages={totalPage}
+        onPageChange={setPage}
+        />
+
       </div>
 
     </>

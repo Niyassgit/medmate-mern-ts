@@ -6,7 +6,7 @@ import { Avatar,AvatarImage,AvatarFallback } from "@/components/ui/avatar"
 const AdminLayout = () => {
   
    return (
-    <div className="flex h-screen">
+    <div className="flex min-h-screen">
 
       <aside className="flex flex-col justify-between w-64 bg-[#e6686c] text-white">
        
