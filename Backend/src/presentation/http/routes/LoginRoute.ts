@@ -14,5 +14,6 @@ export class LoginRoute{
      initializeRoute(){
 
         this.router.post("/login",ValidateSchema(validateLogin),authController.loginUser);
+        this.router.post("/google",authController.googleLogin);
      }
-}
+} 

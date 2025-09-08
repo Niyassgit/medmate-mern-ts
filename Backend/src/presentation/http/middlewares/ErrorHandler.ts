@@ -6,6 +6,7 @@ export const ErrorHandler=(err:unknown,req:Request,res:Response,next:NextFunctio
     if(err instanceof AppError){
         res.status(err.statusCode).json({success:false,message:err.message});
     }else{
+        console.error("🔥 Unhandled Error:", err); 
         res.status(500).json({success:false,message:"Internal Server Error"});
     }
 }

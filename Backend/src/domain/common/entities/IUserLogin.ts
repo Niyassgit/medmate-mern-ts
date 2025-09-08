@@ -12,13 +12,14 @@ export enum AuthProvider {
 
 
 
-export interface IUserLogin{
+export interface    IUserLogin{
     id:string;
     email:string;
     password?:string | null;
     isBlocked:boolean;
     authProvider:AuthProvider;
     providerId?:string | null;
+    isVerified:boolean
     role:Role;
     createdAt:Date;
     updatedAt:Date;
