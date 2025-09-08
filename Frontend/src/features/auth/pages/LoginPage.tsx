@@ -2,8 +2,10 @@ import ExampleForm from "@/components/example-form";
 import { Link } from "react-router-dom";
 import { loginUser } from "../api";
 import { Role } from "@/types/Role";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
+  const navigate=useNavigate();
   const handleLogin = async (values: { email: string; password: string }) => {
     try {
       const { data } = await loginUser(values);
@@ -12,23 +14,19 @@ const LoginPage = () => {
       localStorage.setItem("role", data.user.role);
 
       if (data.user.role === Role.DOCTOR) {
-        window.location.href = "/doctor/dashboard";
+         navigate("/doctor/dashboard", { replace: true });
       } else if (data.user.role === Role.MEDICAL_REP) {
-        window.location.href = "/rep/dashboard";
+         navigate("/rep/dashboard", { replace: true });
       } else if (data.user.role === Role.SUPER_ADMIN) {
-        window.location.href = "/admin/dashboard";
+        navigate("/admin/dashboard", { replace: true });
       } else {
-        window.location.href = "/";
+         navigate("/", { replace: true });
       }
     } catch (error: any) {
       alert(error.response?.data?.message || "something went wrong");
     }
   };
 
-  const handleGoogleLogin = () => {
-    console.log("Google login clicked");
-    // Redirect to your backend Google OAuth endpoint
-  };
 
   return (
     <div className="relative min-h-screen w-full flex justify-center items-center ">
@@ -49,7 +47,6 @@ const LoginPage = () => {
           </h2>
           <ExampleForm
             onSubmit={handleLogin}
-            onGoogleLogin={handleGoogleLogin}
           />
 
           <div className="flex flex-col items-center mt-4 space-y-2">

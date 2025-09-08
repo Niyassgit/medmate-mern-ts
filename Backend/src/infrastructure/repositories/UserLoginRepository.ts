@@ -18,6 +18,11 @@ export class UserLoginRepository implements IUserLoginRepository {
     const found = await prisma.userLogin.findUnique({ where: { email } });
     return found ? UserLoginMapper.toDomain(found) : null;
   }
+
+  async findById(userId: string): Promise<IUserLogin | null> {
+    const found =await prisma.userLogin.findUnique({where:{id:userId}});
+    return found ? UserLoginMapper.toDomain(found) : null;
+  }
   async updateBlockStatus(
     userId: string,
     isBlocked: boolean

@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { RefreshTokenPayload } from "../../application/common/types/AuthPayload";
 
 
 export class JWTServices{
@@ -15,9 +16,9 @@ export class JWTServices{
     }
 
     verifyAccessToken(token:string){
-        return jwt.sign(token,this.accessToken);
+        return jwt.verify(token,this.accessToken);
     }
-    verifyRefreshToken(token:string){
-        return jwt.sign(token,this.refreshToken);
+    verifyRefreshToken(token:string):RefreshTokenPayload{
+        return jwt.verify(token,this.refreshToken) as RefreshTokenPayload;
     }
 }

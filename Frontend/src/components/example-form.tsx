@@ -21,7 +21,7 @@ type LoginFormValues = {
 
 interface ExampleFormProps {
   onSubmit: (values: LoginFormValues) => void
-  onGoogleLogin?: () => void   // optional prop for Google login
+  onGoogleLogin?: () => void  
 }
 
 export default function ExampleForm({ onSubmit}: ExampleFormProps) {

@@ -21,8 +21,8 @@ export class GooglePrecheckUseCase{
         if (!user) return { exists: false };
 
         const jwtPayload={id:user.id,role:user.role};
-        const accessToken=await this._jwtServices.signAccessToken(jwtPayload);
-        const refreshToken=await this._jwtServices.signRefreshToken(jwtPayload);
+        const accessToken=this._jwtServices.signAccessToken(jwtPayload);
+        const refreshToken=this._jwtServices.signRefreshToken(jwtPayload);
 
         return {exists:true,accessToken,refreshToken,user};
         }

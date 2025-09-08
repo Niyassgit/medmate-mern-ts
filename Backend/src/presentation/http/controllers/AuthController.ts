@@ -5,12 +5,15 @@ import { LoginRequestBody } from "../validators/LoginValidationSchema";
 import { AuthResponseDTO } from "../../dto/AuthResponseDTO";
 import { GoogleLoginDTO } from "../../../application/common/dto/GoogleLoginDTO";
 import { GooglePrecheckUseCase } from "../../../application/common/use-cases/GooglePrecheckUseCase.ts";
+import { GetNewAccessTokenUseCase } from "../../../application/common/use-cases/GetNewAcccessTokenUseCase";
+import { Cookie, PreCheckRequestBody } from "../../../types/express/auth";
 
 export class AuthController {
   constructor(
     private _userLoginUseCase: LoginUserUseCase,
     private _googleLoginUseCase:GoogleLoginUseCase,
-    private _googlePrecheckUseCase:GooglePrecheckUseCase
+    private _googlePrecheckUseCase:GooglePrecheckUseCase,
+    private _getNewAccessTokenUsecase:GetNewAccessTokenUseCase
   ) {}
 
   loginUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -38,6 +41,22 @@ export class AuthController {
       next(error);
     }
   };
+
+  refreshToken=async(req:Request,res:Response,next:NextFunction)=>{
+
+    try {
+      const cookies=req.cookies as Cookie;
+      const token=cookies.refreshtoken;
+      if(!token) return res.status(401).json({message:" No refresh token"})
+      
+        const newAccessToken=await this._getNewAccessTokenUsecase.execute(token);
+        res.json({accessToken:newAccessToken});
+      
+    } catch (error) {
+      next(error);
+    }
+       
+  }
 
   googleLogin=async(req:Request,res:Response,next:NextFunction)=>{
 
@@ -72,7 +91,7 @@ export class AuthController {
   googlePrecheck=async(req:Request,res:Response,next:NextFunction)=>{
 
     try {
-      const {idToken}=req.body ;
+      const {idToken}=req.body as PreCheckRequestBody;
       const result=await this._googlePrecheckUseCase.execute(idToken);
       if(!result.exists) return res.json({exists:false});
 

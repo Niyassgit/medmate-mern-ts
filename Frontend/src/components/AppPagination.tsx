@@ -53,7 +53,7 @@ const AppPagination = ({ page, totalPages, onPageChange }: Props) => {
           <PaginationItem>
             <PaginationNext
               href=""
-              onChange={(e) => {
+              onClick={(e) => {
                 e.preventDefault();
                 if (page < totalPages) onPageChange(page + 1);
               }}

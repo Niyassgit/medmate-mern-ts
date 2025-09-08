@@ -1,13 +1,16 @@
 import { JSX } from "react";
 import { Navigate } from "react-router-dom";
+import { useSelector} from "react-redux";
+import { RootState } from "@/app/store";
 
 const PrivateRoute=({children,role}:{children:JSX.Element;role:string})=>{
-    const token=localStorage.getItem("token");
-    const userRole=localStorage.getItem("role");
-           if(!token || userRole !==role){  
-            return <Navigate to={`/login/${role.toLowerCase()}`} replace/>
-           }
-           return children;
+    const {accessToken,role:userRole}=useSelector((state:RootState)=>state.auth);
+
+    if(!accessToken || userRole!==role){
+        return <Navigate to="/auth/login" replace/>
+    }
+
+    return children;
 }
 
 export default PrivateRoute;
