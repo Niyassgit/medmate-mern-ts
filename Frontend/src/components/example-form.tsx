@@ -1,4 +1,4 @@
-"use client"
+// "use client"
 
 import { useForm } from "react-hook-form"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -12,6 +12,7 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form"
+import GoogleAuthButton from "@/features/auth/components/GoogleAuthButton"
 
 type LoginFormValues = {
   email: string
@@ -23,7 +24,7 @@ interface ExampleFormProps {
   onGoogleLogin?: () => void   // optional prop for Google login
 }
 
-export default function ExampleForm({ onSubmit, onGoogleLogin }: ExampleFormProps) {
+export default function ExampleForm({ onSubmit}: ExampleFormProps) {
   const form = useForm<LoginFormValues>({
     defaultValues: {
       email: "",
@@ -87,19 +88,8 @@ export default function ExampleForm({ onSubmit, onGoogleLogin }: ExampleFormProp
         </div>
 
         {/* Google Auth Button */}
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full flex items-center justify-center space-x-2"
-          onClick={onGoogleLogin}
-        >
-          <img
-            src="https://png.pngtree.com/png-clipart/20230916/original/pngtree-google-logo-vector-png-image_12256710.png"
-            alt="Google"
-            className="w-5 h-5"
-          />
-          <span>Continue with Google</span>
-        </Button>
+       
+        <GoogleAuthButton />
       </CardContent>
     </Card>
   )
