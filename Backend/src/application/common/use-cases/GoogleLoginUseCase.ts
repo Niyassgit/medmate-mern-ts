@@ -15,13 +15,10 @@ export class GoogleLoginUseCase {
   async execute(
     payload: GoogleLoginDTO
   ): Promise<{ accessToken: string; refreshToken: string; user: IUserLogin }> {
-
-    console.log("[GoogleLoginUseCase] calling verifyIdToken...");
     const { email, providerId } = await this._googleAuthService.verifyIdToken(
       payload.idToken
     );
 
-   console.log("[GoogleLoginUseCase] verified:", { email, providerId });
     if (!email) throw new UnautharizedError("Google account has no email");
 
     const user = await this._userRepository.upsertGoogleUser({
@@ -29,7 +26,7 @@ export class GoogleLoginUseCase {
       providerId,
       role: payload.role,
     });
-console.log("Upserted user:", user);
+
     const jwtPayload = { id: user.id, role: user.role };
     const accessToken = this._jwtServices.signAccessToken(jwtPayload);
     const refreshToken = this._jwtServices.signRefreshToken(jwtPayload);

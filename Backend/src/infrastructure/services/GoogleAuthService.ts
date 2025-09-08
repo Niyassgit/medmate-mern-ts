@@ -2,8 +2,6 @@ import { OAuth2Client} from "google-auth-library";
 import { IGoogleAuthService } from "../../domain/common/services/IGoogleAuthService";
 
 const client=new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-console.log("client id:",process.env.GOOGLE_CLIENT_ID)
-console.log("client from google auth:",client)
 export class GoogleAuthService implements IGoogleAuthService {
 
     async verifyIdToken(idToken: string): Promise<{ email: string; providerId: string; }> {
@@ -24,7 +22,6 @@ export class GoogleAuthService implements IGoogleAuthService {
       providerId: payload.sub,
     };
   } catch (err) {
-    console.error("[GoogleAuthService] verifyIdToken failed:", err);
     throw err;
   }
     }

@@ -33,34 +33,34 @@ export class UserLoginRepository implements IUserLoginRepository {
 
   async upsertGoogleUser(payload: { email: string; providerId: string | null; role: Role; }): Promise<IUserLogin> {
 
-      const user = await prisma.userLogin.upsert({
-      where: { email: payload.email },
-      update: {
-        providerId: payload.providerId ?? undefined,
-        authProvider: AuthProvider.GOOGLE,
-        isVerified: true,
-      },
-      create: {
-        email: payload.email,
-        providerId: payload.providerId ?? undefined,
-        role: payload.role,
-        authProvider: AuthProvider.GOOGLE,
-        password: null,
-        isVerified: true,
-      },
+    const existingUser=await prisma.userLogin.findUnique({where:{email:payload.email}});
+
+    if(existingUser){
+      const user=await prisma.userLogin.update({
+        where:{email:payload.email},
+        data:{
+          providerId:payload.providerId ?? undefined,
+          authProvider:AuthProvider.GOOGLE,
+          isVerified:true,
+        }
+      });
+       return UserLoginMapper.toDomain(user);
+    }
+
+    const user=await prisma.userLogin.create({
+      data:{
+        email:payload.email,
+        providerId:payload.providerId ?? undefined,
+        role:payload.role,
+        authProvider:AuthProvider.GOOGLE,
+        password:null,
+        isVerified:true
+
+      }
     });
 
     return UserLoginMapper.toDomain(user);
     
   }
-  async updateUser(userId: string, data: Partial<IUserLogin>): Promise<IUserLogin> {
-      const user=await prisma.userLogin.update({
-        where:{id:userId},
-        data:{
-          ...UserLoginMapper.toPersistanceUpdate(data),
-        }
-      });
 
-      return UserLoginMapper.toDomain(user);
-  }
 }
