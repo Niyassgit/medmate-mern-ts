@@ -86,8 +86,7 @@ export class AuthController {
       
     }
   }
-
-
+   
   googlePrecheck=async(req:Request,res:Response,next:NextFunction)=>{
 
     try {
@@ -117,4 +116,15 @@ export class AuthController {
       next(error);
     }
   }
+
+    logoutUser=(req:Request,res:Response,next:NextFunction)=>{
+
+      res.clearCookie("refreshtoken",{
+        httpOnly:true,
+        sameSite:"strict",
+        secure:process.env.NODE_ENV==="production",
+      });
+      return res.json({message:"Logged out successfully"});
+  }
+
 }

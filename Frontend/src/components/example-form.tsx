@@ -88,8 +88,9 @@ export default function ExampleForm({ onSubmit}: ExampleFormProps) {
         </div>
 
         {/* Google Auth Button */}
-       
+       <div className="flex justify-center">
         <GoogleAuthButton />
+        </div>
       </CardContent>
     </Card>
   )

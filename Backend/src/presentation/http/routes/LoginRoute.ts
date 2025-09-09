@@ -17,5 +17,6 @@ export class LoginRoute{
         this.router.get("/refresh",authController.refreshToken)
         this.router.post("/google/precheck",authController.googlePrecheck);
         this.router.post("/google",authController.googleLogin);
+        this.router.post("/logout",authController.logoutUser);
      }
 } 

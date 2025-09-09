@@ -10,6 +10,14 @@ export const loginUser = (values: loginPayload) => {
   return api.post<AuthResponse>("/auth/login", values, { withCredentials: true });
 };
 
+export const refreshAccessToken=async ()=>{
+  try {
+    const res=await api.get("/auth/refresh")
+  } catch (error) {
+    
+  }
+}
+
 export const googelPrecheck = (idToken: string) => {
   return api.post<GooglePrecheckBody>(
     "/auth/google/precheck",
@@ -39,3 +47,7 @@ export const registerRep = (values: FormData) => {
     },
   });
 };
+
+export const logoutUser=()=>{
+  return api.post("/auth/logout",{},{withCredentials:true});
+}

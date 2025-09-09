@@ -9,6 +9,7 @@ import AdminLayout from "@/features/superAdmin/pages/AdminLayout";
 import RepsList from "@/features/superAdmin/pages/RepsList";
 import DoctorsList from "@/features/superAdmin/pages/DoctorsList";
 import UserValidation from "@/features/superAdmin/pages/UserValidation";
+import SelectRolePage from "@/features/auth/components/SelectRole";
 import PrivateRoute from "@/components/PrivateRoute";
 import { Role } from "@/types/Role";
 
@@ -17,7 +18,7 @@ export const router = createBrowserRouter([
   { path: "/signup", element: <RegisterPage /> },
 
   { path: "/auth/login", element: <LoginPage /> },
-
+   {path:"/auth/login/selectrole",element:<SelectRolePage/>},
   {
     path: "/doctor/dashboard",
     element: (
