@@ -3,17 +3,18 @@ import { Link } from "react-router-dom";
 import { loginUser } from "../api";
 import { Role } from "@/types/Role";
 import { useNavigate } from "react-router-dom";
-import LandingpageNavbar from "@/components/navbar/LandingpageNavbar";
+import { useDispatch } from "react-redux";
+import { login } from "../authSlice";
+
 
 const LoginPage = () => {
   const navigate=useNavigate();
+  const dispatch=useDispatch();
   const handleLogin = async (values: { email: string; password: string }) => {
     try {
       const { data } = await loginUser(values);
-
-      localStorage.setItem("accessToken", data.accessToken);
-      localStorage.setItem("role", data.user.role);
-
+      dispatch(login({token:data.accessToken,role:data.user.role}));
+      
       if (data.user.role === Role.DOCTOR) {
          navigate("/doctor/dashboard", { replace: true });
       } else if (data.user.role === Role.MEDICAL_REP) {
@@ -31,7 +32,6 @@ const LoginPage = () => {
 
   return (
     <>
-
     <div className="relative min-h-screen w-full flex justify-center items-center bg-gradient-to-b from-[#185891]">
       <div className="absolute inset-0 "></div>
 
