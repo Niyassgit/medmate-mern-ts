@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { loginUser } from "../api";
 import { Role } from "@/types/Role";
 import { useNavigate } from "react-router-dom";
+import LandingpageNavbar from "@/components/navbar/LandingpageNavbar";
 
 const LoginPage = () => {
   const navigate=useNavigate();
@@ -29,7 +30,9 @@ const LoginPage = () => {
 
 
   return (
-    <div className="relative min-h-screen w-full flex justify-center items-center ">
+    <>
+
+    <div className="relative min-h-screen w-full flex justify-center items-center bg-gradient-to-b from-[#185891]">
       <div className="absolute inset-0 "></div>
 
       <div className="relative z-10 flex w-full max-w-4xl min-h-[500px] md:min-h-[600px] rounded-2xl shadow-2xl overflow-hidden bg-white">
@@ -66,6 +69,7 @@ const LoginPage = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

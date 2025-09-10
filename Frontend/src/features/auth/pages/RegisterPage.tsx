@@ -17,7 +17,7 @@ const RegisterPage = () => {
   }, [type]);
 
   return (
-    <div className="relative min-h-screen w-full flex justify-center items-center">
+    <div className="relative min-h-screen w-full flex justify-center items-center bg-gradient-to-b from-[#185891]">
 
       <div className="absolute inset-0"></div>
 

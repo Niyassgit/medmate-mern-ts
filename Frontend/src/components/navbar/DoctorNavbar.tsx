@@ -1,6 +1,7 @@
 import { Button } from "../ui/button"
-import { Bell,Mail,Search,User} from "lucide-react"
-import { Avatar,AvatarImage,AvatarFallback } from "../ui/avatar"
+import { Bell,Mail,Search} from "lucide-react"
+
+
 
 
 const DoctorNavbar = () => {
@@ -32,12 +33,7 @@ const DoctorNavbar = () => {
             <Mail className="h-6 w-6 cursor-pointer text-white hover:text-gray-300"/>
                 <Bell className="h-6 w-6 cursor-pointer text-white hover:text-gray-300"/>
 
-                <Avatar>
-                    <AvatarImage src="" alt="Doctor" />
-                    <AvatarFallback >
-                        <User className="h-6 w-6" />
-                    </AvatarFallback>
-                </Avatar>
+        {/* <UserMenu/> */}
         </div>
         </nav>
     )

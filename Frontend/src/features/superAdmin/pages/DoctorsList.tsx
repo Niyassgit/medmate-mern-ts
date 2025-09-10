@@ -26,7 +26,7 @@ type DoctorResponse={
 
 const DoctorsList = () => {
   const [page,setPage]=useState(1);
-  const limit=10;
+  const limit=8;
   const fetchFn=useCallback(()=>getAllDoctors(page,limit),[page,limit]);
   const { data, loading, error,setData} = useFetchList<DoctorResponse>(fetchFn);
   const [blockLoading,setBlockLoading]=useState<string|null>(null);

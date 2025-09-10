@@ -12,9 +12,13 @@ export const loginUser = (values: loginPayload) => {
 
 export const refreshAccessToken=async ()=>{
   try {
-    const res=await api.get("/auth/refresh")
+    const res=await api.get("/auth/refresh",{withCredentials:true});
+    const {accessToken}=res.data;
+    localStorage.setItem("accessToken",accessToken);
+    return accessToken;
   } catch (error) {
-    
+    console.error("Failed to refresh token:",error);
+    throw error;
   }
 }
 
