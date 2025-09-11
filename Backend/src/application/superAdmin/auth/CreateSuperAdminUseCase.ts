@@ -29,7 +29,8 @@ export class CreateSuperAdminUseCase{
             password:hashedPassword,
             role:Role.SUPER_ADMIN,
             authProvider:AuthProvider.NATIVE,
-            isBlocked:false
+            isBlocked:false,
+            isVerified:false
         });
 
         return this._superAdminRepository.createSuperAdmin({

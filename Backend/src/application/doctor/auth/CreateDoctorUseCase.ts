@@ -5,12 +5,17 @@ import { RegisterDoctorDTO } from "../dto/RegisterDoctorDTO";
 import { IUserLoginRepository } from "../../../domain/common/repositories/IUserLoginRepository"; 
 import { AuthProvider,Role } from  "../../../domain/common/entities/IUserLogin"
 import { ConflictError,BadRequestError } from "../../../domain/common/errors";
+import { OtpService } from "../../../infrastructure/services/OtpService";
+import { NotificationService } from "../../../infrastructure/services/NotificationService";
+
 export class CreateDoctorUseCase{
 
     constructor(
         private _doctorRepository:IDoctorRepository,
         private _bcryptServices:BcryptServices,
-        private _userLoginRepository:IUserLoginRepository
+        private _userLoginRepository:IUserLoginRepository,
+        private _otpService:OtpService,
+        private _notificationService:NotificationService
     ){}
 
     async execute(data:RegisterDoctorDTO):Promise<IDoctor>{
@@ -28,9 +33,10 @@ export class CreateDoctorUseCase{
             authProvider:AuthProvider.NATIVE,
             role:Role.DOCTOR,
             isBlocked:false,
+            isVerified:false
         });
 
-        return this._doctorRepository.createDoctor({
+        const doctor =await this._doctorRepository.createDoctor({
             name:data.name,
             phone:data.phone,
             departmentId:data.departmentId,
@@ -43,5 +49,15 @@ export class CreateDoctorUseCase{
             loginId:(await login).id,
         
         });
+
+
+        const {otp} =await this._otpService.generateOtp((await login).id,"SIGNUP");
+        await this._notificationService.sendEmail(
+            data.email,
+            "Veryfy your account",
+            `Your OTP is ${otp}`
+        );
+
+        return doctor
     }
 }

@@ -17,30 +17,44 @@ model Department {
   reps    MedicalRep[]
 }
 
+model otpVerification {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  otp       String
+  purpose   String
+  expiredAt DateTime
+  createdAt DateTime
+
+  user UserLogin @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiredAt], map: "otp_expiry_idx")
+}
+
 model UserLogin {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  email    String @unique
-  password String? 
-  role     Role
+  id           String       @id @default(auto()) @map("_id") @db.ObjectId
+  email        String       @unique
+  password     String?
+  role         Role
   authProvider AuthProvider @default(NATIVE)
-  isBlocked Boolean  @default(false)
-  providerId String?
-  isVerified Boolean @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  isBlocked    Boolean      @default(false)
+  providerId   String?
+  isVerified   Boolean      @default(false)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 
-
-  superAdmin SuperAdmin?
-  doctor Doctor?
-  medicalRep MedicalRep?
+  superAdmin       SuperAdmin?
+  doctor           Doctor?
+  medicalRep       MedicalRep?
+  otpVerifications otpVerification[]
 }
 
 enum Role {
-
   SUPER_ADMIN
   DOCTOR
   MEDICAL_REP
 }
+
 enum AuthProvider {
   NATIVE
   GOOGLE
@@ -50,40 +64,40 @@ model Doctor {
   id              String   @id @default(auto()) @map("_id") @db.ObjectId
   name            String
   phone           String
-  departmentId    String?   @db.ObjectId
+  departmentId    String?  @db.ObjectId
   experienceYears Int?
   hasOwnClinic    Boolean?
   doctorClass     String?
-  territoryId     String?   @db.ObjectId
-  hospital      String
-  licenseImageUrl    String?
+  territoryId     String?  @db.ObjectId
+  hospital        String
+  licenseImageUrl String?
   opHours         String?
   registrationId  String
   about           String?
   educations      String[]
   certificates    String[]
   createdAt       DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  updatedAt       DateTime @updatedAt
 
-  department           Department?              @relation(fields: [departmentId], references: [id])
-  territory            Territory?               @relation(fields: [territoryId], references: [id])
+  department           Department?        @relation(fields: [departmentId], references: [id])
+  territory            Territory?         @relation(fields: [territoryId], references: [id])
   interests            Interest[]
   connections          Connection[]
-  doctorConn1          DoctorConnection[]      @relation("Doctor1")
-  doctorConn2          DoctorConnection[]      @relation("Doctor2")
-  referralsGiven       DoctorReferral[]        @relation("ReferringDoctor")
-  referralsReceived    DoctorReferral[]        @relation("ReferredDoctor")
+  doctorConn1          DoctorConnection[] @relation("Doctor1")
+  doctorConn2          DoctorConnection[] @relation("Doctor2")
+  referralsGiven       DoctorReferral[]   @relation("ReferringDoctor")
+  referralsReceived    DoctorReferral[]   @relation("ReferredDoctor")
   // requirements         DoctorRequirementPost[]
   notifications        Notification[]
   conversations        Conversation[]
-  repReferralsReceived RepReferral[]           @relation("ReferredDoctorInRepReferral")
+  repReferralsReceived RepReferral[]      @relation("ReferredDoctorInRepReferral")
 
-  login UserLogin?@relation(fields: [loginId],references: [id])
-  loginId String?  @unique @db.ObjectId
+  login   UserLogin? @relation(fields: [loginId], references: [id])
+  loginId String?    @unique @db.ObjectId
 }
 
 model MedicalRep {
-  id                   String   @id @default(auto()) @map("_id") @db.ObjectId
+  id                   String    @id @default(auto()) @map("_id") @db.ObjectId
   name                 String
   phone                String
   companyName          String
@@ -96,11 +110,11 @@ model MedicalRep {
   subscriptionStart    DateTime?
   subscriptionEnd      DateTime?
   maxConnectionsPerDay Int?
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
 
-  department        Department?            @relation(fields: [departmentId], references: [id])
-  subscriptionPlan  SubscriptionPlan?      @relation(fields: [subscriptionPlanId], references: [id])
+  department        Department?           @relation(fields: [departmentId], references: [id])
+  subscriptionPlan  SubscriptionPlan?     @relation(fields: [subscriptionPlanId], references: [id])
   territories       MedicalRepTerritory[]
   products          ProductPost[]
   interests         Interest[]
@@ -114,19 +128,18 @@ model MedicalRep {
 
   doctorReferralsReceived DoctorReferral[] @relation("ReferredRep")
 
-  login UserLogin? @relation(fields: [loginId],references: [id])
-  loginId String? @unique @db.ObjectId
+  login   UserLogin? @relation(fields: [loginId], references: [id])
+  loginId String?    @unique @db.ObjectId
 }
 
 model SuperAdmin {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  name     String
-  phone    String?
-  
-  login    UserLogin? @relation(fields: [loginId],references: [id])
-  loginId  String?   @unique @db.ObjectId
-}
+  id    String  @id @default(auto()) @map("_id") @db.ObjectId
+  name  String
+  phone String?
 
+  login   UserLogin? @relation(fields: [loginId], references: [id])
+  loginId String?    @unique @db.ObjectId
+}
 
 model SubscriptionPlan {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
@@ -276,7 +289,6 @@ model Notification {
   doctor Doctor?     @relation(fields: [doctorId], references: [id])
   rep    MedicalRep? @relation(fields: [repId], references: [id])
 }
-
 
 model MedicalRepTerritory {
   id          String @id @default(auto()) @map("_id") @db.ObjectId

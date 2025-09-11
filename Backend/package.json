@@ -22,6 +22,7 @@
     "google-auth-library": "^10.3.0",
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.2",
+    "nodemailer": "^7.0.6",
     "prisma": "^6.13.0",
     "typescript": "^5.9.2",
     "zod": "^4.0.17"
@@ -35,6 +36,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/multer": "^2.0.0",
     "@types/node": "^24.2.1",
+    "@types/nodemailer": "^7.0.1",
     "@typescript-eslint/eslint-plugin": "^8.40.0",
     "@typescript-eslint/parser": "^8.40.0",
     "eslint": "^9.33.0",

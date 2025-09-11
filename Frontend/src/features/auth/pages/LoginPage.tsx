@@ -5,6 +5,7 @@ import { Role } from "@/types/Role";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../authSlice";
+import toast from "react-hot-toast"
 
 
 const LoginPage = () => {
@@ -15,6 +16,7 @@ const LoginPage = () => {
       const { data } = await loginUser(values);
       dispatch(login({token:data.accessToken,role:data.user.role}));
       
+      toast.success("User login successfully");
       if (data.user.role === Role.DOCTOR) {
          navigate("/doctor/dashboard", { replace: true });
       } else if (data.user.role === Role.MEDICAL_REP) {
@@ -25,23 +27,28 @@ const LoginPage = () => {
          navigate("/", { replace: true });
       }
     } catch (error: any) {
-      alert(error.response?.data?.message || "something went wrong");
+      console.log("error has been called",error.response?.data?.message);
+      toast.error(error.response?.data?.message|| "Login failed")
     }
   };
 
 
   return (
     <>
+
     <div className="relative min-h-screen w-full flex justify-center items-center bg-gradient-to-b from-[#185891]">
       <div className="absolute inset-0 "></div>
 
       <div className="relative z-10 flex w-full max-w-4xl min-h-[500px] md:min-h-[600px] rounded-2xl shadow-2xl overflow-hidden bg-white">
-        <div className="hidden md:flex w-1/2">
+        <div className="hidden md:flex w-1/2 relative">
           <img
             src="/LoginImg.png"
             alt="Login"
             className="w-full h-full object-cover"
           />
+          <div className="absolute top-2 ">
+            <img src="/logo.png" alt="MedMatelogo" className="h-25 w-auto" />
+          </div>
         </div>
 
         <div className="w-full md:w-1/2 flex flex-col justify-center p-8 sm:p-10">

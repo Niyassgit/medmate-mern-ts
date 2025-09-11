@@ -44,6 +44,8 @@ export const registerDoctor = (values: FormData) => {
   });
 };
 
+
+
 export const registerRep = (values: FormData) => {
   return api.post("/rep/signup", values, {
     headers: {

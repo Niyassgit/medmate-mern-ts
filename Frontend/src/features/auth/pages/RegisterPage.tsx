@@ -25,12 +25,15 @@ const RegisterPage = () => {
       <div className="relative z-10 flex w-full max-w-5xl min-h-[500px] md:min-h-[600px] rounded-2xl shadow-2xl overflow-hidden bg-white">
 
 
-        <div className="hidden md:flex w-1/2">
+        <div className="hidden md:flex w-1/2 relative">
           <img
             src="/med-rep-mar-8-2.png"
             alt="Register"
             className="w-full h-full object-cover"
           />
+          <div className="absolute top-0" >
+            <img src="/logo.png" alt="MedMateLogo" className='h-20 w-auto' />
+          </div>
         </div>
         <div className="w-full md:w-1/2 flex flex-col justify-center p-8 sm:p-10">
           <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-gray-800 text-center md:text-left">

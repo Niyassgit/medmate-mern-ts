@@ -5,12 +5,16 @@ import { IUserLoginRepository } from "../../../domain/common/repositories/IUserL
 import { AuthProvider,Role } from "../../../domain/common/entities/IUserLogin"; 
 import { RegisterMedicalRepDTO } from "../dto/RegisterMedicalRepDTO"; 
 import { ConflictError,BadRequestError } from "../../../domain/common/errors";
+import { OtpService } from "../../../infrastructure/services/OtpService";
+import { NotificationService } from "../../../infrastructure/services/NotificationService";
 
 export class CreateMedicalRepUseCase{
  
     constructor(private _medicalRepRepository:IMedicalRepRepository,
       private _bcryptServices: BcryptServices, 
-      private _userLoginRepository:IUserLoginRepository
+      private _userLoginRepository:IUserLoginRepository,
+      private _otpService:OtpService,
+      private _notificationService:NotificationService
     
     ){}
     
@@ -32,10 +36,11 @@ export class CreateMedicalRepUseCase{
         role:Role.MEDICAL_REP,
         authProvider:AuthProvider.NATIVE,
         isBlocked:false,
+        isVerified:false,
       });
 
 
-      return this._medicalRepRepository.createMedicalRep({
+      const rep=await this._medicalRepRepository.createMedicalRep({
         name:data.name,
         phone:data.phone,
         companyName:data.companyName,
@@ -45,7 +50,15 @@ export class CreateMedicalRepUseCase{
         maxConnectionsPerDay:10,
         loginId:login.id,
         
-      })
+      });
+
+      const {otp}=await this._otpService.generateOtp(login.id,"SIGNUP");
+      await this._notificationService.sendEmail(
+        data.email,
+        "Veryfy your account",
+         `Your OTP is ${otp}`
+      )
+      return rep;
     
 }
 }

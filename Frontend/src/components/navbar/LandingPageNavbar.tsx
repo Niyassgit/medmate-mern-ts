@@ -1,10 +1,8 @@
 import { Button } from "../ui/button";
-import { Bell, Search,Mail } from "lucide-react";
 
 
 
-
-const LandingpageNavbar = () => {
+const LandingPageNavbar = () => {
 return (
     <nav className="flex items-center justify-between  bg-gradient-to-b from-[#022b4e] to-[#185891]/90 px-6 h-16 py-3  shadow-md">
       <div className="flex items-center gap-0">
@@ -37,4 +35,4 @@ return (
   );
 }
 
-export default LandingpageNavbar
+export default LandingPageNavbar

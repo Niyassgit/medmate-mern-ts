@@ -1,4 +1,4 @@
-// "use client"
+"use client"
 
 import { useForm } from "react-hook-form"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -13,19 +13,22 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import GoogleAuthButton from "@/features/auth/components/GoogleAuthButton"
+import { validateLogin,LoginRequestBody } from "@/features/auth/schemas/LoginSchema"
+import {zodResolver} from "@hookform/resolvers/zod"
+import { Eye,EyeOff } from "lucide-react"
+import { useState } from "react"
 
-type LoginFormValues = {
-  email: string
-  password: string
-}
 
 interface ExampleFormProps {
-  onSubmit: (values: LoginFormValues) => void
+  onSubmit: (values: LoginRequestBody) => void
   onGoogleLogin?: () => void  
 }
 
 export default function ExampleForm({ onSubmit}: ExampleFormProps) {
-  const form = useForm<LoginFormValues>({
+  const [showPassword,setShowPassword]=useState(false);
+
+  const form = useForm<LoginRequestBody>({
+    resolver:zodResolver(validateLogin),
     defaultValues: {
       email: "",
       password: "",
@@ -33,6 +36,8 @@ export default function ExampleForm({ onSubmit}: ExampleFormProps) {
   })
 
   return (
+    <>
+
     <Card className="w-[400px] shadow-lg">
       <CardHeader>
         <CardTitle className="text-center">Login</CardTitle>
@@ -63,7 +68,13 @@ export default function ExampleForm({ onSubmit}: ExampleFormProps) {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="********" {...field} />
+                    <div className="relative">
+                    <Input type={showPassword?"text": "password"} placeholder="********" {...field} />
+                    <button className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500"
+                    onClick={()=>setShowPassword((prev)=>!prev)}
+                    >{showPassword ? <EyeOff className="w-4 h-4"/>: <Eye className="w-4 h-4"/>}</button>
+                    </div>
+
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -93,5 +104,6 @@ export default function ExampleForm({ onSubmit}: ExampleFormProps) {
         </div>
       </CardContent>
     </Card>
+    </>
   )
 }

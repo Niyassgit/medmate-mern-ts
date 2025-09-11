@@ -1,4 +1,4 @@
-import LandingpageNavbar from "@/components/navbar/LandingpageNavbar";
+import LandingPageNavbar from "@/components/navbar/LandingPageNavbar";
 import { Link } from "react-router-dom";
 import Autoplay from "embla-carousel-autoplay";
 
@@ -10,7 +10,6 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import CarouselDots from "@/components/CarouselDots";
-import useEmblaCarousel from "embla-carousel-react";
 import { useEffect, useState } from "react";
 
 const slides = [
@@ -51,7 +50,7 @@ const LandingPage = () => {
 
   return (
     <>
-      <LandingpageNavbar />
+      <LandingPageNavbar />
 
       {/* Full-width / full-height hero carousel */}
       <section
@@ -163,8 +162,8 @@ const LandingPage = () => {
               ))}
             </CarouselContent>
 
-            <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 shadow-md" />
-            <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 shadow-md" />
+            <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 shadow-md bg-gray-300" />
+            <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 shadow-md bg-gray-300" />
           </Carousel>
 
           <CarouselDots
