@@ -11,6 +11,7 @@ import { GoogleAuthService } from "../services/GoogleAuthService";
 import { OtpService } from "../services/OtpService";
 import { ResendOtpUseCase } from "../../application/common/use-cases/ResendOtpUseCase";
 import { NotificationService } from "../services/NotificationService";
+import { ForgotPasswordUseCase } from "../../application/common/use-cases/ForgotPasswordUseCase";
 
 const userLoginRepository=new UserLoginRepository();
 const bcryptServices=new BcryptServices();
@@ -25,6 +26,7 @@ const googlePrecheckUseCase= new GooglePrecheckUseCase(userLoginRepository,googl
 const getNewAcccessTokenUseCase= new GetNewAccessTokenUseCase(userLoginRepository,jwtServices);
 const verifyOtpUseCase=new VerifyOtpUseCase(userLoginRepository,otpService,bcryptServices);
 const resendOtpuseCase=new ResendOtpUseCase(userLoginRepository,otpService,notificationService);
+const forgotPasswordUseCase =new ForgotPasswordUseCase(userLoginRepository,bcryptServices)
 
 export const authController=new AuthController(
     loginUserUseCase,
@@ -32,5 +34,6 @@ export const authController=new AuthController(
     googlePrecheckUseCase,
     getNewAcccessTokenUseCase,
     verifyOtpUseCase,
-    resendOtpuseCase
+    resendOtpuseCase,
+    forgotPasswordUseCase
 );

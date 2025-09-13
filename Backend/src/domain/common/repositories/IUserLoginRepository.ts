@@ -10,4 +10,5 @@ export interface IUserLoginRepository{
     updateBlockStatus(userId:string,isBlocked:boolean):Promise<IUserLogin | null>;
     upsertGoogleUser(payload:{ email:string,providerId:string |null,role:Role}):Promise<IUserLogin>
     updateUser(userId:string,isVerified:boolean):Promise<IUserLogin | null>;
+    resetPassword(userId:string,password:string):Promise<string>;
 } 

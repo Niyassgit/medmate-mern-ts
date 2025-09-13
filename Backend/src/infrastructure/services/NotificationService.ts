@@ -21,12 +21,12 @@ export class NotificationService implements INotificationService{
     }
 
     async sendEmail(to: string, subject: string, body: string): Promise<void> {
-         this.transporter.sendMail({
+        await this.transporter.sendMail({
             to,
             subject,
             text:body,
             html:`<p>${body}</p>`,
-        });
+        })
     }
 
 }

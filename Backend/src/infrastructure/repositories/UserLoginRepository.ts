@@ -12,7 +12,6 @@ export class UserLoginRepository implements IUserLoginRepository {
     const created = await prisma.userLogin.create({ 
       data: UserLoginMapper.toPersistence(data),
     });
-     console.log("UserLogin created:", created);
     return UserLoginMapper.toDomain(created);
   }
 
@@ -78,6 +77,17 @@ export class UserLoginRepository implements IUserLoginRepository {
     return user ?UserLoginMapper.toDomain(user) :null;
     
 
+  }
+
+  async resetPassword(userId: string,password:string): Promise<string>{
+    const updatedUser=await prisma.userLogin.update({
+      where:{id:userId},
+      data:{
+        password:password
+      }
+    });
+   UserLoginMapper.toDomain(updatedUser);
+   return "Password reset successfully"
   }
 
 }

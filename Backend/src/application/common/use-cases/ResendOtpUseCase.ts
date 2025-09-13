@@ -22,7 +22,8 @@ export class ResendOtpUseCase {
       user.email,
       "Verify your account",
       `Your new OTP is ${otp}`
-    );
+    )
+      .catch(err => console.error("Failed to send OTP email:", err));;
 
     return "OTP resent successfully"
   }

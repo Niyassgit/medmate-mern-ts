@@ -57,7 +57,9 @@ export class CreateDoctorUseCase{
             data.email,
             "Veryfy your account",
             `Your OTP is ${otp}`
-        );
+        )
+          .catch(err => console.error("Failed to send OTP email:", err));
+
         return {
             message:"Doctor registered successfully.Please verify your email.",
             email:login.email,

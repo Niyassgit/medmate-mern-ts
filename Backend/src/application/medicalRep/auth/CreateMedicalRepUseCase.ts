@@ -1,6 +1,5 @@
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository"; 
 import { BcryptServices } from "../../../infrastructure/services/BcryptService";  
-import { IMedicalRep } from "../../../domain/medicalRep/entities/IMedicalRep";  
 import { IUserLoginRepository } from "../../../domain/common/repositories/IUserLoginRepository"; 
 import { AuthProvider,Role } from "../../../domain/common/entities/IUserLogin"; 
 import { RegisterMedicalRepDTO } from "../dto/RegisterMedicalRepDTO"; 
@@ -55,11 +54,11 @@ export class CreateMedicalRepUseCase{
 
       const {otp}=await this._otpService.generateOtp(login.id,"SIGNUP");
       console.log("otp sended from rep register:",otp)
-       this._notificationService.sendEmail(
+      this._notificationService.sendEmail(
         data.email,
         "Veryfy your account",
          `Your OTP is ${otp}`
-      )
+      )  .catch(err => console.error("Failed to send OTP email:", err));
       return {
         message:"User registerd successfully.Please verify your email",
         email:login.email,

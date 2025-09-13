@@ -19,3 +19,7 @@ export interface VerifyOtpBody{
 export interface resendOtpBody{
     email:string;
 }
+export interface ForgotPassVerifyBody{
+  email:string,
+  newPassword:string
+}
