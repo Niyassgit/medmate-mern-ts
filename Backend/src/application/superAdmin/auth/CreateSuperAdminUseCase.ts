@@ -22,7 +22,7 @@ export class CreateSuperAdminUseCase{
              throw new BadRequestError("Password is Required for signup");
         }
 
-        const hashedPassword= await this._bcryptServices.hashPassword(data.password);
+        const hashedPassword= await this._bcryptServices.hashValue(data.password);
 
         const login =await this._userLoginRepository.createUserLogin({
             email:data.email,

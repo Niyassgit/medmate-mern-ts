@@ -20,8 +20,8 @@ export class MedicalRepController{
                 ...(req.body as RegisterMedicalRepDTO),
                 companyLogoUrl
             };
-            const rep =await this._createMedicalRepUseCase.execute(data);
-            res.status(201).json({success:true,data:rep});
+            const response =await this._createMedicalRepUseCase.execute(data);
+            res.status(201).json({success:true,...response});
     }
 
     getMedicalRepByProfileId=async (req:Request,res:Response)=>{

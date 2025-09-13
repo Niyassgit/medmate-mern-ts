@@ -13,3 +13,7 @@ export interface AuthResponse{
 export interface GooglePrecheckBody{
     exists:boolean
 }
+
+export interface verifyResponse{
+    message:string
+}

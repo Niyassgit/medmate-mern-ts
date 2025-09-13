@@ -1,5 +1,6 @@
 import { api } from "@/services/api";
-import { AuthResponse,GooglePrecheckBody } from "./types";
+import { AuthResponse,GooglePrecheckBody, verifyResponse } from "./types";
+
 
 interface loginPayload {
   email: string;
@@ -45,7 +46,6 @@ export const registerDoctor = (values: FormData) => {
 };
 
 
-
 export const registerRep = (values: FormData) => {
   return api.post("/rep/signup", values, {
     headers: {
@@ -53,6 +53,13 @@ export const registerRep = (values: FormData) => {
     },
   });
 };
+
+export const verifyOtp=(email:string,otp:string)=>{
+  return api.post<verifyResponse>("auth/verifyotp",{
+    email,
+    otp
+  },{withCredentials:true});
+}
 
 export const logoutUser=()=>{
   return api.post("/auth/logout",{},{withCredentials:true});

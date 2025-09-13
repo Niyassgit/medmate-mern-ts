@@ -14,6 +14,7 @@ export class LoginRoute{
      initializeRoute(){
 
         this.router.post("/login",ValidateSchema(validateLogin),authController.loginUser);
+        this.router.post("/verifyotp",authController.verifyOtp)
         this.router.get("/refresh",authController.refreshToken)
         this.router.post("/google/precheck",authController.googlePrecheck);
         this.router.post("/google",authController.googleLogin);

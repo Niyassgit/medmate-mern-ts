@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { RegisterRepBody,registerMedicalRepSchema } from "../schemas/RegisterRepSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import toast from "react-hot-toast";
 
 
 const SignupRep = () => {
@@ -50,11 +51,14 @@ const SignupRep = () => {
         }
       })}
      
-      await registerRep(formData);
-      alert("User has been Registered Successfully🚀");
-      navigate("/auth/login", { replace: true });
+      const res=await registerRep(formData);
+      if(res.data.success && res.data.email){
+        toast.success(res.data.message);
+        navigate("/verifyotp", {state:{email:res.data.email}});
+      }
+ 
     } catch (error: any) {
-      console.error(error);
+      toast.error(error.response?.data?.message || "Something went wrong");
 
     }
   };

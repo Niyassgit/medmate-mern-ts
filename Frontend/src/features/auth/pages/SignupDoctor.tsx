@@ -56,12 +56,15 @@ const SignupDoctor = () => {
         }
       });
 
-      await registerDoctor(formData);
-      toast.success("Doctor registered successfully");
+      const res=await registerDoctor(formData);
 
-      navigate("/auth/login", { replace: true });
+      if(res.data.success && res.data.email){
+        toast.success(res.data.message);
+        navigate("/verifyotp",{state:{email:res.data.email}});
+      }
+
     } catch (error: any) {
-      toast.error(error.response?.data?.message);
+      toast.error(error.response?.data?.message || "Something went wrong");
     }
   };
 

@@ -11,3 +11,8 @@ export interface Cookie{
 export interface PreCheckRequestBody {
   idToken: string;
 }
+
+export interface VerifyOtpBody{
+  email:string,
+  otp:string
+}

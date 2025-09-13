@@ -12,10 +12,12 @@ import UserValidation from "@/features/superAdmin/pages/UserValidation";
 import SelectRolePage from "@/features/auth/components/SelectRole";
 import PrivateRoute from "@/components/PrivateRoute";
 import { Role } from "@/types/Role";
+import OtpPage from "@/features/auth/components/OtpPage";
 
 export const router = createBrowserRouter([
   { path: "/", element: <LandingPage /> },
   { path: "/signup", element: <RegisterPage /> },
+  {path :"/verifyotp",element:<OtpPage />},
 
   { path: "/auth/login", element: <LoginPage /> },
    {path:"/auth/login/selectrole",element:<SelectRolePage/>},

@@ -14,15 +14,14 @@ export class DoctorController {
     ){}
 
     createDoctor= async (req: Request, res: Response) =>{
-    
             const licenseImageUrl=req.file?`/uploads/licenses/${req.file.filename}`:null;
-
+              
             const data:RegisterDoctorDTO={
                 ...(req.body as RegisterDoctorDTO),
                 licenseImageUrl
             };
-            const doctor=await this._createDoctorUseCase.execute(data);
-            res.status(201).json({success:true,data:doctor});
+            const response=await this._createDoctorUseCase.execute(data);
+            res.status(201).json({success:true,...response});
     }
     getDoctorProfileById=async(req:Request,res:Response)=>{
        

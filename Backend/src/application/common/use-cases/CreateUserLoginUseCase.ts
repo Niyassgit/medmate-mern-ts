@@ -20,7 +20,7 @@ export class CreateUserLoginUseCase{
             throw new BadRequestError("Password is required");
         }
         
-        const hashedPassword=data.password ? await this._bcryptServices.hashPassword(data.password):null;
+        const hashedPassword=data.password ? await this._bcryptServices.hashValue(data.password):null;
         return this._userLoginRepository.createUserLogin({
             ...data,
             password:hashedPassword

@@ -18,7 +18,7 @@ export class LoginUserUseCase{
      if(!user) throw new UnautharizedError("User not found");
      
      if(!user.password) throw new BadRequestError("Password is required");
-     const isValidUser=await this._bcryptServices.comparePassword(password,user.password);
+     const isValidUser=await this._bcryptServices.compareValue(password,user.password);
      if(!isValidUser) throw new UnautharizedError("Invalid password");
      if(user.isBlocked) throw new ForbiddenError("User is blocked")
 

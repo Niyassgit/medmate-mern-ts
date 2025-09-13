@@ -1,6 +1,8 @@
 import nodemailer from "nodemailer"
 import { INotificationService } from "../../domain/common/services/INotificationService"
 
+
+
 export class NotificationService implements INotificationService{
    
     private transporter;
@@ -19,12 +21,12 @@ export class NotificationService implements INotificationService{
     }
 
     async sendEmail(to: string, subject: string, body: string): Promise<void> {
-        
-        await this.transporter.sendMail({
+         this.transporter.sendMail({
             to,
             subject,
             text:body,
             html:`<p>${body}</p>`,
         });
     }
+
 }

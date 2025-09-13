@@ -6,14 +6,16 @@ import { AuthResponseDTO } from "../../dto/AuthResponseDTO";
 import { GoogleLoginDTO } from "../../../application/common/dto/GoogleLoginDTO";
 import { GooglePrecheckUseCase } from "../../../application/common/use-cases/GooglePrecheckUseCase.ts";
 import { GetNewAccessTokenUseCase } from "../../../application/common/use-cases/GetNewAcccessTokenUseCase";
-import { Cookie, PreCheckRequestBody } from "../../../types/express/auth";
+import { VerifyOtpUseCase } from "../../../application/common/use-cases/VerifyOtpUseCase";
+import { Cookie, PreCheckRequestBody, VerifyOtpBody } from "../../../types/express/auth";
 
 export class AuthController {
   constructor(
     private _userLoginUseCase: LoginUserUseCase,
     private _googleLoginUseCase:GoogleLoginUseCase,
     private _googlePrecheckUseCase:GooglePrecheckUseCase,
-    private _getNewAccessTokenUsecase:GetNewAccessTokenUseCase
+    private _getNewAccessTokenUsecase:GetNewAccessTokenUseCase,
+    private _verifyOtpUseCase:VerifyOtpUseCase
   ) {}
 
   loginUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -117,7 +119,19 @@ export class AuthController {
     }
   }
 
-    logoutUser=(req:Request,res:Response,next:NextFunction)=>{
+   verifyOtp= async(req:Request,res:Response,next:NextFunction)=>{
+    try {
+          const {email,otp}=req.body as VerifyOtpBody;
+         const response=await this._verifyOtpUseCase.execute(email,otp);
+         res.json(response);
+
+    } catch (error) {
+      next(error)
+    }
+    
+  }
+
+    logoutUser=(req:Request,res:Response)=>{
 
       res.clearCookie("refreshtoken",{
         httpOnly:true,

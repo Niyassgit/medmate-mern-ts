@@ -7,6 +7,7 @@ import { RegisterMedicalRepDTO } from "../dto/RegisterMedicalRepDTO";
 import { ConflictError,BadRequestError } from "../../../domain/common/errors";
 import { OtpService } from "../../../infrastructure/services/OtpService";
 import { NotificationService } from "../../../infrastructure/services/NotificationService";
+import { RegisterRepResponseDTO } from "../dto/RegisterRepResponseDTO";
 
 export class CreateMedicalRepUseCase{
  
@@ -18,7 +19,7 @@ export class CreateMedicalRepUseCase{
     
     ){}
     
-    async execute(data:RegisterMedicalRepDTO):Promise <IMedicalRep>{
+    async execute(data:RegisterMedicalRepDTO):Promise <RegisterRepResponseDTO>{
 
       const existingRep=await this._medicalRepRepository.getMedicalRepByEmail(data.email);
       if(existingRep){
@@ -28,7 +29,7 @@ export class CreateMedicalRepUseCase{
       if(!data.password){
         throw new BadRequestError("Password is required for signup");
       }
-      const hashedPassword=await this._bcryptServices.hashPassword(data.password);
+      const hashedPassword=await this._bcryptServices.hashValue(data.password);
       
       const login=await this._userLoginRepository.createUserLogin({
         email:data.email,
@@ -40,7 +41,7 @@ export class CreateMedicalRepUseCase{
       });
 
 
-      const rep=await this._medicalRepRepository.createMedicalRep({
+      await this._medicalRepRepository.createMedicalRep({
         name:data.name,
         phone:data.phone,
         companyName:data.companyName,
@@ -53,12 +54,19 @@ export class CreateMedicalRepUseCase{
       });
 
       const {otp}=await this._otpService.generateOtp(login.id,"SIGNUP");
-      await this._notificationService.sendEmail(
+      console.log("otp sended from rep register:",otp)
+       this._notificationService.sendEmail(
         data.email,
         "Veryfy your account",
          `Your OTP is ${otp}`
       )
-      return rep;
+      return {
+        message:"User registerd successfully.Please verify your email",
+        email:login.email,
+        role:login.role,
+        isVerified:login.isVerified,
+        loginId:login.id
+      }
     
 }
 }
