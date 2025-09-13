@@ -20,7 +20,8 @@ export class LoginUserUseCase{
      if(!user.password) throw new BadRequestError("Password is required");
      const isValidUser=await this._bcryptServices.compareValue(password,user.password);
      if(!isValidUser) throw new UnautharizedError("Invalid password");
-     if(user.isBlocked) throw new ForbiddenError("User is blocked")
+     if(user.isBlocked) throw new ForbiddenError("User is blocked");
+     if(!user.isVerified) throw new ForbiddenError("Please verify email before logging in");
 
      const payload={id:user.id,role:user.role};
      const accessToken=this._jwtServices.signAccessToken(payload);

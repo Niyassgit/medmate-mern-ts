@@ -16,3 +16,6 @@ export interface VerifyOtpBody{
   email:string,
   otp:string
 }
+export interface resendOtpBody{
+    email:string;
+}

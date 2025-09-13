@@ -55,9 +55,15 @@ export const registerRep = (values: FormData) => {
 };
 
 export const verifyOtp=(email:string,otp:string)=>{
-  return api.post<verifyResponse>("auth/verifyotp",{
+  return api.post<verifyResponse>("/auth/verifyotp",{
     email,
     otp
+  },{withCredentials:true});
+}
+
+export const resendOtp=(email:string)=>{
+  return api.post<verifyResponse>("/auth/resendotp",{
+    email
   },{withCredentials:true});
 }
 

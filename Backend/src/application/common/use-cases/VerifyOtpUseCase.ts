@@ -21,8 +21,6 @@ export class VerifyOtpUseCase{
        if(!otpRecord) throw new NotFoundError("Invalid or expired OTP");
        if(otpRecord.expiredAt< new Date()) throw new BadRequestError("OTP expired");
 
-       console.log("Verifying OTP for email:", email, "userId:", user.id, "entered otp:", otp);
-
        const matched=await this._bcryptService.compareValue(otp,otpRecord.otp);
        if(!matched) throw new BadRequestError("Invalid OTP");
    
