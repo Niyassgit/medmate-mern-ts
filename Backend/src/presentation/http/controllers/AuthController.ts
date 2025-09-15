@@ -7,9 +7,12 @@ import { GoogleLoginDTO } from "../../../application/common/dto/GoogleLoginDTO";
 import { GooglePrecheckUseCase } from "../../../application/common/use-cases/GooglePrecheckUseCase.ts";
 import { GetNewAccessTokenUseCase } from "../../../application/common/use-cases/GetNewAcccessTokenUseCase";
 import { ResendOtpUseCase } from "../../../application/common/use-cases/ResendOtpUseCase";
-import { VerifyOtpUseCase } from "../../../application/common/use-cases/VerifyOtpUseCase";
+import { VerifySignupOtpUseCase } from "../../../application/common/use-cases/VerifySignupOtpUseCase";
 import { ForgotPasswordUseCase } from "../../../application/common/use-cases/ForgotPasswordUseCase";
-import { Cookie, ForgotPassVerifyBody, PreCheckRequestBody, VerifyOtpBody } from "../../../types/express/auth";
+import { VerifyForgotPasswordOtpUseCase } from "../../../application/common/use-cases/VerifyForgotPasswordOtpUseCase";
+import { ResetPasswordUseCase } from "../../../application/common/use-cases/ResetPasswordUseCase";
+import { Cookie, ResetPasswordBody, PreCheckRequestBody, VerifyOtpBody, resendOtpBody, ForgotPasswordBody } from "../../../types/express/auth";
+
 
 export class AuthController {
   constructor(
@@ -17,9 +20,11 @@ export class AuthController {
     private _googleLoginUseCase:GoogleLoginUseCase,
     private _googlePrecheckUseCase:GooglePrecheckUseCase,
     private _getNewAccessTokenUsecase:GetNewAccessTokenUseCase,
-    private _verifyOtpUseCase:VerifyOtpUseCase,
+    private _verifySignupOtpUseCase:VerifySignupOtpUseCase,
     private _resendOtpUseCase:ResendOtpUseCase,
-    private _forgotPasswordUseCase:ForgotPasswordUseCase
+    private _forgotPasswordUseCase:ForgotPasswordUseCase,
+    private _verifyForgotPasswordOtpUseCase:VerifyForgotPasswordOtpUseCase,
+    private _resetPasswordUseCase:ResetPasswordUseCase
   ) {}
 
   loginUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -123,10 +128,10 @@ export class AuthController {
     }
   }
 
-   verifyOtp= async(req:Request,res:Response,next:NextFunction)=>{
+   verifySignupOtp= async(req:Request,res:Response,next:NextFunction)=>{
     try {
           const {email,otp}=req.body as VerifyOtpBody;
-         const response=await this._verifyOtpUseCase.execute(email,otp);
+         const response=await this._verifySignupOtpUseCase.execute(email,otp);
          res.json(response);
 
     } catch (error) {
@@ -137,7 +142,7 @@ export class AuthController {
 
   resendOtp=async(req:Request,res:Response,next:NextFunction)=>{
     try {
-      const {email}=req.body as VerifyOtpBody
+      const {email}=req.body as resendOtpBody
       const response=await this._resendOtpUseCase.execute(email);
       res.json({success:true,message:response});
     } catch (error) {
@@ -147,9 +152,29 @@ export class AuthController {
 
   forgotPassword=async(req:Request,res:Response,next:NextFunction)=>{
     try {
-      const {email,newPassword}=req.body as ForgotPassVerifyBody;
-      const response=await this._forgotPasswordUseCase.execute(email,newPassword);
+      const {email}=req.body as ForgotPasswordBody;
+      const response=await this._forgotPasswordUseCase.execute(email);
       res.json({success:true,message:response});
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  verifyResetPassOtp=async (req:Request,res:Response,next:NextFunction)=>{
+         try {
+          const {email,otp}=req.body as VerifyOtpBody;
+          const response=await this._verifyForgotPasswordOtpUseCase.execute(email,otp);
+          res.json({success:true,message:response});
+         } catch (error) {
+            next(error)
+         }
+  }
+  resetPassword=async(req:Request,res:Response,next:NextFunction)=>{
+    try {
+      const {email,otp,password}=req.body as ResetPasswordBody;
+      const response=await this._resetPasswordUseCase.execute(email,otp,password);
+      res.json({success:true,message:response});
+
     } catch (error) {
       next(error)
     }

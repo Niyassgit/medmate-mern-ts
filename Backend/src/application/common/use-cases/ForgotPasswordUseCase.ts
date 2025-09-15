@@ -1,22 +1,32 @@
-import { IUserLogin } from "../../../domain/common/entities/IUserLogin";
-import { NotFoundError } from "../../../domain/common/errors";
+import { ForbiddenError, NotFoundError, UnautharizedError } from "../../../domain/common/errors";
 import { IUserLoginRepository } from "../../../domain/common/repositories/IUserLoginRepository";
-import { BcryptServices } from "../../../infrastructure/services/BcryptService";
+import { IOtpService } from "../../../domain/common/services/IOtpService";
+import { OtpPurpose } from "../../../domain/common/types/OtpPurpose";
+import { INotificationService } from "../../../domain/common/services/INotificationService";
 
 export class ForgotPasswordUseCase{
     constructor(
         private _userLoginRepository:IUserLoginRepository,
-        private _bcryptService:BcryptServices
+        private _otpService:IOtpService,
+        private _notificationService:INotificationService
     ){}
 
-    async execute(email:string,newPassword:string):Promise<IUserLogin>{
+    async execute(email:string):Promise<string>{
        
         const user=await this._userLoginRepository.findByEmail(email);
         if(!user) throw new NotFoundError("User not found");
+        if(user.isBlocked) throw new ForbiddenError("User is blocked by admin");
+        if(!user.isVerified) throw new UnautharizedError("User not verified");
 
-        const hashedNewPassword=await this._bcryptService.hashValue(newPassword);
+        const {otp}=await this._otpService.generateOtp(user.id,OtpPurpose.RESET_PASSWORD);
+        console.log("otp sent for reset password:",otp);
 
-        return this._userLoginRepository.resetPassword(user.id,hashedNewPassword);
-      
+        this._notificationService.sendEmail(
+            user.email,
+            "Verify your account",
+             `Your OTP for reset passsword is ${otp}`
+        ).catch((err)=>console.log("Failed to send OTP email:",err));
+
+        return "OTP sent to your registered email"
     }
 }

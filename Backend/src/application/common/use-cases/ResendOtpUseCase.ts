@@ -1,13 +1,14 @@
 import { NotFoundError } from "../../../domain/common/errors";
 import { IUserLoginRepository } from "../../../domain/common/repositories/IUserLoginRepository";
-import { OtpService } from "../../../infrastructure/services/OtpService";
-import { NotificationService } from "../../../infrastructure/services/NotificationService";
+import { IOtpService } from "../../../domain/common/services/IOtpService";
+import { INotificationService } from "../../../domain/common/services/INotificationService";
+import { OtpPurpose } from "../../../domain/common/types/OtpPurpose";
 
 export class ResendOtpUseCase {
   constructor(
     private _userLoginRepository: IUserLoginRepository,
-    private _otpService: OtpService,
-    private _notificationService: NotificationService
+    private _otpService: IOtpService,
+    private _notificationService: INotificationService
   ) {}
 
   async execute(email: string): Promise<string> {
@@ -15,7 +16,7 @@ export class ResendOtpUseCase {
     if (!user) throw new NotFoundError("User not found");
 
  
-    const {otp}=await this._otpService.updateOtp(user.id);
+    const {otp}=await this._otpService.updateOtp(user.id,OtpPurpose.SIGNUP);
        
     console.log("resend otp sended to user:", otp);
     this._notificationService.sendEmail(

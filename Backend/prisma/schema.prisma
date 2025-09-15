@@ -36,13 +36,14 @@ model UserLogin {
   email        String       @unique
   password     String?
   role         Role
+  tokenVersion Int @default(0)
   authProvider AuthProvider @default(NATIVE)
   isBlocked    Boolean      @default(false)
   providerId   String?
   isVerified   Boolean      @default(false)
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
-
+  
   superAdmin       SuperAdmin?
   doctor           Doctor?
   medicalRep       MedicalRep?

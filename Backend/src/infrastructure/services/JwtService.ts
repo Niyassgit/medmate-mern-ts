@@ -1,24 +1,31 @@
 import jwt from "jsonwebtoken";
-import { RefreshTokenPayload } from "../../application/common/types/AuthPayload";
+import { IJWtService } from "../../domain/common/services/IJWTService";
+import { JwtPayload,RefreshTokenPayload} from "../../domain/common/types/JwtPayload";
 
-
-export class JWTServices{
+export class JWTServices implements IJWtService{
      
-    private accessToken=process.env.ACCESS_TOKEN!;
-    private refreshToken=process.env.REFRESH_TOKEN!;
+    private accessSecret=process.env.ACCESS_TOKEN!;
+    private refreshSecret=process.env.REFRESH_TOKEN!;
 
-    signAccessToken(payload:object){
-        return jwt.sign(payload,this.accessToken,{expiresIn:"15m"});
-    }
+   async signAccessToken(payload: JwtPayload): Promise<string> {
+       return jwt.sign(payload,this.accessSecret,{expiresIn:"15m"})
+   }
+   async signRefreshToken(payload: RefreshTokenPayload): Promise<string> {
+       return jwt.sign(payload,this.refreshSecret,{expiresIn:"7d"});
+   }
+   async verifyAccessToken(token: string): Promise<JwtPayload | null> {
+       try {
+        return jwt.verify(token,this.accessSecret) as JwtPayload;
+       } catch (error) {
+        return null;
+       }
+   }
 
-    signRefreshToken(payload:object){
-        return jwt.sign(payload,this.refreshToken,{expiresIn:"7d"})
-    }
-
-    verifyAccessToken(token:string){
-        return jwt.verify(token,this.accessToken);
-    }
-    verifyRefreshToken(token:string):RefreshTokenPayload{
-        return jwt.verify(token,this.refreshToken) as RefreshTokenPayload;
-    }
+   async verifyRefreshToken(token: string): Promise<RefreshTokenPayload | null> {
+       try {
+        return jwt.verify(token,this.refreshSecret) as RefreshTokenPayload
+       } catch (error) {
+        return null;
+       }
+   }
 }

@@ -1,5 +1,5 @@
 import { IUserLoginRepository } from "../../../domain/common/repositories/IUserLoginRepository";
-import { BcryptServices } from "../../../infrastructure/services/BcryptService";
+import { IBcryptService } from "../../../domain/common/services/IHashService";
 import { AuthProvider,IUserLogin } from "../../../domain/common/entities/IUserLogin";
 import { ConflictError,BadRequestError } from "../../../domain/common/errors";
 
@@ -7,7 +7,7 @@ export class CreateUserLoginUseCase{
 
     constructor(
         private _userLoginRepository:IUserLoginRepository,
-        private _bcryptServices:BcryptServices
+        private _bcryptServices:IBcryptService
     ){}
 
     async execute(data:Omit<IUserLogin,"id" | "createdAt" | "updatedAt">):Promise<IUserLogin>{
@@ -20,7 +20,7 @@ export class CreateUserLoginUseCase{
             throw new BadRequestError("Password is required");
         }
         
-        const hashedPassword=data.password ? await this._bcryptServices.hashValue(data.password):null;
+        const hashedPassword=data.password ? await this._bcryptServices.hash(data.password):null;
         return this._userLoginRepository.createUserLogin({
             ...data,
             password:hashedPassword

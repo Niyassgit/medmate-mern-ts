@@ -1,24 +1,24 @@
-import { JWTServices } from "../../../infrastructure/services/JwtService";
+import { IJWtService } from "../../../domain/common/services/IJWTService";
 import { IUserLoginRepository } from "../../../domain/common/repositories/IUserLoginRepository";
 import { UnautharizedError } from "../../../domain/common/errors";
-import { RefreshTokenPayload } from "../types/AuthPayload";
+
 
 export  class GetNewAccessTokenUseCase{
     constructor(
         private _userLoginRepository:IUserLoginRepository,
-        private _jwtService:JWTServices
+        private _jwtService:IJWtService
     ){}
 
     async execute(refreshToken:string):Promise<string>{
 
-        const decoded=this._jwtService.verifyRefreshToken(refreshToken);
-        
-       const user=await this._userLoginRepository.findById(decoded.id)  
+        const decoded=await this._jwtService.verifyRefreshToken(refreshToken);
+        if(!decoded) throw new UnautharizedError("Invalid refresh token");
+       const user=await this._userLoginRepository.findById(decoded.userId)  
 
         if(!user) throw new UnautharizedError("User not found");
        
-        const jwtpayload={id:user.id,role:user.role};
-        const newAccessToken=this._jwtService.signAccessToken(jwtpayload);
+        const accessPayload={userId:user.id,role:user.role};
+        const newAccessToken=this._jwtService.signAccessToken(accessPayload);
 
         return newAccessToken;
     }

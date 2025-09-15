@@ -27,9 +27,10 @@ export class GoogleLoginUseCase {
       role: payload.role,
     });
 
-    const jwtPayload = { id: user.id, role: user.role };
-    const accessToken = this._jwtServices.signAccessToken(jwtPayload);
-    const refreshToken = this._jwtServices.signRefreshToken(jwtPayload);
+    const acessPayload = { userId: user.id, role: user.role };
+    const refreshPayload={userId:user.id,role:user.role,tokenVersion:user.tokenVersion}
+    const accessToken =await this._jwtServices.signAccessToken(acessPayload);
+    const refreshToken = await this._jwtServices.signRefreshToken(refreshPayload);
 
     return { accessToken, refreshToken, user };
   }

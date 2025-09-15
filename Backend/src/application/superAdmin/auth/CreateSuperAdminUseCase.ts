@@ -1,7 +1,7 @@
 import { ISuperAdminRepository } from "../../../domain/superAdmin/repositories/ISuperAdminRepository"; 
-import { BcryptServices } from "../../../infrastructure/services/BcryptService"; 
+import { IBcryptService } from "../../../domain/common/services/IHashService";
 import { ISuperAdmin } from "../../../domain/superAdmin/entities/ISuperAdmin"; 
-import { UserLoginRepository } from "../../../infrastructure/repositories/UserLoginRepository"; 
+import { IUserLoginRepository } from "../../../domain/common/repositories/IUserLoginRepository";
 import { RegisterSuperAdminDTO } from "../dto/RegisterSuperAdminDTO"; 
 import { AuthProvider,Role } from "../../../domain/common/entities/IUserLogin"; 
 import { ConflictError,BadRequestError} from "../../../domain/common/errors";
@@ -9,8 +9,8 @@ import { ConflictError,BadRequestError} from "../../../domain/common/errors";
 export class CreateSuperAdminUseCase{
     constructor(
         private _superAdminRepository:ISuperAdminRepository,
-        private _userLoginRepository:UserLoginRepository,
-        private _bcryptServices:BcryptServices
+        private _userLoginRepository:IUserLoginRepository,
+        private _bcryptServices:IBcryptService
     ){}
 
     async execute(data:RegisterSuperAdminDTO):Promise<ISuperAdmin>{
@@ -22,7 +22,7 @@ export class CreateSuperAdminUseCase{
              throw new BadRequestError("Password is Required for signup");
         }
 
-        const hashedPassword= await this._bcryptServices.hashValue(data.password);
+        const hashedPassword= await this._bcryptServices.hash(data.password);
 
         const login =await this._userLoginRepository.createUserLogin({
             email:data.email,
@@ -30,7 +30,8 @@ export class CreateSuperAdminUseCase{
             role:Role.SUPER_ADMIN,
             authProvider:AuthProvider.NATIVE,
             isBlocked:false,
-            isVerified:false
+            isVerified:false,
+            tokenVersion:0
         });
 
         return this._superAdminRepository.createSuperAdmin({

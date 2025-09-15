@@ -1,18 +1,19 @@
 import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRepository"; 
 import { RegisterResponseDTO } from "../dto/RegisterResponseDTO";
-import { BcryptServices } from "../../../infrastructure/services/BcryptService"; 
+import { IBcryptService } from "../../../domain/common/services/IHashService";
 import { RegisterDoctorDTO } from "../dto/RegisterDoctorDTO";
 import { IUserLoginRepository } from "../../../domain/common/repositories/IUserLoginRepository"; 
 import { AuthProvider,Role } from  "../../../domain/common/entities/IUserLogin"
 import { ConflictError,BadRequestError } from "../../../domain/common/errors";
 import { OtpService } from "../../../infrastructure/services/OtpService";
 import { NotificationService } from "../../../infrastructure/services/NotificationService";
+import { OtpPurpose } from "../../../domain/common/types/OtpPurpose";
 
 export class CreateDoctorUseCase{
 
     constructor(
         private _doctorRepository:IDoctorRepository,
-        private _bcryptServices:BcryptServices,
+        private _bcryptServices:IBcryptService,
         private _userLoginRepository:IUserLoginRepository,
         private _otpService:OtpService,
         private _notificationService:NotificationService
@@ -25,7 +26,7 @@ export class CreateDoctorUseCase{
         
         if(!data.password) throw new BadRequestError("Password is requred for signup");
 
-        const hashedPassword= await this._bcryptServices.hashValue(data.password);
+        const hashedPassword= await this._bcryptServices.hash(data.password);
 
         const login=await this._userLoginRepository.createUserLogin({
             email:data.email,
@@ -33,7 +34,8 @@ export class CreateDoctorUseCase{
             authProvider:AuthProvider.NATIVE,
             role:Role.DOCTOR,
             isBlocked:false,
-            isVerified:false
+            isVerified:false,
+            tokenVersion:0
         });
 
         await this._doctorRepository.createDoctor({
@@ -51,7 +53,7 @@ export class CreateDoctorUseCase{
         });
    
 
-        const {otp} =await this._otpService.generateOtp(login.id,"SIGNUP");
+        const {otp} =await this._otpService.generateOtp(login.id,OtpPurpose.SIGNUP);
         console.log("otp sended to user:",otp);
         this._notificationService.sendEmail(
             data.email,

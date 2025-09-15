@@ -4,4 +4,5 @@ export interface IOtpRecord{
     otp:string,
     purpose:string,
     expiredAt:Date,
+    createdAt:Date,
 }

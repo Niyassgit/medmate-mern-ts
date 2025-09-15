@@ -1,20 +1,21 @@
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository"; 
-import { BcryptServices } from "../../../infrastructure/services/BcryptService";  
+import { IBcryptService } from "../../../domain/common/services/IHashService";
 import { IUserLoginRepository } from "../../../domain/common/repositories/IUserLoginRepository"; 
 import { AuthProvider,Role } from "../../../domain/common/entities/IUserLogin"; 
 import { RegisterMedicalRepDTO } from "../dto/RegisterMedicalRepDTO"; 
 import { ConflictError,BadRequestError } from "../../../domain/common/errors";
-import { OtpService } from "../../../infrastructure/services/OtpService";
-import { NotificationService } from "../../../infrastructure/services/NotificationService";
+import { IOtpService } from "../../../domain/common/services/IOtpService";
+import { INotificationService } from "../../../domain/common/services/INotificationService";
 import { RegisterRepResponseDTO } from "../dto/RegisterRepResponseDTO";
+import { OtpPurpose } from "../../../domain/common/types/OtpPurpose";
 
 export class CreateMedicalRepUseCase{
  
     constructor(private _medicalRepRepository:IMedicalRepRepository,
-      private _bcryptServices: BcryptServices, 
+      private _bcryptServices: IBcryptService, 
       private _userLoginRepository:IUserLoginRepository,
-      private _otpService:OtpService,
-      private _notificationService:NotificationService
+      private _otpService:IOtpService,
+      private _notificationService:INotificationService
     
     ){}
     
@@ -28,7 +29,7 @@ export class CreateMedicalRepUseCase{
       if(!data.password){
         throw new BadRequestError("Password is required for signup");
       }
-      const hashedPassword=await this._bcryptServices.hashValue(data.password);
+      const hashedPassword=await this._bcryptServices.hash(data.password);
       
       const login=await this._userLoginRepository.createUserLogin({
         email:data.email,
@@ -37,6 +38,7 @@ export class CreateMedicalRepUseCase{
         authProvider:AuthProvider.NATIVE,
         isBlocked:false,
         isVerified:false,
+        tokenVersion:0
       });
 
 
@@ -52,11 +54,11 @@ export class CreateMedicalRepUseCase{
         
       });
 
-      const {otp}=await this._otpService.generateOtp(login.id,"SIGNUP");
+      const {otp}=await this._otpService.generateOtp(login.id,OtpPurpose.SIGNUP);
       console.log("otp sended from rep register:",otp)
       this._notificationService.sendEmail(
         data.email,
-        "Veryfy your account",
+        "Verify your account",
          `Your OTP is ${otp}`
       )  .catch(err => console.error("Failed to send OTP email:", err));
       return {

@@ -13,14 +13,20 @@ import SelectRolePage from "@/features/auth/components/SelectRole";
 import PrivateRoute from "@/components/PrivateRoute";
 import { Role } from "@/types/Role";
 import OtpPage from "@/features/auth/components/OtpPage";
+import ForgotPassword from "@/features/auth/pages/ForgotPassword";
+import ResetPassword from "@/features/auth/pages/ResetPassword";
 
 export const router = createBrowserRouter([
   { path: "/", element: <LandingPage /> },
   { path: "/signup", element: <RegisterPage /> },
   {path :"/verifyotp",element:<OtpPage />},
+  {path:"/forgotpassword",element:<ForgotPassword/>},
+  {path:"/forgotpaasword/verifyotp",element:<OtpPage/>},
+  {path:"/forgotpassword/reset",element:<ResetPassword/>},
+ 
 
   { path: "/auth/login", element: <LoginPage /> },
-   {path:"/auth/login/selectrole",element:<SelectRolePage/>},
+   {path:"/auth/login/selectrole",element:<SelectRolePage/> },
   {
     path: "/doctor/dashboard",
     element: (

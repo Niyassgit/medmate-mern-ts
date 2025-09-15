@@ -19,7 +19,8 @@ export interface    IUserLogin{
     isBlocked:boolean;
     authProvider:AuthProvider;
     providerId?:string | null;
-    isVerified:boolean
+    isVerified:boolean;
+    tokenVersion:number;
     role:Role;
     createdAt:Date;
     updatedAt:Date;

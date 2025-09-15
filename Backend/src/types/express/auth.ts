@@ -11,7 +11,9 @@ export interface Cookie{
 export interface PreCheckRequestBody {
   idToken: string;
 }
-
+export interface ForgotPasswordBody{
+  email:string
+}
 export interface VerifyOtpBody{
   email:string,
   otp:string
@@ -19,7 +21,9 @@ export interface VerifyOtpBody{
 export interface resendOtpBody{
     email:string;
 }
-export interface ForgotPassVerifyBody{
+
+export interface ResetPasswordBody{
   email:string,
-  newPassword:string
+  otp:string,
+  password:string
 }
