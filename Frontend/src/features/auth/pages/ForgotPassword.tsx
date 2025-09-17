@@ -34,9 +34,9 @@ const ForgotPassword = () => {
     const res= await forgotPassword(values.email);
    
     try {
-      if(res.data.success){
+      if(res.data.success && res.data.email && res.data.expiredAt){
       toast.success(res.data.message);
-         navigate("/forgotpassword/verifyotp",{state:{email:res.data.email,purpose:"reset"}});
+         navigate("/forgotpassword/verifyotp",{state:{email:res.data.email,purpose:"reset",expiredAt:res.data.expiredAt}});
     }
     } catch (error:any) {
           toast.error(error.response?.data?.message || "Something went wrong");

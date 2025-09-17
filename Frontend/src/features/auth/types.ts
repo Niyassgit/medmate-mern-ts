@@ -13,6 +13,17 @@ export interface AuthResponse{
 export interface GooglePrecheckBody{
     exists:boolean
 }
+export interface RegisterResponseBody{
+    success:boolean,
+    message:string,
+    email:string,
+    role:string,
+    loginId:boolean,
+    isVerified:boolean,
+    expiredAt:string,
+    otplength:number
+
+}
 
 export interface verifyResponse{
     success:string,
@@ -24,5 +35,7 @@ export interface verifyResponse{
 export interface ForgotPasswordResponse{
    success:boolean,
    email:string,
-   message:string
+   message:string,
+   expiredAt:string,
+   otplength:number
 }

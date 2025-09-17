@@ -68,7 +68,8 @@ export class CreateDoctorUseCase{
             role:login.role,
             loginId:login.id,
             isVerified:login.isVerified,
-            otpExpiredAt:record?.expiredAt
+            expiredAt:record?.expiredAt,
+            otplength:6
 
         }
 

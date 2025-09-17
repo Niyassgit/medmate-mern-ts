@@ -1,18 +1,29 @@
 import { useState, useEffect } from "react";
 import { Mail, ArrowLeft, CheckCircle, AlertCircle } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { forgotPasswordResendOtp, resendOtp, verifyOtp, verifyResetPassOtp } from "../api";
-import {toast} from "react-hot-toast"
+import {
+  forgotPasswordResendOtp,
+  resendOtp,
+  verifyOtp,
+  verifyResetPassOtp,
+} from "../api";
+import { toast } from "react-hot-toast";
 const OtpPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const {email,purpose} =location.state || {};
+  const { email, purpose, expiredAt } = location.state || {};
 
   const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState<"success" | "error" | "">("");
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [timeLeft, setTimeLeft] = useState<number>(() => {
+    if (!expiredAt) return 0;
+    const diff = Math.floor(
+      (new Date(expiredAt).getTime() - Date.now()) / 1000
+    );
+    return diff > 0 ? diff : 0;
+  });
   const [canResend, setCanResend] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
 
@@ -36,14 +47,21 @@ const OtpPage = () => {
 
     // Auto-focus next
     if (value && index < 5) {
-      const nextInput = document.getElementById(`otp-${index + 1}`) as HTMLInputElement;
+      const nextInput = document.getElementById(
+        `otp-${index + 1}`
+      ) as HTMLInputElement;
       nextInput?.focus();
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    index: number
+  ) => {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
-      const prevInput = document.getElementById(`otp-${index - 1}`) as HTMLInputElement;
+      const prevInput = document.getElementById(
+        `otp-${index - 1}`
+      ) as HTMLInputElement;
       prevInput?.focus();
     }
   };
@@ -70,21 +88,25 @@ const OtpPage = () => {
       setLoading(true);
       setMessage("");
 
-      if(purpose==="signup"){
-        const res=await verifyOtp(email,otpString);
-         toast.success(res.data.message);
-         navigate("/auth/login");
-      }else if(purpose ==="reset"){
-        const res=await verifyResetPassOtp(email,otpString);
+      if (purpose === "signup") {
+        const res = await verifyOtp(email, otpString);
+        toast.success(res.data.message);
+        navigate("/auth/login");
+      } else if (purpose === "reset") {
+        const res = await verifyResetPassOtp(email, otpString);
         toast.success(res.data.message);
 
-        setTimeout(()=>{
-          navigate("/forgotpassword/reset",{state:{email,otp:otpString}});
-        },1500);
+        setTimeout(() => {
+          navigate("/forgotpassword/reset", {
+            state: { email, otp: otpString },
+          });
+        }, 1500);
         return;
       }
     } catch (error: any) {
-      setMessage(error.response?.data?.message || "Invalid OTP. Please try again.");
+      setMessage(
+        error.response?.data?.message || "Invalid OTP. Please try again."
+      );
       setMessageType("error");
     } finally {
       setLoading(false);
@@ -95,12 +117,23 @@ const OtpPage = () => {
     try {
       setResendLoading(true);
       setMessage("");
+      
+      let res;
+      if (purpose === "signup") {
+        res=await resendOtp(email);
+      } else if (purpose === "reset") {
+        res=await forgotPasswordResendOtp(email);
+      }
 
-        if(purpose === 'signup'){
-          await resendOtp(email);
-        }else if(purpose==="reset"){
-          await forgotPasswordResendOtp(email)
-        }
+      const newExpiry=res?.data.expiredAt;
+
+      if(newExpiry){
+      const diff=Math.floor((new Date(newExpiry).getTime() - Date.now()/1000));
+      setTimeLeft(diff>0 ?diff : 0);
+      }else{
+        setTimeLeft(0);
+      }
+
 
       setMessage("OTP has been resent to your email");
       setMessageType("success");
@@ -141,8 +174,12 @@ const OtpPage = () => {
             <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl mx-auto mb-4 flex items-center justify-center">
               <Mail className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Verify Your Email</h1>
-            <p className="text-gray-600">We've sent a 6-digit verification code to</p>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              Verify Your Email
+            </h1>
+            <p className="text-gray-600">
+              We've sent a 6-digit verification code to
+            </p>
             <p className="text-gray-900 font-semibold mt-1">{email}</p>
           </div>
 
@@ -200,12 +237,16 @@ const OtpPage = () => {
 
           {/* Resend section */}
           <div className="text-center">
-            <p className="text-gray-600 text-sm mb-3">Didn't receive the code?</p>
+            <p className="text-gray-600 text-sm mb-3">
+              Didn't receive the code?
+            </p>
 
             {!canResend ? (
               <div className="flex items-center justify-center gap-2 text-gray-500">
                 <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
-                <span className="text-sm">Resend in {formatTime(timeLeft)}</span>
+                <span className="text-sm">
+                  Resend in {formatTime(timeLeft)}
+                </span>
               </div>
             ) : (
               <button

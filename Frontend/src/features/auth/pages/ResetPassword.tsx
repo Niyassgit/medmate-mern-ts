@@ -29,7 +29,6 @@ const ResetPassword = () => {
 
   const location = useLocation();
   const { email, otp } = location.state || {};
-  console.log("emal and otp from location:",email,otp)
   const form = useForm<ResetPasswordBody>({
     resolver: zodResolver(ResetPasswordSchema),
     defaultValues: {

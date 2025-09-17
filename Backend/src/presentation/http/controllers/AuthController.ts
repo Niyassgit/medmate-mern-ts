@@ -147,7 +147,7 @@ export class AuthController {
     try {
       const {email}=req.body as resendOtpBody
       const response=await this._resendOtpUseCase.execute(email);
-      res.json({success:true,message:response});
+      res.json({success:true,...response});
     } catch (error) {
       next(error)
     }

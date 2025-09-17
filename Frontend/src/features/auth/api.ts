@@ -1,5 +1,5 @@
 import { api } from "@/services/api";
-import { AuthResponse,ForgotPasswordResponse,GooglePrecheckBody, verifyResponse } from "./types";
+import { AuthResponse,ForgotPasswordResponse,GooglePrecheckBody, verifyResponse ,RegisterResponseBody } from "./types";
 
 
 interface loginPayload {
@@ -38,7 +38,7 @@ export const googleLogin = (
 };
 
 export const registerDoctor = (values: FormData) => {
-  return api.post("/doctor/signup", values, {
+  return api.post<RegisterResponseBody>("/doctor/signup", values, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
@@ -47,7 +47,7 @@ export const registerDoctor = (values: FormData) => {
 
 
 export const registerRep = (values: FormData) => {
-  return api.post("/rep/signup", values, {
+  return api.post<RegisterResponseBody>("/rep/signup", values, {
     headers: {
       "Content-Type": "multipart/form-data",
     },

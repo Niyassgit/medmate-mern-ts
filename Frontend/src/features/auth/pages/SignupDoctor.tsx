@@ -58,9 +58,9 @@ const SignupDoctor = () => {
 
       const res=await registerDoctor(formData);
 
-      if(res.data.success && res.data.email){
+      if(res.data.success && res.data.email && res.data.expiredAt){
         toast.success(res.data.message);
-          navigate("/verifyotp", {state:{email:res.data.email,purpose:"signup"}});
+          navigate("/verifyotp", {state:{email:res.data.email,purpose:"signup",expiredAt:res.data.expiredAt}});
       }
 
     } catch (error: any) {

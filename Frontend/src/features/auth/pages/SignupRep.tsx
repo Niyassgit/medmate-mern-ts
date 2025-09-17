@@ -53,8 +53,8 @@ const SignupRep = () => {
      
       const res=await registerRep(formData);
       if(res.data.success && res.data.email){
-        toast.success(res.data.message);
-        navigate("/verifyotp", {state:{email:res.data.email,purpose:"signup"}});
+        toast.success(res.data.success && res.data.message && res.data.expiredAt);
+        navigate("/verifyotp", {state:{email:res.data.email,purpose:"signup",expiredAt:res.data.expiredAt}});
       }
  
     } catch (error: any) {
