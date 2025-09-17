@@ -2,9 +2,9 @@ import { JwtPayload,RefreshTokenPayload} from "../types/JwtPayload"
 
 export interface IJWtService{
  
-    signAccessToken(payload:JwtPayload):Promise<string>;
-    signRefreshToken(payload:RefreshTokenPayload):Promise<string>;
-    verifyAccessToken(token:string):Promise<JwtPayload | null>;
-    verifyRefreshToken(token:string):Promise<RefreshTokenPayload | null>;
+    signAccessToken(payload:JwtPayload):string;
+    signRefreshToken(payload:RefreshTokenPayload):string;
+    verifyAccessToken(token:string): JwtPayload | null;
+    verifyRefreshToken(token:string): RefreshTokenPayload | null;
 
 }

@@ -54,7 +54,7 @@ export class CreateMedicalRepUseCase{
         
       });
 
-      const {otp}=await this._otpService.generateOtp(login.id,OtpPurpose.SIGNUP);
+      const {otp,record}=await this._otpService.generateOtp(login.id,OtpPurpose.SIGNUP);
       console.log("otp sended from rep register:",otp)
       this._notificationService.sendEmail(
         data.email,
@@ -66,7 +66,8 @@ export class CreateMedicalRepUseCase{
         email:login.email,
         role:login.role,
         isVerified:login.isVerified,
-        loginId:login.id
+        loginId:login.id,
+        otpExpiredAt:record?.expiredAt
       }
     
 }

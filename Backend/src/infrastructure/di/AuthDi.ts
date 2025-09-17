@@ -14,6 +14,7 @@ import { NotificationService } from "../services/NotificationService";
 import { ForgotPasswordUseCase } from "../../application/common/use-cases/ForgotPasswordUseCase";
 import { VerifyForgotPasswordOtpUseCase } from "../../application/common/use-cases/VerifyForgotPasswordOtpUseCase";
 import { ResetPasswordUseCase } from "../../application/common/use-cases/ResetPasswordUseCase";
+import { ResetPasswordResendOtpUseCase } from "../../application/common/use-cases/ResetPasswordResendOtpUseCase";
 
 const userLoginRepository=new UserLoginRepository();
 const bcryptServices=new BcryptServices();
@@ -31,6 +32,7 @@ const resendOtpuseCase=new ResendOtpUseCase(userLoginRepository,otpService,notif
 const forgotPasswordUseCase =new ForgotPasswordUseCase(userLoginRepository,otpService,notificationService);
 const verifyForgotPasswordOtpUseCase=new VerifyForgotPasswordOtpUseCase(userLoginRepository,bcryptServices,otpService);
 const resetPasswordUseCase=new ResetPasswordUseCase(userLoginRepository,otpService,bcryptServices);
+const resetPasswordResendOtpUseCase=new ResetPasswordResendOtpUseCase(userLoginRepository,otpService,notificationService);
 
 export const authController=new AuthController(
     loginUserUseCase,
@@ -41,6 +43,7 @@ export const authController=new AuthController(
     resendOtpuseCase,
     forgotPasswordUseCase,
     verifyForgotPasswordOtpUseCase,
-    resetPasswordUseCase
+    resetPasswordUseCase,
+    resetPasswordResendOtpUseCase
 
 );

@@ -11,7 +11,7 @@ export  class GetNewAccessTokenUseCase{
 
     async execute(refreshToken:string):Promise<string>{
 
-        const decoded=await this._jwtService.verifyRefreshToken(refreshToken);
+        const decoded=this._jwtService.verifyRefreshToken(refreshToken);
         if(!decoded) throw new UnautharizedError("Invalid refresh token");
        const user=await this._userLoginRepository.findById(decoded.userId)  
 

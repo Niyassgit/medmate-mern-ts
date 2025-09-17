@@ -1,5 +1,5 @@
 import { api } from "@/services/api";
-import { AuthResponse,GooglePrecheckBody, verifyResponse } from "./types";
+import { AuthResponse,ForgotPasswordResponse,GooglePrecheckBody, verifyResponse } from "./types";
 
 
 interface loginPayload {
@@ -65,6 +65,26 @@ export const resendOtp=(email:string)=>{
   return api.post<verifyResponse>("/auth/resendotp",{
     email
   },{withCredentials:true});
+}
+export const forgotPassword=(email:string)=>{
+  return api.post<ForgotPasswordResponse>("/auth/forgotpassword",{email});
+}
+export const verifyResetPassOtp=(email:string,otp:string)=>{
+  return api.post<verifyResponse>("/auth/forgotpassword/verifyotp",{
+    email,
+    otp
+  },{withCredentials:true})
+}
+
+export const forgotPasswordResendOtp=(email:string)=>{
+   return api.post<verifyResponse>("/auth/forgotpassword/resendotp",{email});
+}
+export const resetPassword=(email:string,otp:string,password:string)=>{
+   return api.post<verifyResponse>("/auth/forgotpassword/reset",{
+    email,
+    otp,
+    password
+   })
 }
 
 export const logoutUser=()=>{

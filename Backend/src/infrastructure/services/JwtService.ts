@@ -7,13 +7,13 @@ export class JWTServices implements IJWtService{
     private accessSecret=process.env.ACCESS_TOKEN!;
     private refreshSecret=process.env.REFRESH_TOKEN!;
 
-   async signAccessToken(payload: JwtPayload): Promise<string> {
+      signAccessToken(payload: JwtPayload): string{
        return jwt.sign(payload,this.accessSecret,{expiresIn:"15m"})
    }
-   async signRefreshToken(payload: RefreshTokenPayload): Promise<string> {
+     signRefreshToken(payload: RefreshTokenPayload):string{
        return jwt.sign(payload,this.refreshSecret,{expiresIn:"7d"});
    }
-   async verifyAccessToken(token: string): Promise<JwtPayload | null> {
+     verifyAccessToken(token: string): JwtPayload | null {
        try {
         return jwt.verify(token,this.accessSecret) as JwtPayload;
        } catch (error) {
@@ -21,7 +21,7 @@ export class JWTServices implements IJWtService{
        }
    }
 
-   async verifyRefreshToken(token: string): Promise<RefreshTokenPayload | null> {
+     verifyRefreshToken(token: string): RefreshTokenPayload | null{
        try {
         return jwt.verify(token,this.refreshSecret) as RefreshTokenPayload
        } catch (error) {

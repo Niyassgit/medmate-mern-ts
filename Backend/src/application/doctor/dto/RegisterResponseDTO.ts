@@ -3,5 +3,6 @@ export interface RegisterResponseDTO{
     email:string,
     role:string,
     loginId:string,
-    isVerified:boolean
+    isVerified:boolean,
+    otpExpiredAt?:Date
 }

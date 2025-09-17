@@ -11,7 +11,9 @@ import { VerifySignupOtpUseCase } from "../../../application/common/use-cases/Ve
 import { ForgotPasswordUseCase } from "../../../application/common/use-cases/ForgotPasswordUseCase";
 import { VerifyForgotPasswordOtpUseCase } from "../../../application/common/use-cases/VerifyForgotPasswordOtpUseCase";
 import { ResetPasswordUseCase } from "../../../application/common/use-cases/ResetPasswordUseCase";
+import { ResetPasswordResendOtpUseCase } from "../../../application/common/use-cases/ResetPasswordResendOtpUseCase";
 import { Cookie, ResetPasswordBody, PreCheckRequestBody, VerifyOtpBody, resendOtpBody, ForgotPasswordBody } from "../../../types/express/auth";
+
 
 
 export class AuthController {
@@ -24,7 +26,8 @@ export class AuthController {
     private _resendOtpUseCase:ResendOtpUseCase,
     private _forgotPasswordUseCase:ForgotPasswordUseCase,
     private _verifyForgotPasswordOtpUseCase:VerifyForgotPasswordOtpUseCase,
-    private _resetPasswordUseCase:ResetPasswordUseCase
+    private _resetPasswordUseCase:ResetPasswordUseCase,
+    private _resetPasswordResendOtpUseCase:ResetPasswordResendOtpUseCase
   ) {}
 
   loginUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -132,7 +135,7 @@ export class AuthController {
     try {
           const {email,otp}=req.body as VerifyOtpBody;
          const response=await this._verifySignupOtpUseCase.execute(email,otp);
-         res.json(response);
+         res.json({success:true,message:response});
 
     } catch (error) {
       next(error)
@@ -154,7 +157,7 @@ export class AuthController {
     try {
       const {email}=req.body as ForgotPasswordBody;
       const response=await this._forgotPasswordUseCase.execute(email);
-      res.json({success:true,message:response});
+      res.json({success:true,...response});
     } catch (error) {
       next(error)
     }
@@ -168,6 +171,17 @@ export class AuthController {
          } catch (error) {
             next(error)
          }
+  }
+
+  forgotPasswordResendOtp=async(req:Request,res:Response,next:NextFunction)=>{
+    try {
+
+      const {email}=req.body as resendOtpBody;
+      const response=await this._resetPasswordResendOtpUseCase.execute(email);
+       res.json({success:true,message:response});
+    } catch (error) {
+      next(error);
+    }
   }
   resetPassword=async(req:Request,res:Response,next:NextFunction)=>{
     try {

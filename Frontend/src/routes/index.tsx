@@ -21,7 +21,7 @@ export const router = createBrowserRouter([
   { path: "/signup", element: <RegisterPage /> },
   {path :"/verifyotp",element:<OtpPage />},
   {path:"/forgotpassword",element:<ForgotPassword/>},
-  {path:"/forgotpaasword/verifyotp",element:<OtpPage/>},
+  {path:"/forgotpassword/verifyotp",element:<OtpPage/>},
   {path:"/forgotpassword/reset",element:<ResetPassword/>},
  
 

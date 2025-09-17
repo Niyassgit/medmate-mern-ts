@@ -5,9 +5,9 @@ import { RegisterDoctorDTO } from "../dto/RegisterDoctorDTO";
 import { IUserLoginRepository } from "../../../domain/common/repositories/IUserLoginRepository"; 
 import { AuthProvider,Role } from  "../../../domain/common/entities/IUserLogin"
 import { ConflictError,BadRequestError } from "../../../domain/common/errors";
-import { OtpService } from "../../../infrastructure/services/OtpService";
-import { NotificationService } from "../../../infrastructure/services/NotificationService";
+import { INotificationService } from "../../../domain/common/services/INotificationService";
 import { OtpPurpose } from "../../../domain/common/types/OtpPurpose";
+import { IOtpService } from "../../../domain/common/services/IOtpService";
 
 export class CreateDoctorUseCase{
 
@@ -15,8 +15,8 @@ export class CreateDoctorUseCase{
         private _doctorRepository:IDoctorRepository,
         private _bcryptServices:IBcryptService,
         private _userLoginRepository:IUserLoginRepository,
-        private _otpService:OtpService,
-        private _notificationService:NotificationService
+        private _otpService:IOtpService,
+        private _notificationService:INotificationService
     ){}
 
     async execute(data:RegisterDoctorDTO):Promise<RegisterResponseDTO>{
@@ -53,7 +53,7 @@ export class CreateDoctorUseCase{
         });
    
 
-        const {otp} =await this._otpService.generateOtp(login.id,OtpPurpose.SIGNUP);
+        const {otp,record} =await this._otpService.generateOtp(login.id,OtpPurpose.SIGNUP);
         console.log("otp sended to user:",otp);
         this._notificationService.sendEmail(
             data.email,
@@ -67,7 +67,9 @@ export class CreateDoctorUseCase{
             email:login.email,
             role:login.role,
             loginId:login.id,
-            isVerified:login.isVerified
+            isVerified:login.isVerified,
+            otpExpiredAt:record?.expiredAt
+
         }
 
     }

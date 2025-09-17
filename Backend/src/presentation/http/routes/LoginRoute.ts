@@ -22,6 +22,7 @@ export class LoginRoute{
         this.router.post("/logout",authController.logoutUser);
         this.router.post("/forgotpassword",authController.forgotPassword);
         this.router.post("/forgotpassword/verifyotp",authController.verifyResetPassOtp);
+        this.router.post("/forgotpassword/resendotp",authController.forgotPasswordResendOtp)
         this.router.post("/forgotpassword/reset",authController.resetPassword)
      }
 } 

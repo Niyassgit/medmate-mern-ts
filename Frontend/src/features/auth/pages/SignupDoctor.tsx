@@ -60,7 +60,7 @@ const SignupDoctor = () => {
 
       if(res.data.success && res.data.email){
         toast.success(res.data.message);
-        navigate("/verifyotp",{state:{email:res.data.email}});
+          navigate("/verifyotp", {state:{email:res.data.email,purpose:"signup"}});
       }
 
     } catch (error: any) {

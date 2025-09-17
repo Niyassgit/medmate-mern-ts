@@ -3,6 +3,7 @@ import { IUserLoginRepository } from "../../../domain/common/repositories/IUserL
 import { IOtpService } from "../../../domain/common/services/IOtpService";
 import { INotificationService } from "../../../domain/common/services/INotificationService";
 import { OtpPurpose } from "../../../domain/common/types/OtpPurpose";
+import { OtpResponseDTO } from "../dto/OtpResponseDTO";
 
 export class ResendOtpUseCase {
   constructor(
@@ -11,12 +12,12 @@ export class ResendOtpUseCase {
     private _notificationService: INotificationService
   ) {}
 
-  async execute(email: string): Promise<string> {
+  async execute(email: string): Promise<OtpResponseDTO> {
     const user = await this._userLoginRepository.findByEmail(email);
     if (!user) throw new NotFoundError("User not found");
 
  
-    const {otp}=await this._otpService.updateOtp(user.id,OtpPurpose.SIGNUP);
+    const {otp,otpRecord}=await this._otpService.updateOtp(user.id,OtpPurpose.SIGNUP);
        
     console.log("resend otp sended to user:", otp);
     this._notificationService.sendEmail(
@@ -26,6 +27,11 @@ export class ResendOtpUseCase {
     )
       .catch(err => console.error("Failed to send OTP email:", err));;
 
-    return "OTP resent successfully"
+    return {
+      message:"OTP resent successfully",
+      expiredAt:otpRecord.createdAt,
+      otplength:6
+    
+    }
   }
 }

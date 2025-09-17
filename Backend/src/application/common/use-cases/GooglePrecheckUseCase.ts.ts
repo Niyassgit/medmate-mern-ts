@@ -1,13 +1,14 @@
-import { JWTServices } from "../../../infrastructure/services/JwtService";
+import { IJWtService } from "../../../domain/common/services/IJWTService";
 import { IUserLoginRepository } from "../../../domain/common/repositories/IUserLoginRepository";
-import { GoogleAuthService } from "../../../infrastructure/services/GoogleAuthService";
+import { IGoogleAuthService } from "../../../domain/common/services/IGoogleAuthService";
 import { GooglePrecheckResultDTO } from "../dto/GooglePrecheckResultDTO";
+
 
 export class GooglePrecheckUseCase{
     constructor(
         private _userLoginRepository:IUserLoginRepository,
-        private _googleAuthService:GoogleAuthService,
-        private _jwtServices:JWTServices
+        private _googleAuthService:IGoogleAuthService,
+        private _jwtServices:IJWtService
     ){}
 
 
@@ -20,9 +21,10 @@ export class GooglePrecheckUseCase{
         const user=await this._userLoginRepository.findByEmail(email);
         if (!user) return { exists: false };
 
-        const jwtPayload={id:user.id,role:user.role};
+        const jwtPayload={userId:user.id,role:user.role};
+        const refreshPayload={userId:user.id,role:user.role,tokenVersion:user.tokenVersion}
         const accessToken=this._jwtServices.signAccessToken(jwtPayload);
-        const refreshToken=this._jwtServices.signRefreshToken(jwtPayload);
+        const refreshToken=this._jwtServices.signRefreshToken(refreshPayload);
 
         return {exists:true,accessToken,refreshToken,user};
         }

@@ -29,8 +29,8 @@ export class GoogleLoginUseCase {
 
     const acessPayload = { userId: user.id, role: user.role };
     const refreshPayload={userId:user.id,role:user.role,tokenVersion:user.tokenVersion}
-    const accessToken =await this._jwtServices.signAccessToken(acessPayload);
-    const refreshToken = await this._jwtServices.signRefreshToken(refreshPayload);
+    const accessToken =this._jwtServices.signAccessToken(acessPayload);
+    const refreshToken =this._jwtServices.signRefreshToken(refreshPayload);
 
     return { accessToken, refreshToken, user };
   }

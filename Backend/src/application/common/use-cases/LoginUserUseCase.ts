@@ -25,8 +25,8 @@ export class LoginUserUseCase{
 
      const accessPayload={userId:user.id,role:user.role};
      const refreshPayload={userId:user.id,role:user.role,tokenVersion:user.tokenVersion}
-     const accessToken=await this._jwtServices.signAccessToken(accessPayload);
-     const refreshToken=await this._jwtServices.signRefreshToken(refreshPayload);
+     const accessToken=this._jwtServices.signAccessToken(accessPayload);
+     const refreshToken=this._jwtServices.signRefreshToken(refreshPayload);
 
     return {accessToken,refreshToken,user};
    }

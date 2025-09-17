@@ -9,7 +9,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link} from "react-router-dom";
 import {
   ForgotPasswordSchema,
   ForgotPasswordBody,
@@ -17,7 +17,13 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {Mail} from "lucide-react"
+import { forgotPassword } from "../api";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+
+
 const ForgotPassword = () => {
+  const navigate=useNavigate();
 
   const form = useForm<ForgotPasswordBody>({
     resolver: zodResolver(ForgotPasswordSchema),
@@ -25,7 +31,17 @@ const ForgotPassword = () => {
   });
 
   const handleSubmit = async (values: ForgotPasswordBody) => {
-    console.log("email submited",values.email);
+    const res= await forgotPassword(values.email);
+   
+    try {
+      if(res.data.success){
+      toast.success(res.data.message);
+         navigate("/forgotpassword/verifyotp",{state:{email:res.data.email,purpose:"reset"}});
+    }
+    } catch (error:any) {
+          toast.error(error.response?.data?.message || "Something went wrong");
+    }
+    
   };
   return (
     <>

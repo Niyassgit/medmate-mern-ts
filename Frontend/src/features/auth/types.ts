@@ -15,5 +15,14 @@ export interface GooglePrecheckBody{
 }
 
 export interface verifyResponse{
-    message:string
+    success:string,
+    message:string,
+    expiredAt:string,
+    otplength:number,
+}
+
+export interface ForgotPasswordResponse{
+   success:boolean,
+   email:string,
+   message:string
 }

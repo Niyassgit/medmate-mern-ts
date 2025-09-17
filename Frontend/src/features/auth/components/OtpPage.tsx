@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { Mail, ArrowLeft, CheckCircle, AlertCircle } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { resendOtp, verifyOtp } from "../api";
-
+import { forgotPasswordResendOtp, resendOtp, verifyOtp, verifyResetPassOtp } from "../api";
+import {toast} from "react-hot-toast"
 const OtpPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const email = location.state?.email;
+  const {email,purpose} =location.state || {};
 
   const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
   const [loading, setLoading] = useState(false);
@@ -70,13 +70,19 @@ const OtpPage = () => {
       setLoading(true);
       setMessage("");
 
-      const res = await verifyOtp(email, otpString);
-      setMessage(res.data.message);
-      setMessageType("success");
+      if(purpose==="signup"){
+        const res=await verifyOtp(email,otpString);
+         toast.success(res.data.message);
+         navigate("/auth/login");
+      }else if(purpose ==="reset"){
+        const res=await verifyResetPassOtp(email,otpString);
+        toast.success(res.data.message);
 
-      setTimeout(() => {
-        navigate("/auth/login", { replace: true });
-      }, 1500);
+        setTimeout(()=>{
+          navigate("/forgotpassword/reset",{state:{email,otp:otpString}});
+        },1500);
+        return;
+      }
     } catch (error: any) {
       setMessage(error.response?.data?.message || "Invalid OTP. Please try again.");
       setMessageType("error");
@@ -90,7 +96,11 @@ const OtpPage = () => {
       setResendLoading(true);
       setMessage("");
 
-      await resendOtp(email);
+        if(purpose === 'signup'){
+          await resendOtp(email);
+        }else if(purpose==="reset"){
+          await forgotPasswordResendOtp(email)
+        }
 
       setMessage("OTP has been resent to your email");
       setMessageType("success");

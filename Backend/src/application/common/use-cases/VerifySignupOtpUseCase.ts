@@ -3,6 +3,7 @@ import { IUserLoginRepository } from "../../../domain/common/repositories/IUserL
 import { IOtpService } from "../../../domain/common/services/IOtpService";
 import { IBcryptService } from "../../../domain/common/services/IHashService";
 import { OtpPurpose } from "../../../domain/common/types/OtpPurpose";
+import { OtpResponseDTO } from "../dto/OtpResponseDTO";
 
 export class VerifySignupOtpUseCase{
 
