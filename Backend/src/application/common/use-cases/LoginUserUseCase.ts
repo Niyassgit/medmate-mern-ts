@@ -1,5 +1,5 @@
-import { IUserLoginRepository } from "../../../domain/common/repositories/IUserLoginRepository";
-import { IUserLogin} from "../../../domain/common/entities/IUserLogin";
+import { IUserRepository } from "../../../domain/common/repositories/IUserLoginRepository";
+import { IUser} from "../../../domain/common/entities/IUserLogin";
 import { IBcryptService } from "../../../domain/common/services/IHashService";
 import { IJWtService } from "../../../domain/common/services/IJWTService";
 import { UnautharizedError,BadRequestError,ForbiddenError} from "../../../domain/common/errors";
@@ -7,12 +7,12 @@ import { UnautharizedError,BadRequestError,ForbiddenError} from "../../../domain
 export class LoginUserUseCase{
 
     constructor(
-        private _userLoginRepository:IUserLoginRepository,
+        private _userLoginRepository:IUserRepository,
         private _bcryptServices:IBcryptService,
         private _jwtServices:IJWtService
     ){}
 
-   async execute(email:string,password:string):Promise<{accessToken:string,refreshToken:string,user:IUserLogin}>{
+   async execute(email:string,password:string):Promise<{accessToken:string,refreshToken:string,user:IUser}>{
   
      const user=await this._userLoginRepository.findByEmail(email);
      if(!user) throw new UnautharizedError("User not found");

@@ -1,28 +1,32 @@
 import {
-  Role,
-  AuthProvider,
-  IUserLogin,
+  Role as DomainRole,
+  AuthProvider as DomainAuthProvider,
+  IUser,
 } from "../../domain/common/entities/IUserLogin";
+
 import { Prisma, UserLogin } from "@prisma/client";
 
 export class UserLoginMapper {
-  static toDomain(user: UserLogin): IUserLogin {
+
+  static toDomain(user: UserLogin): IUser {
+ 
     return {
       id: user.id,
       email: user.email,
       password: user.password,
-      authProvider: user.authProvider as AuthProvider,
-      role: user.role as Role,
+      authProvider: user.authProvider as DomainAuthProvider,
+      role: user.role as DomainRole,
       isBlocked: user.isBlocked,
       isVerified: user.isVerified,
       providerId: user.providerId,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
+      tokenVersion:user.tokenVersion
     };
   }
 
   static toPersistence(
-    domain: Omit<IUserLogin, "id" | "createdAt" | "updatedAt">
+    domain: Omit<IUser, "id" | "createdAt" | "updatedAt">
   ): Prisma.UserLoginCreateInput {
     return {
       email: domain.email,
@@ -37,7 +41,7 @@ export class UserLoginMapper {
 
 
   static toPersistanceUpdate(
-    domain :Partial<IUserLogin>
+    domain :Partial<IUser>
   ):Prisma.UserLoginUpdateInput{
     return {
 

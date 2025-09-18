@@ -12,7 +12,7 @@ export enum AuthProvider {
 
 
 
-export interface    IUserLogin{
+export interface IUser{
     id:string;
     email:string;
     password?:string | null;

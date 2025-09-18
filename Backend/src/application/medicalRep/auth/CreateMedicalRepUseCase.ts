@@ -1,6 +1,6 @@
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository"; 
 import { IBcryptService } from "../../../domain/common/services/IHashService";
-import { IUserLoginRepository } from "../../../domain/common/repositories/IUserLoginRepository"; 
+import { IUserRepository } from "../../../domain/common/repositories/IUserLoginRepository"; 
 import { AuthProvider,Role } from "../../../domain/common/entities/IUserLogin"; 
 import { RegisterMedicalRepDTO } from "../dto/RegisterMedicalRepDTO"; 
 import { ConflictError,BadRequestError } from "../../../domain/common/errors";
@@ -13,7 +13,7 @@ export class CreateMedicalRepUseCase{
  
     constructor(private _medicalRepRepository:IMedicalRepRepository,
       private _bcryptServices: IBcryptService, 
-      private _userLoginRepository:IUserLoginRepository,
+      private _userLoginRepository:IUserRepository,
       private _otpService:IOtpService,
       private _notificationService:INotificationService
     
@@ -31,7 +31,7 @@ export class CreateMedicalRepUseCase{
       }
       const hashedPassword=await this._bcryptServices.hash(data.password);
       
-      const login=await this._userLoginRepository.createUserLogin({
+      const login=await this._userLoginRepository.createUser({
         email:data.email,
         password:hashedPassword,
         role:Role.MEDICAL_REP,
@@ -67,7 +67,8 @@ export class CreateMedicalRepUseCase{
         role:login.role,
         isVerified:login.isVerified,
         loginId:login.id,
-        otpExpiredAt:record?.expiredAt
+        expiredAt:record?.expiredAt,
+        otplength:6
       }
     
 }

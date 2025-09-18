@@ -1,14 +1,14 @@
-import { IUserLogin } from "../entities/IUserLogin";
+import { IUser } from "../entities/IUserLogin";
 import { Role } from "../entities/IUserLogin";
 
 
-export interface IUserLoginRepository{
+export interface IUserRepository{
 
-    createUserLogin(data:Omit<IUserLogin , "id" | "createdAt" | "updatedAt">):Promise <IUserLogin>;
-    findByEmail(email:string): Promise<IUserLogin | null>;
-    findById(userId:string):Promise<IUserLogin | null>;
-    updateBlockStatus(userId:string,isBlocked:boolean):Promise<IUserLogin | null>;
-    upsertGoogleUser(payload:{ email:string,providerId:string |null,role:Role}):Promise<IUserLogin>
-    updateUser(userId:string,isVerified:boolean):Promise<IUserLogin | null>;
+    createUser(data:Omit<IUser , "id" | "createdAt" | "updatedAt">):Promise <IUser>;
+    findByEmail(email:string): Promise<IUser | null>;
+    findById(userId:string):Promise<IUser | null>;
+    updateBlockStatus(userId:string,isBlocked:boolean):Promise<IUser | null>;
+    upsertGoogleUser(payload:{ email:string,providerId:string |null,role:Role}):Promise<IUser>
+    updateUser(userId:string,isVerified:boolean):Promise<IUser | null>;
     resetPassword(userId:string,password:string):Promise<string>;
 } 

@@ -1,4 +1,4 @@
-import { IUserLoginRepository } from "../../../domain/common/repositories/IUserLoginRepository";
+import { IUserRepository } from "../../../domain/common/repositories/IUserLoginRepository";
 import { IOtpService } from "../../../domain/common/services/IOtpService";
 import { IBcryptService } from "../../../domain/common/services/IHashService";
 import { BadRequestError, NotFoundError } from "../../../domain/common/errors";
@@ -6,7 +6,7 @@ import { OtpPurpose } from "../../../domain/common/types/OtpPurpose";
 
 export class ResetPasswordUseCase{
     constructor(
-        private _userLoginRepository:IUserLoginRepository,
+        private _userLoginRepository:IUserRepository,
         private _otpService:IOtpService,
         private _bcryptService:IBcryptService
 

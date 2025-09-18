@@ -1,5 +1,5 @@
 import { BadRequestError, NotFoundError } from "../../../domain/common/errors";
-import { IUserLoginRepository } from "../../../domain/common/repositories/IUserLoginRepository";
+import { IUserRepository } from "../../../domain/common/repositories/IUserLoginRepository";
 import { OtpPurpose } from "../../../domain/common/types/OtpPurpose";
 import { IBcryptService } from "../../../domain/common/services/IHashService";
 import { IOtpService } from "../../../domain/common/services/IOtpService";
@@ -7,7 +7,7 @@ import { IOtpService } from "../../../domain/common/services/IOtpService";
 export class VerifyForgotPasswordOtpUseCase{
 
     constructor(
-        private _userLoginRepository:IUserLoginRepository,
+        private _userLoginRepository:IUserRepository,
         private _bcryptService:IBcryptService,
         private _otpService:IOtpService
     ){}

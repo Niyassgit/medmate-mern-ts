@@ -4,12 +4,12 @@ import { CreateMedicalRepUseCase } from "../../application/medicalRep/auth/Creat
 import { GetMedicalRepByIdUseCase } from "../../application/medicalRep/auth/GetMedicalRepByIdUseCase"; 
 import { GetMedicalRepByEmailUseCase } from "../../application/medicalRep/auth/GetMedicalRepByEmailUseCase"; 
 import { MedicalRepRepository } from "../repositories/MedicalRepRepository";
-import { UserLoginRepository } from "../repositories/UserLoginRepository";
+import { UserRepository } from "../repositories/UserLoginRepository";
 import { OtpService } from "../services/OtpService";
 import { NotificationService } from "../services/NotificationService";
 
 const medicalRepRepository=new MedicalRepRepository();
-const  userLoginRepository=new UserLoginRepository()
+const  userLoginRepository=new UserRepository()
 const bcryptServices=new BcryptServices();
 const otpService=new OtpService();
 const notificationService=new NotificationService()

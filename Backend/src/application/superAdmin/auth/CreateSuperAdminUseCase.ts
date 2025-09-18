@@ -1,7 +1,7 @@
 import { ISuperAdminRepository } from "../../../domain/superAdmin/repositories/ISuperAdminRepository"; 
 import { IBcryptService } from "../../../domain/common/services/IHashService";
 import { ISuperAdmin } from "../../../domain/superAdmin/entities/ISuperAdmin"; 
-import { IUserLoginRepository } from "../../../domain/common/repositories/IUserLoginRepository";
+import { IUserRepository } from "../../../domain/common/repositories/IUserLoginRepository";
 import { RegisterSuperAdminDTO } from "../dto/RegisterSuperAdminDTO"; 
 import { AuthProvider,Role } from "../../../domain/common/entities/IUserLogin"; 
 import { ConflictError,BadRequestError} from "../../../domain/common/errors";
@@ -9,7 +9,7 @@ import { ConflictError,BadRequestError} from "../../../domain/common/errors";
 export class CreateSuperAdminUseCase{
     constructor(
         private _superAdminRepository:ISuperAdminRepository,
-        private _userLoginRepository:IUserLoginRepository,
+        private _userLoginRepository:IUserRepository,
         private _bcryptServices:IBcryptService
     ){}
 
@@ -24,7 +24,7 @@ export class CreateSuperAdminUseCase{
 
         const hashedPassword= await this._bcryptServices.hash(data.password);
 
-        const login =await this._userLoginRepository.createUserLogin({
+        const login =await this._userLoginRepository.createUser({
             email:data.email,
             password:hashedPassword,
             role:Role.SUPER_ADMIN,

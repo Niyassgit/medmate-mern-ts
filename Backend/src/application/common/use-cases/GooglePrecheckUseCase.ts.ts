@@ -1,12 +1,12 @@
 import { IJWtService } from "../../../domain/common/services/IJWTService";
-import { IUserLoginRepository } from "../../../domain/common/repositories/IUserLoginRepository";
+import { IUserRepository } from "../../../domain/common/repositories/IUserLoginRepository";
 import { IGoogleAuthService } from "../../../domain/common/services/IGoogleAuthService";
 import { GooglePrecheckResultDTO } from "../dto/GooglePrecheckResultDTO";
 
 
 export class GooglePrecheckUseCase{
     constructor(
-        private _userLoginRepository:IUserLoginRepository,
+        private _userLoginRepository:IUserRepository,
         private _googleAuthService:IGoogleAuthService,
         private _jwtServices:IJWtService
     ){}

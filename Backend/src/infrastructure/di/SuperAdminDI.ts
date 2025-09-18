@@ -3,7 +3,7 @@ import { CreateSuperAdminUseCase } from "../../application/superAdmin/auth/Creat
 import { GetSuperAdminByEmailIdUseCase } from "../../application/superAdmin/auth/GetSuperAdminByEmailIdUseCase"; 
 import { BcryptServices } from "../services/BcryptService";
 import { SuperAdminRepository } from "../repositories/SuperAdminRepository";
-import { UserLoginRepository } from "../repositories/UserLoginRepository";
+import { UserRepository } from "../repositories/UserLoginRepository";
 import { GetAllDoctorsUseCase } from "../../application/superAdmin/useCases/GetAllDoctorsUseCase";
 import { DoctorRepository } from "../repositories/DoctorRepository";
 import { MedicalRepRepository } from "../repositories/MedicalRepRepository";
@@ -12,7 +12,7 @@ import { BlockUserUseCase } from "../../application/superAdmin/useCases/BlockUse
 import { UnBlockUserUseCase } from "../../application/superAdmin/useCases/UnblockUserUseCase";
 
 const superAdminRepositories=new SuperAdminRepository();
-const userLoginRepository=new UserLoginRepository()
+const userLoginRepository=new UserRepository()
 const bycryptServices=new BcryptServices();
 const doctorRepository=new DoctorRepository();
 const medicalRepRepository=new MedicalRepRepository();

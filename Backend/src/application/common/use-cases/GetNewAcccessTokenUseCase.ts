@@ -1,11 +1,11 @@
 import { IJWtService } from "../../../domain/common/services/IJWTService";
-import { IUserLoginRepository } from "../../../domain/common/repositories/IUserLoginRepository";
+import { IUserRepository } from "../../../domain/common/repositories/IUserLoginRepository";
 import { UnautharizedError } from "../../../domain/common/errors";
 
 
 export  class GetNewAccessTokenUseCase{
     constructor(
-        private _userLoginRepository:IUserLoginRepository,
+        private _userLoginRepository:IUserRepository,
         private _jwtService:IJWtService
     ){}
 

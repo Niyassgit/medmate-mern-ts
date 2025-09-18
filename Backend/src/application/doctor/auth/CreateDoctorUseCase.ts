@@ -2,7 +2,7 @@ import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRe
 import { RegisterResponseDTO } from "../dto/RegisterResponseDTO";
 import { IBcryptService } from "../../../domain/common/services/IHashService";
 import { RegisterDoctorDTO } from "../dto/RegisterDoctorDTO";
-import { IUserLoginRepository } from "../../../domain/common/repositories/IUserLoginRepository"; 
+import { IUserRepository } from "../../../domain/common/repositories/IUserLoginRepository"; 
 import { AuthProvider,Role } from  "../../../domain/common/entities/IUserLogin"
 import { ConflictError,BadRequestError } from "../../../domain/common/errors";
 import { INotificationService } from "../../../domain/common/services/INotificationService";
@@ -14,7 +14,7 @@ export class CreateDoctorUseCase{
     constructor(
         private _doctorRepository:IDoctorRepository,
         private _bcryptServices:IBcryptService,
-        private _userLoginRepository:IUserLoginRepository,
+        private _userRepository:IUserRepository,
         private _otpService:IOtpService,
         private _notificationService:INotificationService
     ){}
@@ -28,7 +28,7 @@ export class CreateDoctorUseCase{
 
         const hashedPassword= await this._bcryptServices.hash(data.password);
 
-        const login=await this._userLoginRepository.createUserLogin({
+        const login=await this._userRepository.createUser({
             email:data.email,
             password:hashedPassword,
             authProvider:AuthProvider.NATIVE,

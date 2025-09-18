@@ -1,5 +1,5 @@
 import { NotFoundError } from "../../../domain/common/errors";
-import { IUserLoginRepository } from "../../../domain/common/repositories/IUserLoginRepository";
+import { IUserRepository } from "../../../domain/common/repositories/IUserLoginRepository";
 import { IOtpService } from "../../../domain/common/services/IOtpService";
 import { INotificationService } from "../../../domain/common/services/INotificationService";
 import { OtpPurpose } from "../../../domain/common/types/OtpPurpose";
@@ -7,7 +7,7 @@ import { OtpResponseDTO } from "../dto/OtpResponseDTO";
 
 export class ResendOtpUseCase {
   constructor(
-    private _userLoginRepository: IUserLoginRepository,
+    private _userLoginRepository: IUserRepository,
     private _otpService: IOtpService,
     private _notificationService: INotificationService
   ) {}

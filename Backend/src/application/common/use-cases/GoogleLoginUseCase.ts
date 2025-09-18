@@ -1,20 +1,20 @@
-import { IUserLoginRepository } from "../../../domain/common/repositories/IUserLoginRepository";
+import { IUserRepository } from "../../../domain/common/repositories/IUserLoginRepository";
 import { IGoogleAuthService } from "../../../domain/common/services/IGoogleAuthService";
 import { GoogleLoginDTO } from "../dto/GoogleLoginDTO";
-import { JWTServices } from "../../../infrastructure/services/JwtService";
-import { IUserLogin } from "../../../domain/common/entities/IUserLogin";
+import { IJWtService } from "../../../domain/common/services/IJWTService";
+import { IUser } from "../../../domain/common/entities/IUserLogin";
 import { UnautharizedError } from "../../../domain/common/errors";
 
 export class GoogleLoginUseCase {
   constructor(
-    private _userRepository: IUserLoginRepository,
+    private _userRepository: IUserRepository,
     private _googleAuthService: IGoogleAuthService,
-    private _jwtServices: JWTServices
+    private _jwtServices: IJWtService
   ) {}
 
   async execute(
     payload: GoogleLoginDTO
-  ): Promise<{ accessToken: string; refreshToken: string; user: IUserLogin }> {
+  ): Promise<{ accessToken: string; refreshToken: string; user: IUser }> {
     const { email, providerId } = await this._googleAuthService.verifyIdToken(
       payload.idToken
     );
