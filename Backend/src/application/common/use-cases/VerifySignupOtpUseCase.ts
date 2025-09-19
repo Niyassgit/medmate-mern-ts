@@ -4,32 +4,32 @@ import { IOtpService } from "../../../domain/common/services/IOtpService";
 import { IBcryptService } from "../../../domain/common/services/IHashService";
 import { OtpPurpose } from "../../../domain/common/types/OtpPurpose";
 
-export class VerifySignupOtpUseCase{
+export class VerifySignupOtpUseCase {
+  constructor(
+    private _userLoginRepository: IUserRepository,
+    private _otpService: IOtpService,
+    private _bcryptService: IBcryptService
+  ) {}
 
-    constructor(
-        private _userLoginRepository:IUserRepository,
-        private _otpService:IOtpService,
-        private _bcryptService:IBcryptService
-    ){}
+  async execute(email: string, otp: string): Promise<string> {
+    const user = await this._userLoginRepository.findByEmail(email);
+    if (!user) throw new NotFoundError("User not Found");
 
-    async execute(email:string,otp:string):Promise<string>{
-        
-       const user=await this._userLoginRepository.findByEmail(email);
-       if(!user) throw new NotFoundError("User not Found")
-        
-       const otpRecord=await this._otpService.findOtp(user.id,OtpPurpose.SIGNUP);
+    const otpRecord = await this._otpService.findOtp(
+      user.id,
+      OtpPurpose.SIGNUP
+    );
 
-       if(!otpRecord) throw new NotFoundError("Invalid or expired OTP");
-       if(otpRecord.expiredAt< new Date()) throw new BadRequestError("OTP expired");
+    if (!otpRecord) throw new NotFoundError("Invalid or expired OTP");
+    if (otpRecord.expiredAt < new Date())
+      throw new BadRequestError("OTP expired");
 
-       const matched=await this._bcryptService.compare(otp,otpRecord.otp);
-       if(!matched) throw new BadRequestError("Invalid OTP");
-   
+    const matched = await this._bcryptService.compare(otp, otpRecord.otp);
+    if (!matched) throw new BadRequestError("Invalid OTP");
 
-       await this._userLoginRepository.updateUser(user.id,true);
-       await this._otpService.deleteOtp(otpRecord.id,OtpPurpose.SIGNUP);
- 
-       return "Account verified successfully"
-    }
+    await this._userLoginRepository.updateUser(user.id, true);
+    await this._otpService.deleteOtp(otpRecord.id, OtpPurpose.SIGNUP);
 
+    return "Account verified successfully";
+  }
 }

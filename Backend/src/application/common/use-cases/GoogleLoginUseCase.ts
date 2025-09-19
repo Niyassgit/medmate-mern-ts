@@ -2,7 +2,7 @@ import { IUserRepository } from "../../../domain/common/repositories/IUserLoginR
 import { IGoogleAuthService } from "../../../domain/common/services/IGoogleAuthService";
 import { GoogleLoginDTO } from "../dto/GoogleLoginDTO";
 import { IJWtService } from "../../../domain/common/services/IJWTService";
-import { IUser } from "../../../domain/common/entities/IUserLogin";
+import { IUser } from "../../../domain/common/entities/IUser";
 import { UnautharizedError } from "../../../domain/common/errors";
 
 export class GoogleLoginUseCase {
@@ -28,9 +28,13 @@ export class GoogleLoginUseCase {
     });
 
     const acessPayload = { userId: user.id, role: user.role };
-    const refreshPayload={userId:user.id,role:user.role,tokenVersion:user.tokenVersion}
-    const accessToken =this._jwtServices.signAccessToken(acessPayload);
-    const refreshToken =this._jwtServices.signRefreshToken(refreshPayload);
+    const refreshPayload = {
+      userId: user.id,
+      role: user.role,
+      tokenVersion: user.tokenVersion,
+    };
+    const accessToken = this._jwtServices.signAccessToken(acessPayload);
+    const refreshToken = this._jwtServices.signRefreshToken(refreshPayload);
 
     return { accessToken, refreshToken, user };
   }

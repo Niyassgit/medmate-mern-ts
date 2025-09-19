@@ -2,17 +2,20 @@ import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/I
 import { RepListDTO } from "../dto/RepListDTO";
 import { RepListMapper } from "../mappers/RepListMapper";
 
-export class GetAllRepsUseCase{
-    constructor(
-        private _medicalRepRepository:IMedicalRepRepository
-    ){}
+export class GetAllRepsUseCase {
+  constructor(private _medicalRepRepository: IMedicalRepRepository) {}
 
-    async execute(page:number,limit:number):Promise<{reps:RepListDTO[],total:number}>{
-        const {reps,total}=await this._medicalRepRepository.getAllMedicalReps(page,limit);
-        return{
-              reps:reps.map((rep)=>RepListMapper.toRepListDTO(rep)),
-              total    
-
-        }
-    }
+  async execute(
+    page: number,
+    limit: number
+  ): Promise<{ reps: RepListDTO[]; total: number }> {
+    const { reps, total } = await this._medicalRepRepository.getAllMedicalReps(
+      page,
+      limit
+    );
+    return {
+      reps: reps.map((rep) => RepListMapper.toRepListDTO(rep)),
+      total,
+    };
+  }
 }

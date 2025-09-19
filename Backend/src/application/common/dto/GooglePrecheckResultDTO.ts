@@ -1,3 +1,5 @@
-import { IUser } from "../../../domain/common/entities/IUserLogin";
+import { IUser } from "../../../domain/common/entities/IUser";
 
-export type GooglePrecheckResultDTO= |{exists:false}|{exists:true;accessToken:string;refreshToken:string;user:IUser}
+export type GooglePrecheckResultDTO =
+  | { exists: false }
+  | { exists: true; accessToken: string; refreshToken: string; user: IUser };

@@ -27,7 +27,7 @@ type MedicalRepResponse={
 
 const RepsList = () => {
   const [page,setPage]=useState(1);
-  const limit=10;
+  const limit=8;
   const fetchFn=useCallback(()=>getAllReps(page,limit),[page,limit]);
   const { data,loading, error,setData} = useFetchList<MedicalRepResponse>(fetchFn);
   const [blockLoading,setBlockLoading]=useState<string|null>(null);

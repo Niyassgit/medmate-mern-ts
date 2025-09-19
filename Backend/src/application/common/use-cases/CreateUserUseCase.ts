@@ -1,29 +1,31 @@
 import { IUserRepository } from "../../../domain/common/repositories/IUserLoginRepository";
 import { IBcryptService } from "../../../domain/common/services/IHashService";
-import { AuthProvider,IUser } from "../../../domain/common/entities/IUserLogin";
-import { ConflictError,BadRequestError } from "../../../domain/common/errors";
+import { AuthProvider, IUser } from "../../../domain/common/entities/IUser";
+import { ConflictError, BadRequestError } from "../../../domain/common/errors";
 
-export class CreateUserUseCase{
+export class CreateUserUseCase {
+  constructor(
+    private _userRepository: IUserRepository,
+    private _bcryptServices: IBcryptService
+  ) {}
 
-    constructor(
-        private _userLoginRepository:IUserRepository,
-        private _bcryptServices:IBcryptService
-    ){}
+  async execute(
+    data: Omit<IUser, "id" | "createdAt" | "updatedAt">
+  ): Promise<IUser> {
+    const existUser = await this._userRepository.findByEmail(data.email);
 
-    async execute(data:Omit<IUser,"id" | "createdAt" | "updatedAt">):Promise<IUser>{
+    if (existUser) throw new ConflictError("Email already exists");
 
-        const existUser=await this._userLoginRepository.findByEmail(data.email);
-
-        if(existUser)   throw new ConflictError("Email already exists");
-
-        if(data.authProvider===AuthProvider.NATIVE && !data.password) {
-            throw new BadRequestError("Password is required");
-        }
-        
-        const hashedPassword=data.password ? await this._bcryptServices.hash(data.password):null;
-        return this._userLoginRepository.createUser({
-            ...data,
-            password:hashedPassword
-        })
+    if (data.authProvider === AuthProvider.NATIVE && !data.password) {
+      throw new BadRequestError("Password is required");
     }
+
+    const hashedPassword = data.password
+      ? await this._bcryptServices.hash(data.password)
+      : null;
+    return this._userRepository.createUser({
+      ...data,
+      password: hashedPassword,
+    });
+  }
 }

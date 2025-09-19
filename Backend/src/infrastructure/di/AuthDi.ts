@@ -1,7 +1,7 @@
 import { AuthController } from "../../presentation/http/controllers/AuthController";
 import { LoginUserUseCase } from "../../application/common/use-cases/LoginUserUseCase";
 import { GoogleLoginUseCase } from "../../application/common/use-cases/GoogleLoginUseCase";
-import { UserRepository } from "../repositories/UserLoginRepository";
+import { UserRepository } from "../repositories/UserRepository";
 import { GooglePrecheckUseCase } from "../../application/common/use-cases/GooglePrecheckUseCase.ts";
 import { GetNewAccessTokenUseCase } from "../../application/common/use-cases/GetNewAcccessTokenUseCase";
 import { VerifySignupOtpUseCase } from "../../application/common/use-cases/VerifySignupOtpUseCase";
@@ -16,34 +16,72 @@ import { VerifyForgotPasswordOtpUseCase } from "../../application/common/use-cas
 import { ResetPasswordUseCase } from "../../application/common/use-cases/ResetPasswordUseCase";
 import { ResetPasswordResendOtpUseCase } from "../../application/common/use-cases/ResetPasswordResendOtpUseCase";
 
-const userRepository=new UserRepository();
-const bcryptServices=new BcryptServices();
-const jwtServices=new JWTServices()
-const googleAuthService=new GoogleAuthService();
-const otpService=new OtpService();
-const notificationService=new NotificationService()
+const userRepository = new UserRepository();
+const bcryptServices = new BcryptServices();
+const jwtServices = new JWTServices();
+const googleAuthService = new GoogleAuthService();
+const otpService = new OtpService();
+const notificationService = new NotificationService();
 
-const loginUserUseCase=new LoginUserUseCase(userRepository,bcryptServices,jwtServices);
-const googleLoginUseCase=new GoogleLoginUseCase(userRepository,googleAuthService,jwtServices);
-const googlePrecheckUseCase= new GooglePrecheckUseCase(userRepository,googleAuthService,jwtServices);
-const getNewAcccessTokenUseCase= new GetNewAccessTokenUseCase(userRepository,jwtServices);
-const verifySignupOtpUseCase=new VerifySignupOtpUseCase(userRepository,otpService,bcryptServices);
-const resendOtpuseCase=new ResendOtpUseCase(userRepository,otpService,notificationService);
-const forgotPasswordUseCase =new ForgotPasswordUseCase(userRepository,otpService,notificationService);
-const verifyForgotPasswordOtpUseCase=new VerifyForgotPasswordOtpUseCase(userRepository,bcryptServices,otpService);
-const resetPasswordUseCase=new ResetPasswordUseCase(userRepository,otpService,bcryptServices);
-const resetPasswordResendOtpUseCase=new ResetPasswordResendOtpUseCase(userRepository,otpService,notificationService);
+const loginUserUseCase = new LoginUserUseCase(
+  userRepository,
+  bcryptServices,
+  jwtServices
+);
+const googleLoginUseCase = new GoogleLoginUseCase(
+  userRepository,
+  googleAuthService,
+  jwtServices
+);
+const googlePrecheckUseCase = new GooglePrecheckUseCase(
+  userRepository,
+  googleAuthService,
+  jwtServices
+);
+const getNewAcccessTokenUseCase = new GetNewAccessTokenUseCase(
+  userRepository,
+  jwtServices
+);
+const verifySignupOtpUseCase = new VerifySignupOtpUseCase(
+  userRepository,
+  otpService,
+  bcryptServices
+);
+const resendOtpuseCase = new ResendOtpUseCase(
+  userRepository,
+  otpService,
+  notificationService
+);
+const forgotPasswordUseCase = new ForgotPasswordUseCase(
+  userRepository,
+  otpService,
+  notificationService
+);
+const verifyForgotPasswordOtpUseCase = new VerifyForgotPasswordOtpUseCase(
+  userRepository,
+  bcryptServices,
+  otpService
+);
+const resetPasswordUseCase = new ResetPasswordUseCase(
+  userRepository,
+  otpService,
+  bcryptServices
+);
+const resetPasswordResendOtpUseCase = new ResetPasswordResendOtpUseCase(
+  userRepository,
+  otpService,
+  notificationService
+);
 
-export const authController=new AuthController(
-    loginUserUseCase,
-    googleLoginUseCase,
-    googlePrecheckUseCase,
-    getNewAcccessTokenUseCase,
-    verifySignupOtpUseCase,
-    resendOtpuseCase,
-    forgotPasswordUseCase,
-    verifyForgotPasswordOtpUseCase,
-    resetPasswordUseCase,
-    resetPasswordResendOtpUseCase
-
+export const authController = new AuthController(
+  loginUserUseCase,
+  googleLoginUseCase,
+  googlePrecheckUseCase,
+  getNewAcccessTokenUseCase,
+  verifySignupOtpUseCase,
+  resendOtpuseCase,
+  forgotPasswordUseCase,
+  verifyForgotPasswordOtpUseCase,
+  resetPasswordUseCase,
+  resetPasswordResendOtpUseCase
 );

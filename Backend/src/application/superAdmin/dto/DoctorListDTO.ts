@@ -1,4 +1,4 @@
-export interface DoctorListDTO{
+export interface DoctorListDTO {
   id: string;
   name: string;
   email: string | null;
@@ -6,5 +6,5 @@ export interface DoctorListDTO{
   isBlocked: boolean | null;
   hospital: string;
   createdAt: Date | null;
-  loginId:string | null
+  loginId: string | null;
 }

@@ -11,7 +11,7 @@ export class DoctorListMapper {
       isBlocked: entity.isBlocked,
       hospital: entity.hospital,
       createdAt: entity.createdAt,
-      loginId:entity.loginId
+      loginId: entity.loginId,
     };
   }
 }

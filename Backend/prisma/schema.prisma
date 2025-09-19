@@ -25,25 +25,25 @@ model otpVerification {
   expiredAt DateTime
   createdAt DateTime
 
-  user UserLogin @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([expiredAt], map: "otp_expiry_idx")
 }
 
-model UserLogin {
+model User {
   id           String       @id @default(auto()) @map("_id") @db.ObjectId
   email        String       @unique
   password     String?
   role         Role
-  tokenVersion Int @default(0)
+  tokenVersion Int          @default(0)
   authProvider AuthProvider @default(NATIVE)
   isBlocked    Boolean      @default(false)
   providerId   String?
   isVerified   Boolean      @default(false)
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
-  
+
   superAdmin       SuperAdmin?
   doctor           Doctor?
   medicalRep       MedicalRep?
@@ -93,8 +93,8 @@ model Doctor {
   conversations        Conversation[]
   repReferralsReceived RepReferral[]      @relation("ReferredDoctorInRepReferral")
 
-  login   UserLogin? @relation(fields: [loginId], references: [id])
-  loginId String?    @unique @db.ObjectId
+  login   User?   @relation(fields: [loginId], references: [id])
+  loginId String? @unique @db.ObjectId
 }
 
 model MedicalRep {
@@ -129,8 +129,8 @@ model MedicalRep {
 
   doctorReferralsReceived DoctorReferral[] @relation("ReferredRep")
 
-  login   UserLogin? @relation(fields: [loginId], references: [id])
-  loginId String?    @unique @db.ObjectId
+  login   User?   @relation(fields: [loginId], references: [id])
+  loginId String? @unique @db.ObjectId
 }
 
 model SuperAdmin {
@@ -138,8 +138,8 @@ model SuperAdmin {
   name  String
   phone String?
 
-  login   UserLogin? @relation(fields: [loginId], references: [id])
-  loginId String?    @unique @db.ObjectId
+  login   User?   @relation(fields: [loginId], references: [id])
+  loginId String? @unique @db.ObjectId
 }
 
 model SubscriptionPlan {

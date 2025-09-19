@@ -1,9 +1,9 @@
 import { SuperAdminController } from "../../presentation/http/controllers/SuperAdminController";
-import { CreateSuperAdminUseCase } from "../../application/superAdmin/auth/CreateSuperAdminUseCase"; 
-import { GetSuperAdminByEmailIdUseCase } from "../../application/superAdmin/auth/GetSuperAdminByEmailIdUseCase"; 
+import { CreateSuperAdminUseCase } from "../../application/superAdmin/auth/CreateSuperAdminUseCase";
+import { GetSuperAdminByEmailIdUseCase } from "../../application/superAdmin/auth/GetSuperAdminByEmailIdUseCase";
 import { BcryptServices } from "../services/BcryptService";
 import { SuperAdminRepository } from "../repositories/SuperAdminRepository";
-import { UserRepository } from "../repositories/UserLoginRepository";
+import { UserRepository } from "../repositories/UserRepository";
 import { GetAllDoctorsUseCase } from "../../application/superAdmin/useCases/GetAllDoctorsUseCase";
 import { DoctorRepository } from "../repositories/DoctorRepository";
 import { MedicalRepRepository } from "../repositories/MedicalRepRepository";
@@ -11,24 +11,30 @@ import { GetAllRepsUseCase } from "../../application/superAdmin/useCases/GetAllR
 import { BlockUserUseCase } from "../../application/superAdmin/useCases/BlockUserUseCase";
 import { UnBlockUserUseCase } from "../../application/superAdmin/useCases/UnblockUserUseCase";
 
-const superAdminRepositories=new SuperAdminRepository();
-const userLoginRepository=new UserRepository()
-const bycryptServices=new BcryptServices();
-const doctorRepository=new DoctorRepository();
-const medicalRepRepository=new MedicalRepRepository();
+const superAdminRepositories = new SuperAdminRepository();
+const userLoginRepository = new UserRepository();
+const bycryptServices = new BcryptServices();
+const doctorRepository = new DoctorRepository();
+const medicalRepRepository = new MedicalRepRepository();
 
-const createSuperAdminUseCase=new CreateSuperAdminUseCase(superAdminRepositories,userLoginRepository,bycryptServices);
-const getSuperAdminByEmailIdUseCase=new GetSuperAdminByEmailIdUseCase(superAdminRepositories);
-const getAllDoctorsUseCase=new GetAllDoctorsUseCase(doctorRepository);
-const getAllRepUseCase=new GetAllRepsUseCase(medicalRepRepository);
-const blockUserUseCase=new BlockUserUseCase(userLoginRepository);
-const unblockUserUseCase=new UnBlockUserUseCase(userLoginRepository);
+const createSuperAdminUseCase = new CreateSuperAdminUseCase(
+  superAdminRepositories,
+  userLoginRepository,
+  bycryptServices
+);
+const getSuperAdminByEmailIdUseCase = new GetSuperAdminByEmailIdUseCase(
+  superAdminRepositories
+);
+const getAllDoctorsUseCase = new GetAllDoctorsUseCase(doctorRepository);
+const getAllRepUseCase = new GetAllRepsUseCase(medicalRepRepository);
+const blockUserUseCase = new BlockUserUseCase(userLoginRepository);
+const unblockUserUseCase = new UnBlockUserUseCase(userLoginRepository);
 
-export const superAdminController=new SuperAdminController(
-    createSuperAdminUseCase,
-    getSuperAdminByEmailIdUseCase,
-    getAllDoctorsUseCase,
-    getAllRepUseCase,
-    blockUserUseCase,
-    unblockUserUseCase
+export const superAdminController = new SuperAdminController(
+  createSuperAdminUseCase,
+  getSuperAdminByEmailIdUseCase,
+  getAllDoctorsUseCase,
+  getAllRepUseCase,
+  blockUserUseCase,
+  unblockUserUseCase
 );

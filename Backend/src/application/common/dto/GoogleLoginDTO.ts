@@ -1,8 +1,6 @@
-import { Role } from "../../../domain/common/entities/IUserLogin"
+import { Role } from "../../../domain/common/entities/IUser";
 
-
-export interface GoogleLoginDTO{
- idToken:string;
- role:Role;
-
+export interface GoogleLoginDTO {
+  idToken: string;
+  role: Role;
 }

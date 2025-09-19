@@ -4,6 +4,7 @@ import { IOtpService } from "../../../domain/common/services/IOtpService";
 import { INotificationService } from "../../../domain/common/services/INotificationService";
 import { OtpPurpose } from "../../../domain/common/types/OtpPurpose";
 import { OtpResponseDTO } from "../dto/OtpResponseDTO";
+import { OtpMapper } from "../mapper/OtpMapper";
 
 export class ResendOtpUseCase {
   constructor(
@@ -16,22 +17,16 @@ export class ResendOtpUseCase {
     const user = await this._userLoginRepository.findByEmail(email);
     if (!user) throw new NotFoundError("User not found");
 
- 
-    const {otp,otpRecord}=await this._otpService.updateOtp(user.id,OtpPurpose.SIGNUP);
-       
-    console.log("resend otp sended to user:", otp);
-    this._notificationService.sendEmail(
-      user.email,
-      "Verify your account",
-      `Your new OTP is ${otp}`
-    )
-      .catch(err => console.error("Failed to send OTP email:", err));;
+    const { otp, otpRecord } = await this._otpService.updateOtp(
+      user.id,
+      OtpPurpose.SIGNUP
+    );
 
-    return {
-      message:"OTP resent successfully",
-      expiredAt:otpRecord.createdAt,
-      otplength:6
-    
-    }
+    console.log("resend otp sended to user:", otp);
+    this._notificationService
+      .sendEmail(user.email, "Verify your account", `Your new OTP is ${otp}`)
+      .catch((err) => console.error("Failed to send OTP email:", err));
+
+    return OtpMapper.toForgotResponse(user.email, otpRecord.expiredAt);
   }
 }

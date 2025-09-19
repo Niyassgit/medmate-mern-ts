@@ -6,13 +6,13 @@ export class RepListMapper {
     return {
       id: entity.id,
       name: entity.name,
-      email:entity.email,
-      phone:entity.phone,
-      employeeId:entity.employeeId,
-      isBlocked:entity.isBlocked,
-      subscriptionStatus:entity.subscriptionStatus,
-      createdAt:entity.createdAt,
-      loginId:entity.loginId
+      email: entity.email,
+      phone: entity.phone,
+      employeeId: entity.employeeId,
+      isBlocked: entity.isBlocked,
+      subscriptionStatus: entity.subscriptionStatus,
+      createdAt: entity.createdAt,
+      loginId: entity.loginId,
     };
   }
 }

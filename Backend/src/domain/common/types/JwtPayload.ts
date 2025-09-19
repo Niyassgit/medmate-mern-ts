@@ -4,6 +4,5 @@ export interface JwtPayload {
 }
 
 export interface RefreshTokenPayload extends JwtPayload {
-  tokenVersion: number; 
+  tokenVersion: number;
 }
-

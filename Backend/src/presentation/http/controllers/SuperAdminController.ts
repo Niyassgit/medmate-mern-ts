@@ -34,18 +34,17 @@ export class SuperAdminController {
   };
 
   getAllDoctors = async (req: Request, res: Response) => {
-
-    const page=parseInt(req.query.page as string) || 1;
-    const limit=parseInt(req.query.limit as string) || 10;  
-    const doctors = await this._getAllDoctorsUseCase.execute(page,limit);
-    res.json({ success: true, data: doctors,page,limit});
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const doctors = await this._getAllDoctorsUseCase.execute(page, limit);
+    res.json({ success: true, data: doctors, page, limit });
   };
 
   getAllReps = async (req: Request, res: Response) => {
-    const page=parseInt(req.query.page as string) || 1;
-    const limit=parseInt(req.query.limit as string) || 10;
-    const reps = await this._getAllRepsUseCase.execute(page,limit);
-    res.json({ success: true, data: reps,page,limit});
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const reps = await this._getAllRepsUseCase.execute(page, limit);
+    res.json({ success: true, data: reps, page, limit });
   };
   blockUser = async (req: Request, res: Response) => {
     const { userId } = req.params;

@@ -18,10 +18,30 @@ export class superAdminRoutes {
       ValidateSchema(SuperAdminRegisterSchema),
       superAdminController.createSuperAdmin
     );
-    this.router.get("/reps", superAdminController.getAllReps);
-    this.router.get("/doctors", superAdminController.getAllDoctors);
-    this.router.patch("/block/:userId", superAdminController.blockUser);
-    this.router.patch("/unblock/:userId", superAdminController.unBlockUser);
+    this.router.get(
+      "/reps",
+      Authenticate,
+      AuthorizeRole(["SUPER_ADMIN"]),
+      superAdminController.getAllReps
+    );
+    this.router.get(
+      "/doctors",
+      Authenticate,
+      AuthorizeRole(["SUPER_ADMIN"]),
+      superAdminController.getAllDoctors
+    );
+    this.router.patch(
+      "/block/:userId",
+      Authenticate,
+      AuthorizeRole(["SUPER_ADMIN"]),
+      superAdminController.blockUser
+    );
+    this.router.patch(
+      "/unblock/:userId",
+      Authenticate,
+      AuthorizeRole(["SUPER_ADMIN"]),
+      superAdminController.unBlockUser
+    );
     this.router.get(
       "/:id",
       Authenticate,
