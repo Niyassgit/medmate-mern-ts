@@ -9,6 +9,7 @@ export interface IMedicalRepRepository {
   getMedicalRepByEmail(email: string): Promise<IMedicalRep | null>;
   getAllMedicalReps(
     page: number,
-    limit: number
+    limit: number,
+    search:string,
   ): Promise<{ reps: IRepListItem[]; total: number }>;
 }

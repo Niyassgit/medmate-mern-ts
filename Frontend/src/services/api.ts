@@ -12,7 +12,6 @@ export const api =axios.create({
 
 api.interceptors.request.use((config) =>{
     const token =localStorage.getItem("accessToken");
-
     if(token){
         config.headers.Authorization=`Bearer ${token}`;
     }
@@ -24,9 +23,8 @@ api.interceptors.response.use(
     async(error)=>{
         const originalRequest=error.config;
 
-        if(error.response?.status===401 && !originalRequest._retry &&  !originalRequest.url.includes("/auth/refresh")){
-            originalRequest._retry=true;
-        
+        if((error.response?.status===401 || error.response?.status===403)&& !originalRequest._retry &&  !originalRequest.url.includes("/auth/refresh")){
+            originalRequest._retry=true;       
 
         try {
             const newToken=await refreshAccessToken();

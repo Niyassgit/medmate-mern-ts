@@ -1,10 +1,10 @@
-import { Button} from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import AdminNavbar from "@/components/navbar/AdminNavbar";
 import useFetchList from "@/hooks/useFetchList";
-import { getAllDoctors ,blockUser,unblockUser} from "../api/superAdminApi";
+import { getAllDoctors, blockUser, unblockUser } from "../api/superAdminApi";
 import { useCallback, useState } from "react";
 import AppPagination from "@/components/AppPagination";
-
+import SearchInput from "../components/SearchInput";
 
 interface Doctor {
   id: string;
@@ -14,60 +14,63 @@ interface Doctor {
   email: string;
   isBlocked: boolean;
   createdAt: string;
-  loginId:string;
+  loginId: string;
 }
 
-type DoctorResponse={
-  doctors:Doctor[],
-  total:number,
-  page:number,
-  limit:number
-}
+type DoctorResponse = {
+  doctors: Doctor[];
+  total: number;
+  page: number;
+  limit: number;
+};
 
 const DoctorsList = () => {
-  const [page,setPage]=useState(1);
-  const limit=8;
-  const fetchFn=useCallback(()=>getAllDoctors(page,limit),[page,limit]);
-  const { data, loading, error,setData} = useFetchList<DoctorResponse>(fetchFn);
-  const [blockLoading,setBlockLoading]=useState<string|null>(null);
+  const [page, setPage] = useState(1);
+  const limit = 8;
+  const [search, setSearch] = useState("");
 
-  
-  const doctors=data?.doctors ?? [];
-  const total=data?.total ?? 0;
-  const totalPage=Math.ceil(total/10);
-
-  const handleBlockToggle = async(doctor:Doctor) => {
-
-
-    try {
-        setBlockLoading(doctor.loginId);
-     let userUpdated;
-     if(doctor.isBlocked){
-      const res=await unblockUser(doctor.loginId);
-      userUpdated=res?.updatedUser;
-     }else{
-      const res=await blockUser(doctor.loginId);
-      userUpdated=res?.updatedUser;
-     }
-
-
-     setData((prev)=>(
-      prev ? { 
-        ...prev,
-        doctors:prev.doctors.map((doc)=>doc.id===doctor.id?{...doc,isBlocked:userUpdated.isBlocked}:doc)
-      } :prev
-    )
+  const fetchFn = useCallback(
+    () => getAllDoctors(page, limit, search),
+    [page, limit, search]
   );
-      
-      
+  const { data, loading, error, setData } =
+    useFetchList<DoctorResponse>(fetchFn);
+  const [blockLoading, setBlockLoading] = useState<string | null>(null);
+
+  const doctors = data?.doctors ?? [];
+  const total = data?.total ?? 0;
+  const totalPage = Math.ceil(total / 10);
+
+  const handleBlockToggle = async (doctor: Doctor) => {
+    try {
+      setBlockLoading(doctor.loginId);
+      let userUpdated;
+      if (doctor.isBlocked) {
+        const res = await unblockUser(doctor.loginId);
+        userUpdated = res?.updatedUser;
+      } else {
+        const res = await blockUser(doctor.loginId);
+        userUpdated = res?.updatedUser;
+      }
+
+      setData((prev) =>
+        prev
+          ? {
+              ...prev,
+              doctors: prev.doctors.map((doc) =>
+                doc.id === doctor.id
+                  ? { ...doc, isBlocked: userUpdated.isBlocked }
+                  : doc
+              ),
+            }
+          : prev
+      );
     } catch (err) {
-      console.log("falied to toggle block button",err);
+      console.log("falied to toggle block button", err);
       alert("Something went wrong while updating block status");
-    }finally{
+    } finally {
       setBlockLoading(null);
     }
-
-   
   };
 
   return (
@@ -78,6 +81,14 @@ const DoctorsList = () => {
         <span className="font-bold text-2xl text-gray-600">
           Doctors Management
         </span>
+
+        <div className="flex items-center gap-2 p-2">
+          <SearchInput
+            value={search}
+            onChange={setSearch}
+            placeholder="Search doctors..."
+          />
+        </div>
 
         <div className="p-6  bg-white rounded-xl shadow-md mt-3">
           <h2 className="text-xl font-semibold mb-4">Registered Doctors</h2>
@@ -119,7 +130,11 @@ const DoctorsList = () => {
                             : "bg-green-100 text-green-700"
                         }`}
                       >
-                        {doctor.isBlocked === undefined?"Unknown":doctor.isBlocked ? "Blocked" : "Active"}
+                        {doctor.isBlocked === undefined
+                          ? "Unknown"
+                          : doctor.isBlocked
+                          ? "Blocked"
+                          : "Active"}
                       </span>
                     </td>
                     <td className="p-3 flex justify-center gap-2">
@@ -131,11 +146,9 @@ const DoctorsList = () => {
                         View
                       </Button>
                       <Button
-                        variant={
-                          doctor.isBlocked ? "default" : "destructive"
-                        }
+                        variant={doctor.isBlocked ? "default" : "destructive"}
                         size="sm"
-                        disabled={blockLoading===doctor.loginId}
+                        disabled={blockLoading === doctor.loginId}
                         onClick={() => handleBlockToggle(doctor)}
                       >
                         {doctor.isBlocked ? "Unblock" : "Block"}
@@ -147,15 +160,13 @@ const DoctorsList = () => {
             </table>
           )}
         </div>
-        
-        <AppPagination 
-        page={page}
-        totalPages={totalPage}
-        onPageChange={setPage}
+
+        <AppPagination
+          page={page}
+          totalPages={totalPage}
+          onPageChange={setPage}
         />
-
       </div>
-
     </>
   );
 };

@@ -9,6 +9,7 @@ export interface IDoctorRepository {
   getDoctorByEmail(email: string): Promise<IDoctor | null>;
   getAllDoctors(
     page: number,
-    limit: number
+    limit: number,
+    search:string
   ): Promise<{ doctors: IDoctorListItem[]; total: number }>;
 }

@@ -3,6 +3,7 @@ import { IMedicalRepRepository } from "../../domain/medicalRep/repositories/IMed
 import { IMedicalRep } from "../../domain/medicalRep/entities/IMedicalRep";
 import { IRepListItem } from "../../domain/medicalRep/entities/IRepListItem";
 import { MedicalRepMapper } from "../mappers/MedicalRepMapper";
+import { Prisma } from "@prisma/client";
 
 export class MedicalRepRepository implements IMedicalRepRepository {
   async createMedicalRep(
@@ -33,17 +34,27 @@ export class MedicalRepRepository implements IMedicalRepRepository {
 
   async getAllMedicalReps(
     page: number,
-    limit: number
+    limit: number,
+    search:string
   ): Promise<{ reps: IRepListItem[]; total: number }> {
     const skip = (page - 1) * limit;
+
+    const where:Prisma.MedicalRepWhereInput=search ?{
+      OR:[
+        {name:{contains:search,mode:"insensitive"}},
+        {login:{email:{contains:search,mode:"insensitive"}}}
+      ],
+    }:{};
+
     const [reps, total] = await Promise.all([
       prisma.medicalRep.findMany({
+        where,
         include: { login: true },
         orderBy: { login: { createdAt: "desc" } },
         skip,
         take: limit,
       }),
-      prisma.medicalRep.count(),
+      prisma.medicalRep.count({where}),
     ]);
 
     return {

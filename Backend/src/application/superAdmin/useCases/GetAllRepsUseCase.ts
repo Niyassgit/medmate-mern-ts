@@ -7,11 +7,13 @@ export class GetAllRepsUseCase {
 
   async execute(
     page: number,
-    limit: number
+    limit: number,
+    search:string,
   ): Promise<{ reps: RepListDTO[]; total: number }> {
     const { reps, total } = await this._medicalRepRepository.getAllMedicalReps(
       page,
-      limit
+      limit,
+      search
     );
     return {
       reps: reps.map((rep) => RepListMapper.toRepListDTO(rep)),
