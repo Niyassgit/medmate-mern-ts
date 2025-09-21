@@ -6,6 +6,7 @@ import { useCallback, useState } from "react";
 import AppPagination from "@/components/AppPagination";
 import SearchInput from "../components/SearchInput";
 
+
 interface MedicalRep {
   id: string;
   name: string;
@@ -83,7 +84,7 @@ const RepsList = () => {
           Medical Reps Management
         </span>
 
-        <div className="flex items-center gap-2 p-2">
+        <div className="flex items-center gap-3 p-2">
           <SearchInput
             onChange={setSearch}
             placeholder="Search Reps..."
