@@ -18,7 +18,7 @@ import ResetPassword from "@/features/auth/pages/ResetPassword";
 
 export const router = createBrowserRouter([
   { path: "/", element: <LandingPage /> },
-  { path: "/signup", element: <RegisterPage /> },
+  { path: "/register/:type", element: <RegisterPage /> },
   {path :"/verifyotp",element:<OtpPage />},
   {path:"/forgotpassword",element:<ForgotPassword/>},
   {path:"/forgotpassword/verifyotp",element:<OtpPage/>},

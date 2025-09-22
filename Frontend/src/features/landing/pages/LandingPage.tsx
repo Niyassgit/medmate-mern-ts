@@ -11,13 +11,16 @@ import {
 } from "@/components/ui/carousel";
 import CarouselDots from "@/components/CarouselDots";
 import { useEffect, useState } from "react";
+import DoctorsSection from "./DoctorsSection";
+import NetworkSection from "./NetworkSection";
+import Footer from "./Footer";
 
 const slides = [
   {
     title: "Connect Doctors & Medical Representatives Seamlessly",
     desc: "Medmate is the leading healthcare networking platform designed to foster efficient connections and collaborations between medical professionals and pharmaceutical representatives.",
     img: "/caro-3.png",
-    cta: { label: "Get Started", to: "/signup" },
+    cta: { label: "Login", to: "/auth/login" },
   },
   {
     title: "Discover Products, Posts & Updates",
@@ -175,12 +178,10 @@ const LandingPage = () => {
 
       </section>
 
-      <p className="mt-6 flex justify-center items-center">
-        Don't have an account?{" "}
-        <Link to="/signup" className="text-blue-600 font-semibold ml-1">
-          Sign Up
-        </Link>
-      </p>
+      <DoctorsSection />
+      <NetworkSection />
+      <Footer/>
+
     </>
   );
 };
