@@ -1,10 +1,11 @@
 import { Router } from "express";
+import { upload } from "../../../infrastructure/storage/multer/MulterConfigFile";
 import { medicalRepController } from "../../../infrastructure/di/MedicalRepDI";
 import { ValidateSchema } from "../middlewares/ValidateSchema";
-import { upload } from "../../../infrastructure/storage/multer/MulterConfig";
 import { registerMedicalRepSchema } from "../validators/RepSchemaValidator";
 import { Authenticate } from "../middlewares/Authenticate";
 import { AuthorizeRole } from "../middlewares/AuthorizeRole";
+
 
 export class MedicalRepRoutes {
   public router: Router;

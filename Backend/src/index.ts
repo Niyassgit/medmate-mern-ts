@@ -5,9 +5,9 @@ import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import { connectDB } from "./config/db";
 import { LoginRoute } from "./presentation/http/routes/LoginRoute";
-import { MedicalRepRoutes } from "./presentation/http/routes/RepRoutes";
+import { MedicalRepRoutes } from "./presentation/http/routes/MedicalRepRoutes";
 import { DoctorRoutes } from "./presentation/http/routes/DoctorRoutes";
-import { superAdminRoutes } from "./presentation/http/routes/SuperAdminRoutes";
+import { SuperAdminRoutes } from "./presentation/http/routes/SuperAdminRoutes";
 import { ErrorHandler } from "./presentation/http/middlewares/ErrorHandler";
 
 dotenv.config();
@@ -28,7 +28,7 @@ const startServer = async () => {
 
     app.use("/api/doctor", new DoctorRoutes().router);
     app.use("/api/rep", new MedicalRepRoutes().router);
-    app.use("/api/admin", new superAdminRoutes().router);
+    app.use("/api/admin", new SuperAdminRoutes().router);
     app.use("/api/auth", new LoginRoute().router);
 
     app.use(ErrorHandler);

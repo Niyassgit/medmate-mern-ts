@@ -24,16 +24,16 @@ export class MedicalRepMapper {
     };
   }
   static toListMedicalRep(
-    rep: MedicalRep & { login: User | null }
+    rep: MedicalRep & { user: User | null }
   ): IRepListItem {
     return {
       id: rep.id,
       name: rep.name,
-      email: rep.login?.email ?? null,
+      email: rep.user?.email ?? null,
       phone: rep.phone,
       subscriptionStatus: rep.subscriptionStatus,
       employeeId: rep.employeeId,
-      isBlocked: rep.login?.isBlocked ?? null,
+      isBlocked: rep.user?.isBlocked ?? null,
       createdAt: rep.createdAt,
       loginId: rep.loginId,
     };

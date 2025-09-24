@@ -26,16 +26,16 @@ export class DoctorMapper {
     };
   }
 
-  static toListItem(doctor: Doctor & { login: User | null }): IDoctorListItem {
+  static toListItem(doctor: Doctor & { user: User | null }): IDoctorListItem {
     return {
       id: doctor.id,
       name: doctor.name,
-      email: doctor.login?.email ?? null,
+      email: doctor.user?.email ?? null,
       phone: doctor.phone,
-      isBlocked: doctor.login?.isBlocked ?? null,
-      createdAt: doctor.login?.createdAt ?? null,
+      isBlocked: doctor.user?.isBlocked ?? null,
+      createdAt: doctor.user?.createdAt ?? null,
       hospital: doctor.hospital,
-      loginId: doctor.login?.id ?? null,
+      loginId: doctor.user?.id ?? null,
     };
   }
 

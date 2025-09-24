@@ -4,6 +4,8 @@ import { IDoctorRepository } from "../../domain/doctor/repositories/IDoctorRepos
 import { IDoctor } from "../../domain/doctor/entities/IDoctor";
 import { IDoctorListItem } from "../../domain/doctor/entities/IDoctorListItem";
 import { DoctorMapper } from "../mappers/DoctorMapper";
+import { IDoctorWithUser } from "../../domain/doctor/entities/IDoctorWithLogin";
+import { DoctorWithLoginMapper } from "../mappers/DoctorWithUserMapper";
 
 export class DoctorRepository implements IDoctorRepository {
   async createDoctor(
@@ -15,9 +17,13 @@ export class DoctorRepository implements IDoctorRepository {
     return DoctorMapper.toDomain(created);
   }
 
-  async getDoctorById(id: string): Promise<IDoctor | null> {
-    const found = await prisma.doctor.findUnique({ where: { id } });
-    return found ? DoctorMapper.toDomain(found) : null;
+  async getDoctorById(id: string): Promise<IDoctorWithUser | null> {
+    const user = await prisma.doctor.findUnique({
+      where: { id },
+      include: { user: true },
+    });
+    if (!user) return null;
+    return DoctorWithLoginMapper.toDomain(user);
   }
 
   async getDoctorByEmail(email: string): Promise<IDoctor | null> {
@@ -34,27 +40,27 @@ export class DoctorRepository implements IDoctorRepository {
   async getAllDoctors(
     page: number,
     limit: number,
-    search:string,
+    search: string
   ): Promise<{ doctors: IDoctorListItem[]; total: number }> {
     const skip = (page - 1) * limit;
-    
-   
-    const where:Prisma.DoctorWhereInput=search ?
-    {
-      OR:[
-        {name:{contains:search,mode:"insensitive"}},
-        {login:{email:{contains:search,mode:"insensitive"}}}
-      ],
-    }:{}
+
+    const where: Prisma.DoctorWhereInput = search
+      ? {
+          OR: [
+            { name: { contains: search, mode: "insensitive" } },
+            { user: { email: { contains: search, mode: "insensitive" } } },
+          ],
+        }
+      : {};
     const [doctors, total] = await Promise.all([
       prisma.doctor.findMany({
         where,
-        include: { login: true },
-        orderBy: { login: { createdAt: "desc" } },
+        include: { user: true },
+        orderBy: { user: { createdAt: "desc" } },
         skip,
         take: limit,
       }),
-      prisma.doctor.count({where}),
+      prisma.doctor.count({ where }),
     ]);
 
     return {
@@ -62,6 +68,4 @@ export class DoctorRepository implements IDoctorRepository {
       total,
     };
   }
-
-
 }

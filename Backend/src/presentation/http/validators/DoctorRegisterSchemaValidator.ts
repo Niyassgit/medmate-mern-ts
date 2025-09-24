@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const RegisterDoctorSchema = z.object({
+export const DoctorRegisterSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email"),
   phone: z.string().regex(/^\+?\d{10,15}$/, "Invalid phone number"),

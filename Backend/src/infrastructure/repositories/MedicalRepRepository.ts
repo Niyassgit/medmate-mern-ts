@@ -4,6 +4,8 @@ import { IMedicalRep } from "../../domain/medicalRep/entities/IMedicalRep";
 import { IRepListItem } from "../../domain/medicalRep/entities/IRepListItem";
 import { MedicalRepMapper } from "../mappers/MedicalRepMapper";
 import { Prisma } from "@prisma/client";
+import { IMedicalRepWithUser } from "../../domain/doctor/entities/IMedicalRepWithUser";
+import { MedicalRepWithUserMapper } from "../mappers/MedicalRepWithUserMapper";
 
 export class MedicalRepRepository implements IMedicalRepRepository {
   async createMedicalRep(
@@ -15,9 +17,13 @@ export class MedicalRepRepository implements IMedicalRepRepository {
     return MedicalRepMapper.toDomain(created);
   }
 
-  async getMedicalRepById(id: string): Promise<IMedicalRep | null> {
-    const found = await prisma.medicalRep.findUnique({ where: { id } });
-    return found ? MedicalRepMapper.toDomain(found) : null;
+  async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {
+    const user=await prisma.medicalRep.findUnique({
+      where:{id},
+      include:{user:true}
+    });
+    if(!user) return null;
+    return MedicalRepWithUserMapper.toDomain(user);
   }
 
   async getMedicalRepByEmail(email: string): Promise<IMedicalRep | null> {
@@ -42,15 +48,15 @@ export class MedicalRepRepository implements IMedicalRepRepository {
     const where:Prisma.MedicalRepWhereInput=search ?{
       OR:[
         {name:{contains:search,mode:"insensitive"}},
-        {login:{email:{contains:search,mode:"insensitive"}}}
+        {user:{email:{contains:search,mode:"insensitive"}}}
       ],
     }:{};
 
     const [reps, total] = await Promise.all([
       prisma.medicalRep.findMany({
         where,
-        include: { login: true },
-        orderBy: { login: { createdAt: "desc" } },
+        include: { user: true },
+        orderBy: { user: { createdAt: "desc" } },
         skip,
         take: limit,
       }),
