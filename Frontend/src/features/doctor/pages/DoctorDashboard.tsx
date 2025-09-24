@@ -1,10 +1,13 @@
-import React from 'react'
+import DoctorNavbar from "@/components/navbar/DoctorNavbar"
+
+
+
 
 const DoctorDashboard = () => {
   return (
-    <div>
-      <p className='text-amber-500 '>Hey this is Doctor Dashboard page</p>
-    </div>
+  <>
+ <DoctorNavbar/>
+  </>
   )
 }
 

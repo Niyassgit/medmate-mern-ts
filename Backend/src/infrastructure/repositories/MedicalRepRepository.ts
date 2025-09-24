@@ -1,54 +1,65 @@
-import {prisma} from "../database/PrismaClient";
-import { IMedicalRepRepository } from "../../domain/medicalRep/entities/IMedicalRepRepository";
+import { prisma } from "../database/PrismaClient";
+import { IMedicalRepRepository } from "../../domain/medicalRep/repositories/IMedicalRepRepository";
 import { IMedicalRep } from "../../domain/medicalRep/entities/IMedicalRep";
+import { IRepListItem } from "../../domain/medicalRep/entities/IRepListItem";
+import { MedicalRepMapper } from "../mappers/MedicalRepMapper";
+import { Prisma } from "@prisma/client";
 
+export class MedicalRepRepository implements IMedicalRepRepository {
+  async createMedicalRep(
+    data: Omit<IMedicalRep, "id" | "createdAt" | "updatedAt">
+  ): Promise<IMedicalRep> {
+    const created = await prisma.medicalRep.create({
+      data: MedicalRepMapper.toPersistance(data),
+    });
+    return MedicalRepMapper.toDomain(created);
+  }
 
-export class MedicalRepRepository implements IMedicalRepRepository{
+  async getMedicalRepById(id: string): Promise<IMedicalRep | null> {
+    const found = await prisma.medicalRep.findUnique({ where: { id } });
+    return found ? MedicalRepMapper.toDomain(found) : null;
+  }
 
-     async createMedicalRep(data: Omit<IMedicalRep, "id" | "createdAt" | "updatedAt">): Promise<IMedicalRep> {
-         const created= await prisma.medicalRep.create({
-            data:{
-                ...data,
-            }
-         });
-         return created;
-     }
+  async getMedicalRepByEmail(email: string): Promise<IMedicalRep | null> {
+    const user = await prisma.user.findUnique({
+      where: { email },
+      include: { medicalRep: true },
+    });
 
-     async getMedicalRepById(id: string): Promise<IMedicalRep | null> {
-         return prisma.medicalRep.findUnique({where:{id}});
-     }
+    if (!user || !user.medicalRep) return null;
 
-     async getMedicalRepByEmail(email: string): Promise<IMedicalRep | null> {
-        
-       const userLogin=await prisma.userLogin.findUnique({
-        where:{email},
-        include:{medicalRep:true},
-       });
+    const rep = user.medicalRep;
+    return MedicalRepMapper.toDomain(rep);
+  }
 
-       if(!userLogin || !userLogin.medicalRep) return null;
+  async getAllMedicalReps(
+    page: number,
+    limit: number,
+    search:string
+  ): Promise<{ reps: IRepListItem[]; total: number }> {
+    const skip = (page - 1) * limit;
 
-       const rep=userLogin.medicalRep;
-       
-       return {
-           id: rep.id,
-        name: rep.name,
-        phone: rep.phone,
-        companyName: rep.companyName,
-        companyLogoUrl: rep.companyLogoUrl ?? null,
-        employeeId: rep.employeeId ?? null,
-        departmentId: rep.departmentId ?? null,
-        about: rep.about ?? null,
-        subscriptionPlanId: rep.subscriptionPlanId ?? null,
-        subscriptionStatus: rep.subscriptionStatus ?? null,
-        subscriptionStart: rep.subscriptionStart ?? null,
-        subscriptionEnd: rep.subscriptionEnd ?? null,
-        maxConnectionsPerDay: rep.maxConnectionsPerDay ?? 0,
-        loginId: rep.loginId,
-        createdAt: rep.createdAt,
-        updatedAt: rep.updatedAt,
-       }
+    const where:Prisma.MedicalRepWhereInput=search ?{
+      OR:[
+        {name:{contains:search,mode:"insensitive"}},
+        {login:{email:{contains:search,mode:"insensitive"}}}
+      ],
+    }:{};
 
-      
-     }
-  
+    const [reps, total] = await Promise.all([
+      prisma.medicalRep.findMany({
+        where,
+        include: { login: true },
+        orderBy: { login: { createdAt: "desc" } },
+        skip,
+        take: limit,
+      }),
+      prisma.medicalRep.count({where}),
+    ]);
+
+    return {
+      reps: reps.map((r) => MedicalRepMapper.toListMedicalRep(r)),
+      total,
+    };
+  }
 }

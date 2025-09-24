@@ -1,10 +1,9 @@
-import React from 'react'
+import RepNavBar from '@/components/navbar/RepNavBar';
+
 
 const RepDashboard = () => {
   return (
-    <div>
-      <p className='text-amber-900'>Hey this is Medical Rep dashboard Page</p>
-    </div>
+   <RepNavBar/>
   )
 }
 

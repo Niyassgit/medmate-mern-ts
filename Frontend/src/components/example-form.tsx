@@ -12,19 +12,23 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form"
+import GoogleAuthButton from "@/features/auth/components/GoogleAuthButton"
+import { validateLogin,LoginRequestBody } from "@/features/auth/schemas/LoginSchema"
+import {zodResolver} from "@hookform/resolvers/zod"
+import { Eye,EyeOff } from "lucide-react"
+import { useState } from "react"
 
-type LoginFormValues = {
-  email: string
-  password: string
-}
 
 interface ExampleFormProps {
-  onSubmit: (values: LoginFormValues) => void
-  onGoogleLogin?: () => void   // optional prop for Google login
+  onSubmit: (values: LoginRequestBody) => void
+  onGoogleLogin?: () => void  
 }
 
-export default function ExampleForm({ onSubmit, onGoogleLogin }: ExampleFormProps) {
-  const form = useForm<LoginFormValues>({
+export default function ExampleForm({ onSubmit}: ExampleFormProps) {
+  const [showPassword,setShowPassword]=useState(false);
+
+  const form = useForm<LoginRequestBody>({
+    resolver:zodResolver(validateLogin),
     defaultValues: {
       email: "",
       password: "",
@@ -32,6 +36,8 @@ export default function ExampleForm({ onSubmit, onGoogleLogin }: ExampleFormProp
   })
 
   return (
+    <>
+
     <Card className="w-[400px] shadow-lg">
       <CardHeader>
         <CardTitle className="text-center">Login</CardTitle>
@@ -62,7 +68,13 @@ export default function ExampleForm({ onSubmit, onGoogleLogin }: ExampleFormProp
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="********" {...field} />
+                    <div className="relative">
+                    <Input type={showPassword?"text": "password"} placeholder="********" {...field} />
+                    <button className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500"
+                    onClick={()=>setShowPassword((prev)=>!prev)}
+                    >{showPassword ? <EyeOff className="w-4 h-4"/>: <Eye className="w-4 h-4"/>}</button>
+                    </div>
+
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -87,20 +99,11 @@ export default function ExampleForm({ onSubmit, onGoogleLogin }: ExampleFormProp
         </div>
 
         {/* Google Auth Button */}
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full flex items-center justify-center space-x-2"
-          onClick={onGoogleLogin}
-        >
-          <img
-            src="https://png.pngtree.com/png-clipart/20230916/original/pngtree-google-logo-vector-png-image_12256710.png"
-            alt="Google"
-            className="w-5 h-5"
-          />
-          <span>Continue with Google</span>
-        </Button>
+       <div className="flex justify-center">
+        <GoogleAuthButton />
+        </div>
       </CardContent>
     </Card>
+    </>
   )
 }

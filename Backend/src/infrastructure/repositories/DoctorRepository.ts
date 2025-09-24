@@ -1,53 +1,67 @@
-import {prisma} from "../database/PrismaClient";
-import { IDoctorRepository } from "../../domain/doctor/entities/IDoctorRepository";
+import { prisma } from "../database/PrismaClient";
+import { Prisma } from "@prisma/client";
+import { IDoctorRepository } from "../../domain/doctor/repositories/IDoctorRepository";
 import { IDoctor } from "../../domain/doctor/entities/IDoctor";
+import { IDoctorListItem } from "../../domain/doctor/entities/IDoctorListItem";
+import { DoctorMapper } from "../mappers/DoctorMapper";
 
+export class DoctorRepository implements IDoctorRepository {
+  async createDoctor(
+    data: Omit<IDoctor, "id" | "updatedAt" | "createdAt">
+  ): Promise<IDoctor> {
+    const created = await prisma.doctor.create({
+      data: DoctorMapper.toPersistance(data),
+    });
+    return DoctorMapper.toDomain(created);
+  }
 
-export class DoctorRepository implements IDoctorRepository{
+  async getDoctorById(id: string): Promise<IDoctor | null> {
+    const found = await prisma.doctor.findUnique({ where: { id } });
+    return found ? DoctorMapper.toDomain(found) : null;
+  }
 
-    async createDoctor(data: Omit<IDoctor, "id" | "updatedAt" | "createdAt">): Promise<IDoctor> {
-        return prisma.doctor.create({
-            data:{
-                ...data,
-            }
-        })
-    }
+  async getDoctorByEmail(email: string): Promise<IDoctor | null> {
+    const user = await prisma.user.findUnique({
+      where: { email },
+      include: { doctor: true },
+    });
 
-     async getDoctorById(id: string): Promise<IDoctor | null> {
-        return prisma.doctor.findUnique({where:{id}});
-    }
+    if (!user || !user.doctor) return null;
+    const doc = user.doctor;
+
+    return DoctorMapper.toDomain(doc);
+  }
+  async getAllDoctors(
+    page: number,
+    limit: number,
+    search:string,
+  ): Promise<{ doctors: IDoctorListItem[]; total: number }> {
+    const skip = (page - 1) * limit;
     
-    async getDoctorByEmail(email: string): Promise<IDoctor | null> {
+   
+    const where:Prisma.DoctorWhereInput=search ?
+    {
+      OR:[
+        {name:{contains:search,mode:"insensitive"}},
+        {login:{email:{contains:search,mode:"insensitive"}}}
+      ],
+    }:{}
+    const [doctors, total] = await Promise.all([
+      prisma.doctor.findMany({
+        where,
+        include: { login: true },
+        orderBy: { login: { createdAt: "desc" } },
+        skip,
+        take: limit,
+      }),
+      prisma.doctor.count({where}),
+    ]);
 
-         const userLogin=await  prisma.userLogin.findUnique({
-             where:{email},
-             include:{doctor:true}
-         });
-
-         if(!userLogin || !userLogin.doctor) return null;
-         const doc=userLogin.doctor;
- 
-        return {
-            id:doc.id,
-            name:doc.name,
-            phone:doc.phone,
-            departmentId:doc.departmentId ?? null,
-            experienceYears:doc.experienceYears ?? null,
-            hasOwnClinic:doc.hasOwnClinic ?? null,
-            doctorClass:doc.doctorClass ?? null,
-            territoryId:doc.doctorClass ?? null,
-            loginId:doc.loginId ?? null,
-            registrationId:doc.registrationId,
-            hospitalId:doc.registrationId,
-            licenseImageUrl:doc.licenseImageUrl,
-            opHours:doc.opHours ?? null,
-            about:doc.about ?? null,
-            educations:doc.educations ?? [],
-            certificates:doc.certificates ?? [],
-            createdAt:doc.createdAt,
-            updatedAt:doc.updatedAt,
-        }
+    return {
+      doctors: doctors.map((d) => DoctorMapper.toListItem(d)),
+      total,
+    };
+  }
 
 
-    }
 }

@@ -1,50 +1,58 @@
-import { IMedicalRepRepository } from "../../../domain/medicalRep/entities/IMedicalRepRepository"; 
-import { BcryptServices } from "../../../infrastructure/security/BcryptService";  
-import { IMedicalRep } from "../../../domain/medicalRep/entities/IMedicalRep";  
-import { IUserLoginRepository } from "../../../domain/common/entities/IUserLoginRepository"; 
-import { AuthProvider,Role } from "../../../domain/common/entities/IUserLogin"; 
-import { RegisterMedicalRepDTO } from "../dto/RegisterMedicalRepDTO"; 
-import { ConflictError,BadRequestError } from "../../../domain/common/errors";
+import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
+import { IBcryptService } from "../../../domain/common/services/IHashService";
+import { IUserRepository } from "../../../domain/common/repositories/IUserLoginRepository";
+import { Role } from "../../../domain/common/entities/IUser";
+import { RegisterMedicalRepDTO } from "../dto/RegisterMedicalRepDTO";
+import { ConflictError, BadRequestError } from "../../../domain/common/errors";
+import { IOtpService } from "../../../domain/common/services/IOtpService";
+import { INotificationService } from "../../../domain/common/services/INotificationService";
+import { RegisterRepResponseDTO } from "../dto/RegisterRepResponseDTO";
+import { OtpPurpose } from "../../../domain/common/types/OtpPurpose";
+import { UserMapper } from "../../common/mapper/UserMapper";
+import { MedicalRepMapper } from "../mapper/MedicalRepMapper";
+import { MedicalRepAuthMapper } from "../mapper/MedicalRepAuthMapper";
 
-export class CreateMedicalRepUseCase{
- 
-    constructor(private _medicalRepRepository:IMedicalRepRepository,
-      private _bcryptServices: BcryptServices, 
-      private _userLoginRepository:IUserLoginRepository
-    
-    ){}
-    
-    async execute(data:RegisterMedicalRepDTO):Promise <IMedicalRep>{
+export class CreateMedicalRepUseCase {
+  constructor(
+    private _medicalRepRepository: IMedicalRepRepository,
+    private _bcryptServices: IBcryptService,
+    private _userLoginRepository: IUserRepository,
+    private _otpService: IOtpService,
+    private _notificationService: INotificationService
+  ) {}
 
-      const existingRep=await this._medicalRepRepository.getMedicalRepByEmail(data.email);
-      if(existingRep){
-        throw new ConflictError(`User already exists`);
-      }
+  async execute(data: RegisterMedicalRepDTO): Promise<RegisterRepResponseDTO> {
+    const existingRep = await this._medicalRepRepository.getMedicalRepByEmail(
+      data.email
+    );
+    if (existingRep) {
+      throw new ConflictError(`User already exists`);
+    }
 
-      if(!data.password){
-        throw new BadRequestError("Password is required for signup");
-      }
-      const hashedPassword=await this._bcryptServices.hashPassword(data.password);
-      
-      const login=await this._userLoginRepository.createUserLogin({
-        email:data.email,
-        password:hashedPassword,
-        role:Role.MEDICAL_REP,
-        authProvider:AuthProvider.NATIVE
-      });
+    if (!data.password) {
+      throw new BadRequestError("Password is required for signup");
+    }
+    const hashedPassword = await this._bcryptServices.hash(data.password);
 
+    const userEntity = UserMapper.toUserEntity(
+      data.email,
+      hashedPassword,
+      Role.MEDICAL_REP
+    );
+    const user = await this._userLoginRepository.createUser(userEntity);
 
-      return this._medicalRepRepository.createMedicalRep({
-        name:data.name,
-        phone:data.phone,
-        companyName:data.companyName,
-        companyLogoUrl:data.companyLogoUrl ?? null,
-        employeeId:data.employeeId,
-        subscriptionStatus:"inactive",
-        maxConnectionsPerDay:10,
-        loginId:login.id,
-        
-      })
-    
-}
+    const medicalRepEntity = MedicalRepMapper.toMedicalRepEntity(data, user.id);
+
+    await this._medicalRepRepository.createMedicalRep(medicalRepEntity);
+
+    const { otp, record } = await this._otpService.generateOtp(
+      user.id,
+      OtpPurpose.SIGNUP
+    );
+    console.log("otp sended from rep register:", otp);
+    this._notificationService
+      .sendEmail(data.email, "Verify your account", `Your OTP is ${otp}`)
+      .catch((err) => console.error("Failed to send OTP email:", err));
+    return MedicalRepAuthMapper.toRegisterResponse(user, record?.expiredAt);
+  }
 }
