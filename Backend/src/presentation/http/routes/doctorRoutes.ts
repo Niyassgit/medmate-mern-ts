@@ -5,6 +5,7 @@ import { upload } from "../../../infrastructure/storage/multer/MulterConfigFile"
 import { DoctorRegisterSchema } from "../validators/DoctorRegisterSchemaValidator";
 import { Authenticate } from "../middlewares/Authenticate";
 import { AuthorizeRole } from "../middlewares/AuthorizeRole";
+import { Role } from "../../../domain/common/entities/IUser";
 
 export class DoctorRoutes {
   public router: Router;
@@ -21,11 +22,7 @@ export class DoctorRoutes {
       ValidateSchema(DoctorRegisterSchema),
       doctorController.createDoctor
     );
-    this.router.get(
-      "/:id",
-      Authenticate,
-      AuthorizeRole(["DOCTOR"]),
-      doctorController.getDoctorProfileById
-    );
+     this.router.get("/:userId",Authenticate,AuthorizeRole([Role.DOCTOR]),doctorController.getDoctorprofileById)
   }
+ 
 }

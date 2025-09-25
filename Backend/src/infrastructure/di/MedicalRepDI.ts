@@ -1,8 +1,7 @@
 import { MedicalRepController } from "../../presentation/http/controllers/MedicalRepController";
 import { BcryptServices } from "../services/BcryptService";
 import { CreateMedicalRepUseCase } from "../../application/medicalRep/auth/CreateMedicalRepUseCase";
-import { GetMedicalRepByIdUseCase } from "../../application/medicalRep/auth/GetMedicalRepByIdUseCase";
-import { GetMedicalRepByEmailUseCase } from "../../application/medicalRep/auth/GetMedicalRepByEmailUseCase";
+import { GetRepProfileByIdUseCase } from "../../application/medicalRep/use-cases/GetRepProfileByIdUseCase";
 import { MedicalRepRepository } from "../repositories/MedicalRepRepository";
 import { UserRepository } from "../repositories/UserRepository";
 import { OtpService } from "../services/OtpService";
@@ -21,15 +20,10 @@ const createMedicalRepUseCase = new CreateMedicalRepUseCase(
   otpService,
   notificationService
 );
-const getMedicalRepByEmailUseCase = new GetMedicalRepByEmailUseCase(
-  medicalRepRepository
-);
-const getMedicalRepByIduseCase = new GetMedicalRepByIdUseCase(
-  medicalRepRepository
-);
+
+const getRepProfileByIdUseCase=new GetRepProfileByIdUseCase(medicalRepRepository);
 
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
-  getMedicalRepByIduseCase,
-  getMedicalRepByEmailUseCase
+  getRepProfileByIdUseCase
 );

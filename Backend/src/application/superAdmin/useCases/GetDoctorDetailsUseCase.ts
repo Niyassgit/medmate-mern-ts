@@ -1,7 +1,7 @@
 import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRepository";
 import { NotFoundError } from "../../errors";
-import { DoctorDetailsDTO } from "../dto/DoctorDetailsDTO";
-import { UserDetailsMapper } from "../mappers/UserDetailsMapper";
+import { DoctorDetailsDTO } from "../../doctor/dto/DoctorDetailsDTO";
+import { DoctorDetailsMapper } from "../../doctor/mapper/DoctorDetailsMapper";
 
 export class GetDoctorDetailsUseCase{
 
@@ -13,6 +13,6 @@ export class GetDoctorDetailsUseCase{
 
       const user=await this._doctorRepository.getDoctorById(userId);
       if(!user) throw new NotFoundError("User not found");
-      return UserDetailsMapper.toDoctorDetails(user)
+      return DoctorDetailsMapper.toDoctorDetails(user)
     }
 }     

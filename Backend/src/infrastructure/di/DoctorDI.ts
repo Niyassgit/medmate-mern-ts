@@ -1,12 +1,11 @@
 import { DoctorRepository } from "../repositories/DoctorRepository";
 import { BcryptServices } from "../services/BcryptService";
 import { CreateDoctorUseCase } from "../../application/doctor/auth/CreateDoctorUseCase";
-import { GetDoctorProfileByIdUseCase } from "../../application/doctor/auth/GetDoctorProfileByIdUseCase";
-import { GetDoctorProfileByEmailUseCase } from "../../application/doctor/auth/GetDoctorProfileByEmailUseCase";
 import { DoctorController } from "../../presentation/http/controllers/DoctorController";
 import { UserRepository } from "../repositories/UserRepository";
 import { NotificationService } from "../services/NotificationService";
 import { OtpService } from "../services/OtpService";
+import { GetDoctorProfileByIdUseCase } from "../../application/doctor/use-cases/GetDoctorProfleByIdUseCase";
 
 const doctorRepository = new DoctorRepository();
 const bycryptServices = new BcryptServices();
@@ -21,15 +20,11 @@ const createDoctorUseCase = new CreateDoctorUseCase(
   otpService,
   notificationService
 );
-const getDoctorProfileByIdUseCase = new GetDoctorProfileByIdUseCase(
-  doctorRepository
-);
-const getDoctorProfileByEmailUseCase = new GetDoctorProfileByEmailUseCase(
-  doctorRepository
-);
+const getDoctorprofileById=new GetDoctorProfileByIdUseCase(doctorRepository);
+
+
 
 export const doctorController = new DoctorController(
   createDoctorUseCase,
-  getDoctorProfileByIdUseCase,
-  getDoctorProfileByEmailUseCase
+  getDoctorprofileById
 );

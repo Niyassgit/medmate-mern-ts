@@ -1,7 +1,7 @@
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
 import { NotFoundError } from "../../errors";
-import { MedicalRepDetailsDTO } from "../dto/MedicalRepDetailsDTO";
-import { UserDetailsMapper } from "../mappers/UserDetailsMapper";
+import { MedicalRepDetailsDTO } from "../../medicalRep/dto/MedicalRepDetailsDTO";
+import { RepDetailsMapper } from "../../medicalRep/mapper/RepDetailsMapper";
 
 
 export class GetMedicalRepDetailsUseCase{
@@ -13,6 +13,6 @@ export class GetMedicalRepDetailsUseCase{
 
         const user=await this._medicalRepRepository.getMedicalRepById(userId);
         if(!user) throw new NotFoundError("User not found");
-        return UserDetailsMapper.toMedicalRepDetails(user);
+        return RepDetailsMapper.toMedicalRepDetails(user);
     }
 }

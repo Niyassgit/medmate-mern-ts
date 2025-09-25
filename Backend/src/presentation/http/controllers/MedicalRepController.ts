@@ -1,14 +1,12 @@
 import { Request, Response } from "express";
 import { CreateMedicalRepUseCase } from "../../../application/medicalRep/auth/CreateMedicalRepUseCase";
 import { RegisterMedicalRepDTO } from "../../../application/medicalRep/dto/RegisterMedicalRepDTO";
-import { GetMedicalRepByIdUseCase } from "../../../application/medicalRep/auth/GetMedicalRepByIdUseCase";
-import { GetMedicalRepByEmailUseCase } from "../../../application/medicalRep/auth/GetMedicalRepByEmailUseCase";
+import { GetRepProfileByIdUseCase } from "../../../application/medicalRep/use-cases/GetRepProfileByIdUseCase";
 
 export class MedicalRepController {
   constructor(
     private _createMedicalRepUseCase: CreateMedicalRepUseCase,
-    private _getMedicalRepByIdUseCase: GetMedicalRepByIdUseCase,
-    private _getMedicalRepByEmailUseCase: GetMedicalRepByEmailUseCase
+    private _getUserProfile:GetRepProfileByIdUseCase
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -22,15 +20,9 @@ export class MedicalRepController {
     const response = await this._createMedicalRepUseCase.execute(data);
     res.status(201).json({ success: true, ...response });
   };
-
-  getMedicalRepByProfileId = async (req: Request, res: Response) => {
-    const rep = await this._getMedicalRepByIdUseCase.execute(req.params.id);
-    res.status(200).json({ success: true, data: rep });
-  };
-
-  getMedicalRepByEmail = async (req: Request, res: Response) => {
-    const { email } = req.params;
-    const rep = await this._getMedicalRepByEmailUseCase.execute(email);
-    res.status(200).json({ success: true, data: rep });
-  };
+  getRepProfileById=async(req:Request,res:Response)=>{
+    const {userId}=req.params;
+    const response=await this._getUserProfile.execute(userId);
+    return res.json({success:true,data:response});
+  }
 }

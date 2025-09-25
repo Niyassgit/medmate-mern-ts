@@ -5,7 +5,7 @@ import { ValidateSchema } from "../middlewares/ValidateSchema";
 import { registerMedicalRepSchema } from "../validators/RepSchemaValidator";
 import { Authenticate } from "../middlewares/Authenticate";
 import { AuthorizeRole } from "../middlewares/AuthorizeRole";
-
+import { Role } from "../../../domain/common/entities/IUser";
 
 export class MedicalRepRoutes {
   public router: Router;
@@ -23,10 +23,10 @@ export class MedicalRepRoutes {
       medicalRepController.createMedicalRep
     );
     this.router.get(
-      "/:id",
+      "/:userId",
       Authenticate,
-      AuthorizeRole(["MEDICAL_REP"]),
-      medicalRepController.getMedicalRepByProfileId
+      AuthorizeRole([Role.MEDICAL_REP]),
+      medicalRepController.getRepProfileById
     );
   }
 }

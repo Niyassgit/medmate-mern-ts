@@ -34,7 +34,7 @@ const DoctorNavbar = () => {
             <Mail className="h-6 w-6 cursor-pointer text-white hover:text-gray-300"/>
                 <Bell className="h-6 w-6 cursor-pointer text-white hover:text-gray-300"/>
 
-   <UserMenu/>
+       <UserMenu/>
         </div>
         </nav>
     )
