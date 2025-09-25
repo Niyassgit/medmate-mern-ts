@@ -20,14 +20,14 @@ export class LoginUserUseCase {
     password: string
   ): Promise<{ accessToken: string; refreshToken: string; user: IUser }> {
     const user = await this._userLoginRepository.findByEmail(email);
-    if (!user) throw new UnautharizedError("User not found");
+    if (!user) throw new BadRequestError("User not found");
 
     if (!user.password) throw new BadRequestError("Password is required");
     const isValidUser = await this._bcryptServices.compare(
       password,
       user.password
     );
-    if (!isValidUser) throw new UnautharizedError("Invalid password");
+    if (!isValidUser) throw new BadRequestError("Invalid password");
     if (user.isBlocked) throw new ForbiddenError("User is blocked");
     if (!user.isVerified)
       throw new ForbiddenError("Please verify email before logging in");

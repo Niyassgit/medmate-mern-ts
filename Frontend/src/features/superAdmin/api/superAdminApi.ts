@@ -17,3 +17,11 @@ export const unblockUser=async(userId:string)=>{
     const response=await api.patch(AdminEndpoints.UNBLOCK_USER(userId));
     return response.data;
 }
+export const viewDoctor=async(userId:string)=>{
+    const response=await api.get(AdminEndpoints.DOCTOR_DETAILS(userId));
+    return response.data;
+}
+export const viewRep=async(userId:string)=>{
+    const response=await api.get(AdminEndpoints.REP_DETAILS(userId));
+    return response.data;
+}

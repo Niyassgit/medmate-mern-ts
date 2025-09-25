@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
     if (file.fieldname === "licenseImageUrl") {
       uploadPath = path.join(uploadPath, "licenses");
     } else if (file.fieldname === "companyLogoUrl") {
-      uploadPath = path.join(uploadPath, "company-logos");
+      uploadPath = path.join(uploadPath, "company-logo");
     } else {
       uploadPath = path.join(uploadPath, "others");
     }

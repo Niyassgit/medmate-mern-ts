@@ -46,7 +46,7 @@ export class SuperAdminController {
 
   getAllReps = async (req: Request, res: Response) => {
     const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 10;
+    const limit = parseInt(req.query.limit as string) || 8;
     const search= req.query.search as string || "";
     const reps = await this._getAllRepsUseCase.execute(page, limit,search);
     res.json({ success: true, data: reps, page, limit });
@@ -79,5 +79,6 @@ export class SuperAdminController {
   repDetails=async (req:Request,res:Response)=>{
     const {userId}=req.params;
     const user=await this._getMedicalRepDetails.execute(userId);
+    return res.json({success:true,data:user})
   }
 }

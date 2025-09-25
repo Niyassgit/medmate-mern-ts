@@ -1,6 +1,8 @@
 import { Outlet,NavLink } from "react-router-dom"
 import { User,LayoutDashboard,ClipboardPlus,Handshake,MapPin,FilePen,Globe} from "lucide-react"
 import { Avatar,AvatarImage,AvatarFallback } from "@/components/ui/avatar"
+import AdminNavbar from "@/components/navbar/AdminNavbar";
+
 
 
 const AdminLayout = () => {
@@ -127,7 +129,9 @@ const AdminLayout = () => {
       </aside>
 
       <main className="flex-1 p-6 bg-gray-100">
+       <AdminNavbar/>
         <Outlet/>
+      
       </main>
     </div>
   )

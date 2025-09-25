@@ -1,32 +1,19 @@
-import AdminNavbar from "@/components/navbar/AdminNavbar";
 import { Button } from "@/components/ui/button";
 import useFetchList from "@/hooks/useFetchList";
 import { getAllReps, blockUser, unblockUser } from "../api/superAdminApi";
 import { useCallback, useState } from "react";
 import AppPagination from "@/components/AppPagination";
 import SearchInput from "../components/SearchInput";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { MedicalRep } from "../Schemas/MedicalRep";
+import { MedicalRepResponse } from "../Schemas/MedicalRepResponse";
 
 
-interface MedicalRep {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  subscriptionStatus: boolean;
-  isBlocked: boolean;
-  employeeId: string;
-  createdAt: Date;
-  loginId: string;
-}
 
-type MedicalRepResponse = {
-  reps: MedicalRep[];
-  page: number;
-  total: number;
-  limit: number;
-};
 
 const RepsList = () => {
+  const navigate=useNavigate();
   const [page, setPage] = useState(1);
   const limit = 8;
   const [search, setSearch] = useState("");
@@ -50,9 +37,11 @@ const RepsList = () => {
       if (rep.isBlocked) {
         const res = await unblockUser(rep.loginId);
         userUpdated = res.updatedUser;
+        toast.success(res.message)
       } else {
         const res = await blockUser(rep.loginId);
         userUpdated = res.updatedUser;
+        toast.success(res.message)
       }
 
       setData((prev) =>
@@ -75,9 +64,16 @@ const RepsList = () => {
     }
   };
 
+  const handleDetailPage=(id:string)=>{
+       if(id){
+        navigate(`/admin/reps/${id}`)
+       }else{
+        toast.error("Invalid request");
+       }
+  }
+
   return (
     <>
-      <AdminNavbar />
 
       <div className="h-screen bg-gray-50 p-4">
         <span className="font-bold text-2xl text-gray-600">
@@ -148,7 +144,9 @@ const RepsList = () => {
                     </td>
 
                     <td className="p-3 flex justify-center gap-2">
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm" 
+                      onClick={()=>handleDetailPage(rep.id)}
+                      >
                         View
                       </Button>
                       <Button

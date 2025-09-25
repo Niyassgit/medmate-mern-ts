@@ -2,7 +2,9 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import path from "path";
 import morgan from "morgan";
+import { fileURLToPath } from "url";
 import { connectDB } from "./config/db";
 import { LoginRoute } from "./presentation/http/routes/LoginRoute";
 import { MedicalRepRoutes } from "./presentation/http/routes/MedicalRepRoutes";
@@ -17,10 +19,16 @@ app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.ORIGIN,
     credentials: true,
   })
 );
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const uploadsPath = path.join(__dirname, "infrastructure/storage/uploads");
+
+app.use("/uploads", express.static(uploadsPath));
 
 const startServer = async () => {
   try {
