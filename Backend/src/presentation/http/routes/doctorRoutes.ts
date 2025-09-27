@@ -22,7 +22,7 @@ export class DoctorRoutes {
       ValidateSchema(DoctorRegisterSchema),
       doctorController.createDoctor
     );
-     this.router.get("/:userId",Authenticate,AuthorizeRole([Role.DOCTOR]),doctorController.getDoctorprofileById)
+     this.router.get("/profile/:userId",Authenticate,AuthorizeRole([Role.DOCTOR]),doctorController.getDoctorprofileById)
   }
  
 }

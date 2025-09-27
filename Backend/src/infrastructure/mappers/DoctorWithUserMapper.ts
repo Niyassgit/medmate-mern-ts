@@ -1,9 +1,9 @@
-import { IDoctorWithUser } from "../../domain/doctor/entities/IDoctorWithLogin";
+import { IDoctorWithUser } from "../../domain/doctor/entities/IDoctorWithUser";
 import { Doctor,User } from "@prisma/client";
 import { DoctorMapper } from "./DoctorMapper";
 import { AuthProvider as DomainAuthProvider,Role as DomainRole } from "../../domain/common/entities/IUser";
 
-export class DoctorWithLoginMapper {
+export class DoctorWithUserMapper {
   static toDomain(doctor: Doctor & { user: User | null }): IDoctorWithUser {
     return {
       ...DoctorMapper.toDomain(doctor),

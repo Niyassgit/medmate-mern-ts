@@ -23,7 +23,7 @@ export class MedicalRepRoutes {
       medicalRepController.createMedicalRep
     );
     this.router.get(
-      "/:userId",
+      "/profile/:userId",
       Authenticate,
       AuthorizeRole([Role.MEDICAL_REP]),
       medicalRepController.getRepProfileById

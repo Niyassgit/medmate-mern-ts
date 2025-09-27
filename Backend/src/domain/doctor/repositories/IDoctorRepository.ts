@@ -1,6 +1,6 @@
 import { IDoctor } from "../entities/IDoctor";
 import { IDoctorListItem } from "../entities/IDoctorListItem";
-import { IDoctorWithUser } from "../entities/IDoctorWithLogin";
+import { IDoctorWithUser } from "../entities/IDoctorWithUser";
 
 export interface IDoctorRepository {
   createDoctor(
@@ -13,4 +13,5 @@ export interface IDoctorRepository {
     limit: number,
     search:string
   ): Promise<{ doctors: IDoctorListItem[]; total: number }>;
+  getDoctorByUserId(id:string):Promise<IDoctorWithUser |null>;
 }

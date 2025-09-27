@@ -1,4 +1,4 @@
-import { IMedicalRepWithUser } from "../../doctor/entities/IMedicalRepWithUser";
+import { IMedicalRepWithUser } from "../entities/IMedicalRepWithUser";
 import { IMedicalRep } from "../entities/IMedicalRep";
 import { IRepListItem } from "../entities/IRepListItem";
 
@@ -13,4 +13,5 @@ export interface IMedicalRepRepository {
     limit: number,
     search:string,
   ): Promise<{ reps: IRepListItem[]; total: number }>;
+  getMedicalRepByUserId(id:string):Promise<IMedicalRepWithUser | null>;
 }

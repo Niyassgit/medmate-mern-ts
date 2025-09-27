@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { prisma } from "../database/PrismaClient";
+import { prisma } from "../database/prisma";
 import { IOtpService } from "../../domain/common/services/IOtpService";
 import { IOtpRecord } from "../../domain/common/entities/IOtpRecord";
 import { OtpPurpose } from "../../domain/common/types/OtpPurpose";

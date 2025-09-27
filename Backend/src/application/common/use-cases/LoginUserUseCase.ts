@@ -3,7 +3,6 @@ import { IUser } from "../../../domain/common/entities/IUser";
 import { IBcryptService } from "../../../domain/common/services/IHashService";
 import { IJWtService } from "../../../domain/common/services/IJWTService";
 import {
-  UnautharizedError,
   BadRequestError,
   ForbiddenError,
 } from "../../../domain/common/errors";

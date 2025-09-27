@@ -1,11 +1,11 @@
-import { prisma } from "../database/PrismaClient";
+import { prisma } from "../database/prisma";
 import { Prisma } from "@prisma/client";
 import { IDoctorRepository } from "../../domain/doctor/repositories/IDoctorRepository";
 import { IDoctor } from "../../domain/doctor/entities/IDoctor";
 import { IDoctorListItem } from "../../domain/doctor/entities/IDoctorListItem";
 import { DoctorMapper } from "../mappers/DoctorMapper";
-import { IDoctorWithUser } from "../../domain/doctor/entities/IDoctorWithLogin";
-import { DoctorWithLoginMapper } from "../mappers/DoctorWithUserMapper";
+import { IDoctorWithUser } from "../../domain/doctor/entities/IDoctorWithUser";
+import { DoctorWithUserMapper } from "../mappers/DoctorWithUserMapper";
 
 export class DoctorRepository implements IDoctorRepository {
   async createDoctor(
@@ -23,7 +23,7 @@ export class DoctorRepository implements IDoctorRepository {
       include: { user: true },
     });
     if (!user) return null;
-    return DoctorWithLoginMapper.toDomain(user);
+    return DoctorWithUserMapper.toDomain(user);
   }
 
   async getDoctorByEmail(email: string): Promise<IDoctor | null> {
@@ -67,5 +67,15 @@ export class DoctorRepository implements IDoctorRepository {
       doctors: doctors.map((d) => DoctorMapper.toListItem(d)),
       total,
     };
+  }
+
+  async getDoctorByUserId(id: string): Promise<IDoctorWithUser | null> {
+    const user=await prisma.doctor.findFirst({
+      where:{loginId:id},
+      include:{user:true}
+    });
+
+    if(!user) return null;
+    return DoctorWithUserMapper.toDomain(user);
   }
 }

@@ -1,3 +1,4 @@
+import { IUserRepository } from "../../../domain/common/repositories/IUserLoginRepository";
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
 import { NotFoundError } from "../../errors";
 import { MedicalRepDetailsDTO } from "../dto/MedicalRepDetailsDTO";
@@ -10,8 +11,8 @@ export class GetRepProfileByIdUseCase{
     ){}
 
     async execute(userId:string):Promise<MedicalRepDetailsDTO | null>{
-         const user=await this._medicalRepRepository.getMedicalRepById(userId);
-         if(!user) throw new NotFoundError("User not found");
-         return RepDetailsMapper.toMedicalRepDetails(user);
+    const user=await this._medicalRepRepository.getMedicalRepByUserId(userId);
+   if(!user) throw new NotFoundError("User not found");
+   return RepDetailsMapper.toMedicalRepDetails(user);
     }
 }

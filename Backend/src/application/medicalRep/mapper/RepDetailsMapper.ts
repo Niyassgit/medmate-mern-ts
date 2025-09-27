@@ -1,4 +1,4 @@
-import { IMedicalRepWithUser } from "../../../domain/doctor/entities/IMedicalRepWithUser"
+import { IMedicalRepWithUser } from "../../../domain/medicalRep/entities/IMedicalRepWithUser"
 import { MedicalRepDetailsDTO } from "../dto/MedicalRepDetailsDTO"
 
 export class RepDetailsMapper{

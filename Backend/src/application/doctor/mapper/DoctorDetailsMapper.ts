@@ -1,4 +1,4 @@
-import { IDoctorWithUser } from "../../../domain/doctor/entities/IDoctorWithLogin"
+import { IDoctorWithUser } from "../../../domain/doctor/entities/IDoctorWithUser"
 import { DoctorDetailsDTO } from "../dto/DoctorDetailsDTO"
 
 export class DoctorDetailsMapper{

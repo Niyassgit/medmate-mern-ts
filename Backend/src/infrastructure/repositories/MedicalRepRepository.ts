@@ -1,10 +1,10 @@
-import { prisma } from "../database/PrismaClient";
+import { prisma } from "../database/prisma";
 import { IMedicalRepRepository } from "../../domain/medicalRep/repositories/IMedicalRepRepository";
 import { IMedicalRep } from "../../domain/medicalRep/entities/IMedicalRep";
 import { IRepListItem } from "../../domain/medicalRep/entities/IRepListItem";
 import { MedicalRepMapper } from "../mappers/MedicalRepMapper";
 import { Prisma } from "@prisma/client";
-import { IMedicalRepWithUser } from "../../domain/doctor/entities/IMedicalRepWithUser";
+import { IMedicalRepWithUser } from "../../domain/medicalRep/entities/IMedicalRepWithUser";
 import { MedicalRepWithUserMapper } from "../mappers/MedicalRepWithUserMapper";
 
 export class MedicalRepRepository implements IMedicalRepRepository {
@@ -67,5 +67,14 @@ export class MedicalRepRepository implements IMedicalRepRepository {
       reps: reps.map((r) => MedicalRepMapper.toListMedicalRep(r)),
       total,
     };
+  }
+  async getMedicalRepByUserId(id: string): Promise<IMedicalRepWithUser | null> {
+    const user= await prisma.medicalRep.findFirst({
+      where:{loginId:id},
+      include:{user:true}
+    });
+ 
+     if(!user) return null;
+   return MedicalRepWithUserMapper.toDomain(user);
   }
 }
