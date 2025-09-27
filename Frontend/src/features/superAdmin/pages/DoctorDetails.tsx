@@ -107,7 +107,7 @@ const DoctorDetailsPage: React.FC = () => {
               <img
                 src={
                   doctor.licenseImageUrl
-                    ? `http://localhost:5000${doctor.licenseImageUrl}`
+                    ? `${import.meta.env.VITE_API_IMG}${doctor.licenseImageUrl}`
                     : ""
                 }
                 alt="License"

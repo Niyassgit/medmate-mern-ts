@@ -4,8 +4,8 @@ import { useSelector} from "react-redux";
 import { RootState } from "@/app/store";
 
 const PrivateRoute=({children,role}:{children:JSX.Element;role:string})=>{
-    const {accessToken,role:userRole}=useSelector((state:RootState)=>state.auth);
-    if(!accessToken || userRole!==role){
+    const {accessToken,user}=useSelector((state:RootState)=>state.auth);
+    if(!accessToken || !user ||user.role!==role){
         return <Navigate to="/auth/login" replace/>
     }
 

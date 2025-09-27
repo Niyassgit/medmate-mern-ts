@@ -1,16 +1,22 @@
-import DoctorDashboard from "@/features/doctor/pages/DoctorDashboard";
 import PrivateRoute from "@/components/PrivateRoute";
 import { Role } from "@/types/Role";
 import ProfilePage from "@/features/doctor/pages/ProfilePage";
+import Feed from "@/features/doctor/pages/Feed";
+import Connections from "@/features/doctor/pages/Connections";
+import Network from "@/features/rep/pages/Network";
+import DoctorLayout from "@/features/doctor/components/DoctorLayout";
 
 export const DoctorRoutes={
-    path:"/doctor/dashboard",
+    path:"/doctor",
     element:(
         <PrivateRoute role={Role.DOCTOR}>
-          <DoctorDashboard />
+         <DoctorLayout/>
         </PrivateRoute>
     ),
     children:[
-      {path:"profile", element:<ProfilePage/>}
+      {path:"feed",element:<Feed />},
+      {path:"profile", element:<ProfilePage/>},
+      {path:"connections",element:<Connections />},
+      {path:"network",element:<Network />}
     ]
 };

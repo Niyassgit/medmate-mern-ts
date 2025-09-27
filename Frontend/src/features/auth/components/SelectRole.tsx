@@ -25,8 +25,9 @@ export default function SelectRolePage() {
     setSelectedRole(role);
 
     try {
-      console.log("idToken:",idToken);
+  
       const response = await googleLogin(idToken, role);
+  
 
       if (response.data.user.role === Role.DOCTOR) {
         navigate("/doctor/dashboard");

@@ -57,8 +57,7 @@ const RepsList = () => {
           : prev
       );
     } catch (error) {
-      console.log("Block user Toggel error:", error);
-      alert("Something went wronn on updating block status");
+     toast.error("Something went wronn on updating block status");
     } finally {
       setBlockLoading(null);
     }

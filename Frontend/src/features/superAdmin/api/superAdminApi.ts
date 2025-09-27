@@ -1,5 +1,5 @@
 import { api } from "@/services/api";
-import { AdminEndpoints } from "@/services/endpoints";
+import { AdminEndpoints } from "@/services/endpoints/AdminEndpoints";
 
 export const getAllDoctors=async(page:number=1,limit:number=10,search:string="")=>{
    const response=await api.get(AdminEndpoints.GET_DOCTORS(page,limit,search));

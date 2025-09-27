@@ -41,7 +41,7 @@ const RepDetails = () => {
       {rep.companyLogoUrl && (
         <div className="mb-4">
           <img
-            src={`http://localhost:5000${rep.companyLogoUrl}`}
+            src={`${import.meta.env.VITE_API_IMG}${rep.companyLogoUrl}`}
             alt="Company Logo"
             className="h-20 w-20 object-contain border rounded-md"
           />

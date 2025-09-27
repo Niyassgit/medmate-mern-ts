@@ -70,7 +70,7 @@ export default function ExampleForm({ onSubmit}: ExampleFormProps) {
                   <FormControl>
                     <div className="relative">
                     <Input type={showPassword?"text": "password"} placeholder="********" {...field} />
-                    <button className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500"
+                    <button type="button" className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500"
                     onClick={()=>setShowPassword((prev)=>!prev)}
                     >{showPassword ? <EyeOff className="w-4 h-4"/>: <Eye className="w-4 h-4"/>}</button>
                     </div>

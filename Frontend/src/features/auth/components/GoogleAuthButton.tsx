@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Role } from "@/types/Role";
 import { useDispatch } from "react-redux";
 import { login } from "../authSlice";
+import toast from "react-hot-toast";
 
 const GoogleAuthButton = () => {
   const navigate = useNavigate();
@@ -14,35 +15,40 @@ const GoogleAuthButton = () => {
       const idToken = credentialResponse.credential;
 
       if (!idToken) {
-        console.error("No ID token recieved from Google");
+        toast.error("No ID token recieved from Google");
         return;
       }
 
       const precheckRes = await googelPrecheck(idToken);
 
-      if (precheckRes.data.exists) {
-        const response = await googleLogin(idToken);
+      if (precheckRes.data.exists && precheckRes.data.user.role) {
+        const role = precheckRes.data.user.role;
+        const response = await googleLogin(idToken, role);
 
         dispatch(
           login({
             token: response.data.accessToken,
-            role: response.data.user.role,
+            user: response.data.user,
           })
         );
 
-        if (response.data.user.role === Role.DOCTOR)
+        if (response.data.user.role === Role.DOCTOR) {
           navigate("/doctor/dashboard");
-        if (response.data.user.role === Role.MEDICAL_REP)
-          navigate("/rep/dashboard");
-        if (response.data.user.role === Role.SUPER_ADMIN)
-          navigate("/admin/dashboard");
-      } else {
-        console.log("ëlse");
+        }
 
+        if (response.data.user.role === Role.MEDICAL_REP) {
+          navigate("/rep/dashboard");
+        }
+
+        if (response.data.user.role === Role.SUPER_ADMIN) {
+          console.log("user is super admin");
+          navigate("/admin/dashboard");
+        }
+      } else {
         navigate(`selectrole?idToken=${idToken}`);
       }
-    } catch (error) {
-      console.error("Google login failed", error);
+    } catch (error:any) {
+      toast.error(error.message || "Google login failed");
     }
   };
 
@@ -50,7 +56,7 @@ const GoogleAuthButton = () => {
     <GoogleLogin
       onSuccess={handleSuccess}
       onError={() => {
-        console.log("Google login Failed");
+        toast.error("Google login Failed");
       }}
     />
   );

@@ -9,5 +9,9 @@ export interface DoctorDetails{
     registrationId:string,
     licenseImageUrl:string | null,
     opHours:string | null,
+    about:string,
+    educations:string[],
+    certificates:string[],
+
     
 }
