@@ -6,7 +6,7 @@ export interface IMedicalRep {
 
   name: string;
   phone: string;
-  profileImage:string | null;
+  profileImage?:string | null;
   companyName: string;
   companyLogoUrl?: string | null;
   employeeId?: string | null;

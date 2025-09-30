@@ -33,21 +33,19 @@ const GoogleAuthButton = () => {
         );
 
         if (response.data.user.role === Role.DOCTOR) {
-          navigate("/doctor/dashboard");
+          navigate("/doctor/feed");
         }
-
         if (response.data.user.role === Role.MEDICAL_REP) {
           navigate("/rep/dashboard");
         }
 
         if (response.data.user.role === Role.SUPER_ADMIN) {
-          console.log("user is super admin");
           navigate("/admin/dashboard");
         }
       } else {
         navigate(`selectrole?idToken=${idToken}`);
       }
-    } catch (error:any) {
+    } catch (error: any) {
       toast.error(error.message || "Google login failed");
     }
   };

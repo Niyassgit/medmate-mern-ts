@@ -1,7 +1,7 @@
 export interface DoctorDetailsDTO{
     id:string,
     name:string ,
-    email:string | null,
+    email:string |null,
     isBlocked:boolean | null,
     phone:string,
     hasOwnClinic:boolean | null,

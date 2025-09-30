@@ -38,7 +38,7 @@ const ProfilePage = () => {
 
     fetchDoctor();
   }, [id]);
-
+ 
   const handleAvatarChange=(file:File)=>{
     setSelectedFile(file);
     setOpenConfirm(true);
@@ -189,7 +189,7 @@ const ProfilePage = () => {
             Professional Details
           </h2>
           <ul className="list-disc list-inside text-gray-700 space-y-1">
-            <li>Hospital: {doctor.hospital}</li>
+            <li>Hospital: {doctor.hospital || "Not provided"}</li>
             <li>
               Own Clinic: {doctor.hasOwnClinic ? "Yes" : "No / Not provided"}
             </li>

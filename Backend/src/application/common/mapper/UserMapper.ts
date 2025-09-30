@@ -3,6 +3,7 @@ import {
   AuthProvider,
   Role,
 } from "../../../domain/common/entities/IUser";
+import { UserProfileDTO } from "../dto/UserProfileDTO";
 
 export class UserMapper {
   static toUserEntity(
@@ -20,4 +21,12 @@ export class UserMapper {
       tokenVersion: 0,
     };
   }
+  
+  static toUserProfile(user:IUser):UserProfileDTO{
+    return{
+      id:user.id,
+      email:user.email
+    }
+  }
+
 }

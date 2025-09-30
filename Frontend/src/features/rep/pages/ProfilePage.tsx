@@ -5,11 +5,14 @@ import { getProfileRep, updateProfileImage } from "../api";
 import ProfileAvatar from "@/components/shared/ProfileAvatar";
 import toast from "react-hot-toast";
 import LogoutButton from "@/components/shared/LogoutButton";
+import ConfirmDialog from "@/components/shared/ConfirmDialog";
 
 const ProfilePage = () => {
   const [rep, setRep] = useState<RepDetails | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const id = useSelector((state: any) => state.auth.user?.id);
 
   useEffect(() => {
@@ -34,22 +37,27 @@ const ProfilePage = () => {
     fetchProfile();
   }, [id]);
 
-  
-  const handleAvatarChange = async (file: File) => {
-    if (!rep) return;
+  const handleAvatarChange = (file: File) => {
+    setSelectedFile(file);
+    setOpenConfirm(true);
+  };
+  const confirmAvatarChange = async () => {
+    if (!rep || !selectedFile) return;
     try {
-      const response = await updateProfileImage(rep.id, file); 
-     if(response.success){
+      const response = await updateProfileImage(rep.id, selectedFile);
+      if (response.success) {
         setRep({ ...rep, profileImage: response.imageUrl });
         toast.success(response.message || "Image changed");
-     }else{
-      toast.error(response.message || "Something has happend");
-     }
-    
+      } else {
+        toast.error(response.message || "Something has happend");
+      }
     } catch (err: any) {
       toast.error("Failed to upload profile image:", err.message);
+    } finally {
+      setOpenConfirm(false);
+      setSelectedFile(null);
     }
-  } 
+  };
 
   if (loading) return <p className="p-6 text-blue-600">Loading profile...</p>;
   if (error) return <p className="p-6 text-red-600">Error: {error}</p>;
@@ -119,6 +127,13 @@ const ProfilePage = () => {
               editable
               onImageChange={handleAvatarChange}
               className="w-32 h-32 border-4 border-white"
+            />
+            <ConfirmDialog
+              open={openConfirm}
+              title="Change Profile Picture"
+              message="Are you sure you want to change your profile picture?"
+              onConfirm={confirmAvatarChange}
+              onCancel={() => setOpenConfirm(false)}
             />
           </div>
 
@@ -216,7 +231,7 @@ const ProfilePage = () => {
             {rep.about || "No information added yet."}
           </p>
         </div>
-        <LogoutButton  className="bg-gray-400 hover:bg-gray-600"/>
+        <LogoutButton className="bg-gray-400 hover:bg-gray-600" />
       </div>
     </div>
   );

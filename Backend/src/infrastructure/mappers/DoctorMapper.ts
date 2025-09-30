@@ -59,7 +59,29 @@ export class DoctorMapper {
       about: domain.about ?? null,
       educations: domain.educations ?? [],
       certificates: domain.certificates ?? [],
-      profileImage:domain.profileImage
+      profileImage:domain.profileImage ?? null
     };
+  }
+   static toPartialPersistence(domain: Partial<IDoctor>): Partial<Doctor> {
+    const data: Partial<Doctor> = {};
+
+    if (domain.name !== undefined) data.name = domain.name;
+    if (domain.phone !== undefined) data.phone = domain.phone;
+    if (domain.departmentId !== undefined) data.departmentId = domain.departmentId;
+    if (domain.experienceYears !== undefined) data.experienceYears = domain.experienceYears;
+    if (domain.hasOwnClinic !== undefined) data.hasOwnClinic = domain.hasOwnClinic;
+    if (domain.doctorClass !== undefined) data.doctorClass = domain.doctorClass;
+    if (domain.territoryId !== undefined) data.territoryId = domain.territoryId;
+    if (domain.loginId !== undefined) data.loginId = domain.loginId;
+    if (domain.registrationId !== undefined) data.registrationId = domain.registrationId;
+    if (domain.hospital !== undefined) data.hospital = domain.hospital;
+    if (domain.licenseImageUrl !== undefined) data.licenseImageUrl = domain.licenseImageUrl;
+    if (domain.opHours !== undefined) data.opHours = domain.opHours;
+    if (domain.about !== undefined) data.about = domain.about;
+    if (domain.educations !== undefined) data.educations = domain.educations;
+    if (domain.certificates !== undefined) data.certificates = domain.certificates;
+    if (domain.profileImage !== undefined) data.profileImage = domain.profileImage;
+
+    return data;
   }
 }

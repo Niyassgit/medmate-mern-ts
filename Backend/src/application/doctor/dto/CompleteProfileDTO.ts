@@ -1,12 +1,7 @@
-export interface IDoctor {
-  id: string;
-  loginId: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-
+export interface CompleteDoctorProfileDTO{
   name: string;
   phone: string;
-  profileImage?:string | null,
+  profileImage:string | null,
   departmentId?: string | null;
   experienceYears?: number | null;
   hasOwnClinic?: boolean | null;

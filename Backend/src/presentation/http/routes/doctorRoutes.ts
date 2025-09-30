@@ -36,5 +36,11 @@ export class DoctorRoutes {
       uploadCloud.single("profileImage"),
       doctorController.updateProfileImage
     );
+    this.router.post(
+      "/complete-profile/:userId",
+      Authenticate,
+      AuthorizeRole([Role.DOCTOR]),
+      doctorController.completeProfile
+    );
   }
 }

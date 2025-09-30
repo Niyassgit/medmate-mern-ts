@@ -3,13 +3,16 @@ import { CreateMedicalRepUseCase } from "../../../application/medicalRep/auth/Cr
 import { RegisterMedicalRepDTO } from "../../../application/medicalRep/dto/RegisterMedicalRepDTO";
 import { GetRepProfileByIdUseCase } from "../../../application/medicalRep/use-cases/GetRepProfileByIdUseCase";
 import { ProfileImageUpdateUseCase } from "../../../application/medicalRep/use-cases/ProfileImageUpdateUseCase";
+import { CompleteRepProfileDTO } from "../../../application/medicalRep/dto/CompleteRepProfileDTO";
+import { CompleteRepProfileUseCase } from "../../../application/medicalRep/use-cases/CompleteRepProfileUseCase";
 
 
 export class MedicalRepController {
   constructor(
     private _createMedicalRepUseCase: CreateMedicalRepUseCase,
     private _getUserProfile:GetRepProfileByIdUseCase,
-    private _ProfileImageUpdateUseCase:ProfileImageUpdateUseCase
+    private _ProfileImageUpdateUseCase:ProfileImageUpdateUseCase,
+    private _completeRepProfileUseCase:CompleteRepProfileUseCase
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -32,6 +35,12 @@ export class MedicalRepController {
     const {userId}=req.params;
     const file=req.file ? req.file:null;
     const response=await this._ProfileImageUpdateUseCase.execute(userId,file);
+    return res.json({success:true,message:response});
+  }
+  completeProfile=async(req:Request,res:Response)=>{
+    const {userId}=req.params;
+    const data=req.body as CompleteRepProfileDTO;
+    const response=await this._completeRepProfileUseCase.execute(userId,data);
     return res.json({success:true,message:response});
   }
 }

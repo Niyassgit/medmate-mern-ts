@@ -36,5 +36,11 @@ export class MedicalRepRoutes {
       uploadCloud.single("profileImage"),
       medicalRepController.updateProfileImage
     );
+    this.router.post(
+      "/complete-profile/:userID",
+      Authenticate,
+      AuthorizeRole([Role.MEDICAL_REP]),
+      medicalRepController.completeProfile
+    );
   }
 }

@@ -8,6 +8,7 @@ import { OtpService } from "../services/OtpService";
 import { GetDoctorProfileByIdUseCase } from "../../application/doctor/use-cases/GetDoctorProfleByIdUseCase";
 import { ProfileImageUpdateUseCase } from "../../application/doctor/use-cases/ProfileImageUpdateUseCase";
 import { CloudinaryService } from "../services/CloudinaryService";
+import { CompleteProfileUseCase } from "../../application/doctor/use-cases/CompleteProfileUseCase";
 
 const doctorRepository = new DoctorRepository();
 const bycryptServices = new BcryptServices();
@@ -23,12 +24,13 @@ const createDoctorUseCase = new CreateDoctorUseCase(
   otpService,
   notificationService
 );
-const getDoctorprofileById=new GetDoctorProfileByIdUseCase(doctorRepository);
+const getDoctorprofileById=new GetDoctorProfileByIdUseCase(doctorRepository,userRepository);
 const profileImageUpdateUseCase=new ProfileImageUpdateUseCase(cloudinaryService,userRepository,doctorRepository)
-
+const completeProfileUseCase=new CompleteProfileUseCase(userRepository,doctorRepository)
 
 export const doctorController = new DoctorController(
   createDoctorUseCase,
   getDoctorprofileById,
-  profileImageUpdateUseCase
+  profileImageUpdateUseCase,
+  completeProfileUseCase
 );
