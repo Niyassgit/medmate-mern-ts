@@ -1,5 +1,5 @@
 import { IJWtService } from "../../../domain/common/services/IJWTService";
-import { IUserRepository } from "../../../domain/common/repositories/IUserLoginRepository";
+import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 import { UnautharizedError } from "../../../domain/common/errors";
 
 export class GetNewAccessTokenUseCase {

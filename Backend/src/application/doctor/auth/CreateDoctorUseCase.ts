@@ -2,7 +2,7 @@ import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRe
 import { RegisterResponseDTO } from "../dto/RegisterResponseDTO";
 import { IBcryptService } from "../../../domain/common/services/IHashService";
 import { RegisterDoctorDTO } from "../dto/RegisterDoctorDTO";
-import { IUserRepository } from "../../../domain/common/repositories/IUserLoginRepository";
+import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 import { Role } from "../../../domain/common/entities/IUser";
 import { ConflictError, BadRequestError } from "../../../domain/common/errors";
 import { INotificationService } from "../../../domain/common/services/INotificationService";

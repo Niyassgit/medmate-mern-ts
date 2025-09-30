@@ -14,7 +14,7 @@ export class RepDetailsMapper{
              isBlocked:rep.user?.isBlocked ?? null,
              maxConnectionsPerDay:rep.maxConnectionsPerDay ?? null,
              subscriptionStatus:rep.subscriptionStatus ?? null,
-    
+             profileImage:rep.profileImage ?? null,
           }
         }
 }

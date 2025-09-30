@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { RepDetails } from "../schemas/RepDetails";
 import { useSelector } from "react-redux";
-import { getProfileRep } from "../api";
-import { Pencil } from "lucide-react";
+import { getProfileRep, updateProfileImage } from "../api";
+import ProfileAvatar from "@/components/shared/ProfileAvatar";
+import toast from "react-hot-toast";
+import LogoutButton from "@/components/shared/LogoutButton";
 
 const ProfilePage = () => {
   const [rep, setRep] = useState<RepDetails | null>(null);
@@ -31,6 +33,23 @@ const ProfilePage = () => {
     };
     fetchProfile();
   }, [id]);
+
+  
+  const handleAvatarChange = async (file: File) => {
+    if (!rep) return;
+    try {
+      const response = await updateProfileImage(rep.id, file); 
+     if(response.success){
+        setRep({ ...rep, profileImage: response.imageUrl });
+        toast.success(response.message || "Image changed");
+     }else{
+      toast.error(response.message || "Something has happend");
+     }
+    
+    } catch (err: any) {
+      toast.error("Failed to upload profile image:", err.message);
+    }
+  } 
 
   if (loading) return <p className="p-6 text-blue-600">Loading profile...</p>;
   if (error) return <p className="p-6 text-red-600">Error: {error}</p>;
@@ -63,7 +82,7 @@ const ProfilePage = () => {
         {/* Header Card */}
         <div className="relative bg-white rounded-xl shadow-lg p-8 flex flex-col items-center">
           {/* Profile Image with Completion Ring */}
-          <div className="relative w-36 h-36 mb-4">
+          <div className="relative w-36 h-36 mb-4 flex items-center justify-center">
             <svg
               className="absolute inset-0 w-full h-full"
               viewBox="0 0 120 120"
@@ -92,17 +111,15 @@ const ProfilePage = () => {
               />
             </svg>
 
-            {/* Profile Image */}
-            <img
-              src={"/default-avatar.png"}
-              alt={rep.name}
-              className="w-32 h-32 rounded-full object-cover border-4 border-white absolute inset-0 m-auto"
+            {/* Avatar stays centered */}
+            <ProfileAvatar
+              image={rep.profileImage}
+              name={rep.name}
+              email={rep.email}
+              editable
+              onImageChange={handleAvatarChange}
+              className="w-32 h-32 border-4 border-white"
             />
-
-            {/* Edit Button */}
-            <button className="absolute bottom-0 right-0 bg-white rounded-full p-2 shadow hover:bg-gray-100">
-              <Pencil className="w-5 h-5 text-gray-600" />
-            </button>
           </div>
 
           {/* Name & Company */}
@@ -199,6 +216,7 @@ const ProfilePage = () => {
             {rep.about || "No information added yet."}
           </p>
         </div>
+        <LogoutButton  className="bg-gray-400 hover:bg-gray-600"/>
       </div>
     </div>
   );

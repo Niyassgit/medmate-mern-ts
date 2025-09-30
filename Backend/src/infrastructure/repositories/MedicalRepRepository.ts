@@ -77,4 +77,10 @@ export class MedicalRepRepository implements IMedicalRepRepository {
      if(!user) return null;
    return MedicalRepWithUserMapper.toDomain(user);
   }
+  async updateProfileImage(id: string, imageUrl: string): Promise<void> {
+    await prisma.medicalRep.update({
+      where:{id},
+      data:{profileImage:imageUrl}
+    });
+  }
 }

@@ -1,4 +1,4 @@
-import { IUserRepository } from "../../../domain/common/repositories/IUserLoginRepository";
+import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
 import { NotFoundError } from "../../errors";
 import { MedicalRepDetailsDTO } from "../dto/MedicalRepDetailsDTO";

@@ -1,4 +1,4 @@
-import { IUserRepository } from "../../../domain/common/repositories/IUserLoginRepository";
+import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 import { IUser } from "../../../domain/common/entities/IUser";
 import { IBcryptService } from "../../../domain/common/services/IHashService";
 import { IJWtService } from "../../../domain/common/services/IJWTService";

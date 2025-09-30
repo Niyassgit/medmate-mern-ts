@@ -65,6 +65,7 @@ model Doctor {
   id              String   @id @default(auto()) @map("_id") @db.ObjectId
   name            String
   phone           String
+  profileImage    String?
   departmentId    String?  @db.ObjectId
   experienceYears Int?
   hasOwnClinic    Boolean?
@@ -93,7 +94,7 @@ model Doctor {
   conversations        Conversation[]
   repReferralsReceived RepReferral[]      @relation("ReferredDoctorInRepReferral")
 
-  login   User?   @relation(fields: [loginId], references: [id])
+  user   User?   @relation(fields: [loginId], references: [id])
   loginId String? @unique @db.ObjectId
 }
 
@@ -101,6 +102,7 @@ model MedicalRep {
   id                   String    @id @default(auto()) @map("_id") @db.ObjectId
   name                 String
   phone                String
+  profileImage         String?
   companyName          String
   companyLogoUrl       String?
   employeeId           String?
@@ -129,7 +131,7 @@ model MedicalRep {
 
   doctorReferralsReceived DoctorReferral[] @relation("ReferredRep")
 
-  login   User?   @relation(fields: [loginId], references: [id])
+  user   User?   @relation(fields: [loginId], references: [id])
   loginId String? @unique @db.ObjectId
 }
 
@@ -138,7 +140,7 @@ model SuperAdmin {
   name  String
   phone String?
 
-  login   User?   @relation(fields: [loginId], references: [id])
+  user   User?   @relation(fields: [loginId], references: [id])
   loginId String? @unique @db.ObjectId
 }
 

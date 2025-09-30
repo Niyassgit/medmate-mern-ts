@@ -6,6 +6,7 @@ import { MedicalRepRepository } from "../repositories/MedicalRepRepository";
 import { UserRepository } from "../repositories/UserRepository";
 import { OtpService } from "../services/OtpService";
 import { NotificationService } from "../services/NotificationService";
+import { ProfileImageUpdateUseCase } from "../../application/medicalRep/use-cases/ProfileImageUpdateUseCase";
 
 const medicalRepRepository = new MedicalRepRepository();
 const userLoginRepository = new UserRepository();
@@ -22,8 +23,10 @@ const createMedicalRepUseCase = new CreateMedicalRepUseCase(
 );
 
 const getRepProfileByIdUseCase=new GetRepProfileByIdUseCase(medicalRepRepository);
+const profileUpdateImageUseCase=new ProfileImageUpdateUseCase(medicalRepRepository);
 
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
-  getRepProfileByIdUseCase
+  getRepProfileByIdUseCase,
+  profileUpdateImageUseCase
 );

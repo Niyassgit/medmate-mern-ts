@@ -14,4 +14,5 @@ export interface IDoctorRepository {
     search:string
   ): Promise<{ doctors: IDoctorListItem[]; total: number }>;
   getDoctorByUserId(id:string):Promise<IDoctorWithUser |null>;
+  updateProfileImage(userId: string, imageUrl: string): Promise<void>;
 }

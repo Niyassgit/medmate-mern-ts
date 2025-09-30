@@ -8,6 +8,7 @@ export interface MedicalRepDetailsDTO{
     companyLogoUrl:string | null,
     employeeId:string | null,
     subscriptionStatus:boolean | null,
-    maxConnectionsPerDay:number | null
+    maxConnectionsPerDay:number | null,
+    profileImage:string | null
 
 }

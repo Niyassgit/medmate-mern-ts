@@ -1,4 +1,4 @@
-import PrivateRoute from "@/components/PrivateRoute";
+import PrivateRoute from "@/components/shared/PrivateRoute";
 import { Role } from "@/types/Role";
 import ProfilePage from "@/features/doctor/pages/ProfilePage";
 import Feed from "@/features/doctor/pages/Feed";

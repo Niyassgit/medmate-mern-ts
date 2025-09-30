@@ -12,6 +12,7 @@ export interface DoctorDetails{
     about:string,
     educations:string[],
     certificates:string[],
+    profileImage:string
 
     
 }

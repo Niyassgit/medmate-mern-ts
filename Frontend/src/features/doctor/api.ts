@@ -5,3 +5,13 @@ export const getProfileDoctor=async(id:string)=>{
     const response=await api.get(DoctorEndpoints.PROFILE(id));
     return response.data;
 }
+export const updateProfileImage=async(id:string,file:File)=>{
+    const formData=new FormData();
+    formData.append("profileImage",file);
+    const response=await api.post(DoctorEndpoints.UPDATE_PROFILE_IMAGE(id),formData,{
+        headers:{
+          "Content-Type":"multipart/form-data",
+        },
+    });
+    return response.data;
+}

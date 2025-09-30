@@ -1,5 +1,5 @@
 import RepDashboard from "@/features/rep/pages/RepDashboard";
-import PrivateRoute from "@/components/PrivateRoute";
+import PrivateRoute from "@/components/shared/PrivateRoute";
 import { Role } from "@/types/Role";
 import ProfilePage from "@/features/rep/pages/ProfilePage";
 import RepLayout from "@/features/rep/components/RepLayout";

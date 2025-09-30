@@ -23,6 +23,7 @@ export class DoctorMapper {
       certificates: doctor.certificates ?? [],
       createdAt: doctor.createdAt,
       updatedAt: doctor.updatedAt,
+      profileImage:doctor.profileImage
     };
   }
 
@@ -58,6 +59,7 @@ export class DoctorMapper {
       about: domain.about ?? null,
       educations: domain.educations ?? [],
       certificates: domain.certificates ?? [],
+      profileImage:domain.profileImage
     };
   }
 }

@@ -3,7 +3,7 @@ import {
   NotFoundError,
   UnautharizedError,
 } from "../../../domain/common/errors";
-import { IUserRepository } from "../../../domain/common/repositories/IUserLoginRepository";
+import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 import { IOtpService } from "../../../domain/common/services/IOtpService";
 import { OtpPurpose } from "../../../domain/common/types/OtpPurpose";
 import { INotificationService } from "../../../domain/common/services/INotificationService";

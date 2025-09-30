@@ -6,6 +6,7 @@ import { DoctorRegisterSchema } from "../validators/DoctorRegisterSchemaValidato
 import { Authenticate } from "../middlewares/Authenticate";
 import { AuthorizeRole } from "../middlewares/AuthorizeRole";
 import { Role } from "../../../domain/common/entities/IUser";
+import { uploadCloud } from "../../../infrastructure/storage/multer/MulterConfigCloudinary";
 
 export class DoctorRoutes {
   public router: Router;
@@ -22,7 +23,18 @@ export class DoctorRoutes {
       ValidateSchema(DoctorRegisterSchema),
       doctorController.createDoctor
     );
-     this.router.get("/profile/:userId",Authenticate,AuthorizeRole([Role.DOCTOR]),doctorController.getDoctorprofileById)
+    this.router.get(
+      "/profile/:userId",
+      Authenticate,
+      AuthorizeRole([Role.DOCTOR]),
+      doctorController.getDoctorprofileById
+    );
+    this.router.post(
+      "/profile-image/:userId",
+      Authenticate,
+      AuthorizeRole([Role.DOCTOR]),
+      uploadCloud.single("profileImage"),
+      doctorController.updateProfileImage
+    );
   }
- 
 }

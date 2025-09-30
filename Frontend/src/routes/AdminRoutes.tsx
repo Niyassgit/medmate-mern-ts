@@ -5,7 +5,7 @@ import DoctorsList from "@/features/superAdmin/pages/DoctorsList";
 import UserValidation from "@/features/superAdmin/pages/UserValidation";
 import RepDetails from "@/features/superAdmin/pages/RepDetails";
 import DoctorDetails from "@/features/superAdmin/pages/DoctorDetails";
-import PrivateRoute from "@/components/PrivateRoute";
+import PrivateRoute from "@/components/shared/PrivateRoute";
 import { Role } from "@/types/Role";
 
 export const AdminRoutes = {

@@ -2,12 +2,19 @@ import { useEffect, useState } from "react";
 import { DoctorDetails } from "@/features/superAdmin/Schemas/DoctorDetails";
 import { getProfileDoctor } from "../api";
 import { useSelector } from "react-redux";
-import { Pencil } from "lucide-react";
+import ProfileAvatar from "@/components/shared/ProfileAvatar";
+import ConfirmDialog from "@/components/shared/ConfirmDialog";
+import { updateProfileImage } from "../api";
+import toast from "react-hot-toast";
+import LogoutButton from "@/components/shared/LogoutButton";
 
 const ProfilePage = () => {
   const [doctor, setDoctor] = useState<DoctorDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [openConfirm,setOpenConfirm]=useState(false);
+  const [selectedFile,setSelectedFile]=useState<File | null>(null);
+
   const id = useSelector((state: any) => state.auth.user?.id);
 
   useEffect(() => {
@@ -31,6 +38,29 @@ const ProfilePage = () => {
 
     fetchDoctor();
   }, [id]);
+
+  const handleAvatarChange=(file:File)=>{
+    setSelectedFile(file);
+    setOpenConfirm(true);
+  }
+   const confirmAvatarChange = async () => {
+    if (!doctor || !selectedFile) return;
+    try {
+      const response = await updateProfileImage(doctor.id, selectedFile); 
+     if(response.success){
+        setDoctor({ ...doctor, profileImage: response.imageUrl });
+        toast.success(response.message || "Image changed");
+     }else{
+      toast.error(response.message || "Something has happend");
+     }
+    
+    } catch (err: any) {
+      toast.error("Failed to upload profile image:", err.message);
+    }finally{
+      setOpenConfirm(false);
+      setSelectedFile(null);
+    }
+  };
 
   if (loading) return <p className="text-center py-6">Loading profile...</p>;
   if (error) return <p className="text-center text-red-600">{error}</p>;
@@ -67,26 +97,27 @@ const ProfilePage = () => {
         {/* Profile Header Card */}
         <div className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center relative">
           {/* Profile Image with Completion Ring */}
-          <div className="relative w-36 h-36 mb-4">
-            {/* SVG Circle (Thinner border) */}
+         <div className="relative w-36 h-36 mb-4 flex items-center justify-center">
             <svg
               className="absolute inset-0 w-full h-full"
               viewBox="0 0 120 120"
             >
+              {/* Background Circle */}
               <circle
                 cx="60"
                 cy="60"
                 r="54"
                 stroke="#e5e7eb"
-                strokeWidth="6" // thinner than before
+                strokeWidth="8"
                 fill="none"
               />
+              {/* Progress Circle */}
               <circle
                 cx="60"
                 cy="60"
                 r="54"
                 stroke="#3b82f6"
-                strokeWidth="6" // thinner than before
+                strokeWidth="8"
                 fill="none"
                 strokeDasharray={2 * Math.PI * 54}
                 strokeDashoffset={2 * Math.PI * 54 * (1 - completion / 100)}
@@ -95,18 +126,24 @@ const ProfilePage = () => {
               />
             </svg>
 
-            {/* Profile Image */}
-            <img
-              src={doctor.licenseImageUrl || "/default-avatar.png"}
-              alt={doctor.name}
-              className="w-32 h-32 rounded-full object-cover border-4 border-white absolute inset-0 m-auto"
+            {/* Avatar stays centered */}
+            <ProfileAvatar
+              name={doctor.name}
+              email={doctor.email}
+              image={doctor.profileImage}
+              editable
+              onImageChange={handleAvatarChange}
+              className="w-32 h-32 border-4 border-white"
             />
-
-            {/* Edit Button */}
-            <button className="absolute bottom-0 right-0 bg-white rounded-full p-2 shadow hover:bg-gray-100">
-              <Pencil className="w-5 h-5 text-gray-600" />
-            </button>
+            <ConfirmDialog 
+             open={openConfirm}
+             title="Change Profile Picture"
+             message="Are you sure you want to change your profile picture?"
+             onConfirm={confirmAvatarChange}
+             onCancel={()=>setOpenConfirm(false)}
+            />
           </div>
+  
 
           {/* Doctor Info */}
           <h1 className="text-2xl font-bold text-gray-800">{doctor.name}</h1>
@@ -192,6 +229,10 @@ const ProfilePage = () => {
             <p className="text-gray-500">No certificates uploaded.</p>
           )}
         </div>
+
+        <LogoutButton 
+        className="bg-[#E8618C] hover:bg-[#e64578]"
+        />
       </div>
     </div>
   );

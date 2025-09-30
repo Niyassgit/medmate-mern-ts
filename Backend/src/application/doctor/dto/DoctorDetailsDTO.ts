@@ -9,5 +9,6 @@ export interface DoctorDetailsDTO{
     registrationId:string,
     licenseImageUrl:string | null,
     opHours:string | null,
+    profileImage:string | null
     
 }

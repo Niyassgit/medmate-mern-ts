@@ -21,6 +21,7 @@ export class MedicalRepMapper {
       loginId: rep.loginId,
       createdAt: rep.createdAt,
       updatedAt: rep.updatedAt,
+      profileImage:rep.profileImage
     };
   }
   static toListMedicalRep(
@@ -56,6 +57,7 @@ export class MedicalRepMapper {
       subscriptionEnd: domain.subscriptionEnd ?? null,
       loginId: domain.loginId,
       maxConnectionsPerDay: domain.maxConnectionsPerDay ?? 0,
+      profileImage:domain.profileImage
     };
   }
 }

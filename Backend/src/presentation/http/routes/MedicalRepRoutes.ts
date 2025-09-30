@@ -6,6 +6,7 @@ import { registerMedicalRepSchema } from "../validators/RepSchemaValidator";
 import { Authenticate } from "../middlewares/Authenticate";
 import { AuthorizeRole } from "../middlewares/AuthorizeRole";
 import { Role } from "../../../domain/common/entities/IUser";
+import { uploadCloud } from "../../../infrastructure/storage/multer/MulterConfigCloudinary";
 
 export class MedicalRepRoutes {
   public router: Router;
@@ -27,6 +28,13 @@ export class MedicalRepRoutes {
       Authenticate,
       AuthorizeRole([Role.MEDICAL_REP]),
       medicalRepController.getRepProfileById
+    );
+    this.router.post(
+      "/profile-image/:userId",
+      Authenticate,
+      AuthorizeRole([Role.MEDICAL_REP]),
+      uploadCloud.single("profileImage"),
+      medicalRepController.updateProfileImage
     );
   }
 }

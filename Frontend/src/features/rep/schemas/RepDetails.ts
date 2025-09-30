@@ -11,6 +11,6 @@ export interface RepDetails{
      maxConnectionsPerDay:number,
      subscriptionStatus:boolean,
      about:string,
-     
-    
+     profileImage:string
+       
 }

@@ -1,4 +1,4 @@
-import ExampleForm from "@/components/example-form";
+import ExampleForm from "@/components/shared/example-form";
 import { Link } from "react-router-dom";
 import { loginUser } from "../api";
 import { Role } from "@/types/Role";
@@ -67,7 +67,7 @@ const LoginPage = () => {
             </Link>
             <p className="text-sm text-gray-600">
               Don't have an account?{" "}
-              <Link to="/signup" className="text-[#3fa8e9] hover:underline">
+              <Link to="/register/doctor" className="text-[#3fa8e9] hover:underline">
                 Sign up
               </Link>
             </p>

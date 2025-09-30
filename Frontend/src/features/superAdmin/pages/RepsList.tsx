@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import useFetchList from "@/hooks/useFetchList";
 import { getAllReps, blockUser, unblockUser } from "../api/superAdminApi";
 import { useCallback, useState } from "react";
-import AppPagination from "@/components/AppPagination";
+import AppPagination from "@/components/shared/AppPagination";
 import SearchInput from "../components/SearchInput";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";

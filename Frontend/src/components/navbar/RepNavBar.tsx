@@ -1,7 +1,7 @@
 import { Button } from "../ui/button";
 import { Bell, Search, Mail } from "lucide-react";
 import { NavLink } from "react-router-dom";
-import UserAvatar from "../UserAvatar";
+import UserAvatar from "../shared/UserAvatar";
 
 const RepNavbar = () => {
   return (

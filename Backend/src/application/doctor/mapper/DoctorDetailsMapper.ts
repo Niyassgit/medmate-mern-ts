@@ -14,7 +14,9 @@ export class DoctorDetailsMapper{
               isBlocked:doctor.user?.isBlocked ?? null,
               licenseImageUrl:doctor.licenseImageUrl ?? null,
               opHours:doctor.opHours ?? null,
-              registrationId:doctor.registrationId  
+              registrationId:doctor.registrationId ,
+              profileImage:doctor.profileImage,
+        
             }
         }
 }
