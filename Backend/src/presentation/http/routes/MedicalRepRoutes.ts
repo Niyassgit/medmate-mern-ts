@@ -37,7 +37,7 @@ export class MedicalRepRoutes {
       medicalRepController.updateProfileImage
     );
     this.router.post(
-      "/complete-profile/:userID",
+      "/profile/complete/:userID",
       Authenticate,
       AuthorizeRole([Role.MEDICAL_REP]),
       medicalRepController.completeProfile

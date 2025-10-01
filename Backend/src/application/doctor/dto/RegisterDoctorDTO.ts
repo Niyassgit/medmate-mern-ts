@@ -10,4 +10,5 @@ export interface RegisterDoctorDTO {
   licenseImageUrl: string | null;
   opHours: string | null;
   hasOwnClinic?: boolean | null;
+  about?:string |null
 }

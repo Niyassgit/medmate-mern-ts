@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { viewDoctor } from "../api/superAdminApi";
-import { DoctorDetails } from "../Schemas/DoctorDetails";
+import { DoctorDetails } from "../../../components/Dto/DoctorDetails";
 import { Button } from "@/components/ui/button";
 
 const DoctorDetailsPage: React.FC = () => {

@@ -76,8 +76,6 @@ model Doctor {
   opHours         String?
   registrationId  String
   about           String?
-  educations      String[]
-  certificates    String[]
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
@@ -93,8 +91,10 @@ model Doctor {
   notifications        Notification[]
   conversations        Conversation[]
   repReferralsReceived RepReferral[]      @relation("ReferredDoctorInRepReferral")
+  educations           Education[]
+  certificates         Certificate[]
 
-  user   User?   @relation(fields: [loginId], references: [id])
+  user    User?   @relation(fields: [loginId], references: [id])
   loginId String? @unique @db.ObjectId
 }
 
@@ -131,7 +131,7 @@ model MedicalRep {
 
   doctorReferralsReceived DoctorReferral[] @relation("ReferredRep")
 
-  user   User?   @relation(fields: [loginId], references: [id])
+  user    User?   @relation(fields: [loginId], references: [id])
   loginId String? @unique @db.ObjectId
 }
 
@@ -140,8 +140,26 @@ model SuperAdmin {
   name  String
   phone String?
 
-  user   User?   @relation(fields: [loginId], references: [id])
+  user    User?   @relation(fields: [loginId], references: [id])
   loginId String? @unique @db.ObjectId
+}
+
+model Education {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  degree    String
+  institute String
+  year      Int?
+  doctorId  String @db.ObjectId
+  doctor    Doctor @relation(fields: [doctorId], references: [id])
+}
+
+model Certificate {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  issuedBy String?
+  year     Int?
+  doctorId String  @db.ObjectId
+  doctor   Doctor  @relation(fields: [doctorId], references: [id])
 }
 
 model SubscriptionPlan {

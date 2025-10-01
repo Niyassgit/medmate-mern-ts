@@ -20,7 +20,11 @@ export class DoctorRepository implements IDoctorRepository {
   async getDoctorById(id: string): Promise<IDoctorWithUser | null> {
     const user = await prisma.doctor.findUnique({
       where: { id },
-      include: { user: true },
+      include: {
+         user: true,
+         educations:true,
+         certificates:true
+        },
     });
     if (!user) return null;
     return DoctorWithUserMapper.toDomain(user);
@@ -72,7 +76,11 @@ export class DoctorRepository implements IDoctorRepository {
   async getDoctorByUserId(id: string): Promise<IDoctorWithUser | null> {
     const user=await prisma.doctor.findFirst({
       where:{loginId:id},
-      include:{user:true}
+      include:{
+        user:true,
+        educations:true,
+        certificates:true
+      }
     });
 
     if(!user) return null;
@@ -84,17 +92,24 @@ export class DoctorRepository implements IDoctorRepository {
           data:{profileImage:imageUrl},
         });
   }
-  async updateDoctor(userId: string, data: Partial<IDoctor>): Promise<IDoctorWithUser | null> {
-    const doctor=await prisma.doctor.findFirst({
-      where:{loginId:userId}
-    });
-    if(!doctor) return null;
-    const updateDoctor=await prisma.doctor.update({
-      where:{id:doctor.id},
-      data:DoctorMapper.toPartialPersistence(data),
-      include:{user:true}
-    })
+ async updateDoctor(userId: string, data: Partial<IDoctor>): Promise<IDoctor | null> {
+  const doctor = await prisma.doctor.findFirst({
+    where: { id: userId },
+  });
+
+  if (!doctor) return null;
+
+  const updateDoctor = await prisma.doctor.update({
+    where: { id: doctor.id },
+    data: DoctorMapper.toPartialPersistence(data),
+    include: {
+      user: true,
+      educations: true,
+      certificates: true,
+    },
+  });
   
-    return DoctorWithUserMapper.toDomain(updateDoctor);
-  }
+  return DoctorWithUserMapper.toDomain(updateDoctor);
+}
+
 }

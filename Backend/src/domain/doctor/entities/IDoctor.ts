@@ -1,3 +1,6 @@
+import { IEducation } from "../../common/entities/IEducations";
+import { ICertificate } from "../../common/entities/ICertificate";
+
 export interface IDoctor {
   id: string;
   loginId: string | null;
@@ -18,6 +21,7 @@ export interface IDoctor {
   opHours?: string | null;
 
   about?: string | null;
-  educations?: string[];
-  certificates?: string[];
+
+  educations?: IEducation[];
+  certificates?: ICertificate[];
 }

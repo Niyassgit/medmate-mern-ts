@@ -37,7 +37,7 @@ export class DoctorRoutes {
       doctorController.updateProfileImage
     );
     this.router.post(
-      "/complete-profile/:userId",
+      "/profile/complete/:userId",
       Authenticate,
       AuthorizeRole([Role.DOCTOR]),
       doctorController.completeProfile

@@ -1,3 +1,6 @@
+import { EducationDTO } from "./EducationDTO";
+import { CertificateDTO } from "./CertificateDTO";
+
 export interface CompleteDoctorProfileDTO{
   name: string;
   phone: string;
@@ -13,6 +16,6 @@ export interface CompleteDoctorProfileDTO{
   opHours?: string | null;
 
   about?: string | null;
-  educations?: string[];
-  certificates?: string[];
+  educations?: EducationDTO[];
+  certificates?: CertificateDTO[];
 }

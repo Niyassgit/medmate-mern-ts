@@ -1,5 +1,6 @@
 import { api } from "@/services/api";
 import { DoctorEndpoints } from "@/services/endpoints/DoctorEndpoints";
+import { CompleteDoctorProfileDTO } from "./schemas/CompleteDoctorProfileSchema";
 
 export const getProfileDoctor=async(id:string)=>{
     const response=await api.get(DoctorEndpoints.PROFILE(id));
@@ -14,4 +15,9 @@ export const updateProfileImage=async(id:string,file:File)=>{
         },
     });
     return response.data;
+}
+export const completeProfile=async(id:string,values:CompleteDoctorProfileDTO)=>{
+    return api.post(DoctorEndpoints.COMPLETE_PROFILE(id),values,{
+        headers: { "Content-Type": "application/json" },
+    });
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { DoctorDetails } from "@/features/superAdmin/Schemas/DoctorDetails";
+import { DoctorDetails } from "@/components/Dto/DoctorDetails";
 import { getProfileDoctor } from "../api";
 import { useSelector } from "react-redux";
 import ProfileAvatar from "@/components/shared/ProfileAvatar";
@@ -7,13 +7,16 @@ import ConfirmDialog from "@/components/shared/ConfirmDialog";
 import { updateProfileImage } from "../api";
 import toast from "react-hot-toast";
 import LogoutButton from "@/components/shared/LogoutButton";
+import { useNavigate } from "react-router-dom";
+
 
 const ProfilePage = () => {
+  const navigate = useNavigate();
   const [doctor, setDoctor] = useState<DoctorDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [openConfirm,setOpenConfirm]=useState(false);
-  const [selectedFile,setSelectedFile]=useState<File | null>(null);
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const id = useSelector((state: any) => state.auth.user?.id);
 
@@ -38,29 +41,29 @@ const ProfilePage = () => {
 
     fetchDoctor();
   }, [id]);
- 
-  const handleAvatarChange=(file:File)=>{
+
+  const handleAvatarChange = (file: File) => {
     setSelectedFile(file);
     setOpenConfirm(true);
-  }
-   const confirmAvatarChange = async () => {
+  };
+  const confirmAvatarChange = async () => {
     if (!doctor || !selectedFile) return;
     try {
-      const response = await updateProfileImage(doctor.id, selectedFile); 
-     if(response.success){
+      const response = await updateProfileImage(doctor.id, selectedFile);
+      if (response.success) {
         setDoctor({ ...doctor, profileImage: response.imageUrl });
         toast.success(response.message || "Image changed");
-     }else{
-      toast.error(response.message || "Something has happend");
-     }
-    
+      } else {
+        toast.error(response.message || "Something has happend");
+      }
     } catch (err: any) {
       toast.error("Failed to upload profile image:", err.message);
-    }finally{
+    } finally {
       setOpenConfirm(false);
       setSelectedFile(null);
     }
   };
+
 
   if (loading) return <p className="text-center py-6">Loading profile...</p>;
   if (error) return <p className="text-center text-red-600">{error}</p>;
@@ -78,7 +81,6 @@ const ProfilePage = () => {
     doctor.certificates?.length,
     doctor.opHours,
     doctor.hasOwnClinic,
-    doctor.licenseImageUrl,
   ];
   const filled = fields.filter((f) => f && f !== "").length;
   const completion = Math.round((filled / fields.length) * 100);
@@ -97,7 +99,7 @@ const ProfilePage = () => {
         {/* Profile Header Card */}
         <div className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center relative">
           {/* Profile Image with Completion Ring */}
-         <div className="relative w-36 h-36 mb-4 flex items-center justify-center">
+          <div className="relative w-36 h-36 mb-4 flex items-center justify-center">
             <svg
               className="absolute inset-0 w-full h-full"
               viewBox="0 0 120 120"
@@ -135,15 +137,14 @@ const ProfilePage = () => {
               onImageChange={handleAvatarChange}
               className="w-32 h-32 border-4 border-white"
             />
-            <ConfirmDialog 
-             open={openConfirm}
-             title="Change Profile Picture"
-             message="Are you sure you want to change your profile picture?"
-             onConfirm={confirmAvatarChange}
-             onCancel={()=>setOpenConfirm(false)}
+            <ConfirmDialog
+              open={openConfirm}
+              title="Change Profile Picture"
+              message="Are you sure you want to change your profile picture?"
+              onConfirm={confirmAvatarChange}
+              onCancel={() => setOpenConfirm(false)}
             />
           </div>
-  
 
           {/* Doctor Info */}
           <h1 className="text-2xl font-bold text-gray-800">{doctor.name}</h1>
@@ -155,7 +156,10 @@ const ProfilePage = () => {
 
           {/* Modern Complete Profile Button */}
           {completion < 100 && (
-            <button className="mt-4 flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full shadow hover:from-blue-600 hover:to-blue-700 transition">
+            <button
+              onClick={() => navigate(`/doctor/profile/complete/${id}`)}
+              className="mt-4 flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full shadow hover:from-blue-600 hover:to-blue-700 transition"
+            >
               <span>Complete Profile</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -205,8 +209,11 @@ const ProfilePage = () => {
           </h2>
           {doctor.educations?.length ? (
             <ul className="list-disc list-inside text-gray-700 space-y-1">
-              {doctor.educations.map((edu, idx) => (
-                <li key={idx}>{edu}</li>
+              {doctor.educations.map((edu) => (
+                <li key={edu.id}>
+                  <span className="font-medium">{edu.degree}</span> –{" "}
+                  {edu.institute} ({edu.year})
+                </li>
               ))}
             </ul>
           ) : (
@@ -221,8 +228,11 @@ const ProfilePage = () => {
           </h2>
           {doctor.certificates?.length ? (
             <ul className="list-disc list-inside text-gray-700 space-y-1">
-              {doctor.certificates.map((cert, idx) => (
-                <li key={idx}>{cert}</li>
+              {doctor.certificates.map((cert) => (
+                <li key={cert.id}>
+                  <span className="font-medium">{cert.name}</span> –{" "}
+                  {cert.issuedBy} ({cert.year})
+                </li>
               ))}
             </ul>
           ) : (
@@ -230,9 +240,7 @@ const ProfilePage = () => {
           )}
         </div>
 
-        <LogoutButton 
-        className="bg-[#E8618C] hover:bg-[#e64578]"
-        />
+        <LogoutButton className="bg-[#E8618C] hover:bg-[#e64578]" />
       </div>
     </div>
   );

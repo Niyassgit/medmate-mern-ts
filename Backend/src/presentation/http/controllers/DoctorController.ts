@@ -29,6 +29,7 @@ export class DoctorController {
   getDoctorprofileById = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const response = await this._getDoctorProfileByIdUseCase.execute(userId);
+    console.log("doctor data to the front end:",response)
     return res.json({ success: true, data: response });
   };
   updateProfileImage = async (req: Request, res: Response) => {
@@ -41,7 +42,7 @@ export class DoctorController {
     res.json({ success: true, message: response });
   };
   completeProfile = async (req: Request, res: Response) => {
-    const { userId } = req.params;
+    const { userId} = req.params;
     const data = req.body as CompleteDoctorProfileDTO;
     const response = await this._compeletProfileUseCase.execute(userId, data);
     return res.json({ success: true, message: response });
