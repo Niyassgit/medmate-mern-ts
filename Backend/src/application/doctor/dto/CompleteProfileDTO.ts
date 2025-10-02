@@ -1,5 +1,5 @@
-import { EducationDTO } from "./EducationDTO";
-import { CertificateDTO } from "./CertificateDTO";
+import { EducationDTO } from "../../common/dto/EducationDTO";
+import { CertificateDTO } from "../../common/dto/CertificateDTO";
 
 export interface CompleteDoctorProfileDTO{
   name: string;

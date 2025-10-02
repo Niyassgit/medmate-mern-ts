@@ -13,6 +13,10 @@ export class MedicalRepRepository implements IMedicalRepRepository {
   ): Promise<IMedicalRep> {
     const created = await prisma.medicalRep.create({
       data: MedicalRepMapper.toPersistance(data),
+      include: {
+        educations: true,
+        certificates: true,
+      },
     });
     return MedicalRepMapper.toDomain(created);
   }
@@ -20,7 +24,11 @@ export class MedicalRepRepository implements IMedicalRepRepository {
   async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {
     const user = await prisma.medicalRep.findUnique({
       where: { id },
-      include: { user: true },
+      include: {
+        user: true,
+        educations: true,
+        certificates: true,
+      },
     });
     if (!user) return null;
     return MedicalRepWithUserMapper.toDomain(user);
@@ -29,7 +37,14 @@ export class MedicalRepRepository implements IMedicalRepRepository {
   async getMedicalRepByEmail(email: string): Promise<IMedicalRep | null> {
     const user = await prisma.user.findUnique({
       where: { email },
-      include: { medicalRep: true },
+      include: {
+        medicalRep: {
+          include: {
+            educations: true,
+            certificates: true,
+          },
+        },
+      },
     });
 
     if (!user || !user.medicalRep) return null;
@@ -73,7 +88,11 @@ export class MedicalRepRepository implements IMedicalRepRepository {
   async getMedicalRepByUserId(id: string): Promise<IMedicalRepWithUser | null> {
     const user = await prisma.medicalRep.findFirst({
       where: { loginId: id },
-      include: { user: true },
+      include: {
+        user: true,
+        educations:true,
+        certificates:true,
+      },
     });
 
     if (!user) return null;
@@ -96,16 +115,18 @@ export class MedicalRepRepository implements IMedicalRepRepository {
       data: updateData,
       include: {
         user: true,
+        educations: true,
+        certificates: true,
       },
     });
     return MedicalRepMapper.toDomain(updatedRep);
   }
-  
+
   async updateCompanyLogo(userId: string, LogoUrl: string): Promise<string> {
-   await prisma.medicalRep.update({
-      where:{id:userId},
-      data:{companyLogoUrl:LogoUrl}
+    await prisma.medicalRep.update({
+      where: { id: userId },
+      data: { companyLogoUrl: LogoUrl },
     });
-   return LogoUrl;
+    return LogoUrl;
   }
 }

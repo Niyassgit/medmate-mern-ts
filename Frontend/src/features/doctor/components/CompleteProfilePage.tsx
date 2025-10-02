@@ -25,8 +25,10 @@ import ConfirmDialog from "@/components/shared/ConfirmDialog";
 export default function CompleteProfilePage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [openConfirm,setOpenConfirm]=useState(false);
-  const [formData,setFormData]=useState<CompleteDoctorProfileDTO | null>(null)
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [formData, setFormData] = useState<CompleteDoctorProfileDTO | null>(
+    null
+  );
 
   const form = useForm<CompleteDoctorProfileDTO>({
     resolver: zodResolver(CompleteDoctorProfileSchema),
@@ -44,7 +46,6 @@ export default function CompleteProfilePage() {
     },
   });
 
-
   useEffect(() => {
     async function fetchProfile() {
       try {
@@ -59,8 +60,14 @@ export default function CompleteProfilePage() {
             registrationId: data.registrationId ?? "",
             about: data.about ?? "",
             opHours: data.opHours ?? "",
-            educations: data.educations.length > 0 ? data.educations : [{ degree: "", institute: "", year: null }],
-            certificates: data.certificates.length > 0 ? data.certificates : [{ name: "", issuedBy: "", year: null }],
+            educations:
+              data.educations.length > 0
+                ? data.educations
+                : [{ degree: "", institute: "", year: null }],
+            certificates:
+              data.certificates.length > 0
+                ? data.certificates
+                : [{ name: "", issuedBy: "", year: null }],
           });
         }
       } catch (err) {
@@ -71,31 +78,33 @@ export default function CompleteProfilePage() {
   }, [id, form]);
 
   const confirmProfileUpdate = async () => {
-  if (!formData) return;
-  try {
-    await completeProfile(id!, formData);
-    toast.success("Profile saved successfully");
-    navigate("/doctor/profile");
-  } catch (err) {
-    console.error(err);
-    toast.error("Failed to save profile");
-  } finally {
-    setOpenConfirm(false);
-  }
-};
-
+    if (!formData) return;
+    try {
+      await completeProfile(id!, formData);
+      toast.success("Profile saved successfully");
+      navigate("/doctor/profile");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to save profile");
+    } finally {
+      setOpenConfirm(false);
+    }
+  };
 
   const handleFormSubmit = (values: CompleteDoctorProfileDTO) => {
-  setFormData(values);
-  setOpenConfirm(true);
-};
+    setFormData(values);
+    setOpenConfirm(true);
+  };
 
   return (
     <div className="max-w-3xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6">Complete Your Profile</h1>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-4">
+        <form
+          onSubmit={form.handleSubmit(handleFormSubmit)}
+          className="space-y-4"
+        >
           {/* Name */}
           <FormField
             control={form.control}
@@ -155,7 +164,11 @@ export default function CompleteProfilePage() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>About</FormLabel>
-                <Textarea {...field} value={field.value ?? ""} placeholder="Write about yourself" />
+                <Textarea
+                  {...field}
+                  value={field.value ?? ""}
+                  placeholder="Write about yourself"
+                />
                 <FormMessage />
               </FormItem>
             )}
@@ -168,45 +181,53 @@ export default function CompleteProfilePage() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>OP Hours</FormLabel>
-                <Input {...field} value={field.value ?? ""} placeholder="e.g. 9am - 5pm" />
+                <Input
+                  {...field}
+                  value={field.value ?? ""}
+                  placeholder="e.g. 9am - 5pm"
+                />
                 <FormMessage />
               </FormItem>
             )}
           />
 
-        <DynamicList
-          name="educations"
-          control={form.control}
-          fields={[
-            { label: "Degree", name: "degree" },
-            { label: "Institute", name: "institute" },
-            {
-              label: "Year",
-              name: "year",
-              type: "number",
-              placeholder: "YYYY",
-            },
-          ]}
-        />
+          <DynamicList
+            name="educations"
+            control={form.control}
+            fields={[
+              { label: "Degree", name: "degree" },
+              { label: "Institute", name: "institute" },
+              {
+                label: "Year",
+                name: "year",
+                type: "number",
+                placeholder: "YYYY",
+              },
+            ]}
+          />
 
-        <DynamicList
-          name="certificates"
-          control={form.control}
-          fields={[
-            { label: "Name", name: "name" },
-            { label: "Issued By", name: "issuedBy" },
-            {
-              label: "Year",
-              name: "year",
-              type: "number",
-              placeholder: "YYYY",
-            },
-          ]}
-        />
+          <DynamicList
+            name="certificates"
+            control={form.control}
+            fields={[
+              { label: "Certificate", name: "name" },
+              { label: "Issued By", name: "issuedBy" },
+              {
+                label: "Year",
+                name: "year",
+                type: "number",
+                placeholder: "YYYY",
+              },
+            ]}
+          />
 
           {/* Submit */}
           <div className="flex justify-end gap-2 mt-4">
-            <Button type="button" variant="outline" onClick={() => navigate(-1)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => navigate(-1)}
+            >
               Cancel
             </Button>
             <Button type="submit" className="bg-[#E8618C] hover:bg-[#e62a66]">
@@ -216,13 +237,13 @@ export default function CompleteProfilePage() {
         </form>
       </Form>
 
-        <ConfirmDialog
-              open={openConfirm}
-              title="Confirm Save"
-              message="Are you sure you want to save your profile?"
-              onConfirm={confirmProfileUpdate}
-              onCancel={() => setOpenConfirm(false)}
-            />
+      <ConfirmDialog
+        open={openConfirm}
+        title="Confirm Save"
+        message="Are you sure you want to save your profile?"
+        onConfirm={confirmProfileUpdate}
+        onCancel={() => setOpenConfirm(false)}
+      />
     </div>
   );
 }

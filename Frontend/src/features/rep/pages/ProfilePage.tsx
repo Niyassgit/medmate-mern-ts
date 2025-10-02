@@ -9,7 +9,7 @@ import ConfirmDialog from "@/components/shared/ConfirmDialog";
 import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const [rep, setRep] = useState<MedicalRepDetails | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -75,7 +75,10 @@ const ProfilePage = () => {
     rep.about,
     rep.subscriptionStatus,
     rep.maxConnectionsPerDay,
+    rep.educations?.length,
+    rep.certificates?.length,
   ];
+
   const filled = fields.filter((f) => f && f !== "").length;
   const completion = Math.round((filled / fields.length) * 100);
 
@@ -160,9 +163,10 @@ const ProfilePage = () => {
 
           {/* Complete Profile Button */}
           {completion < 100 && (
-            <button 
-            onClick={()=>navigate(`/rep/profile/complete/${id}`)}
-            className="mt-4 flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full shadow hover:from-blue-600 hover:to-blue-700 transition">
+            <button
+              onClick={() => navigate(`/rep/profile/complete/${id}`)}
+              className="mt-4 flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full shadow hover:from-blue-600 hover:to-blue-700 transition"
+            >
               <span>Complete Profile</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -235,6 +239,41 @@ const ProfilePage = () => {
             {rep.about || "No information added yet."}
           </p>
         </div>
+
+        {/* Education Section */}
+        <div className="bg-white rounded-xl shadow p-4">
+          <h2 className="font-semibold text-gray-800">Education</h2>
+          {rep.educations && rep.educations.length > 0 ? (
+            <ul className="list-disc list-inside text-gray-700 mt-2 space-y-1">
+              {rep.educations.map((edu) => (
+                <li key={edu.id}>
+                  {edu.degree} from {edu.institute}{" "}
+                  {edu.year ? `(${edu.year})` : ""}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-500 mt-2">Not updated yet</p>
+          )}
+        </div>
+
+        {/* Certificates Section */}
+        <div className="bg-white rounded-xl shadow p-4">
+          <h2 className="font-semibold text-gray-800">Certificates</h2>
+          {rep.certificates && rep.certificates.length > 0 ? (
+            <ul className="list-disc list-inside text-gray-700 mt-2 space-y-1">
+              {rep.certificates.map((cert) => (
+                <li key={cert.id}>
+                  {cert.name} {cert.issuedBy ? `by ${cert.issuedBy}` : ""}{" "}
+                  {cert.year ? `(${cert.year})` : ""}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-500 mt-2">Not updated yet</p>
+          )}
+        </div>
+
         <LogoutButton className="bg-gray-400 hover:bg-gray-600" />
       </div>
     </div>

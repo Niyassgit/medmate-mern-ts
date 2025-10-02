@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { EducationSchema } from "./EducationSchema";
-import { CertificateSchema } from "./CertificateSchema";
+import { EducationSchema } from "../../shared/schemas/EducationSchema";
+import { CertificateSchema } from "../../shared/schemas/CertificateSchema";
 
 
 export const CompleteDoctorProfileSchema = z.object({

@@ -7,7 +7,7 @@ import {
 } from "../schemas/CompleteRepProfileDTO";
 import { getProfileRep, completeProfile, uploadCompanyLogo } from "../api";
 import { useEffect, useState } from "react";
-
+import { DynamicList } from "@/features/doctor/components/DynamicList";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -37,6 +37,8 @@ export default function CompleteRepProfilePage() {
       employeeId: "",
       about: "",
       companyLogoUrl: "",
+      educations: [{ degree: "", institute: "", year: null }],
+      certificates: [{ name: "", issuedBy: "", year: null }],
     },
   });
 
@@ -53,6 +55,14 @@ export default function CompleteRepProfilePage() {
           employeeId: data.employeeId ?? "",
           about: data.about ?? "",
           companyLogoUrl: data.companyLogoUrl ?? "",
+          educations:
+            data.educations?.length > 0
+              ? data.educations
+              : [{ degree: "", institute: "", year: null }],
+          certificates:
+            data.certificates?.length > 0
+              ? data.certificates
+              : [{ name: "", issuedBy: "", year: null }],
         });
       } catch (err) {
         console.error(err);
@@ -68,6 +78,7 @@ export default function CompleteRepProfilePage() {
   const confirmProfileUpdate = async () => {
     if (!formData) return;
     try {
+      console.log("formData:", formData);
       await completeProfile(id!, formData);
       toast.success("Profile saved successfully");
       navigate("/rep/profile");
@@ -225,6 +236,36 @@ export default function CompleteRepProfilePage() {
                 <FormMessage />
               </FormItem>
             )}
+          />
+
+          <DynamicList
+            name="educations"
+            control={form.control}
+            fields={[
+              { label: "Degree", name: "degree" },
+              { label: "Institute", name: "institute" },
+              {
+                label: "Year",
+                name: "year",
+                type: "number",
+                placeholder: "YYYY",
+              },
+            ]}
+          />
+
+          <DynamicList
+            name="certificates"
+            control={form.control}
+            fields={[
+              { label: "Certificate", name: "name" },
+              { label: "Issued By", name: "issuedBy" },
+              {
+                label: "Year",
+                name: "year",
+                type: "number",
+                placeholder: "YYYY",
+              },
+            ]}
           />
 
           {/* Submit */}

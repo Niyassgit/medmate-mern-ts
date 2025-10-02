@@ -131,6 +131,9 @@ model MedicalRep {
 
   doctorReferralsReceived DoctorReferral[] @relation("ReferredRep")
 
+  educations   Education[]
+  certificates Certificate[]
+
   user    User?   @relation(fields: [loginId], references: [id])
   loginId String? @unique @db.ObjectId
 }
@@ -149,8 +152,10 @@ model Education {
   degree    String
   institute String
   year      Int?
-  doctorId  String @db.ObjectId
-  doctor    Doctor @relation(fields: [doctorId], references: [id])
+  doctorId  String? @db.ObjectId
+  doctor    Doctor? @relation(fields: [doctorId], references: [id])
+  medicalRepId String?     @db.ObjectId
+  medicalRep   MedicalRep? @relation(fields: [medicalRepId], references: [id])
 }
 
 model Certificate {
@@ -158,8 +163,10 @@ model Certificate {
   name     String
   issuedBy String?
   year     Int?
-  doctorId String  @db.ObjectId
-  doctor   Doctor  @relation(fields: [doctorId], references: [id])
+  doctorId String?  @db.ObjectId
+  doctor   Doctor?  @relation(fields: [doctorId], references: [id])
+  medicalRepId String?     @db.ObjectId
+  medicalRep   MedicalRep? @relation(fields: [medicalRepId], references: [id])
 }
 
 model SubscriptionPlan {

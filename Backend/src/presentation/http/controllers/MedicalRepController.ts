@@ -42,6 +42,7 @@ export class MedicalRepController {
   completeProfile=async(req:Request,res:Response)=>{
     const {userId}=req.params;
     const data=req.body as CompleteRepProfileDTO;
+    console.log("data from the front end both user id and form data:",userId,data);
     const response=await this._completeRepProfileUseCase.execute(userId,data);
     return res.json({success:true,message:response});
   }

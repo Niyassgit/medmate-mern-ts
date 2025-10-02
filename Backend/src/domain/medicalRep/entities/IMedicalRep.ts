@@ -1,3 +1,5 @@
+import { IEducation } from "../../common/entities/IEducations";
+import { ICertificate } from "../../common/entities/ICertificate";
 export interface IMedicalRep {
   id: string;
   loginId: string | null;
@@ -18,4 +20,7 @@ export interface IMedicalRep {
   subscriptionStart?: Date | null;
   subscriptionEnd?: Date | null;
   maxConnectionsPerDay?: number | null;
+
+  educations?:IEducation[];
+  certificates?:ICertificate[];
 }
