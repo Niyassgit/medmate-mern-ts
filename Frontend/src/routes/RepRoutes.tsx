@@ -8,6 +8,7 @@ import Analytics from "@/features/rep/pages/Analytics";
 import Messages from "@/features/rep/pages/Messages";
 import Notifications from "@/features/rep/pages/Notifications";
 import Network from "@/features/rep/pages/Network";
+import CompleteProfile from "@/features/rep/components/CompleteProfile";
 
 export const RepRoutes={
 
@@ -20,6 +21,7 @@ export const RepRoutes={
     children:[
         {path:"dashboard",element:<RepDashboard />},
         {path:"profile",element:<ProfilePage/>},
+        {path:"profile/complete/:id",element:<CompleteProfile />},
         {path:"subscription",element:<Subscription />},
         {path:"network",element :<Network />},
         {path:"analytics",element:<Analytics/>},

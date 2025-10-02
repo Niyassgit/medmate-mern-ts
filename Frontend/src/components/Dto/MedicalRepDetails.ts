@@ -1,5 +1,5 @@
 
-export interface RepDetails{
+export interface MedicalRepDetails{
      id:string,
      name:string,
      email:string,

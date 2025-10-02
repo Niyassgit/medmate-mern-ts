@@ -10,5 +10,6 @@ export interface MedicalRepDetailsDTO{
     subscriptionStatus:boolean | null,
     maxConnectionsPerDay:number | null,
     profileImage:string | null
+    about:string| null
 
 }

@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
-import { RepDetails } from "../schemas/RepDetails";
+import { MedicalRepDetails } from "@/components/Dto/MedicalRepDetails";
 import { useSelector } from "react-redux";
 import { getProfileRep, updateProfileImage } from "../api";
 import ProfileAvatar from "@/components/shared/ProfileAvatar";
 import toast from "react-hot-toast";
 import LogoutButton from "@/components/shared/LogoutButton";
 import ConfirmDialog from "@/components/shared/ConfirmDialog";
+import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
-  const [rep, setRep] = useState<RepDetails | null>(null);
+  const navigate=useNavigate();
+  const [rep, setRep] = useState<MedicalRepDetails | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [openConfirm, setOpenConfirm] = useState(false);
@@ -158,7 +160,9 @@ const ProfilePage = () => {
 
           {/* Complete Profile Button */}
           {completion < 100 && (
-            <button className="mt-4 flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full shadow hover:from-blue-600 hover:to-blue-700 transition">
+            <button 
+            onClick={()=>navigate(`/rep/profile/complete/${id}`)}
+            className="mt-4 flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full shadow hover:from-blue-600 hover:to-blue-700 transition">
               <span>Complete Profile</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"

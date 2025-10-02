@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { viewRep } from "../api/superAdminApi";
 import { useNavigate, useParams } from "react-router-dom";
-import { MedicalRepDetails } from "../Schemas/MedicalRepDetails";
+import { MedicalRepDetails } from "@/components/Dto/MedicalRepDetails"; 
 
 const RepDetails = () => {
   const { id } = useParams<{ id: string }>();

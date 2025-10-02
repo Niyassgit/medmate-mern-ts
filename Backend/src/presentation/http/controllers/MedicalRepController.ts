@@ -5,6 +5,7 @@ import { GetRepProfileByIdUseCase } from "../../../application/medicalRep/use-ca
 import { ProfileImageUpdateUseCase } from "../../../application/medicalRep/use-cases/ProfileImageUpdateUseCase";
 import { CompleteRepProfileDTO } from "../../../application/medicalRep/dto/CompleteRepProfileDTO";
 import { CompleteRepProfileUseCase } from "../../../application/medicalRep/use-cases/CompleteRepProfileUseCase";
+import { UpdateCompanyLogoUseCase } from "../../../application/medicalRep/use-cases/UpdateCompanyLogoUseCase";
 
 
 export class MedicalRepController {
@@ -12,7 +13,8 @@ export class MedicalRepController {
     private _createMedicalRepUseCase: CreateMedicalRepUseCase,
     private _getUserProfile:GetRepProfileByIdUseCase,
     private _ProfileImageUpdateUseCase:ProfileImageUpdateUseCase,
-    private _completeRepProfileUseCase:CompleteRepProfileUseCase
+    private _completeRepProfileUseCase:CompleteRepProfileUseCase,
+    private _updateCompanyLogoUseCase:UpdateCompanyLogoUseCase
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -42,5 +44,11 @@ export class MedicalRepController {
     const data=req.body as CompleteRepProfileDTO;
     const response=await this._completeRepProfileUseCase.execute(userId,data);
     return res.json({success:true,message:response});
+  }
+  updateCompanyLogo=async(req:Request,res:Response)=>{
+   const {userId}=req.params;
+   const file=req.file ?req.file :null;
+   const response=await this._updateCompanyLogoUseCase.execute(userId,file);
+   return res.json({success:true,data:response});
   }
 }

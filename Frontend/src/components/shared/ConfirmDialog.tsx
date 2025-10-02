@@ -1,4 +1,9 @@
-import { Dialog, DialogContent, DialogHeader, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
 interface ConfirmDialogProps {
@@ -7,6 +12,8 @@ interface ConfirmDialogProps {
   message?: string;
   onConfirm: () => void;
   onCancel: () => void;
+  confirmButtonClassName?: string;
+  cancelButtonClassName?: string;
 }
 
 const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
@@ -15,6 +22,8 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   message = "Are you sure?",
   onConfirm,
   onCancel,
+   confirmButtonClassName,
+  cancelButtonClassName,
 }) => {
   return (
     <Dialog open={open} onOpenChange={onCancel}>
@@ -24,16 +33,26 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
         </DialogHeader>
         <p className="text-sm text-gray-600">{message}</p>
         <DialogFooter className="flex justify-end gap-2 mt-4">
-          <Button variant="outline" onClick={onCancel}>
-            Cancel
-          </Button>
-          <Button onClick={onConfirm} className="bg-[#E8618C] text-white hover:bg-[#f35084]">
+          <Button
+            onClick={onConfirm}
+            className={
+              confirmButtonClassName ??
+              "bg-[#E8618C] text-white hover:bg-[#f35084]"
+            }
+          >
             Confirm
+          </Button>
+
+          <Button
+            variant="outline"
+            onClick={onCancel}
+            className={cancelButtonClassName}
+          >
+            Cancel
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 };
-
 export default ConfirmDialog;

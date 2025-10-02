@@ -57,7 +57,31 @@ export class MedicalRepMapper {
       subscriptionEnd: domain.subscriptionEnd ?? null,
       loginId: domain.loginId,
       maxConnectionsPerDay: domain.maxConnectionsPerDay ?? 0,
-      profileImage:domain.profileImage
+      profileImage:domain.profileImage?? null,  
     };
   }
+
+  static toPartialPersistence(
+  domain: Partial<IMedicalRep>
+): Partial<MedicalRep> {
+  const persistence: Partial<MedicalRep> = {};
+
+  if (domain.name !== undefined) persistence.name = domain.name;
+  if (domain.phone !== undefined) persistence.phone = domain.phone;
+  if (domain.companyName !== undefined) persistence.companyName = domain.companyName;
+  if (domain.companyLogoUrl !== undefined) persistence.companyLogoUrl = domain.companyLogoUrl ?? null;
+  if (domain.employeeId !== undefined) persistence.employeeId = domain.employeeId ?? null;
+  if (domain.departmentId !== undefined) persistence.departmentId = domain.departmentId ?? null;
+  if (domain.about !== undefined) persistence.about = domain.about ?? null;
+  if (domain.subscriptionPlanId !== undefined) persistence.subscriptionPlanId = domain.subscriptionPlanId ?? null;
+  if (domain.subscriptionStatus !== undefined) persistence.subscriptionStatus = domain.subscriptionStatus;
+  if (domain.subscriptionStart !== undefined) persistence.subscriptionStart = domain.subscriptionStart;
+  if (domain.subscriptionEnd !== undefined) persistence.subscriptionEnd = domain.subscriptionEnd;
+  if (domain.maxConnectionsPerDay !== undefined) persistence.maxConnectionsPerDay = domain.maxConnectionsPerDay;
+  if (domain.loginId !== undefined) persistence.loginId = domain.loginId;
+  if (domain.profileImage !== undefined) persistence.profileImage = domain.profileImage;
+
+  return persistence;
+}
+
 }

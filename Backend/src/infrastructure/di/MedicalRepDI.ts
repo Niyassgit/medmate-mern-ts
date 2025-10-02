@@ -7,9 +7,11 @@ import { UserRepository } from "../repositories/UserRepository";
 import { OtpService } from "../services/OtpService";
 import { NotificationService } from "../services/NotificationService";
 import { ProfileImageUpdateUseCase } from "../../application/medicalRep/use-cases/ProfileImageUpdateUseCase";
+import { CompleteRepProfileUseCase } from "../../application/medicalRep/use-cases/CompleteRepProfileUseCase";
+import { UpdateCompanyLogoUseCase} from "../../application/medicalRep/use-cases/UpdateCompanyLogoUseCase";
 
 const medicalRepRepository = new MedicalRepRepository();
-const userLoginRepository = new UserRepository();
+const userRepository = new UserRepository();
 const bcryptServices = new BcryptServices();
 const otpService = new OtpService();
 const notificationService = new NotificationService();
@@ -17,16 +19,20 @@ const notificationService = new NotificationService();
 const createMedicalRepUseCase = new CreateMedicalRepUseCase(
   medicalRepRepository,
   bcryptServices,
-  userLoginRepository,
+  userRepository,
   otpService,
   notificationService
 );
 
 const getRepProfileByIdUseCase=new GetRepProfileByIdUseCase(medicalRepRepository);
 const profileUpdateImageUseCase=new ProfileImageUpdateUseCase(medicalRepRepository);
+const completRepProfileUseCase=new CompleteRepProfileUseCase(userRepository,medicalRepRepository);
+const uploadCompanyLogo=new UpdateCompanyLogoUseCase(medicalRepRepository);
 
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
   getRepProfileByIdUseCase,
-  profileUpdateImageUseCase
+  profileUpdateImageUseCase,
+  completRepProfileUseCase,
+  uploadCompanyLogo
 );

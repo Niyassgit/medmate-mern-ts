@@ -15,6 +15,9 @@ export class RepDetailsMapper{
              maxConnectionsPerDay:rep.maxConnectionsPerDay ?? null,
              subscriptionStatus:rep.subscriptionStatus ?? null,
              profileImage:rep.profileImage ?? null,
+             about:rep.about ?? null,
           }
         }
 }
+
+

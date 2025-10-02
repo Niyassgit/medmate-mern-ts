@@ -37,10 +37,16 @@ export class MedicalRepRoutes {
       medicalRepController.updateProfileImage
     );
     this.router.post(
-      "/profile/complete/:userID",
+      "/profile/complete/:userId",
       Authenticate,
       AuthorizeRole([Role.MEDICAL_REP]),
       medicalRepController.completeProfile
+    );
+    this.router.post(
+      "/profile/complete/upload-logo/:userId",
+      Authenticate,
+      AuthorizeRole([Role.MEDICAL_REP]),
+      upload.single("companyLogoUrl"),medicalRepController.updateCompanyLogo
     );
   }
 }

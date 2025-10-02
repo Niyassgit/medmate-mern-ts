@@ -1,4 +1,4 @@
-import AdminLayout from "@/features/superAdmin/pages/AdminLayout";
+import AdminLayout from "@/features/superAdmin/components/AdminLayout";
 import AdminDashboard from "@/features/superAdmin/pages/AdminDashboard";
 import RepsList from "@/features/superAdmin/pages/RepsList";
 import DoctorsList from "@/features/superAdmin/pages/DoctorsList";
