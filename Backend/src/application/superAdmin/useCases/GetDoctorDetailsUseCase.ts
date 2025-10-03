@@ -13,6 +13,7 @@ export class GetDoctorDetailsUseCase{
 
       const user=await this._doctorRepository.getDoctorById(userId);
       if(!user) throw new NotFoundError("User not found");
-      return DoctorDetailsMapper.toDoctorDetails(user)
+      return DoctorDetailsMapper.toDoctorDetails(user);
+
     }
 }     

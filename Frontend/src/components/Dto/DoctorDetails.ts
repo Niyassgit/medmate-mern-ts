@@ -12,6 +12,7 @@ export interface DoctorDetails {
   registrationId: string;
   opHours: string | null;
   about: string;
+  licenseImageUrl:string | null;
 
   educations?: Education[];
   certificates?: Certificate[];

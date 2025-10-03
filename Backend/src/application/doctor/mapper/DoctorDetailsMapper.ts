@@ -21,6 +21,7 @@ export class DoctorDetailsMapper {
       registrationId: doctor.registrationId ?? "",
       opHours: doctor.opHours ?? null,
       about: doctor.about ?? null,
+      licenseImageUrl:doctor.licenseImageUrl ?? null,
       educations: doctor.educations ?? [],
       certificates: doctor.certificates ?? [],
     };

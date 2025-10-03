@@ -18,6 +18,7 @@ export interface DoctorDetailsDTO {
   registrationId: string;
   opHours?: string | null;
   about?: string | null;
+  licenseImageUrl?: string | null;
 
   educations?: EducationDTO[];
   certificates?: CertificateDTO[];

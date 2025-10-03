@@ -6,7 +6,6 @@ import { Authenticate } from "../middlewares/Authenticate";
 import { AuthorizeRole } from "../middlewares/AuthorizeRole";
 import { Role } from "../../../domain/common/entities/IUser";
 
-
 export class SuperAdminRoutes {
   public router: Router;
 
@@ -50,8 +49,17 @@ export class SuperAdminRoutes {
       AuthorizeRole(["SUPER_ADMIN"]),
       superAdminController.getSuperAdminByEmail
     );
-      this.router.get("/doctors/:userId",Authenticate,AuthorizeRole([Role.SUPER_ADMIN]),superAdminController.doctorDetails);
-      this.router.get("/reps/:userId",Authenticate,AuthorizeRole([Role.SUPER_ADMIN]),superAdminController.repDetails)
+    this.router.get(
+      "/doctors/:userId",
+      Authenticate,
+      AuthorizeRole([Role.SUPER_ADMIN]),
+      superAdminController.doctorDetails
+    );
+    this.router.get(
+      "/reps/:userId",
+      Authenticate,
+      AuthorizeRole([Role.SUPER_ADMIN]),
+      superAdminController.repDetails
+    );
   }
-
 }

@@ -73,13 +73,13 @@ export class SuperAdminController {
   };
   doctorDetails=async (req:Request,res:Response)=>{
     const {userId}=req.params;
-    console.log("doctor id for admin page :",userId);
     const user=await this._getDoctorDetails.execute(userId);
     return res.json({success:true,data:user})
   }
   repDetails=async (req:Request,res:Response)=>{
     const {userId}=req.params;
     const user=await this._getMedicalRepDetails.execute(userId);
+    console.log("medical details:",user);
     return res.json({success:true,data:user})
   }
 }

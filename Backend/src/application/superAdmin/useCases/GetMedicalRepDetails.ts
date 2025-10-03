@@ -13,6 +13,8 @@ export class GetMedicalRepDetailsUseCase{
 
         const user=await this._medicalRepRepository.getMedicalRepById(userId);
         if(!user) throw new NotFoundError("User not found");
-        return RepDetailsMapper.toMedicalRepDetails(user);
+        const userDetails=RepDetailsMapper.toMedicalRepDetails(user);
+        console.log("user Details:",userDetails);
+        return userDetails;
     }
 }
