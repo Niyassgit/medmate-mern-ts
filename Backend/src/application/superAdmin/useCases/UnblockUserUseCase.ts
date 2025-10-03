@@ -1,4 +1,4 @@
-import { IUserRepository } from "../../../domain/common/repositories/IUserLoginRepository";
+import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 
 export class UnBlockUserUseCase {
   constructor(private _userLoginRepositories: IUserRepository) {}

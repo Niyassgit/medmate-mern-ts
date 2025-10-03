@@ -9,7 +9,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import CarouselDots from "@/components/CarouselDots";
+import CarouselDots from "@/components/shared/CarouselDots";
 import { useEffect, useState } from "react";
 import DoctorsSection from "./DoctorsSection";
 import NetworkSection from "./NetworkSection";

@@ -10,6 +10,8 @@ import { MedicalRepRepository } from "../repositories/MedicalRepRepository";
 import { GetAllRepsUseCase } from "../../application/superAdmin/useCases/GetAllRepsUseCase";
 import { BlockUserUseCase } from "../../application/superAdmin/useCases/BlockUserUseCase";
 import { UnBlockUserUseCase } from "../../application/superAdmin/useCases/UnblockUserUseCase";
+import { GetDoctorDetailsUseCase } from "../../application/superAdmin/useCases/GetDoctorDetailsUseCase";
+import { GetMedicalRepDetailsUseCase } from "../../application/superAdmin/useCases/GetMedicalRepDetails";
 
 const superAdminRepositories = new SuperAdminRepository();
 const userLoginRepository = new UserRepository();
@@ -29,6 +31,8 @@ const getAllDoctorsUseCase = new GetAllDoctorsUseCase(doctorRepository);
 const getAllRepUseCase = new GetAllRepsUseCase(medicalRepRepository);
 const blockUserUseCase = new BlockUserUseCase(userLoginRepository);
 const unblockUserUseCase = new UnBlockUserUseCase(userLoginRepository);
+const doctorDetails = new GetDoctorDetailsUseCase(doctorRepository);
+const medicalRepDetails = new GetMedicalRepDetailsUseCase(medicalRepRepository);
 
 export const superAdminController = new SuperAdminController(
   createSuperAdminUseCase,
@@ -36,5 +40,7 @@ export const superAdminController = new SuperAdminController(
   getAllDoctorsUseCase,
   getAllRepUseCase,
   blockUserUseCase,
-  unblockUserUseCase
+  unblockUserUseCase,
+  doctorDetails,
+  medicalRepDetails
 );

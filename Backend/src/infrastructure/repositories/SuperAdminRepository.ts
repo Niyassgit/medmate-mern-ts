@@ -1,6 +1,6 @@
 import { ISuperAdminRepository } from "../../domain/superAdmin/repositories/ISuperAdminRepository";
 import { ISuperAdmin } from "../../domain/superAdmin/entities/ISuperAdmin";
-import { prisma } from "../database/PrismaClient";
+import { prisma } from "../database/prisma";
 
 export class SuperAdminRepository implements ISuperAdminRepository {
   async createSuperAdmin(

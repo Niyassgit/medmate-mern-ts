@@ -1,6 +1,6 @@
 import { ISuperAdminRepository } from "../../../domain/superAdmin/repositories/ISuperAdminRepository";
 import { IBcryptService } from "../../../domain/common/services/IHashService";
-import { IUserRepository } from "../../../domain/common/repositories/IUserLoginRepository";
+import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 import { RegisterSuperAdminDTO } from "../dto/RegisterSuperAdminDTO";
 import { Role } from "../../../domain/common/entities/IUser";
 import { ConflictError, BadRequestError } from "../../../domain/common/errors";

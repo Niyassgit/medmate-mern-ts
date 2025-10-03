@@ -1,4 +1,4 @@
-import ExampleForm from "@/components/example-form";
+import ExampleForm from "@/components/shared/example-form";
 import { Link } from "react-router-dom";
 import { loginUser } from "../api";
 import { Role } from "@/types/Role";
@@ -14,11 +14,11 @@ const LoginPage = () => {
   const handleLogin = async (values: { email: string; password: string }) => {
     try {
       const { data } = await loginUser(values);
-      dispatch(login({token:data.accessToken,role:data.user.role}));
+      dispatch(login({token:data.accessToken,user:data.user}));
       
       toast.success("User login successfully");
       if (data.user.role === Role.DOCTOR) {
-         navigate("/doctor/dashboard", { replace: true });
+         navigate("/doctor/feed", { replace: true });
       } else if (data.user.role === Role.MEDICAL_REP) {
          navigate("/rep/dashboard", { replace: true });
       } else if (data.user.role === Role.SUPER_ADMIN) {
@@ -27,7 +27,6 @@ const LoginPage = () => {
          navigate("/", { replace: true });
       }
     } catch (error: any) {
-      console.log("error has been called",error.response?.data?.message);
       toast.error(error.response?.data?.message|| "Login failed")
     }
   };
@@ -68,7 +67,7 @@ const LoginPage = () => {
             </Link>
             <p className="text-sm text-gray-600">
               Don't have an account?{" "}
-              <Link to="/signup" className="text-[#3fa8e9] hover:underline">
+              <Link to="/register/doctor" className="text-[#3fa8e9] hover:underline">
                 Sign up
               </Link>
             </p>

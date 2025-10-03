@@ -1,5 +1,5 @@
 import { BadRequestError, NotFoundError } from "../../../domain/common/errors";
-import { IUserRepository } from "../../../domain/common/repositories/IUserLoginRepository";
+import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 import { OtpPurpose } from "../../../domain/common/types/OtpPurpose";
 import { IBcryptService } from "../../../domain/common/services/IHashService";
 import { IOtpService } from "../../../domain/common/services/IOtpService";

@@ -1,3 +1,4 @@
+import { IMedicalRepWithUser } from "../entities/IMedicalRepWithUser";
 import { IMedicalRep } from "../entities/IMedicalRep";
 import { IRepListItem } from "../entities/IRepListItem";
 
@@ -5,11 +6,15 @@ export interface IMedicalRepRepository {
   createMedicalRep(
     data: Omit<IMedicalRep, "id" | "createdAt" | "updatedAt">
   ): Promise<IMedicalRep>;
-  getMedicalRepById(id: string): Promise<IMedicalRep | null>;
+  getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null>;
   getMedicalRepByEmail(email: string): Promise<IMedicalRep | null>;
   getAllMedicalReps(
     page: number,
     limit: number,
     search:string,
   ): Promise<{ reps: IRepListItem[]; total: number }>;
+  getMedicalRepByUserId(id:string):Promise<IMedicalRepWithUser | null>;
+  updateProfileImage(id:string,imageUrl:string):Promise<void>;
+  completeProfile(userId:string,data:Partial<IMedicalRep>):Promise<IMedicalRep | null>;
+  updateCompanyLogo(userId:string,LogoUrl:string):Promise<string>;
 }

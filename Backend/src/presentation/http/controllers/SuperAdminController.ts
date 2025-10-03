@@ -6,7 +6,8 @@ import { GetAllDoctorsUseCase } from "../../../application/superAdmin/useCases/G
 import { GetAllRepsUseCase } from "../../../application/superAdmin/useCases/GetAllRepsUseCase";
 import { BlockUserUseCase } from "../../../application/superAdmin/useCases/BlockUserUseCase";
 import { UnBlockUserUseCase } from "../../../application/superAdmin/useCases/UnblockUserUseCase";
-import { success } from "zod";
+import { GetDoctorDetailsUseCase } from "../../../application/superAdmin/useCases/GetDoctorDetailsUseCase";
+import { GetMedicalRepDetailsUseCase } from "../../../application/superAdmin/useCases/GetMedicalRepDetails";
 
 export class SuperAdminController {
   constructor(
@@ -15,7 +16,9 @@ export class SuperAdminController {
     private _getAllDoctorsUseCase: GetAllDoctorsUseCase,
     private _getAllRepsUseCase: GetAllRepsUseCase,
     private _blockUserUseCase: BlockUserUseCase,
-    private _unblockUserUseCase: UnBlockUserUseCase
+    private _unblockUserUseCase: UnBlockUserUseCase,
+    private _getDoctorDetails:GetDoctorDetailsUseCase,
+    private _getMedicalRepDetails:GetMedicalRepDetailsUseCase
   ) {}
 
   createSuperAdmin = async (req: Request, res: Response) => {
@@ -25,7 +28,7 @@ export class SuperAdminController {
     res.status(201).json({ success: true, data: SuperAdmin });
   };
 
-  getSuperAdminByEmial = async (req: Request, res: Response) => {
+  getSuperAdminByEmail = async (req: Request, res: Response) => {
     const dto = req.body as RegisterSuperAdminDTO;
     const superAdmin = await this._getSuperAdminByEmailIdUseCase.execute(
       dto.email
@@ -43,7 +46,7 @@ export class SuperAdminController {
 
   getAllReps = async (req: Request, res: Response) => {
     const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 10;
+    const limit = parseInt(req.query.limit as string) || 8;
     const search= req.query.search as string || "";
     const reps = await this._getAllRepsUseCase.execute(page, limit,search);
     res.json({ success: true, data: reps, page, limit });
@@ -68,4 +71,15 @@ export class SuperAdminController {
       updatedUser,
     });
   };
+  doctorDetails=async (req:Request,res:Response)=>{
+    const {userId}=req.params;
+    const user=await this._getDoctorDetails.execute(userId);
+    return res.json({success:true,data:user})
+  }
+  repDetails=async (req:Request,res:Response)=>{
+    const {userId}=req.params;
+    const user=await this._getMedicalRepDetails.execute(userId);
+    console.log("medical details:",user);
+    return res.json({success:true,data:user})
+  }
 }

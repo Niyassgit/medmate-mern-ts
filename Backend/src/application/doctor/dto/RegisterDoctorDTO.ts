@@ -8,6 +8,7 @@ export interface RegisterDoctorDTO {
   hospital: string;
   registrationId: string;
   licenseImageUrl: string | null;
-  opHours: string;
+  opHours: string | null;
   hasOwnClinic?: boolean | null;
+  about?:string |null
 }

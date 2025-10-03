@@ -1,7 +1,9 @@
+
 export interface User{
     id:string
     email:string,
-    role:"DOCTOR"|"MEDICAL_REP" |"SUPER_ADMIN"
+    role:"DOCTOR"|"MEDICAL_REP" |"SUPER_ADMIN",
+    image?:string
 }
 
 export interface AuthResponse{
@@ -11,7 +13,8 @@ export interface AuthResponse{
 }
 
 export interface GooglePrecheckBody{
-    exists:boolean
+    exists:boolean,
+    user:User
 }
 export interface RegisterResponseBody{
     success:boolean,

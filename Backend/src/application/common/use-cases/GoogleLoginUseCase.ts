@@ -1,4 +1,4 @@
-import { IUserRepository } from "../../../domain/common/repositories/IUserLoginRepository";
+import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 import { IGoogleAuthService } from "../../../domain/common/services/IGoogleAuthService";
 import { GoogleLoginDTO } from "../dto/GoogleLoginDTO";
 import { IJWtService } from "../../../domain/common/services/IJWTService";

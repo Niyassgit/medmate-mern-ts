@@ -1,10 +1,12 @@
 import { Router } from "express";
 import { doctorController } from "../../../infrastructure/di/DoctorDI";
 import { ValidateSchema } from "../middlewares/ValidateSchema";
-import { upload } from "../../../infrastructure/storage/multer/MulterConfig";
-import { RegisterDoctorSchema } from "../validators/DoctorSchemaValidator";
+import { upload } from "../../../infrastructure/storage/multer/MulterConfigFile";
+import { DoctorRegisterSchema } from "../validators/DoctorRegisterSchemaValidator";
 import { Authenticate } from "../middlewares/Authenticate";
 import { AuthorizeRole } from "../middlewares/AuthorizeRole";
+import { Role } from "../../../domain/common/entities/IUser";
+import { uploadCloud } from "../../../infrastructure/storage/multer/MulterConfigCloudinary";
 
 export class DoctorRoutes {
   public router: Router;
@@ -18,14 +20,27 @@ export class DoctorRoutes {
     this.router.post(
       "/signup",
       upload.single("licenseImageUrl"),
-      ValidateSchema(RegisterDoctorSchema),
+      ValidateSchema(DoctorRegisterSchema),
       doctorController.createDoctor
     );
     this.router.get(
-      "/:id",
+      "/profile/:userId",
       Authenticate,
-      AuthorizeRole(["DOCTOR"]),
-      doctorController.getDoctorProfileById
+      AuthorizeRole([Role.DOCTOR]),
+      doctorController.getDoctorprofileById
+    );
+    this.router.post(
+      "/profile-image/:userId",
+      Authenticate,
+      AuthorizeRole([Role.DOCTOR]),
+      uploadCloud.single("profileImage"),
+      doctorController.updateProfileImage
+    );
+    this.router.post(
+      "/profile/complete/:userId",
+      Authenticate,
+      AuthorizeRole([Role.DOCTOR]),
+      doctorController.completeProfile
     );
   }
 }

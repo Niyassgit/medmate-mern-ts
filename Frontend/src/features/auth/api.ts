@@ -1,6 +1,8 @@
 import { api } from "@/services/api";
 import { AuthResponse,ForgotPasswordResponse,GooglePrecheckBody, verifyResponse ,RegisterResponseBody } from "./types";
-import { AuthEndpoints , DoctorEndpoints ,RepEndpoints} from "@/services/endpoints";
+import { AuthEndpoints } from "@/services/endpoints/AuthEndpoints";
+import { DoctorEndpoints } from "@/services/endpoints/DoctorEndpoints";
+import { RepEndpoints } from "@/services/endpoints/RepEndpoints";
 
 interface loginPayload {
   email: string;

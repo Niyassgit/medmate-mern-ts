@@ -1,0 +1,297 @@
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  CompleteRepProfileSchema,
+  CompleteRepProfileDTO,
+} from "../schemas/CompleteRepProfileDTO";
+import { getProfileRep, completeProfile, uploadCompanyLogo } from "../api";
+import { useEffect, useState } from "react";
+import { DynamicList } from "@/features/doctor/components/DynamicList";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import toast from "react-hot-toast";
+import ConfirmDialog from "@/components/shared/ConfirmDialog";
+
+export default function CompleteRepProfilePage() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [repId, setRepId] = useState("");
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [formData, setFormData] = useState<CompleteRepProfileDTO | null>(null);
+
+  const form = useForm<CompleteRepProfileDTO>({
+    resolver: zodResolver(CompleteRepProfileSchema),
+    defaultValues: {
+      name: "",
+      phone: "",
+      companyName: "",
+      employeeId: "",
+      about: "",
+      companyLogoUrl: "",
+      educations: [{ degree: "", institute: "", year: null }],
+      certificates: [{ name: "", issuedBy: "", year: null }],
+    },
+  });
+
+  useEffect(() => {
+    async function fetchProfile() {
+      try {
+        const response = await getProfileRep(id!);
+        const data = response.data;
+        setRepId(data.id);
+        form.reset({
+          name: data.name ?? "",
+          phone: data.phone ?? "",
+          companyName: data.companyName ?? "",
+          employeeId: data.employeeId ?? "",
+          about: data.about ?? "",
+          companyLogoUrl: data.companyLogoUrl ?? "",
+          educations:
+            data.educations?.length > 0
+              ? data.educations
+              : [{ degree: "", institute: "", year: null }],
+          certificates:
+            data.certificates?.length > 0
+              ? data.certificates
+              : [{ name: "", issuedBy: "", year: null }],
+        });
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to fetch profile");
+      }
+    }
+
+    if (id) {
+      fetchProfile();
+    }
+  }, [id, form]);
+
+  const confirmProfileUpdate = async () => {
+    if (!formData) return;
+    try {
+      console.log("formData:", formData);
+      await completeProfile(id!, formData);
+      toast.success("Profile saved successfully");
+      navigate("/rep/profile");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to save profile");
+    } finally {
+      setOpenConfirm(false);
+    }
+  };
+
+  const handleFormSubmit = (values: CompleteRepProfileDTO) => {
+    setFormData(values);
+    setOpenConfirm(true);
+  };
+
+  return (
+    <div className="max-w-3xl mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-6">Complete Your Profile</h1>
+
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(handleFormSubmit)}
+          className="space-y-4"
+        >
+          {/* Name */}
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <Input {...field} placeholder="Enter your name" />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Phone */}
+          <FormField
+            control={form.control}
+            name="phone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Phone</FormLabel>
+                <Input {...field} placeholder="Enter phone number" />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Company Name */}
+          <FormField
+            control={form.control}
+            name="companyName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Company Name</FormLabel>
+                <Input {...field} placeholder="Enter company name" />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Company Logo */}
+          <FormField
+            control={form.control}
+            name="companyLogoUrl"
+            render={() => (
+              <FormItem>
+                <FormLabel>Company Logo</FormLabel>
+
+                <div className="flex items-center gap-4">
+                  {/* Logo Preview */}
+                  {form.watch("companyLogoUrl") ? (
+                    <img
+                      src={`${import.meta.env.VITE_API_IMG}${form.watch(
+                        "companyLogoUrl"
+                      )}`}
+                      alt="Company Logo"
+                      className="h-20 w-20 object-cover rounded-md border"
+                    />
+                  ) : (
+                    <div className="h-20 w-20 bg-gray-200 flex items-center justify-center rounded-md border">
+                      <span className="text-gray-500 text-sm">No Logo</span>
+                    </div>
+                  )}
+
+                  {/* Hidden File Input */}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    id="companyLogoInput"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+
+                      uploadCompanyLogo(repId!, file)
+                        .then((res) => {
+                          console.log("logo update data:", res);
+
+                          // Correct path to LogoUrl and message
+                          const logoPath = res.data.data.LogoUrl;
+                          const message = res.data.data.message;
+
+                          // Update form value so preview changes
+                          form.setValue("companyLogoUrl", logoPath);
+
+                          toast.success(message || "Company logo updated");
+                        })
+                        .catch(() => toast.error("Failed to upload logo"));
+                    }}
+                  />
+
+                  {/* Styled Button */}
+                  <label
+                    htmlFor="companyLogoInput"
+                    className="cursor-pointer px-4 py-2 bg-gray-400 hover:bg-gray-600 text-white rounded-md"
+                  >
+                    Change Logo
+                  </label>
+                </div>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Employee ID */}
+          <FormField
+            control={form.control}
+            name="employeeId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Employee ID</FormLabel>
+                <Input {...field} placeholder="Enter employee ID" />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* About */}
+          <FormField
+            control={form.control}
+            name="about"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>About</FormLabel>
+                <Textarea
+                  {...field}
+                  value={field.value ?? ""}
+                  placeholder="Write about yourself"
+                />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <DynamicList
+            name="educations"
+            control={form.control}
+            fields={[
+              { label: "Degree", name: "degree" },
+              { label: "Institute", name: "institute" },
+              {
+                label: "Year",
+                name: "year",
+                type: "number",
+                placeholder: "YYYY",
+              },
+            ]}
+          />
+
+          <DynamicList
+            name="certificates"
+            control={form.control}
+            fields={[
+              { label: "Certificate", name: "name" },
+              { label: "Issued By", name: "issuedBy" },
+              {
+                label: "Year",
+                name: "year",
+                type: "number",
+                placeholder: "YYYY",
+              },
+            ]}
+          />
+
+          {/* Submit */}
+          <div className="flex justify-end gap-2 mt-4">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => navigate(-1)}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" className="bg-gray-400 hover:bg-gray-600">
+              Save
+            </Button>
+          </div>
+        </form>
+      </Form>
+
+      <ConfirmDialog
+        open={openConfirm}
+        title="Confirm Save"
+        message="Are you sure you want to save your profile?"
+        onConfirm={confirmProfileUpdate}
+        onCancel={() => setOpenConfirm(false)}
+        confirmButtonClassName="bg-gray-400 text-white hover:bg-gray-600"
+      />
+    </div>
+  );
+}

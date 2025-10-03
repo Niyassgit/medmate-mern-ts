@@ -1,11 +1,12 @@
 import { Router } from "express";
 import { superAdminController } from "../../../infrastructure/di/SuperAdminDI";
 import { ValidateSchema } from "../middlewares/ValidateSchema";
-import { SuperAdminRegisterSchema } from "../validators/SuperAdminSchemaValidator";
+import { SuperAdminRegisterSchema } from "../validators/SuperAdminRegisterSchema";
 import { Authenticate } from "../middlewares/Authenticate";
 import { AuthorizeRole } from "../middlewares/AuthorizeRole";
+import { Role } from "../../../domain/common/entities/IUser";
 
-export class superAdminRoutes {
+export class SuperAdminRoutes {
   public router: Router;
 
   constructor() {
@@ -46,7 +47,19 @@ export class superAdminRoutes {
       "/:id",
       Authenticate,
       AuthorizeRole(["SUPER_ADMIN"]),
-      superAdminController.getSuperAdminByEmial
+      superAdminController.getSuperAdminByEmail
+    );
+    this.router.get(
+      "/doctors/:userId",
+      Authenticate,
+      AuthorizeRole([Role.SUPER_ADMIN]),
+      superAdminController.doctorDetails
+    );
+    this.router.get(
+      "/reps/:userId",
+      Authenticate,
+      AuthorizeRole([Role.SUPER_ADMIN]),
+      superAdminController.repDetails
     );
   }
 }

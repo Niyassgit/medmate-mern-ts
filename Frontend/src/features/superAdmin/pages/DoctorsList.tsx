@@ -1,30 +1,17 @@
 import { Button } from "@/components/ui/button";
-import AdminNavbar from "@/components/navbar/AdminNavbar";
 import useFetchList from "@/hooks/useFetchList";
 import { getAllDoctors, blockUser, unblockUser } from "../api/superAdminApi";
 import { useCallback, useState } from "react";
-import AppPagination from "@/components/AppPagination";
+import AppPagination from "@/components/shared/AppPagination";
 import SearchInput from "../components/SearchInput";
+import toast from "react-hot-toast";
+import { Doctor} from "../Schemas/Doctor";
+import { DoctorResponse} from "../Schemas/DoctorResponse";
+import { useNavigate } from "react-router-dom";
 
-interface Doctor {
-  id: string;
-  name: string;
-  phone: string;
-  hospital: string;
-  email: string;
-  isBlocked: boolean;
-  createdAt: string;
-  loginId: string;
-}
-
-type DoctorResponse = {
-  doctors: Doctor[];
-  total: number;
-  page: number;
-  limit: number;
-};
 
 const DoctorsList = () => {
+  const navigate=useNavigate();
   const [page, setPage] = useState(1);
   const limit = 8;
   const [search, setSearch] = useState("");
@@ -48,9 +35,11 @@ const DoctorsList = () => {
       if (doctor.isBlocked) {
         const res = await unblockUser(doctor.loginId);
         userUpdated = res?.updatedUser;
+        toast.success(res.message)
       } else {
         const res = await blockUser(doctor.loginId);
         userUpdated = res?.updatedUser;
+        toast.success(res.message);
       }
 
       setData((prev) =>
@@ -73,9 +62,17 @@ const DoctorsList = () => {
     }
   };
 
+  const handleDetailPage= async (id:string)=>{
+         if(id){
+           navigate(`/admin/doctors/${id}`);
+         }else{
+          toast.error("Invalid request");
+         }
+         
+  }
+
   return (
     <>
-      <AdminNavbar />
 
       <div className="min-h-screen bg-gray-50 p-4">
         <span className="font-bold text-2xl text-gray-600">
@@ -141,7 +138,7 @@ const DoctorsList = () => {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => alert(`Viewing ${doctor.name}`)}
+                        onClick={() => handleDetailPage(doctor.id)}
                       >
                         View
                       </Button>

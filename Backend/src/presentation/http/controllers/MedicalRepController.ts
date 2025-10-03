@@ -1,14 +1,20 @@
 import { Request, Response } from "express";
 import { CreateMedicalRepUseCase } from "../../../application/medicalRep/auth/CreateMedicalRepUseCase";
 import { RegisterMedicalRepDTO } from "../../../application/medicalRep/dto/RegisterMedicalRepDTO";
-import { GetMedicalRepByIdUseCase } from "../../../application/medicalRep/auth/GetMedicalRepByIdUseCase";
-import { GetMedicalRepByEmailUseCase } from "../../../application/medicalRep/auth/GetMedicalRepByEmailUseCase";
+import { GetRepProfileByIdUseCase } from "../../../application/medicalRep/use-cases/GetRepProfileByIdUseCase";
+import { ProfileImageUpdateUseCase } from "../../../application/medicalRep/use-cases/ProfileImageUpdateUseCase";
+import { CompleteRepProfileDTO } from "../../../application/medicalRep/dto/CompleteRepProfileDTO";
+import { CompleteRepProfileUseCase } from "../../../application/medicalRep/use-cases/CompleteRepProfileUseCase";
+import { UpdateCompanyLogoUseCase } from "../../../application/medicalRep/use-cases/UpdateCompanyLogoUseCase";
+
 
 export class MedicalRepController {
   constructor(
     private _createMedicalRepUseCase: CreateMedicalRepUseCase,
-    private _getMedicalRepByIdUseCase: GetMedicalRepByIdUseCase,
-    private _getMedicalRepByEmailUseCase: GetMedicalRepByEmailUseCase
+    private _getUserProfile:GetRepProfileByIdUseCase,
+    private _ProfileImageUpdateUseCase:ProfileImageUpdateUseCase,
+    private _completeRepProfileUseCase:CompleteRepProfileUseCase,
+    private _updateCompanyLogoUseCase:UpdateCompanyLogoUseCase
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -22,15 +28,28 @@ export class MedicalRepController {
     const response = await this._createMedicalRepUseCase.execute(data);
     res.status(201).json({ success: true, ...response });
   };
-
-  getMedicalRepByProfileId = async (req: Request, res: Response) => {
-    const rep = await this._getMedicalRepByIdUseCase.execute(req.params.id);
-    res.status(200).json({ success: true, data: rep });
-  };
-
-  getMedicalRepByEmail = async (req: Request, res: Response) => {
-    const { email } = req.params;
-    const rep = await this._getMedicalRepByEmailUseCase.execute(email);
-    res.status(200).json({ success: true, data: rep });
-  };
+  getRepProfileById=async(req:Request,res:Response)=>{
+    const {userId}=req.params;
+    const response=await this._getUserProfile.execute(userId);
+    return res.json({success:true,data:response});
+  }
+  updateProfileImage=async(req:Request,res:Response)=>{
+    const {userId}=req.params;
+    const file=req.file ? req.file:null;
+    const response=await this._ProfileImageUpdateUseCase.execute(userId,file);
+    return res.json({success:true,message:response});
+  }
+  completeProfile=async(req:Request,res:Response)=>{
+    const {userId}=req.params;
+    const data=req.body as CompleteRepProfileDTO;
+    console.log("data from the front end both user id and form data:",userId,data);
+    const response=await this._completeRepProfileUseCase.execute(userId,data);
+    return res.json({success:true,message:response});
+  }
+  updateCompanyLogo=async(req:Request,res:Response)=>{
+   const {userId}=req.params;
+   const file=req.file ?req.file :null;
+   const response=await this._updateCompanyLogoUseCase.execute(userId,file);
+   return res.json({success:true,data:response});
+  }
 }

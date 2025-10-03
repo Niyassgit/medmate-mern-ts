@@ -1,9 +1,12 @@
 import { IDoctor } from "../../domain/doctor/entities/IDoctor";
 import { IDoctorListItem } from "../../domain/doctor/entities/IDoctorListItem";
-import { Doctor, User } from "@prisma/client";
+import { Doctor, User, Education, Certificate } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 export class DoctorMapper {
-  static toDomain(doctor: Doctor): IDoctor {
+  static toDomain(
+    doctor: Doctor & { educations?: Education[]; certificates?: Certificate[] }
+  ): IDoctor {
     return {
       id: doctor.id,
       name: doctor.name,
@@ -19,45 +22,133 @@ export class DoctorMapper {
       licenseImageUrl: doctor.licenseImageUrl,
       opHours: doctor.opHours ?? null,
       about: doctor.about ?? null,
-      educations: doctor.educations ?? [],
-      certificates: doctor.certificates ?? [],
       createdAt: doctor.createdAt,
       updatedAt: doctor.updatedAt,
+      profileImage: doctor.profileImage,
+
+      educations: doctor.educations?.map((edu) => ({
+        id: edu.id,
+        degree: edu.degree,
+        institute: edu.institute,
+        year: edu.year ?? null,
+      })),
+
+      certificates: doctor.certificates?.map((cert) => ({
+        id: cert.id,
+        name: cert.name,
+        issuedBy: cert.issuedBy ?? null,
+        year: cert.year ?? null,
+      })),
     };
   }
 
-  static toListItem(doctor: Doctor & { login: User | null }): IDoctorListItem {
+  static toListItem(doctor: Doctor & { user: User | null }): IDoctorListItem {
     return {
       id: doctor.id,
       name: doctor.name,
-      email: doctor.login?.email ?? null,
+      email: doctor.user?.email ?? null,
       phone: doctor.phone,
-      isBlocked: doctor.login?.isBlocked ?? null,
-      createdAt: doctor.login?.createdAt ?? null,
+      isBlocked: doctor.user?.isBlocked ?? null,
+      createdAt: doctor.user?.createdAt ?? null,
       hospital: doctor.hospital,
-      loginId: doctor.login?.id ?? null,
+      loginId: doctor.user?.id ?? null,
     };
   }
 
   static toPersistance(
     domain: Omit<IDoctor, "id" | "createdAt" | "updatedAt">
-  ): Omit<Doctor, "id" | "createdAt" | "updatedAt"> {
+  ): Prisma.DoctorCreateInput {
     return {
       name: domain.name,
       phone: domain.phone,
-      departmentId: domain.departmentId ?? null,
       experienceYears: domain.experienceYears ?? null,
       hasOwnClinic: domain.hasOwnClinic ?? null,
       doctorClass: domain.doctorClass ?? null,
-      territoryId: domain.territoryId ?? null,
-      loginId: domain.loginId ?? null,
       registrationId: domain.registrationId,
       hospital: domain.hospital,
       licenseImageUrl: domain.licenseImageUrl,
       opHours: domain.opHours ?? null,
       about: domain.about ?? null,
-      educations: domain.educations ?? [],
-      certificates: domain.certificates ?? [],
+      profileImage: domain.profileImage ?? null,
+      user: domain.loginId ? { connect: { id: domain.loginId } } : undefined,
+
+      department: domain.departmentId
+        ? { connect: { id: domain.departmentId } }
+        : undefined,
+
+      territory: domain.territoryId
+        ? { connect: { id: domain.territoryId } }
+        : undefined,
+
+      educations: {
+        create: domain.educations?.map((edu) => ({
+          degree: edu.degree,
+          institute: edu.institute,
+          year: edu.year ?? null,
+        })),
+      },
+      certificates: {
+        create: domain.certificates?.map((cert) => ({
+          name: cert.name,
+          issuedBy: cert.issuedBy ?? null,
+          year: cert.year ?? null,
+        })),
+      },
     };
   }
+
+ static toPartialPersistence(domain: Partial<IDoctor>): Prisma.DoctorUpdateInput {
+  const data: Prisma.DoctorUpdateInput = {};
+
+  // simple fields
+  if (domain.name !== undefined) data.name = domain.name;
+  if (domain.phone !== undefined) data.phone = domain.phone;
+  if (domain.hospital !== undefined) data.hospital = domain.hospital;
+  if (domain.registrationId !== undefined) data.registrationId = domain.registrationId;
+  if (domain.licenseImageUrl !== undefined) data.licenseImageUrl = domain.licenseImageUrl;
+  if (domain.opHours !== undefined) data.opHours = domain.opHours;
+  if (domain.about !== undefined) data.about = domain.about;
+  if (domain.profileImage !== undefined) data.profileImage = domain.profileImage;
+  if (domain.experienceYears !== undefined) data.experienceYears = domain.experienceYears;
+  if (domain.hasOwnClinic !== undefined) data.hasOwnClinic = domain.hasOwnClinic;
+  if (domain.doctorClass !== undefined) data.doctorClass = domain.doctorClass;
+
+  // relations
+  if (domain.departmentId !== undefined) {
+    data.department = domain.departmentId
+      ? { connect: { id: domain.departmentId } }
+      : { disconnect: true };
+  }
+  if (domain.territoryId !== undefined) {
+    data.territory = domain.territoryId
+      ? { connect: { id: domain.territoryId } }
+      : { disconnect: true };
+  }
+
+  // nested relations
+  if (domain.educations) {
+    data.educations = {
+      deleteMany: {},
+      create: domain.educations.map(edu => ({
+        degree: edu.degree,
+        institute: edu.institute,
+        year: edu.year ?? null,
+      })),
+    };
+  }
+
+  if (domain.certificates) {
+    data.certificates = {
+      deleteMany: {},
+      create: domain.certificates.map(cert => ({
+        name: cert.name,
+        issuedBy: cert.issuedBy ?? null,
+        year: cert.year ?? null,
+      })),
+    };
+  }
+
+  return data;
+}
+
 }

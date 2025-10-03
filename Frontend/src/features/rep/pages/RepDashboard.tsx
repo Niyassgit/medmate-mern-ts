@@ -1,9 +1,14 @@
-import RepNavBar from '@/components/navbar/RepNavBar';
+import RepNavbar from "@/components/navbar/RepNavBar";
+
 
 
 const RepDashboard = () => {
   return (
-   <RepNavBar/>
+    <>
+      <span>Hey this is Rep Dashboard</span>
+    </>
+ 
+   
   )
 }
 

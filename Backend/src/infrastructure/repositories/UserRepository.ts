@@ -1,5 +1,5 @@
-import { prisma } from "../database/PrismaClient";
-import { IUserRepository } from "../../domain/common/repositories/IUserLoginRepository";
+import { prisma } from "../database/prisma";
+import { IUserRepository } from "../../domain/common/repositories/IUserRepository";
 import { IUser, Role, AuthProvider } from "../../domain/common/entities/IUser";
 import { UserMapper } from "../mappers/UserMapper";
 

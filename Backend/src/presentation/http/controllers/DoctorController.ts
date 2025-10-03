@@ -1,14 +1,17 @@
 import { Request, Response } from "express";
 import { CreateDoctorUseCase } from "../../../application/doctor/auth/CreateDoctorUseCase";
-import { GetDoctorProfileByIdUseCase } from "../../../application/doctor/auth/GetDoctorProfileByIdUseCase";
-import { GetDoctorProfileByEmailUseCase } from "../../../application/doctor/auth/GetDoctorProfileByEmailUseCase";
 import { RegisterDoctorDTO } from "../../../application/doctor/dto/RegisterDoctorDTO";
+import { GetDoctorProfileByIdUseCase } from "../../../application/doctor/use-cases/GetDoctorProfleByIdUseCase";
+import { ProfileImageUpdateUseCase } from "../../../application/doctor/use-cases/ProfileImageUpdateUseCase";
+import { CompleteDoctorProfileDTO } from "../../../application/doctor/dto/CompleteProfileDTO";
+import { CompleteProfileUseCase } from "../../../application/doctor/use-cases/CompleteProfileUseCase";
 
 export class DoctorController {
   constructor(
     private _createDoctorUseCase: CreateDoctorUseCase,
     private _getDoctorProfileByIdUseCase: GetDoctorProfileByIdUseCase,
-    private _getDoctorProfileByEmailUseCase: GetDoctorProfileByEmailUseCase
+    private _profileImageUpdateUseCase: ProfileImageUpdateUseCase,
+    private _compeletProfileUseCase: CompleteProfileUseCase
   ) {}
 
   createDoctor = async (req: Request, res: Response) => {
@@ -23,15 +26,25 @@ export class DoctorController {
     const response = await this._createDoctorUseCase.execute(data);
     res.status(201).json({ success: true, ...response });
   };
-  getDoctorProfileById = async (req: Request, res: Response) => {
-    const doctor = await this._getDoctorProfileByIdUseCase.execute(
-      req.params.id
-    );
-    res.status(200).json({ success: true, data: doctor });
+  getDoctorprofileById = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const response = await this._getDoctorProfileByIdUseCase.execute(userId);
+    console.log("doctor data to the front end:",response)
+    return res.json({ success: true, data: response });
   };
-  getDoctorProfileByEmail = async (req: Request, res: Response) => {
-    const { email } = req.params;
-    const doctor = await this._getDoctorProfileByEmailUseCase.execute(email);
-    res.status(200).json({ success: true, data: doctor });
+  updateProfileImage = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const file = req.file ? req.file : null;
+    const response = await this._profileImageUpdateUseCase.execute(
+      userId,
+      file
+    );
+    res.json({ success: true, message: response });
+  };
+  completeProfile = async (req: Request, res: Response) => {
+    const { userId} = req.params;
+    const data = req.body as CompleteDoctorProfileDTO;
+    const response = await this._compeletProfileUseCase.execute(userId, data);
+    return res.json({ success: true, message: response });
   };
 }

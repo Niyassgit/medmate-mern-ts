@@ -3,7 +3,7 @@ import { LoginUserUseCase } from "../../../application/common/use-cases/LoginUse
 import { GoogleLoginUseCase } from "../../../application/common/use-cases/GoogleLoginUseCase";
 import { LoginRequestBody } from "../validators/LoginValidationSchema";
 import { AuthResponseDTO } from "../../dto/AuthResponseDTO";
-import { GoogleLoginDTO } from "../../../application/common/dto/GoogleLoginDTO";
+import { GoogleLoginDTO, reciveBody } from "../../../application/common/dto/GoogleLoginDTO";
 import { GooglePrecheckUseCase } from "../../../application/common/use-cases/GooglePrecheckUseCase.ts";
 import { GetNewAccessTokenUseCase } from "../../../application/common/use-cases/GetNewAcccessTokenUseCase";
 import { ResendOtpUseCase } from "../../../application/common/use-cases/ResendOtpUseCase";
@@ -79,7 +79,7 @@ export class AuthController {
   googleLogin = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { idToken, role } = req.body as GoogleLoginDTO;
-      const result = await this._googleLoginUseCase.execute({ idToken, role });
+      const result = await this._googleLoginUseCase.execute({ idToken,role});
       res.cookie("refreshtoken", result.refreshToken, {
         httpOnly: true,
         sameSite: "strict",
@@ -114,7 +114,8 @@ export class AuthController {
         secure: process.env.NODE_ENV === "production",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
-
+         
+      console.log("user role after the result",result.user.role);
       const response: AuthResponseDTO = {
         accessToken: result.accessToken,
         user: {

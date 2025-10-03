@@ -12,13 +12,11 @@ export const Authenticate = (
     return res.status(401).json({ message: "No token provided" });
 
   const token = authHeader.split(" ")[1];
-  console.log("token:",token);
   try {
     const payload = jwt.verify(token, process.env.ACCESS_TOKEN!) as JwtPayload;
     req.user = payload;
     next();
-  } catch (error:any) {
-    console.error("JWT verification failed:", error.name, error.message);
-    return res.status(403).json({ message: "Invalid token" });
+  } catch (error:unknown) {
+  return res.status(403).json({ message: "Invalid token" });
   }
 };

@@ -65,6 +65,7 @@ model Doctor {
   id              String   @id @default(auto()) @map("_id") @db.ObjectId
   name            String
   phone           String
+  profileImage    String?
   departmentId    String?  @db.ObjectId
   experienceYears Int?
   hasOwnClinic    Boolean?
@@ -75,8 +76,6 @@ model Doctor {
   opHours         String?
   registrationId  String
   about           String?
-  educations      String[]
-  certificates    String[]
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
@@ -92,8 +91,10 @@ model Doctor {
   notifications        Notification[]
   conversations        Conversation[]
   repReferralsReceived RepReferral[]      @relation("ReferredDoctorInRepReferral")
+  educations           Education[]
+  certificates         Certificate[]
 
-  login   User?   @relation(fields: [loginId], references: [id])
+  user    User?   @relation(fields: [loginId], references: [id])
   loginId String? @unique @db.ObjectId
 }
 
@@ -101,6 +102,7 @@ model MedicalRep {
   id                   String    @id @default(auto()) @map("_id") @db.ObjectId
   name                 String
   phone                String
+  profileImage         String?
   companyName          String
   companyLogoUrl       String?
   employeeId           String?
@@ -129,7 +131,10 @@ model MedicalRep {
 
   doctorReferralsReceived DoctorReferral[] @relation("ReferredRep")
 
-  login   User?   @relation(fields: [loginId], references: [id])
+  educations   Education[]
+  certificates Certificate[]
+
+  user    User?   @relation(fields: [loginId], references: [id])
   loginId String? @unique @db.ObjectId
 }
 
@@ -138,8 +143,30 @@ model SuperAdmin {
   name  String
   phone String?
 
-  login   User?   @relation(fields: [loginId], references: [id])
+  user    User?   @relation(fields: [loginId], references: [id])
   loginId String? @unique @db.ObjectId
+}
+
+model Education {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  degree    String
+  institute String
+  year      Int?
+  doctorId  String? @db.ObjectId
+  doctor    Doctor? @relation(fields: [doctorId], references: [id])
+  medicalRepId String?     @db.ObjectId
+  medicalRep   MedicalRep? @relation(fields: [medicalRepId], references: [id])
+}
+
+model Certificate {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  issuedBy String?
+  year     Int?
+  doctorId String?  @db.ObjectId
+  doctor   Doctor?  @relation(fields: [doctorId], references: [id])
+  medicalRepId String?     @db.ObjectId
+  medicalRep   MedicalRep? @relation(fields: [medicalRepId], references: [id])
 }
 
 model SubscriptionPlan {

@@ -1,6 +1,6 @@
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
 import { IBcryptService } from "../../../domain/common/services/IHashService";
-import { IUserRepository } from "../../../domain/common/repositories/IUserLoginRepository";
+import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 import { Role } from "../../../domain/common/entities/IUser";
 import { RegisterMedicalRepDTO } from "../dto/RegisterMedicalRepDTO";
 import { ConflictError, BadRequestError } from "../../../domain/common/errors";

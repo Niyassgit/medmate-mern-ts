@@ -1,35 +1,36 @@
 import { DoctorRepository } from "../repositories/DoctorRepository";
 import { BcryptServices } from "../services/BcryptService";
 import { CreateDoctorUseCase } from "../../application/doctor/auth/CreateDoctorUseCase";
-import { GetDoctorProfileByIdUseCase } from "../../application/doctor/auth/GetDoctorProfileByIdUseCase";
-import { GetDoctorProfileByEmailUseCase } from "../../application/doctor/auth/GetDoctorProfileByEmailUseCase";
 import { DoctorController } from "../../presentation/http/controllers/DoctorController";
 import { UserRepository } from "../repositories/UserRepository";
 import { NotificationService } from "../services/NotificationService";
 import { OtpService } from "../services/OtpService";
+import { GetDoctorProfileByIdUseCase } from "../../application/doctor/use-cases/GetDoctorProfleByIdUseCase";
+import { ProfileImageUpdateUseCase } from "../../application/doctor/use-cases/ProfileImageUpdateUseCase";
+import { CloudinaryService } from "../services/CloudinaryService";
+import { CompleteProfileUseCase } from "../../application/doctor/use-cases/CompleteProfileUseCase";
 
 const doctorRepository = new DoctorRepository();
 const bycryptServices = new BcryptServices();
-const userLoginRepository = new UserRepository();
+const userRepository = new UserRepository();
 const otpService = new OtpService();
 const notificationService = new NotificationService();
+const cloudinaryService=new CloudinaryService()
 
 const createDoctorUseCase = new CreateDoctorUseCase(
   doctorRepository,
   bycryptServices,
-  userLoginRepository,
+  userRepository,
   otpService,
   notificationService
 );
-const getDoctorProfileByIdUseCase = new GetDoctorProfileByIdUseCase(
-  doctorRepository
-);
-const getDoctorProfileByEmailUseCase = new GetDoctorProfileByEmailUseCase(
-  doctorRepository
-);
+const getDoctorprofileById=new GetDoctorProfileByIdUseCase(doctorRepository,userRepository);
+const profileImageUpdateUseCase=new ProfileImageUpdateUseCase(cloudinaryService,userRepository,doctorRepository)
+const completeProfileUseCase=new CompleteProfileUseCase(userRepository,doctorRepository)
 
 export const doctorController = new DoctorController(
   createDoctorUseCase,
-  getDoctorProfileByIdUseCase,
-  getDoctorProfileByEmailUseCase
+  getDoctorprofileById,
+  profileImageUpdateUseCase,
+  completeProfileUseCase
 );
