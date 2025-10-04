@@ -129,4 +129,5 @@ export class MedicalRepRepository implements IMedicalRepRepository {
     });
     return LogoUrl;
   }
+
 }

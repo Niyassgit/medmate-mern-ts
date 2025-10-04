@@ -11,7 +11,7 @@ cloudinary.config({
 
 const storage=new CloudinaryStorage({
     cloudinary,
-    params:async (req,file)=>{
+    params:(req,file)=>{
         let folder="others";
 
         if(file.fieldname === "profileImage"){

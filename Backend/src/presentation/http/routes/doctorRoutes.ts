@@ -7,6 +7,7 @@ import { Authenticate } from "../middlewares/Authenticate";
 import { AuthorizeRole } from "../middlewares/AuthorizeRole";
 import { Role } from "../../../domain/common/entities/IUser";
 import { uploadCloud } from "../../../infrastructure/storage/multer/MulterConfigCloudinary";
+import { DoctorProfileUpdateSchema } from "../validators/DoctorProfileUpdateSchema";
 
 export class DoctorRoutes {
   public router: Router;
@@ -40,6 +41,7 @@ export class DoctorRoutes {
       "/profile/complete/:userId",
       Authenticate,
       AuthorizeRole([Role.DOCTOR]),
+      ValidateSchema(DoctorProfileUpdateSchema),
       doctorController.completeProfile
     );
   }

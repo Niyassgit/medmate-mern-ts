@@ -6,6 +6,8 @@ import { ProfileImageUpdateUseCase } from "../../../application/medicalRep/use-c
 import { CompleteRepProfileDTO } from "../../../application/medicalRep/dto/CompleteRepProfileDTO";
 import { CompleteRepProfileUseCase } from "../../../application/medicalRep/use-cases/CompleteRepProfileUseCase";
 import { UpdateCompanyLogoUseCase } from "../../../application/medicalRep/use-cases/UpdateCompanyLogoUseCase";
+import { CreatePostUseCase } from "../../../application/productPost/use-case/CreatePostUseCase";
+import { ProductPostDTO } from "../../../application/productPost/dto/ProductPostDTO";
 
 
 export class MedicalRepController {
@@ -14,7 +16,8 @@ export class MedicalRepController {
     private _getUserProfile:GetRepProfileByIdUseCase,
     private _ProfileImageUpdateUseCase:ProfileImageUpdateUseCase,
     private _completeRepProfileUseCase:CompleteRepProfileUseCase,
-    private _updateCompanyLogoUseCase:UpdateCompanyLogoUseCase
+    private _updateCompanyLogoUseCase:UpdateCompanyLogoUseCase,
+    private _createPostUseCase:CreatePostUseCase
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -42,7 +45,6 @@ export class MedicalRepController {
   completeProfile=async(req:Request,res:Response)=>{
     const {userId}=req.params;
     const data=req.body as CompleteRepProfileDTO;
-    console.log("data from the front end both user id and form data:",userId,data);
     const response=await this._completeRepProfileUseCase.execute(userId,data);
     return res.json({success:true,message:response});
   }
@@ -51,5 +53,11 @@ export class MedicalRepController {
    const file=req.file ?req.file :null;
    const response=await this._updateCompanyLogoUseCase.execute(userId,file);
    return res.json({success:true,data:response});
+  }
+  createPost=async(req:Request,res:Response)=>{
+    const {userId}=req.params;
+    const data=req.body as ProductPostDTO;
+    const response=await this._createPostUseCase.execute(userId,data);
+    return res.json({success:true,message:response});
   }
 }

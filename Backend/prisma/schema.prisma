@@ -200,18 +200,17 @@ model ProductPost {
   repId        String   @db.ObjectId
   title        String
   description  String
-  imageUrl     String
+  imageUrl     String[]
   brand        String
-  territoryId  String   @db.ObjectId
+  territoryId  String?   @db.ObjectId
   useCases     String[]
   ingredients  String[]
   termsOfUse   String
-  deliveryTime String
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
   rep       MedicalRep @relation(fields: [repId], references: [id])
-  territory Territory  @relation(fields: [territoryId], references: [id])
+  territory Territory?  @relation(fields: [territoryId], references: [id])
   interests Interest[]
 }
 

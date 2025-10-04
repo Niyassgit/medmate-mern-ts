@@ -17,4 +17,5 @@ export interface IMedicalRepRepository {
   updateProfileImage(id:string,imageUrl:string):Promise<void>;
   completeProfile(userId:string,data:Partial<IMedicalRep>):Promise<IMedicalRep | null>;
   updateCompanyLogo(userId:string,LogoUrl:string):Promise<string>;
+  
 }

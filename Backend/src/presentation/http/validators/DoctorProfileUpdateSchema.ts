@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { EducationSchema } from "../../shared/schemas/EducationSchema";
-import { CertificateSchema } from "../../shared/schemas/CertificateSchema";
+import { EducationSchema } from "./EducationSchema";
+import { CertificateSchema } from "./CertificateSchema";
 
-export const CompleteDoctorProfileSchema = z.object({
+export const DoctorProfileUpdateSchema = z.object({
   name: z
     .string()
     .min(2, "Name is required")
@@ -71,6 +71,6 @@ export const CompleteDoctorProfileSchema = z.object({
   certificates: z.array(CertificateSchema).optional(),
 });
 
-export type CompleteDoctorProfileDTO = z.infer<
-  typeof CompleteDoctorProfileSchema
+export type DoctorProfileUpdateRepProfileDTO = z.infer<
+  typeof DoctorProfileUpdateSchema
 >;

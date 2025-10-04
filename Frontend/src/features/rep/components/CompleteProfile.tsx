@@ -78,13 +78,15 @@ export default function CompleteRepProfilePage() {
   const confirmProfileUpdate = async () => {
     if (!formData) return;
     try {
-      console.log("formData:", formData);
-      await completeProfile(id!, formData);
-      toast.success("Profile saved successfully");
+      const res = await completeProfile(id!, formData);
+      toast.success(res.data.message || "Profile saved successfully");
       navigate("/rep/profile");
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to save profile");
+    } catch (err: any) {
+      if (err.response) {
+        toast.error(err.response.data.message || "Failed to save profile");
+      } else {
+        toast.error("Internal server error");
+      }
     } finally {
       setOpenConfirm(false);
     }

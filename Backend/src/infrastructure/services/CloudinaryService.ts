@@ -2,9 +2,11 @@ import cloudinary from "../../config/cloudinaryConfig";
 import { ICloudinaryService } from "../../domain/common/services/ICloudinaryService";
 import streamifier from "streamifier";
 
-export class CloudinaryService implements ICloudinaryService{
-
-   async uploadProfileImage(userId: string, file: Express.Multer.File): Promise<string> {
+export class CloudinaryService implements ICloudinaryService {
+  async uploadProfileImage(
+    userId: string,
+    file: Express.Multer.File
+  ): Promise<string> {
     if (!file || !file.buffer) {
       throw new Error("No file buffer found");
     }
@@ -16,8 +18,20 @@ export class CloudinaryService implements ICloudinaryService{
           public_id: `${userId}-${Date.now()}`,
         },
         (error, result) => {
-          if (error) return reject(error);
-          if (!result?.secure_url) return reject(new Error("Failed to get Cloudinary URL"));
+          if (error) {
+            let err: Error;
+            if (error instanceof Error) {
+              err = error;
+            } else if (typeof error === "string") {
+              err = new Error(error);
+            } else {
+              err = new Error(JSON.stringify(error));
+            }
+            return reject(err);
+          }
+
+          if (!result?.secure_url)
+            return reject(new Error("Failed to get Cloudinary URL"));
           resolve(result.secure_url);
         }
       );

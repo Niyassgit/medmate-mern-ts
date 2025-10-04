@@ -1,8 +1,9 @@
 import { z } from "zod";
-import { EducationSchema } from "@/features/shared/schemas/EducationSchema";
-import { CertificateSchema } from "@/features/shared/schemas/CertificateSchema";
-export const CompleteRepProfileSchema = z.object({
- name: z
+import { EducationSchema } from "./EducationSchema";
+import { CertificateSchema } from "./CertificateSchema";
+
+export const MedicalRepProfileUpdateSchema = z.object({
+  name: z
     .string()
     .min(2, "Name is required")
     .regex(/^[A-Za-z\s]+$/, "Name must contain only letters"),
@@ -18,4 +19,4 @@ export const CompleteRepProfileSchema = z.object({
   certificates: z.array(CertificateSchema).optional(),
 });
 
-export type CompleteRepProfileDTO = z.infer<typeof CompleteRepProfileSchema>;
+export type CompleteRepProfileDTO = z.infer<typeof MedicalRepProfileUpdateSchema>;
