@@ -17,7 +17,7 @@ export class CreatePostUseCase{
         const formatedData=ProductPostMapper.toProductPostEntity(dto);
         const creatPost=await this._productpostRepository.createPost(rep.id,formatedData);
         if(!creatPost) throw new BadRequestError("Post upload failed");
-        return "Product uploaded successfully";
+        return "Post uploaded successfully";
 
     }
 }

@@ -55,10 +55,15 @@ export class MedicalRepRoutes {
       "/add-post/:userId",
       Authenticate,
       AuthorizeRole([Role.MEDICAL_REP]),
-      uploadCloud.array("images",5),
+      uploadCloud.array("images", 5),
       medicalRepController.createPost
     );
-    // this.router.post("/edit-post/:userId",Authenticate,AuthorizeRole([Role.MEDICAL_REP]),uploadCloud.array("images",5),medicalRepController)
+    this.router.post(
+      "/edit-post/:userId",
+      Authenticate,
+      AuthorizeRole([Role.MEDICAL_REP]),
+      uploadCloud.array("images", 5),
+      medicalRepController.editPost
+    );
   }
-
 }

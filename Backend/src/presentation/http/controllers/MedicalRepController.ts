@@ -8,6 +8,7 @@ import { CompleteRepProfileUseCase } from "../../../application/medicalRep/use-c
 import { UpdateCompanyLogoUseCase } from "../../../application/medicalRep/use-cases/UpdateCompanyLogoUseCase";
 import { CreatePostUseCase } from "../../../application/productPost/use-case/CreatePostUseCase";
 import { ProductPostDTO } from "../../../application/productPost/dto/ProductPostDTO";
+import { EditProductPostUseCase } from "../../../application/productPost/use-case/EditProductPostUseCase";
 
 
 export class MedicalRepController {
@@ -17,7 +18,8 @@ export class MedicalRepController {
     private _ProfileImageUpdateUseCase:ProfileImageUpdateUseCase,
     private _completeRepProfileUseCase:CompleteRepProfileUseCase,
     private _updateCompanyLogoUseCase:UpdateCompanyLogoUseCase,
-    private _createPostUseCase:CreatePostUseCase
+    private _createPostUseCase:CreatePostUseCase,
+    private _editposUseCase:EditProductPostUseCase,
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -65,5 +67,15 @@ export class MedicalRepController {
     const response=await this._createPostUseCase.execute(userId,dto);
     return res.json({success:true,message:response});
   }
-  // editPost=async(req:Request,)
+  editPost=async(req:Request,res:Response)=>{
+    const {userId}=req.params;
+    const dto=req.body as ProductPostDTO;
+    if(req.files && Array.isArray(req.files)){
+      dto.imageUrl=req.files.map((file)=>file.path);
+    }else{
+      dto.imageUrl=[];
+    }
+    const response=await this._editposUseCase.execute(userId,dto);
+    return res.json({success:true,message:response});
+  }
 }

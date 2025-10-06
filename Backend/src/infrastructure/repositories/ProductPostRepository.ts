@@ -12,4 +12,12 @@ export class ProductPostRepository implements IProductPostRepository{
         });
         return product;
     }
+    async editPost(postId:string,data: Partial<IProductPost>): Promise<IProductPost | null> {
+       const formatedData=ProductPostMapper.toPartialPersistance(data);
+      const updatedPost= await prisma.productPost.update({
+         where:{id:postId},
+         data:formatedData
+       });
+       return updatedPost;
+    }
 }
