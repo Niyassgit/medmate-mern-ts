@@ -8,11 +8,11 @@ export class ProductPostMapper{
        return{
         brand:dto.brand,
         description:dto.description,
-        imageUrl:dto.imageUrl ?? [],
-        ingredients:dto.ingredients,
+        imageUrl:dto.imageUrl,
+        ingredients:Array.isArray(dto.ingredients) ?dto.ingredients : [dto.ingredients],
         title:dto.title,
-        termsOfUse:dto.termsOfUse ??[],
-        useCases:dto.useCases ?? [],
+        termsOfUse:dto.termsOfUse,
+        useCases:Array.isArray(dto.useCases) ? dto.useCases :[dto.useCases],
         territoryId:dto.territoryId ?? null,
         repId:dto.repId
        }

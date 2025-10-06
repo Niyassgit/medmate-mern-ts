@@ -56,8 +56,14 @@ export class MedicalRepController {
   }
   createPost=async(req:Request,res:Response)=>{
     const {userId}=req.params;
-    const data=req.body as ProductPostDTO;
-    const response=await this._createPostUseCase.execute(userId,data);
+    const dto=req.body as ProductPostDTO;
+    if(req.files && Array.isArray(req.files)){
+      dto.imageUrl=req.files.map((file)=>file.path);
+    }else{
+      dto.imageUrl=[];
+    }
+    const response=await this._createPostUseCase.execute(userId,dto);
     return res.json({success:true,message:response});
   }
+  // editPost=async(req:Request,)
 }
