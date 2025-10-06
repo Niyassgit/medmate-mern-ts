@@ -29,3 +29,10 @@ export const uploadCompanyLogo= async (id:string,file:File)=>{
     headers:{"Content-Type":"multipart/form-data"}
   })
 }
+
+export const addPost=async(id:string,formData:FormData)=>{
+  console.log("the data form the form:",formData);
+  return api.post(RepEndpoints.ADD_POST(id),formData,{
+    headers:{"Content-Type":"multipart/form-data"},
+  });
+}

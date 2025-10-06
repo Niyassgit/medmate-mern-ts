@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Upload, X } from "lucide-react";
@@ -27,55 +26,54 @@ import {
 } from "@/components/ui/form";
 import { TagInput } from "../components/TagInput";
 import { useNavigate } from "react-router-dom";
-
-// ✅ Schema for validation
-const productSchema = z.object({
-  title: z.string().min(2, "Title is required"),
-  description: z.string().min(10, "Description must be at least 10 characters"),
-  brand: z.string().min(2, "Brand is required"),
-  territory: z.string().optional(),
-  terms: z.string().min(10, "Terms & Conditions are required"),
-});
-
-type ProductFormValues = z.infer<typeof productSchema>;
+import {
+  productPostSchema,
+  ProductPostFormValues,
+} from "../schemas/ProductPostSchema";
+import { addPost } from "../api";
+import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
 
 const AddPost = () => {
   const navigate = useNavigate();
-  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [uploadedImages, setUploadedImages] = useState<File[]>([]);
   const [useCases, setUseCases] = useState<string[]>([]);
   const [ingredients, setIngredients] = useState<string[]>([]);
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
 
-  const form = useForm<ProductFormValues>({
-    resolver: zodResolver(productSchema),
+  const id = useSelector((state: any) => state.auth.user?.id);
+
+  console.log("user id is :", id);
+  const form = useForm<ProductPostFormValues>({
+    resolver: zodResolver(productPostSchema),
     defaultValues: {
       title: "",
       description: "",
       brand: "",
       territory: "",
-      terms: "",
+      termsOfUse: "",
     },
   });
 
-  // ✅ Handle file browse
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
-      const newImages = Array.from(files).map((file) =>
-        URL.createObjectURL(file)
-      );
-      setUploadedImages((prev) => [...prev, ...newImages]);
+      const fileArray = Array.from(files);
+      setUploadedImages((prev) => [...prev, ...fileArray]);
+
+      const urls = fileArray.map((file) => URL.createObjectURL(file));
+      setPreviewUrls((prev) => [...prev, ...urls]);
     }
   };
 
-  // ✅ Handle drag & drop
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     const files = e.dataTransfer.files;
     if (files) {
-      const newImages = Array.from(files).map((file) =>
-        URL.createObjectURL(file)
-      );
-      setUploadedImages((prev) => [...prev, ...newImages]);
+      const fileArray = Array.from(files);
+      setUploadedImages((prev) => [...prev, ...fileArray]);
+      const urls = fileArray.map((file) => URL.createObjectURL(file));
+      setPreviewUrls((prev) => [...prev, ...urls]);
     }
   };
 
@@ -85,24 +83,49 @@ const AddPost = () => {
 
   const removeImage = (index: number) => {
     setUploadedImages((prev) => prev.filter((_, i) => i !== index));
+    setPreviewUrls((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const onSubmit = (values: ProductFormValues) => {
-    const finalData = {
-      ...values,
-      images: uploadedImages,
-      useCases,
-      ingredients,
-    };
-    console.log("Final Product Data:", finalData);
-    // 👉 Here you would send to API
+  const onSubmit = async (values: ProductPostFormValues) => {
+    const formData = new FormData();
+
+    formData.append("title", values.title);
+    formData.append("description", values.description);
+    formData.append("brand", values.brand);
+    formData.append("territory", values.territory || "");
+    formData.append("termsOfUse", values.termsOfUse);
+    useCases.forEach((u) => formData.append("useCases", u));
+    ingredients.forEach((i) => formData.append("ingredients", i));
+
+    uploadedImages.forEach((file) => {
+      formData.append("images", file);
+    });
+
+    try {
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
+
+      const res = await addPost(id, formData);
+      console.log("response after add post:", res);
+      if (res.data.success) {
+        toast.success(res.data.message || "Post uploaded successfully");
+        navigate("/rep/dashboard");
+      } else {
+        toast.error(res.data.message || "Failed to post Feed");
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Failed to add product.Please try again.");
+    }
   };
 
   return (
     <div className="min-h-screen bg-background">
       <main className="container mx-auto max-w-4xl px-6 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground">Add New Product</h1>
+          <h1 className="text-3xl font-bold text-foreground">
+            Add New Product
+          </h1>
           <p className="text-sm text-muted-foreground">
             Fill out the details below to add a new product to your catalog
           </p>
@@ -236,16 +259,16 @@ const AddPost = () => {
                   />
                 </div>
 
-                {uploadedImages.length > 0 && (
+                {previewUrls.length > 0 && (
                   <div className="flex flex-wrap gap-4 mt-4">
-                    {uploadedImages.map((image, index) => (
+                    {previewUrls.map((url, index) => (
                       <div
                         key={index}
                         className="relative h-24 w-24 overflow-hidden rounded-lg border border-border"
                       >
                         <img
-                          src={image}
-                          alt={`Upload ${index + 1}`}
+                          src={url}
+                          alt={`preview ${index + 1}`}
                           className="h-full w-full object-cover"
                         />
                         <button
@@ -306,7 +329,7 @@ const AddPost = () => {
 
                 <FormField
                   control={form.control}
-                  name="terms"
+                  name="termsOfUse"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Terms & Conditions *</FormLabel>
