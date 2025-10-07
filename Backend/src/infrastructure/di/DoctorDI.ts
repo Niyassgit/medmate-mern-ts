@@ -25,7 +25,7 @@ const createDoctorUseCase = new CreateDoctorUseCase(
   notificationService
 );
 const getDoctorprofileById=new GetDoctorProfileByIdUseCase(doctorRepository,userRepository);
-const profileImageUpdateUseCase=new ProfileImageUpdateUseCase(cloudinaryService,userRepository,doctorRepository)
+const profileImageUpdateUseCase=new ProfileImageUpdateUseCase(userRepository);
 const completeProfileUseCase=new CompleteProfileUseCase(userRepository,doctorRepository)
 
 export const doctorController = new DoctorController(

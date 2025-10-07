@@ -43,7 +43,6 @@ const AddPost = () => {
 
   const id = useSelector((state: any) => state.auth.user?.id);
 
-  console.log("user id is :", id);
   const form = useForm<ProductPostFormValues>({
     resolver: zodResolver(productPostSchema),
     defaultValues: {
@@ -88,29 +87,26 @@ const AddPost = () => {
 
   const onSubmit = async (values: ProductPostFormValues) => {
     const formData = new FormData();
+    console.log("incrediants and usecase:",ingredients,useCases);
 
     formData.append("title", values.title);
     formData.append("description", values.description);
     formData.append("brand", values.brand);
     formData.append("territory", values.territory || "");
     formData.append("termsOfUse", values.termsOfUse);
-    useCases.forEach((u) => formData.append("useCases", u));
-    ingredients.forEach((i) => formData.append("ingredients", i));
+    formData.append("useCases", JSON.stringify(useCases));
+    formData.append("ingredients", JSON.stringify(ingredients));
+
 
     uploadedImages.forEach((file) => {
       formData.append("images", file);
     });
 
     try {
-      for (let [key, value] of formData.entries()) {
-        console.log(key, value);
-      }
-
       const res = await addPost(id, formData);
-      console.log("response after add post:", res);
       if (res.data.success) {
         toast.success(res.data.message || "Post uploaded successfully");
-        navigate("/rep/dashboard");
+        setTimeout(() => navigate("/rep/dashboard"), 2000);
       } else {
         toast.error(res.data.message || "Failed to post Feed");
       }

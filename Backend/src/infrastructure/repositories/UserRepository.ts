@@ -86,4 +86,11 @@ export class UserRepository implements IUserRepository {
     UserMapper.toDomain(updatedUser);
     return "Password reset successfully";
   }
+  async updateProfileImage(userId: string, imageUrl: string): Promise<IUser | null> {
+    const user=await prisma.user.update({
+      where:{id:userId},
+      data:{profileimage:imageUrl}
+    })
+    return user ? UserMapper.toDomain(user) : null;
+  }
 }

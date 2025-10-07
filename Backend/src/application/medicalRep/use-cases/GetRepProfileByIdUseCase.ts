@@ -3,16 +3,24 @@ import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/I
 import { NotFoundError } from "../../errors";
 import { MedicalRepDetailsDTO } from "../dto/MedicalRepDetailsDTO";
 import { RepDetailsMapper } from "../mapper/RepDetailsMapper";
+import { UserMapper } from "../../common/mapper/UserMapper";
+import { UserProfileDTO } from "../../common/dto/UserProfileDTO";
 
+export class GetRepProfileByIdUseCase {
+  constructor(
+    private _medicalRepRepository: IMedicalRepRepository,
+    private _userRepository: IUserRepository
+  ) {}
 
-export class GetRepProfileByIdUseCase{
-    constructor(
-        private _medicalRepRepository:IMedicalRepRepository
-    ){}
-
-    async execute(userId:string):Promise<MedicalRepDetailsDTO | null>{
-    const user=await this._medicalRepRepository.getMedicalRepByUserId(userId);
-   if(!user) throw new NotFoundError("User not found");
-   return RepDetailsMapper.toMedicalRepDetails(user);
+  async execute(
+    userId: string
+  ): Promise<MedicalRepDetailsDTO | UserProfileDTO | null> {
+    const rep = await this._medicalRepRepository.getMedicalRepByUserId(userId);
+    if (!rep) {
+      const user = await this._userRepository.findById(userId);
+      if (!user) throw new NotFoundError("User is not found");
+      return UserMapper.toUserProfile(user);
     }
+    return RepDetailsMapper.toMedicalRepDetails(rep);
+  }
 }

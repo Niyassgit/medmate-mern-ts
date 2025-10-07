@@ -1,24 +1,21 @@
-import { ICloudinaryService } from "../../../domain/common/services/ICloudinaryService";
-import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRepository";
-import { UserRepository } from "../../../infrastructure/repositories/UserRepository";
+import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 import { BadRequestError, NotFoundError } from "../../errors";
 
+export class ProfileImageUpdateUseCase {
+  constructor(
+    private _userRepository: IUserRepository,
+  ) {}
 
-
-export class ProfileImageUpdateUseCase{
-    constructor(
-        private _cloudinaryService:ICloudinaryService,
-        private _userRepository:UserRepository,
-        private _doctorRepository:IDoctorRepository
-    ){}
-
-    async execute(userId:string,file:Express.Multer.File | null):Promise<string>{
-        if(!file) throw new BadRequestError("No file provided for profile image");
-        const  user=await this._doctorRepository.getDoctorById(userId);
-        if(!user) throw new NotFoundError("User not found");
-        const imageUrl=file.path;
-        await this._doctorRepository.updateProfileImage(userId,imageUrl);
-
-        return "Profile picture addedd successfully"
-    }
+  async execute(
+    userId: string,
+    file: Express.Multer.File | null
+  ): Promise<string> {
+    if (!file) throw new BadRequestError("No file provided for profile image");
+    const user = await this._userRepository.findById(userId);
+    if (!user) throw new NotFoundError("User not found");
+    const imageUrl = file.path;
+    const res = await this._userRepository.updateProfileImage(userId, imageUrl);
+    if (!res) throw new BadRequestError("Failed to update profile image");
+    return "Profile picture addedd successfully";
+  }
 }

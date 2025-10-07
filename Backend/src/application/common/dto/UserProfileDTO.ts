@@ -1,4 +1,6 @@
 export interface UserProfileDTO{
     id:string,
-    email:string
+    email:string,
+    profileImage:string | null,
+    role:string
 }

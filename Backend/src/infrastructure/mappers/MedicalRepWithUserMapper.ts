@@ -15,6 +15,7 @@ export class MedicalRepWithUserMapper{
                         isBlocked: rep.user.isBlocked,
                         createdAt: rep.user.createdAt,
                         updatedAt: rep.user.updatedAt,
+                        profileImage:rep.user.profileimage,
                         role: rep.user.role as DomainRole,
                         authProvider: rep.user.authProvider as DomainAuthProvider,
                         providerId: rep.user.providerId ?? null,

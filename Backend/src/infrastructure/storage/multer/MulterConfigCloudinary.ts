@@ -16,7 +16,10 @@ const storage=new CloudinaryStorage({
 
         if(file.fieldname === "profileImage"){
             folder="profiles";
-        }
+        }else if (file.fieldname === "images") { 
+        folder = "products";
+    }
+
     return {
         folder,
         allowed_formats:["jpg","jpeg","webp","pdf","png"],

@@ -8,8 +8,6 @@ import { OtpService } from "../services/OtpService";
 import { NotificationService } from "../services/NotificationService";
 import { ProfileImageUpdateUseCase } from "../../application/medicalRep/use-cases/ProfileImageUpdateUseCase";
 import { CompleteRepProfileUseCase } from "../../application/medicalRep/use-cases/CompleteRepProfileUseCase";
-import { UpdateCompanyLogoUseCase } from "../../application/medicalRep/use-cases/UpdateCompanyLogoUseCase";
-
 import { ProductPostRepository } from "../repositories/ProductPostRepository";
 import { CreatePostUseCase } from "../../application/productPost/use-case/CreatePostUseCase";
 import { EditProductPostUseCase } from "../../application/productPost/use-case/EditProductPostUseCase";
@@ -30,22 +28,23 @@ const createMedicalRepUseCase = new CreateMedicalRepUseCase(
 );
 
 const getRepProfileByIdUseCase = new GetRepProfileByIdUseCase(
-  medicalRepRepository
+  medicalRepRepository,
+  userRepository
 );
 const profileUpdateImageUseCase = new ProfileImageUpdateUseCase(
-  medicalRepRepository
+  userRepository
 );
 const completRepProfileUseCase = new CompleteRepProfileUseCase(
   userRepository,
   medicalRepRepository
 );
-const uploadCompanyLogo = new UpdateCompanyLogoUseCase(medicalRepRepository);
+
 const createPostUseCase = new CreatePostUseCase(
-  medicalRepRepository,
+  userRepository,
   productPostRepository
 );
 const editProductPostUseCase = new EditProductPostUseCase(
-  medicalRepRepository,
+  userRepository,
   productPostRepository
 );
 
@@ -54,7 +53,6 @@ export const medicalRepController = new MedicalRepController(
   getRepProfileByIdUseCase,
   profileUpdateImageUseCase,
   completRepProfileUseCase,
-  uploadCompanyLogo,
   createPostUseCase,
   editProductPostUseCase
 );

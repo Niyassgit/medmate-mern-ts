@@ -11,7 +11,7 @@ export class DoctorDetailsMapper {
       phone: doctor.phone,
       email: doctor.user?.email ?? null,
       isBlocked: doctor.user?.isBlocked ?? null,
-      profileImage: doctor.profileImage ?? null,
+      profileImage: doctor.user?.profileImage ?? null,
       departmentId: doctor.departmentId ?? null,
       experienceYears: doctor.experienceYears ?? null,
       hasOwnClinic: doctor.hasOwnClinic ?? null,
@@ -31,7 +31,6 @@ export class DoctorDetailsMapper {
     return {
       name: doctor.name,
       phone: doctor.phone,
-      profileImage: doctor.profileImage ?? null,
       departmentId: doctor.departmentId ?? null,
       experienceYears: doctor.experienceYears ?? null,
       hasOwnClinic: doctor.hasOwnClinic ?? null,

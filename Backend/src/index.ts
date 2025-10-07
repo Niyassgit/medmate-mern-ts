@@ -6,7 +6,7 @@ import path from "path";
 import morgan from "morgan";
 import { fileURLToPath } from "url";
 import { connectDB } from "./config/db";
-import { LoginRoute } from "./presentation/http/routes/LoginRoute";
+import { LoginRoute } from "./presentation/http/routes/AuthRoute";
 import { MedicalRepRoutes } from "./presentation/http/routes/MedicalRepRoutes";
 import { DoctorRoutes } from "./presentation/http/routes/DoctorRoutes";
 import { SuperAdminRoutes } from "./presentation/http/routes/SuperAdminRoutes";

@@ -1,11 +1,12 @@
 import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
-import { IUser } from "../../../domain/common/entities/IUser";
 import { IBcryptService } from "../../../domain/common/services/IHashService";
 import { IJWtService } from "../../../domain/common/services/IJWTService";
 import {
   BadRequestError,
   ForbiddenError,
 } from "../../../domain/common/errors";
+import { LoginResponseDTO } from "../dto/LoginResponseDTO";
+import { UserMapper } from "../mapper/UserMapper";
 
 export class LoginUserUseCase {
   constructor(
@@ -17,7 +18,7 @@ export class LoginUserUseCase {
   async execute(
     email: string,
     password: string
-  ): Promise<{ accessToken: string; refreshToken: string; user: IUser }> {
+  ): Promise<LoginResponseDTO> {
     const user = await this._userLoginRepository.findByEmail(email);
     if (!user) throw new BadRequestError("User not found");
 
@@ -39,7 +40,7 @@ export class LoginUserUseCase {
     };
     const accessToken = this._jwtServices.signAccessToken(accessPayload);
     const refreshToken = this._jwtServices.signRefreshToken(refreshPayload);
-
-    return { accessToken, refreshToken, user };
+    const mappedUser=UserMapper.toUserProfile(user);
+    return { accessToken, refreshToken, mappedUser};
   }
 }

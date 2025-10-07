@@ -16,6 +16,7 @@ export class UserMapper {
       password: user.password,
       authProvider: user.authProvider as DomainAuthProvider,
       role: user.role as DomainRole,
+      profileImage:user.profileimage,
       isBlocked: user.isBlocked,
       isVerified: user.isVerified,
       providerId: user.providerId,

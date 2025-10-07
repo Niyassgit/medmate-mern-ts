@@ -8,6 +8,9 @@ import { AuthorizeRole } from "../middlewares/AuthorizeRole";
 import { Role } from "../../../domain/common/entities/IUser";
 import { uploadCloud } from "../../../infrastructure/storage/multer/MulterConfigCloudinary";
 import { MedicalRepProfileUpdateSchema } from "../validators/MedicalRepProfileUpdateSchema";
+import { parseArrayFields } from "../middlewares/ParseArrayField";
+import { productPostValidateSchema } from "../validators/ProductPostValidateSchema";
+import { parsePostField } from "../middlewares/ParsePostField";
 
 export class MedicalRepRoutes {
   public router: Router;
@@ -41,23 +44,21 @@ export class MedicalRepRoutes {
       "/profile/complete/:userId",
       Authenticate,
       AuthorizeRole([Role.MEDICAL_REP]),
+      upload.single("companyLogoUrl"),
+      parseArrayFields,
       ValidateSchema(MedicalRepProfileUpdateSchema),
       medicalRepController.completeProfile
-    );
-    this.router.post(
-      "/profile/complete/upload-logo/:userId",
-      Authenticate,
-      AuthorizeRole([Role.MEDICAL_REP]),
-      upload.single("companyLogoUrl"),
-      medicalRepController.updateCompanyLogo
     );
     this.router.post(
       "/add-post/:userId",
       Authenticate,
       AuthorizeRole([Role.MEDICAL_REP]),
       uploadCloud.array("images", 5),
+      parsePostField,
+      ValidateSchema(productPostValidateSchema),
       medicalRepController.createPost
     );
+
     this.router.post(
       "/edit-post/:userId",
       Authenticate,

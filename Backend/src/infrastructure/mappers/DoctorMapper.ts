@@ -24,7 +24,6 @@ export class DoctorMapper {
       about: doctor.about ?? null,
       createdAt: doctor.createdAt,
       updatedAt: doctor.updatedAt,
-      profileImage: doctor.profileImage,
 
       educations: doctor.educations?.map((edu) => ({
         id: edu.id,
@@ -69,7 +68,6 @@ export class DoctorMapper {
       licenseImageUrl: domain.licenseImageUrl,
       opHours: domain.opHours ?? null,
       about: domain.about ?? null,
-      profileImage: domain.profileImage ?? null,
       user: domain.loginId ? { connect: { id: domain.loginId } } : undefined,
 
       department: domain.departmentId
@@ -108,7 +106,6 @@ export class DoctorMapper {
   if (domain.licenseImageUrl !== undefined) data.licenseImageUrl = domain.licenseImageUrl;
   if (domain.opHours !== undefined) data.opHours = domain.opHours;
   if (domain.about !== undefined) data.about = domain.about;
-  if (domain.profileImage !== undefined) data.profileImage = domain.profileImage;
   if (domain.experienceYears !== undefined) data.experienceYears = domain.experienceYears;
   if (domain.hasOwnClinic !== undefined) data.hasOwnClinic = domain.hasOwnClinic;
   if (domain.doctorClass !== undefined) data.doctorClass = domain.doctorClass;

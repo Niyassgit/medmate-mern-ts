@@ -1,4 +1,4 @@
-import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
+import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 import { IProductPostRepository } from "../../../domain/product/repositories/IProductPostRepository";
 import { BadRequestError, NotFoundError } from "../../errors";
 import { ProductPostDTO } from "../dto/ProductPostDTO";
@@ -9,13 +9,13 @@ export class EditProductPostUseCase{
 
 
     constructor(
-        private _medcialRepRepositiory:IMedicalRepRepository,
+        private _userRepository:IUserRepository,
         private _productPostRepository:IProductPostRepository
     ){}
 
     async execute(userId:string,dto:ProductPostDTO):Promise<string>{
         if(!dto) throw new BadRequestError("Fill the missing field and continue...");
-        const rep=await this._medcialRepRepositiory.getMedicalRepByUserId(userId);
+        const rep=await this._userRepository.findById(userId);
         if(!rep) throw new NotFoundError("User not found");
         const formatedData=ProductPostMapper.toProductPostEntity(dto);
         const updated=await this._productPostRepository.editPost(dto.id,formatedData);

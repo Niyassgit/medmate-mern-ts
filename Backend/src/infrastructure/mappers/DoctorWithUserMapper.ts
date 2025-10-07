@@ -14,6 +14,7 @@ export class DoctorWithUserMapper {
             isBlocked: doctor.user.isBlocked,
             createdAt: doctor.user.createdAt,
             updatedAt: doctor.user.updatedAt,
+            profileImage:doctor.user.profileimage,
             role: doctor.user.role as DomainRole,
             authProvider: doctor.user.authProvider as DomainAuthProvider,
             providerId: doctor.user.providerId ?? null,

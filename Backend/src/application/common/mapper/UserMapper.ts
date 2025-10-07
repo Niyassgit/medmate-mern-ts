@@ -21,12 +21,13 @@ export class UserMapper {
       tokenVersion: 0,
     };
   }
-  
-  static toUserProfile(user:IUser):UserProfileDTO{
-    return{
-      id:user.id,
-      email:user.email
-    }
-  }
 
+  static toUserProfile(user: IUser): UserProfileDTO {
+    return {
+      id: user.id,
+      email: user.email,
+      profileImage: user.profileImage ?? null,
+      role:user.role,
+    };
+  }
 }

@@ -9,7 +9,6 @@ export interface IDoctor {
 
   name: string;
   phone: string;
-  profileImage?:string | null,
   departmentId?: string | null;
   experienceYears?: number | null;
   hasOwnClinic?: boolean | null;

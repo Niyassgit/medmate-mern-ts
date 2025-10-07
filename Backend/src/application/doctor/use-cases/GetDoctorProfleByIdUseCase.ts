@@ -18,7 +18,6 @@ export class GetDoctorProfileByIdUseCase{
        if(!doctor){
            const user=await this._userRepository.findById(userId);
             if(!user) throw new NotFoundError("User is not found");
-
             return UserMapper.toUserProfile(user);
        }
       

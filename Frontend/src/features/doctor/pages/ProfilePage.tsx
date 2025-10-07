@@ -49,7 +49,7 @@ const ProfilePage = () => {
   const confirmAvatarChange = async () => {
     if (!doctor || !selectedFile) return;
     try {
-      const response = await updateProfileImage(doctor.id, selectedFile);
+      const response = await updateProfileImage(id, selectedFile);
       if (response.success) {
         setDoctor({ ...doctor, profileImage: response.imageUrl });
         toast.success(response.message || "Image changed");

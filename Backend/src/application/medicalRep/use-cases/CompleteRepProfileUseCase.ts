@@ -9,18 +9,21 @@ export class CompleteRepProfileUseCase {
     private _userRepository: IUserRepository,
     private _medicalRepository: IMedicalRepRepository
   ) {}
-  async execute(userId: string, data: CompleteRepProfileDTO): Promise<string> {
+  async execute(userId: string, data: CompleteRepProfileDTO,file:Express.Multer.File |  null): Promise<string> {
     const user = await this._userRepository.findById(userId);
     if (!user) throw new NotFoundError("User not found");
     const existingRep = await this._medicalRepository.getMedicalRepByUserId(
       user.id
     );
-    const repEntity = MedicalRepMapper.toMedicalRepEntity(data, user.id);
+    const logoUrl=file?`/uploads/company-logo/${file.filename}`:null;  
+  
     if (!existingRep) {
+        const repEntity = MedicalRepMapper.toMedicalRepEntity(data, user.id,logoUrl);
       await this._medicalRepository.createMedicalRep(repEntity);
       return "profile created Successfully";
     } else {
-      await this._medicalRepository.completeProfile(existingRep.id, data);
+      const updatedEntity=MedicalRepMapper.updateMedicalRepEntity(existingRep,data,logoUrl);
+      await this._medicalRepository.completeProfile(existingRep.id,updatedEntity);
       return "Profile updated successfully";
     }
   }

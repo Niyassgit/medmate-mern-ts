@@ -50,9 +50,10 @@ export class AuthController {
       const response: AuthResponseDTO = {
         accessToken: result.accessToken,
         user: {
-          id: result.user.id,
-          email: result.user.email,
-          role: result.user.role,
+          id: result.mappedUser.id,
+          email: result.mappedUser.email,
+          role: result.mappedUser.role,
+          image:result.mappedUser.profileImage,
         },
       };
       res.json(response);

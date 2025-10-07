@@ -14,6 +14,7 @@ const LoginPage = () => {
   const handleLogin = async (values: { email: string; password: string }) => {
     try {
       const { data } = await loginUser(values);
+      console.log("user data to save into the slice:",data);
       dispatch(login({token:data.accessToken,user:data.user}));
       
       toast.success("User login successfully");

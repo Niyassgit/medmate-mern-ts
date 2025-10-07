@@ -16,6 +16,7 @@ export interface IUser {
   isBlocked: boolean;
   authProvider: AuthProvider;
   providerId?: string | null;
+  profileImage?:string | null;
   isVerified: boolean;
   tokenVersion: number;
   role: Role;

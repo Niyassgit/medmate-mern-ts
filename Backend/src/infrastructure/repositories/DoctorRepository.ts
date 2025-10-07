@@ -82,15 +82,10 @@ export class DoctorRepository implements IDoctorRepository {
         certificates:true
       }
     });
-
+    
     if(!user) return null;
+    console.log("doctor profile before mapping:",user);
     return DoctorWithUserMapper.toDomain(user);
-  }
-  async updateProfileImage(userId: string, imageUrl: string): Promise<void> {
-        await prisma.doctor.update({
-          where:{id:userId},
-          data:{profileImage:imageUrl},
-        });
   }
  async updateDoctor(userId: string, data: Partial<IDoctor>): Promise<IDoctor | null> {
   const doctor = await prisma.doctor.findFirst({

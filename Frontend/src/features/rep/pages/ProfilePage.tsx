@@ -46,7 +46,7 @@ const ProfilePage = () => {
   const confirmAvatarChange = async () => {
     if (!rep || !selectedFile) return;
     try {
-      const response = await updateProfileImage(rep.id, selectedFile);
+      const response = await updateProfileImage(id, selectedFile);
       if (response.success) {
         setRep({ ...rep, profileImage: response.imageUrl });
         toast.success(response.message || "Image changed");
