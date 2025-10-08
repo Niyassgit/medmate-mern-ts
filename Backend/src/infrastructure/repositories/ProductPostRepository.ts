@@ -20,4 +20,12 @@ export class ProductPostRepository implements IProductPostRepository{
        });
        return updatedPost;
     }
+    async getProducts(userId: string): Promise<IProductPost[] | null> {
+     const products=await prisma.productPost.findMany({
+        where:{repId:userId},
+        orderBy:{createdAt:"desc"}
+      });
+      if(!products) return null;
+      return ProductPostMapper.toDomainList(products);
+    }
 }

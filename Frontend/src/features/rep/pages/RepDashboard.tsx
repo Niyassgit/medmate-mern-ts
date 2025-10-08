@@ -12,62 +12,37 @@ import PostCard from "../components/PostCard";
 import ProfileCard from "../components/ProfileCard";
 import { Link } from "react-router-dom";
 
-import post1 from "@/assets/post-1.jpg";
-import post2 from "@/assets/post-2.jpg";
-import post3 from "@/assets/post-3.jpg";
-import post4 from "@/assets/post-4.jpg";
-import post5 from "@/assets/post-5.jpg";
-
-const posts = [
-  {
-    id: 1,
-    image: post1,
-    category: "Product Launch",
-    title: "New Advancements in ACE Inhibitors",
-    date: "November 18, 2024",
-    description: "A comprehensive overview of the latest breakthrough in ACE Inhibitor technology for improved treatment and management of cardiovascular conditions.",
-    likes: 245
-  },
-  {
-    id: 2,
-    image: post2,
-    category: "Education",
-    title: "Understanding Diabetes: Basics and Beyond",
-    date: "November 10, 2024",
-    description: "Exploring the fundamentals of action and cellular dynamics of our leading \"Beta-2 Agonist medication.",
-    likes: 834
-  },
-  {
-    id: 3,
-    image: post3,
-    category: "Clinical Data",
-    title: "Q3 2024: Sales Performance Increase",
-    date: "October 22, 2024",
-    description: "Highlighting a significant increase in the quarterly financial results and the achievement across all divisions. See our product line report.",
-    likes: 856
-  },
-  {
-    id: 4,
-    image: post4,
-    category: "Product Launch",
-    title: "Draft: Upcoming Product Launch Strategy",
-    date: "October 15, 2024",
-    description: "Preliminary plans for the Q4 2024 product launch event. Pre-plans outline launch activities, target audiences, messaging, and critical milestones.",
-    likes: 743
-  },
-  {
-    id: 5,
-    image: post5,
-    category: "Education",
-    title: "Webinar: Patient-Centric Care in Geriatric Diseases",
-    date: "September 30, 2024",
-    description: "Highlights from recent expert webinar on patient-centric approaches to chronic medication regimens for chronic diseases in elderly.",
-    likes: 456
-  }
-];
+import { useSelector } from "react-redux";
+import { getPostList, getProfileRep } from "../api";
+import useFetchList from "@/hooks/useFetchList";
+import { useCallback } from "react";
+import { ProductListDTO } from "../dto/productListDto";
+import { MedicalRepDetailsDTO } from "../dto/MedicalRepDetailsDTO";
 
 const RepDashboard = () => {
+  const id = useSelector((state: any) => state.auth.user?.id);
 
+  const fetchPosts = useCallback(() => {
+    if (!id) return Promise.resolve([]);
+    return getPostList(id);
+  }, [id]);
+
+  const fetchProfile = useCallback(async() => {
+    if (!id) return Promise.resolve(null);
+    const response=await getProfileRep(id);
+    return response.data;
+  }, [id]);
+
+  const { data: postList, loading:postLoading, error:postError } = useFetchList(fetchPosts);
+  const {
+    data: rep,
+    loading: profileLoading,
+    error: profileError,
+  } = useFetchList<MedicalRepDetailsDTO | null>(fetchProfile);
+
+
+  if (postError || profileError) return <p>{postError || profileError}</p>;
+  if (postLoading || profileLoading) return <p>Loading...</p>;
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -79,11 +54,10 @@ const RepDashboard = () => {
               <h1 className="text-3xl font-bold text-foreground">My Posts</h1>
               <Link to="/rep/dashboard/add-post">
                 <Button className="bg-primary hover:bg-primary/90">
-                <Plus className="mr-2 h-4 w-4" />
-                Upload New Post
-              </Button>
+                  <Plus className="mr-2 h-4 w-4" />
+                  Upload New Post
+                </Button>
               </Link>
-            
             </div>
 
             <div className="mb-6 flex flex-col gap-4 sm:flex-row">
@@ -104,21 +78,25 @@ const RepDashboard = () => {
             </div>
 
             <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-              {posts.map((post) => (
-                <PostCard key={post.id} {...post} />
+              {postList?.map((post: ProductListDTO) => (
+                <PostCard
+                  key={post.id}
+                  {...post}
+                  likes={119}
+                  category="Cardiac"
+                />
               ))}
             </div>
           </div>
 
           {/* Sidebar */}
           <aside className="lg:sticky lg:top-8 lg:self-start">
-            <ProfileCard />
+            <ProfileCard rep={rep} />
           </aside>
         </div>
       </main>
-
     </div>
   );
 };
 
-export default  RepDashboard;
+export default RepDashboard;

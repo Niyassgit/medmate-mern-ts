@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { CreateMedicalRepUseCase } from "../../../application/medicalRep/auth/CreateMedicalRepUseCase";
 import { RegisterMedicalRepDTO } from "../../../application/medicalRep/dto/RegisterMedicalRepDTO";
 import { GetRepProfileByIdUseCase } from "../../../application/medicalRep/use-cases/GetRepProfileByIdUseCase";
@@ -8,6 +8,7 @@ import { CompleteRepProfileUseCase } from "../../../application/medicalRep/use-c
 import { CreatePostUseCase } from "../../../application/productPost/use-case/CreatePostUseCase";
 import { ProductPostDTO } from "../../../application/productPost/dto/ProductPostDTO";
 import { EditProductPostUseCase } from "../../../application/productPost/use-case/EditProductPostUseCase";
+import { GetProductPostListUseCase } from "../../../application/productPost/use-case/GetProductPostListUseCase";
 
 export class MedicalRepController {
   constructor(
@@ -16,7 +17,8 @@ export class MedicalRepController {
     private _ProfileImageUpdateUseCase: ProfileImageUpdateUseCase,
     private _completeRepProfileUseCase: CompleteRepProfileUseCase,
     private _createPostUseCase: CreatePostUseCase,
-    private _editposUseCase: EditProductPostUseCase
+    private _editposUseCase: EditProductPostUseCase,
+    private _getProductsListUseCase:GetProductPostListUseCase,
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -77,4 +79,9 @@ export class MedicalRepController {
     const response = await this._editposUseCase.execute(userId, dto);
     return res.json({ success: true, message: response });
   };
+  products=async(req:Request,res:Response)=>{
+    const {userId}=req.params;
+    const response=await this._getProductsListUseCase.execute(userId);
+    return res.json({success:true,data:response});
+  }
 }

@@ -5,4 +5,5 @@ export const RepEndpoints= {
   COMPLETE_PROFILE:((userId:string)=>`/rep/profile/complete/${userId}`),
   UPLOAD_COMPANY_LOGO:((userId:string)=>`/rep/profile/complete/upload-logo/${userId}`),
   ADD_POST:((userId:string)=>`/rep/add-post/${userId}`),
+  GET_POSTS:((userId:string)=>`/rep/products/${userId}`),
 }

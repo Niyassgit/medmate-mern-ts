@@ -66,5 +66,11 @@ export class MedicalRepRoutes {
       uploadCloud.array("images", 5),
       medicalRepController.editPost
     );
+    this.router.get(
+      "/products/:userId",
+      Authenticate,
+      AuthorizeRole([Role.MEDICAL_REP]),
+      medicalRepController.products
+    );
   }
 }

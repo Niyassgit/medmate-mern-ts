@@ -16,7 +16,6 @@ export const updateProfileImage=async(userId:string,file:File)=>{
   return response.data;
 }
 export const completeProfile=async(userId:string,formData:FormData)=>{
-  console.log("the data before sending to the api:",formData);
   for(let [key,val] of formData.entries()){
     console.log(key,val);
   }
@@ -28,4 +27,8 @@ export const addPost=async(id:string,formData:FormData)=>{
   return api.post(RepEndpoints.ADD_POST(id),formData,{
     headers:{"Content-Type":"multipart/form-data"},
   });
+}
+export const getPostList=async(id:string)=>{
+  const response=await api.get(RepEndpoints.GET_POSTS(id));
+  return response.data?.data;
 }

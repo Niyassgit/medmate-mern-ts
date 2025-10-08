@@ -16,7 +16,6 @@ export class CreatePostUseCase{
         if(!rep) throw new NotFoundError("You must complete your profile to continue posting...");
        
         const formatedData=ProductPostMapper.toProductPostEntity(dto);
-        console.log('data before passsing to create post:',formatedData);
         const creatPost=await this._productpostRepository.createPost(rep.id,formatedData);
         if(!creatPost) throw new BadRequestError("Post upload failed");
         return "Post uploaded successfully";
