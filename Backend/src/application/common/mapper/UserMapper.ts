@@ -1,8 +1,6 @@
-import {
-  IUser,
-  AuthProvider,
-  Role,
-} from "../../../domain/common/entities/IUser";
+import { IUser } from "../../../domain/common/entities/IUser";
+import { AuthProvider } from "../../../domain/common/value-objects/AuthProvider";
+import { Role } from "../../../domain/common/value-objects/Role";
 import { UserProfileDTO } from "../dto/UserProfileDTO";
 
 export class UserMapper {
@@ -27,7 +25,7 @@ export class UserMapper {
       id: user.id,
       email: user.email,
       profileImage: user.profileImage ?? null,
-      role:user.role,
+      role: user.role,
     };
   }
 }

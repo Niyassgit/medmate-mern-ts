@@ -1,17 +1,17 @@
 import { Request, Response, NextFunction } from "express";
-import { LoginUserUseCase } from "../../../application/common/use-cases/LoginUserUseCase";
-import { GoogleLoginUseCase } from "../../../application/common/use-cases/GoogleLoginUseCase";
+import { ILoginUserUseCase } from "../../../application/common/interfaces/ILoginUserUseCase";
+import { IGoogleLoginUseCase } from "../../../application/common/interfaces/IGoogleLoginUseCase"; 
 import { LoginRequestBody } from "../validators/LoginValidationSchema";
 import { AuthResponseDTO } from "../../dto/AuthResponseDTO";
-import { GoogleLoginDTO, reciveBody } from "../../../application/common/dto/GoogleLoginDTO";
-import { GooglePrecheckUseCase } from "../../../application/common/use-cases/GooglePrecheckUseCase.ts";
-import { GetNewAccessTokenUseCase } from "../../../application/common/use-cases/GetNewAcccessTokenUseCase";
-import { ResendOtpUseCase } from "../../../application/common/use-cases/ResendOtpUseCase";
-import { VerifySignupOtpUseCase } from "../../../application/common/use-cases/VerifySignupOtpUseCase";
-import { ForgotPasswordUseCase } from "../../../application/common/use-cases/ForgotPasswordUseCase";
-import { VerifyForgotPasswordOtpUseCase } from "../../../application/common/use-cases/VerifyForgotPasswordOtpUseCase";
-import { ResetPasswordUseCase } from "../../../application/common/use-cases/ResetPasswordUseCase";
-import { ResetPasswordResendOtpUseCase } from "../../../application/common/use-cases/ResetPasswordResendOtpUseCase";
+import { GoogleLoginDTO } from "../../../application/common/dto/GoogleLoginDTO";
+import { IGooglePrecheckUseCase } from "../../../application/common/interfaces/IGooglePrecheckUseCase"; 
+import { IGetNewAccessTokenUseCase } from "../../../application/common/interfaces/IGetNewAccessTokenUseCase"; 
+import { IResendOtpUseCase } from "../../../application/common/interfaces/IResendOtpUseCase";
+import { IVerifySignupOtpUseCase } from "../../../application/common/interfaces/IVerifySignupOtpUseCase";
+import { IForgotPasswordUseCase } from "../../../application/common/interfaces/IForgotPasswordUseCase"; 
+import { IVerifyForgotPasswordOtpUseCase } from "../../../application/common/interfaces/IVerifiyForgotPasswordOtpUseCase";
+import { IResetPasswordUseCase } from "../../../application/common/interfaces/IResetPasswordUseCase";
+import { IResetPasswordResendOtpUseCase } from "../../../application/common/interfaces/IResetPasswordResendOtpUseCase";
 import {
   Cookie,
   ResetPasswordBody,
@@ -23,16 +23,16 @@ import {
 
 export class AuthController {
   constructor(
-    private _userLoginUseCase: LoginUserUseCase,
-    private _googleLoginUseCase: GoogleLoginUseCase,
-    private _googlePrecheckUseCase: GooglePrecheckUseCase,
-    private _getNewAccessTokenUsecase: GetNewAccessTokenUseCase,
-    private _verifySignupOtpUseCase: VerifySignupOtpUseCase,
-    private _resendOtpUseCase: ResendOtpUseCase,
-    private _forgotPasswordUseCase: ForgotPasswordUseCase,
-    private _verifyForgotPasswordOtpUseCase: VerifyForgotPasswordOtpUseCase,
-    private _resetPasswordUseCase: ResetPasswordUseCase,
-    private _resetPasswordResendOtpUseCase: ResetPasswordResendOtpUseCase
+    private _userLoginUseCase: ILoginUserUseCase,
+    private _googleLoginUseCase: IGoogleLoginUseCase,
+    private _googlePrecheckUseCase: IGooglePrecheckUseCase,
+    private _getNewAccessTokenUsecase: IGetNewAccessTokenUseCase,
+    private _verifySignupOtpUseCase: IVerifySignupOtpUseCase,
+    private _resendOtpUseCase: IResendOtpUseCase,
+    private _forgotPasswordUseCase: IForgotPasswordUseCase,
+    private _verifyForgotPasswordOtpUseCase: IVerifyForgotPasswordOtpUseCase,
+    private _resetPasswordUseCase: IResetPasswordUseCase,
+    private _resetPasswordResendOtpUseCase: IResetPasswordResendOtpUseCase
   ) {}
 
   loginUser = async (req: Request, res: Response, next: NextFunction) => {

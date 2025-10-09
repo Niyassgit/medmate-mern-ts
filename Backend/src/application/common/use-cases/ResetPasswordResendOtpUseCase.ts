@@ -5,8 +5,9 @@ import { OtpPurpose } from "../../../domain/common/types/OtpPurpose";
 import { INotificationService } from "../../../domain/common/services/INotificationService";
 import { OtpResponseDTO } from "../dto/OtpResponseDTO";
 import { OtpMapper } from "../mapper/OtpMapper";
+import { IResetPasswordResendOtpUseCase } from "../interfaces/IResetPasswordResendOtpUseCase";
 
-export class ResetPasswordResendOtpUseCase {
+export class ResetPasswordResendOtpUseCase implements IResetPasswordResendOtpUseCase{
   constructor(
     private _userLoginRepository: IUserRepository,
     private _otpService: IOtpService,

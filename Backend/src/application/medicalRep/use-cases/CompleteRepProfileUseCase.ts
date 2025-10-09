@@ -2,9 +2,10 @@ import { IUserRepository } from "../../../domain/common/repositories/IUserReposi
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
 import { NotFoundError } from "../../errors";
 import { CompleteRepProfileDTO } from "../dto/CompleteRepProfileDTO";
+import { ICompleteRepProfileUseCase } from "../interfaces/ICompleteRepProfileUseCase";
 import { MedicalRepMapper } from "../mapper/MedicalRepMapper";
 
-export class CompleteRepProfileUseCase {
+export class CompleteRepProfileUseCase implements ICompleteRepProfileUseCase{
   constructor(
     private _userRepository: IUserRepository,
     private _medicalRepository: IMedicalRepRepository

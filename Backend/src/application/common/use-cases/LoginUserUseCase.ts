@@ -7,8 +7,9 @@ import {
 } from "../../../domain/common/errors";
 import { LoginResponseDTO } from "../dto/LoginResponseDTO";
 import { UserMapper } from "../mapper/UserMapper";
+import { ILoginUserUseCase } from "../interfaces/ILoginUserUseCase";
 
-export class LoginUserUseCase {
+export class LoginUserUseCase implements ILoginUserUseCase{
   constructor(
     private _userLoginRepository: IUserRepository,
     private _bcryptServices: IBcryptService,

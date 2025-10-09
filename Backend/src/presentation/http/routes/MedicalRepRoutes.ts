@@ -5,7 +5,7 @@ import { ValidateSchema } from "../middlewares/ValidateSchema";
 import { registerMedicalRepSchema } from "../validators/RepSchemaValidator";
 import { Authenticate } from "../middlewares/Authenticate";
 import { AuthorizeRole } from "../middlewares/AuthorizeRole";
-import { Role } from "../../../domain/common/entities/IUser";
+import { Role } from "../../../domain/common/value-objects/Role";
 import { uploadCloud } from "../../../infrastructure/storage/multer/MulterConfigCloudinary";
 import { MedicalRepProfileUpdateSchema } from "../validators/MedicalRepProfileUpdateSchema";
 import { parseArrayFields } from "../middlewares/ParseArrayField";

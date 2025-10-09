@@ -1,7 +1,8 @@
 import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 import { BadRequestError, NotFoundError } from "../../errors";
+import { IProfileImageUpdateUseCase } from "../interfaces/IProfileImageUpdateUseCase";
 
-export class ProfileImageUpdateUseCase {
+export class ProfileImageUpdateUseCase implements IProfileImageUpdateUseCase {
   constructor(
     private _userRepository: IUserRepository,
   ) {}

@@ -5,8 +5,9 @@ import { MedicalRepDetailsDTO } from "../dto/MedicalRepDetailsDTO";
 import { RepDetailsMapper } from "../mapper/RepDetailsMapper";
 import { UserMapper } from "../../common/mapper/UserMapper";
 import { UserProfileDTO } from "../../common/dto/UserProfileDTO";
+import { IGetRepProfileByIdUseCase } from "../interfaces/IGetRepProfileByIdUseCase";
 
-export class GetRepProfileByIdUseCase {
+export class GetRepProfileByIdUseCase implements IGetRepProfileByIdUseCase{
   constructor(
     private _medicalRepRepository: IMedicalRepRepository,
     private _userRepository: IUserRepository

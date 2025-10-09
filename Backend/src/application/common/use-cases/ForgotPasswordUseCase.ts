@@ -9,8 +9,9 @@ import { OtpPurpose } from "../../../domain/common/types/OtpPurpose";
 import { INotificationService } from "../../../domain/common/services/INotificationService";
 import { ForgotResponseDTO } from "../dto/ForgotResponseDTO";
 import { OtpMapper } from "../mapper/OtpMapper";
+import { IForgotPasswordUseCase } from "../interfaces/IForgotPasswordUseCase";
 
-export class ForgotPasswordUseCase {
+export class ForgotPasswordUseCase implements IForgotPasswordUseCase {
   constructor(
     private _userLoginRepository: IUserRepository,
     private _otpService: IOtpService,

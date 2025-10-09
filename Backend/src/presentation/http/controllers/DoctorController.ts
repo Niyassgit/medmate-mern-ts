@@ -1,17 +1,18 @@
 import { Request, Response } from "express";
-import { CreateDoctorUseCase } from "../../../application/doctor/auth/CreateDoctorUseCase";
+import { ICreateDoctorUseCase } from "../../../application/doctor/interfaces/ICreateDoctorUseCase";
 import { RegisterDoctorDTO } from "../../../application/doctor/dto/RegisterDoctorDTO";
-import { GetDoctorProfileByIdUseCase } from "../../../application/doctor/use-cases/GetDoctorProfleByIdUseCase";
-import { ProfileImageUpdateUseCase } from "../../../application/doctor/use-cases/ProfileImageUpdateUseCase";
+import { IGetDoctorProfileByIdUseCase } from "../../../application/doctor/interfaces/IGetDoctoraProfileByIdUseCase";
+import { IProfileImageUpdateUseCase } from "../../../application/doctor/interfaces/IProfileImageUpdateUseCase"; 
+import { ICompleteProfileUseCase } from "../../../application/doctor/interfaces/ICompleteProfileUseCase";
 import { CompleteDoctorProfileDTO } from "../../../application/doctor/dto/CompleteProfileDTO";
-import { CompleteProfileUseCase } from "../../../application/doctor/use-cases/CompleteProfileUseCase";
+
 
 export class DoctorController {
   constructor(
-    private _createDoctorUseCase: CreateDoctorUseCase,
-    private _getDoctorProfileByIdUseCase: GetDoctorProfileByIdUseCase,
-    private _profileImageUpdateUseCase: ProfileImageUpdateUseCase,
-    private _compeletProfileUseCase: CompleteProfileUseCase
+    private _createDoctorUseCase: ICreateDoctorUseCase,
+    private _getDoctorProfileByIdUseCase: IGetDoctorProfileByIdUseCase,
+    private _profileImageUpdateUseCase: IProfileImageUpdateUseCase,
+    private _compeletProfileUseCase: ICompleteProfileUseCase
   ) {}
 
   createDoctor = async (req: Request, res: Response) => {

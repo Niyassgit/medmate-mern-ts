@@ -1,6 +1,8 @@
 import { prisma } from "../database/prisma";
 import { IUserRepository } from "../../domain/common/repositories/IUserRepository";
-import { IUser, Role, AuthProvider } from "../../domain/common/entities/IUser";
+import { IUser} from "../../domain/common/entities/IUser";
+import { AuthProvider } from "../../domain/common/value-objects/AuthProvider";
+import { Role } from "../../domain/common/value-objects/Role";
 import { UserMapper } from "../mappers/UserMapper";
 
 export class UserRepository implements IUserRepository {

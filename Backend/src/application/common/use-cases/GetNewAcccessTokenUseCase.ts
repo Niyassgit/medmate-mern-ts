@@ -1,8 +1,9 @@
 import { IJWtService } from "../../../domain/common/services/IJWTService";
 import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 import { UnautharizedError } from "../../../domain/common/errors";
+import { IGetNewAccessTokenUseCase } from "../interfaces/IGetNewAccessTokenUseCase";
 
-export class GetNewAccessTokenUseCase {
+export class GetNewAccessTokenUseCase implements IGetNewAccessTokenUseCase{
   constructor(
     private _userLoginRepository: IUserRepository,
     private _jwtService: IJWtService

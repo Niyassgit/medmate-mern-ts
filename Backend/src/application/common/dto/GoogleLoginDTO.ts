@@ -1,4 +1,4 @@
-import { Role } from "../../../domain/common/entities/IUser";
+import { Role } from "../../../domain/common/value-objects/Role"
 
 interface User{
   id:string,

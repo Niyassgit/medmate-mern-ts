@@ -5,8 +5,9 @@ import { INotificationService } from "../../../domain/common/services/INotificat
 import { OtpPurpose } from "../../../domain/common/types/OtpPurpose";
 import { OtpResponseDTO } from "../dto/OtpResponseDTO";
 import { OtpMapper } from "../mapper/OtpMapper";
+import { IResendOtpUseCase } from "../interfaces/IResendOtpUseCase";
 
-export class ResendOtpUseCase {
+export class ResendOtpUseCase implements IResendOtpUseCase {
   constructor(
     private _userLoginRepository: IUserRepository,
     private _otpService: IOtpService,

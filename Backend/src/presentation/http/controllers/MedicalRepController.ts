@@ -1,24 +1,24 @@
-import { NextFunction, Request, Response } from "express";
-import { CreateMedicalRepUseCase } from "../../../application/medicalRep/auth/CreateMedicalRepUseCase";
+import { Request, Response } from "express";
+import { ICreateMedicalRepUseCase } from "../../../application/medicalRep/interfaces/ICreateMedicalRepUseCase";
 import { RegisterMedicalRepDTO } from "../../../application/medicalRep/dto/RegisterMedicalRepDTO";
-import { GetRepProfileByIdUseCase } from "../../../application/medicalRep/use-cases/GetRepProfileByIdUseCase";
-import { ProfileImageUpdateUseCase } from "../../../application/medicalRep/use-cases/ProfileImageUpdateUseCase";
+import { IGetRepProfileByIdUseCase } from "../../../application/medicalRep/interfaces/IGetRepProfileByIdUseCase";
+import { IProfileImageUpdateUseCase } from "../../../application/medicalRep/interfaces/IProfileImageUpdateUseCase";
 import { CompleteRepProfileDTO } from "../../../application/medicalRep/dto/CompleteRepProfileDTO";
-import { CompleteRepProfileUseCase } from "../../../application/medicalRep/use-cases/CompleteRepProfileUseCase";
-import { CreatePostUseCase } from "../../../application/productPost/use-case/CreatePostUseCase";
+import { ICompleteRepProfileUseCase } from "../../../application/medicalRep/interfaces/ICompleteRepProfileUseCase";
+import { ICreatePostUseCase } from "../../../application/productPost/interfaces/ICreatePostUseCase";
 import { ProductPostDTO } from "../../../application/productPost/dto/ProductPostDTO";
-import { EditProductPostUseCase } from "../../../application/productPost/use-case/EditProductPostUseCase";
-import { GetProductPostListUseCase } from "../../../application/productPost/use-case/GetProductPostListUseCase";
+import { IEditProductPostUseCase } from "../../../application/productPost/interfaces/IEditProductPostUseCase"; 
+import { IGetProductPostListUseCase } from "../../../application/productPost/interfaces/IGetProductPostListUseCase"; 
 
 export class MedicalRepController {
   constructor(
-    private _createMedicalRepUseCase: CreateMedicalRepUseCase,
-    private _getUserProfile: GetRepProfileByIdUseCase,
-    private _ProfileImageUpdateUseCase: ProfileImageUpdateUseCase,
-    private _completeRepProfileUseCase: CompleteRepProfileUseCase,
-    private _createPostUseCase: CreatePostUseCase,
-    private _editposUseCase: EditProductPostUseCase,
-    private _getProductsListUseCase:GetProductPostListUseCase,
+    private _createMedicalRepUseCase: ICreateMedicalRepUseCase,
+    private _getUserProfile: IGetRepProfileByIdUseCase,
+    private _ProfileImageUpdateUseCase: IProfileImageUpdateUseCase,
+    private _completeRepProfileUseCase: ICompleteRepProfileUseCase,
+    private _createPostUseCase: ICreatePostUseCase,
+    private _editposUseCase: IEditProductPostUseCase,
+    private _getProductsListUseCase:IGetProductPostListUseCase,
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {

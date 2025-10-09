@@ -2,9 +2,10 @@ import { IUserRepository } from "../../../domain/common/repositories/IUserReposi
 import { IProductPostRepository } from "../../../domain/product/repositories/IProductPostRepository";
 import { BadRequestError, NotFoundError } from "../../errors";
 import { ProductPostDTO } from "../dto/ProductPostDTO";
+import { ICreatePostUseCase } from "../interfaces/ICreatePostUseCase";
 import { ProductPostMapper } from "../mappers/ProductPostMapper";
 
-export class CreatePostUseCase{
+export class CreatePostUseCase implements ICreatePostUseCase{
     constructor(
         private _userRepository:IUserRepository,
         private _productpostRepository:IProductPostRepository

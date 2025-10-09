@@ -1,5 +1,5 @@
 import { IUser } from "../entities/IUser";
-import { Role } from "../entities/IUser";
+import { Role } from "../value-objects/Role";
 
 export interface IUserRepository {
   createUser(

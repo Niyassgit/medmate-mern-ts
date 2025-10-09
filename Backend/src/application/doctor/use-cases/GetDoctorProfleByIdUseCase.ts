@@ -4,11 +4,12 @@ import { UserProfileDTO } from "../../common/dto/UserProfileDTO";
 import { UserMapper } from "../../common/mapper/UserMapper";
 import { NotFoundError } from "../../errors";
 import { DoctorDetailsDTO } from "../dto/DoctorDetailsDTO";
+import { IGetDoctorProfileByIdUseCase } from "../interfaces/IGetDoctoraProfileByIdUseCase";
 import { DoctorDetailsMapper } from "../mapper/DoctorDetailsMapper";
 
 
 
-export class GetDoctorProfileByIdUseCase{
+export class GetDoctorProfileByIdUseCase implements IGetDoctorProfileByIdUseCase{
     constructor(
         private _doctorRepository:IDoctorRepository,
         private _userRepository:IUserRepository

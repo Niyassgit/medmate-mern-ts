@@ -2,7 +2,7 @@ import { ISuperAdminRepository } from "../../../domain/superAdmin/repositories/I
 import { IBcryptService } from "../../../domain/common/services/IHashService";
 import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 import { RegisterSuperAdminDTO } from "../dto/RegisterSuperAdminDTO";
-import { Role } from "../../../domain/common/entities/IUser";
+import { Role } from "../../../domain/common/value-objects/Role";
 import { ConflictError, BadRequestError } from "../../../domain/common/errors";
 import { UserMapper } from "../../common/mapper/UserMapper";
 import { SuperAdminMapper } from "../mappers/SuperAdminMapper";

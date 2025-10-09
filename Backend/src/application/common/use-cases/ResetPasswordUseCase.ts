@@ -3,15 +3,16 @@ import { IOtpService } from "../../../domain/common/services/IOtpService";
 import { IBcryptService } from "../../../domain/common/services/IHashService";
 import { BadRequestError, NotFoundError } from "../../../domain/common/errors";
 import { OtpPurpose } from "../../../domain/common/types/OtpPurpose";
+import { IResetPasswordUseCase } from "../interfaces/IResetPasswordUseCase";
 
-export class ResetPasswordUseCase {
+export class ResetPasswordUseCase implements IResetPasswordUseCase{
   constructor(
     private _userLoginRepository: IUserRepository,
     private _otpService: IOtpService,
     private _bcryptService: IBcryptService
   ) {}
 
-  async execute(email: string, otp: string, password: string): Promise<string> {
+  async execute(email:string,password:string,otp:string): Promise<string> {
     const user = await this._userLoginRepository.findByEmail(email);
     if (!user) throw new NotFoundError("User not found");
 

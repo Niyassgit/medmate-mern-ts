@@ -1,13 +1,5 @@
-export enum Role {
-  SUPER_ADMIN = "SUPER_ADMIN",
-  DOCTOR = "DOCTOR",
-  MEDICAL_REP = "MEDICAL_REP",
-}
-
-export enum AuthProvider {
-  NATIVE = "NATIVE",
-  GOOGLE = "GOOGLE",
-}
+import { AuthProvider } from "../value-objects/AuthProvider";
+import { Role } from "../value-objects/Role";
 
 export interface IUser {
   id: string;

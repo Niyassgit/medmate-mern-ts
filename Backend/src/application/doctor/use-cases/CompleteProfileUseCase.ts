@@ -2,10 +2,11 @@ import { IUserRepository } from "../../../domain/common/repositories/IUserReposi
 import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRepository";
 import {NotFoundError } from "../../errors";
 import { CompleteDoctorProfileDTO } from "../dto/CompleteProfileDTO";
+import { ICompleteProfileUseCase} from "../interfaces/ICompleteProfileUseCase";
 import { DoctorMapper } from "../mapper/DoctorMapper";
 
 
-export class CompleteProfileUseCase{
+export class CompleteProfileUseCase implements ICompleteProfileUseCase{
     constructor(
         private _userRepository:IUserRepository,
         private _doctorRepository:IDoctorRepository

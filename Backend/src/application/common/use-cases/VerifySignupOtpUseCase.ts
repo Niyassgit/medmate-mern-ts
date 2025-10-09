@@ -3,8 +3,9 @@ import { IUserRepository } from "../../../domain/common/repositories/IUserReposi
 import { IOtpService } from "../../../domain/common/services/IOtpService";
 import { IBcryptService } from "../../../domain/common/services/IHashService";
 import { OtpPurpose } from "../../../domain/common/types/OtpPurpose";
+import { IVerifySignupOtpUseCase } from "../interfaces/IVerifySignupOtpUseCase";
 
-export class VerifySignupOtpUseCase {
+export class VerifySignupOtpUseCase implements IVerifySignupOtpUseCase {
   constructor(
     private _userLoginRepository: IUserRepository,
     private _otpService: IOtpService,

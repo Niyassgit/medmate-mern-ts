@@ -33,7 +33,6 @@ app.use("/uploads", express.static(uploadsPath));
 const startServer = async () => {
   try {
     await connectDB();
-
     app.use("/api/doctor", new DoctorRoutes().router);
     app.use("/api/rep", new MedicalRepRoutes().router);
     app.use("/api/admin", new SuperAdminRoutes().router);
