@@ -1,5 +1,5 @@
 import { IUser } from "../../domain/common/entities/IUser";
-import { Role as DomainRole} from "../../domain/common/value-objects/Role";
+import { Role as DomainRole } from "../../domain/common/value-objects/Role";
 import { AuthProvider as DomainAuthProvider } from "../../domain/common/value-objects/AuthProvider";
 import { Prisma, User } from "@prisma/client";
 
@@ -11,7 +11,7 @@ export class UserMapper {
       password: user.password,
       authProvider: user.authProvider as DomainAuthProvider,
       role: user.role as DomainRole,
-      profileImage: user.profileimage,
+      profileImage: user.profileImage,
       isBlocked: user.isBlocked,
       isVerified: user.isVerified,
       providerId: user.providerId,
@@ -20,18 +20,19 @@ export class UserMapper {
       tokenVersion: user.tokenVersion,
     };
   }
-
   static toPersistence(
     domain: Omit<IUser, "id" | "createdAt" | "updatedAt">
   ): Prisma.UserCreateInput {
     return {
       email: domain.email,
-      password: domain.password ?? undefined,
+      password: domain.password ?? null, // fallback if undefined
       authProvider: domain.authProvider,
       role: domain.role,
-      providerId: domain.providerId,
-      isBlocked: domain.isBlocked ?? false,
-      isVerified: domain.isVerified ?? false,
+      providerId: domain.providerId ?? null, // fallback
+      isBlocked: domain.isBlocked ?? false, // fallback
+      isVerified: domain.isVerified ?? false, // fallback
+      profileImage: domain.profileImage ?? null, // must match Prisma field name
+      tokenVersion: 0,
     };
   }
 

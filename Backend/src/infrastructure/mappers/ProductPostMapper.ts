@@ -5,7 +5,7 @@ export class ProductPostMapper {
   static toPersistance(
     domain: Omit<IProductPost, "id" | "createdAt" | "updatedAt">,
     medicalRepId: string
-  ): Omit<ProductPost, "id" | "createdAt" | "updatedAt"> {
+  ): Prisma.ProductPostCreateInput {
     return {
       title: domain.title,
       brand: domain.brand,
@@ -13,9 +13,17 @@ export class ProductPostMapper {
       imageUrl: domain.imageUrl,
       ingredients: domain.ingredients,
       termsOfUse: domain.termsOfUse,
-      territoryId: domain.territoryId ?? null,
       useCases: domain.useCases,
-      repId: medicalRepId,
+      rep: {
+        connect: { id: medicalRepId },
+      },
+      ...(domain.territoryId
+        ? {
+            territory: {
+              connect: { id: domain.territoryId },
+            },
+          }
+        : {}),
     };
   }
 
@@ -61,5 +69,21 @@ export class ProductPostMapper {
       createdAt: product.createdAt,
       territoryId: product.territoryId,
     }));
+  }
+  static toDomain(product: ProductPost): IProductPost{
+    return {
+      id: product.id,
+      brand: product.brand,
+      description: product.description,
+      title: product.title,
+      repId: product.repId,
+      imageUrl: product.imageUrl,
+      ingredients: product.ingredients,
+      termsOfUse: product.termsOfUse,
+      useCases: product.useCases,
+      updatedAt: product.updatedAt,
+      createdAt: product.createdAt,
+      territoryId: product.territoryId,
+    };
   }
 }

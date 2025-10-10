@@ -36,7 +36,7 @@ model User {
   email        String       @unique
   password     String?
   role         Role
-  profileimage String?
+  profileImage String?
   tokenVersion Int          @default(0)
   authProvider AuthProvider @default(NATIVE)
   isBlocked    Boolean      @default(false)

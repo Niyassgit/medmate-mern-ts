@@ -3,11 +3,20 @@ import { IMedicalRepRepository } from "../../domain/medicalRep/repositories/IMed
 import { IMedicalRep } from "../../domain/medicalRep/entities/IMedicalRep";
 import { IRepListItem } from "../../domain/medicalRep/entities/IRepListItem";
 import { MedicalRepMapper } from "../mappers/MedicalRepMapper";
-import { Prisma } from "@prisma/client";
+import { MedicalRep, Prisma } from "@prisma/client";
 import { IMedicalRepWithUser } from "../../domain/medicalRep/entities/IMedicalRepWithUser";
 import { MedicalRepWithUserMapper } from "../mappers/MedicalRepWithUserMapper";
+import { BaseRepository } from "../database/BaseRepository";
 
-export class MedicalRepRepository implements IMedicalRepRepository {
+export class MedicalRepRepository
+  extends BaseRepository<
+    IMedicalRep,
+    MedicalRep,
+    Prisma.MedicalRepCreateInput,
+    "medicalRep"
+  >
+  implements IMedicalRepRepository
+{
   async createMedicalRep(
     data: Omit<IMedicalRep, "id" | "createdAt" | "updatedAt">
   ): Promise<IMedicalRep> {
@@ -90,8 +99,8 @@ export class MedicalRepRepository implements IMedicalRepRepository {
       where: { loginId: id },
       include: {
         user: true,
-        educations:true,
-        certificates:true,
+        educations: true,
+        certificates: true,
       },
     });
 
@@ -115,14 +124,4 @@ export class MedicalRepRepository implements IMedicalRepRepository {
     });
     return MedicalRepMapper.toDomain(updatedRep);
   }
-
-  async updateCompanyLogo(userId: string, LogoUrl: string): Promise<string> {
-    await prisma.medicalRep.update({
-      where: { id: userId },
-      data: { companyLogoUrl: LogoUrl },
-    });
-    return LogoUrl;
-  }
-  
-
 }

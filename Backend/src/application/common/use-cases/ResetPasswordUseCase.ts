@@ -39,7 +39,8 @@ export class ResetPasswordUseCase implements IResetPasswordUseCase{
       );
 
     const hashedPassword = await this._bcryptService.hash(password);
-    await this._userLoginRepository.resetPassword(user.id, hashedPassword);
+    const success=await this._userLoginRepository.resetPassword(user.id, hashedPassword);
+    if(!success) throw new BadRequestError("Password reset failed");
     await this._otpService.deleteOtp(user.id, OtpPurpose.RESET_PASSWORD);
     return "Password changed successfully";
   }

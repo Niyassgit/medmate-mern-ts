@@ -8,7 +8,7 @@ export interface IProductPost {
   useCases: string[];
   ingredients: string[];
   termsOfUse: string;
-  territoryId?: string |null;
+  territoryId: string |null;
   createdAt: Date;
   updatedAt: Date;
 }

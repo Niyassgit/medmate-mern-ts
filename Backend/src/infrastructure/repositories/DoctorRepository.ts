@@ -1,33 +1,35 @@
 import { prisma } from "../database/prisma";
-import { Prisma } from "@prisma/client";
+import { Prisma, Doctor } from "@prisma/client";
 import { IDoctorRepository } from "../../domain/doctor/repositories/IDoctorRepository";
 import { IDoctor } from "../../domain/doctor/entities/IDoctor";
 import { IDoctorListItem } from "../../domain/doctor/entities/IDoctorListItem";
 import { DoctorMapper } from "../mappers/DoctorMapper";
 import { IDoctorWithUser } from "../../domain/doctor/entities/IDoctorWithUser";
 import { DoctorWithUserMapper } from "../mappers/DoctorWithUserMapper";
+import { BaseRepository } from "../database/BaseRepository";
 
-export class DoctorRepository implements IDoctorRepository {
+export class DoctorRepository
+  extends BaseRepository<IDoctor, Doctor, Prisma.DoctorCreateInput, "doctor">
+  implements IDoctorRepository
+{
   async createDoctor(
     data: Omit<IDoctor, "id" | "updatedAt" | "createdAt">
   ): Promise<IDoctor> {
-    const created = await prisma.doctor.create({
-      data: DoctorMapper.toPersistance(data),
-    });
-    return DoctorMapper.toDomain(created);
+    const mappedData = DoctorMapper.toPersistance(data);
+    return await this.create(mappedData);
   }
 
   async getDoctorById(id: string): Promise<IDoctorWithUser | null> {
-    const user = await prisma.doctor.findUnique({
+    const doctor = await prisma.doctor.findFirst({
       where: { id },
       include: {
-         user: true,
-         educations:true,
-         certificates:true
-        },
+        user: true,
+        educations: true,
+        certificates: true,
+      },
     });
-    if (!user) return null;
-    return DoctorWithUserMapper.toDomain(user);
+    if (!doctor) return null;
+    return DoctorWithUserMapper.toDomain(doctor);
   }
 
   async getDoctorByEmail(email: string): Promise<IDoctor | null> {
@@ -74,37 +76,36 @@ export class DoctorRepository implements IDoctorRepository {
   }
 
   async getDoctorByUserId(id: string): Promise<IDoctorWithUser | null> {
-    const user=await prisma.doctor.findFirst({
-      where:{loginId:id},
-      include:{
-        user:true,
-        educations:true,
-        certificates:true
-      }
+    const user = await prisma.doctor.findFirst({
+      where: { loginId: id },
+      include: {
+        user: true,
+        educations: true,
+        certificates: true,
+      },
     });
-    
-    if(!user) return null;
-    console.log("doctor profile before mapping:",user);
+
+    if (!user) return null;
     return DoctorWithUserMapper.toDomain(user);
   }
- async updateDoctor(userId: string, data: Partial<IDoctor>): Promise<IDoctor | null> {
-  const doctor = await prisma.doctor.findFirst({
-    where: { id: userId },
-  });
+  async updateDoctor(
+    userId: string,
+    data: Partial<IDoctor>
+  ): Promise<IDoctor | null> {
+    const doctor = await this.findById(userId);
 
-  if (!doctor) return null;
+    if (!doctor) return null;
 
-  const updateDoctor = await prisma.doctor.update({
-    where: { id: doctor.id },
-    data: DoctorMapper.toPartialPersistence(data),
-    include: {
-      user: true,
-      educations: true,
-      certificates: true,
-    },
-  });
-  
-  return DoctorWithUserMapper.toDomain(updateDoctor);
-}
+    const updateDoctor = await prisma.doctor.update({
+      where: { id: doctor.id },
+      data: DoctorMapper.toPartialPersistence(data),
+      include: {
+        user: true,
+        educations: true,
+        certificates: true,
+      },
+    });
 
+    return DoctorWithUserMapper.toDomain(updateDoctor);
+  }
 }

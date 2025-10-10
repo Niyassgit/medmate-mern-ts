@@ -5,7 +5,7 @@ import { AuthProvider as DomainAuthProvider } from "../../domain/common/value-ob
 import { Role as DomainRole } from "../../domain/common/value-objects/Role";
 
 export class DoctorWithUserMapper {
-  static toDomain(doctor: Doctor & { user: User | null }): IDoctorWithUser {
+  static toDomain(doctor: Doctor & { user?: User | null }): IDoctorWithUser {
     return {
       ...DoctorMapper.toDomain(doctor),
       user: doctor.user
@@ -15,7 +15,7 @@ export class DoctorWithUserMapper {
             isBlocked: doctor.user.isBlocked,
             createdAt: doctor.user.createdAt,
             updatedAt: doctor.user.updatedAt,
-            profileImage:doctor.user.profileimage,
+            profileImage:doctor.user.profileImage,
             role: doctor.user.role as DomainRole,
             authProvider: doctor.user.authProvider as DomainAuthProvider,
             providerId: doctor.user.providerId ?? null,

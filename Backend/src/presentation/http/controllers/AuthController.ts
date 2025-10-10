@@ -44,7 +44,7 @@ export class AuthController {
         httpOnly: true,
         sameSite: "strict",
         secure: process.env.NODE_ENV === "production",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
+        maxAge: Number(process.env.MAX_AGE),
       });
 
       const response: AuthResponseDTO = {
@@ -85,7 +85,7 @@ export class AuthController {
         httpOnly: true,
         sameSite: "strict",
         secure: process.env.NODE_ENV === "production",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
+        maxAge:Number(process.env.MAX_AGE),
       });
 
       const response: AuthResponseDTO = {
@@ -113,7 +113,7 @@ export class AuthController {
         httpOnly: true,
         sameSite: "strict",
         secure: process.env.NODE_ENV === "production",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
+        maxAge:Number(process.env.MAX_AGE),
       });
          
       console.log("user role after the result",result.user.role);

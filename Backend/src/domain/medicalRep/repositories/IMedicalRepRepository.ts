@@ -15,6 +15,5 @@ export interface IMedicalRepRepository {
   ): Promise<{ reps: IRepListItem[]; total: number }>;
   getMedicalRepByUserId(id:string):Promise<IMedicalRepWithUser | null>;
   completeProfile(userId:string,data:Partial<IMedicalRep>):Promise<IMedicalRep | null>;
-  updateCompanyLogo(userId:string,LogoUrl:string):Promise<string>;
   
 }

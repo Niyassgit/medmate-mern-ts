@@ -1,34 +1,43 @@
 import { prisma } from "../database/prisma";
 import { IUserRepository } from "../../domain/common/repositories/IUserRepository";
-import { IUser} from "../../domain/common/entities/IUser";
+import { IUser } from "../../domain/common/entities/IUser";
 import { AuthProvider } from "../../domain/common/value-objects/AuthProvider";
 import { Role } from "../../domain/common/value-objects/Role";
 import { UserMapper } from "../mappers/UserMapper";
+import { BaseRepository } from "../database/BaseRepository";
+import { User,Prisma } from "@prisma/client";
 
-export class UserRepository implements IUserRepository {
+export class UserRepository
+  extends BaseRepository<IUser, User,Prisma.UserCreateInput, "user">
+  implements IUserRepository
+{
+  constructor() {
+    super(prisma.user,(user)=> UserMapper.toDomain(user));
+  }
+
   async createUser(
     data: Omit<IUser, "id" | "createdAt" | "updatedAt">
   ): Promise<IUser> {
-    const created = await prisma.user.create({
-      data: UserMapper.toPersistence(data),
-    });
-    return UserMapper.toDomain(created);
+    const mappedData = UserMapper.toPersistence(data);
+    const created = await this.create(mappedData);
+    return created; 
   }
 
-  async findByEmail(email: string): Promise<IUser | null> {
-    const found = await prisma.user.findUnique({ where: { email } });
-    return found ? UserMapper.toDomain(found) : null;
+   async findByEmail(email: string): Promise<IUser | null> {
+    const entity = await this.model.findUnique({ where: { email } });
+    return entity ? this.toDomain(entity) : null;
   }
 
   async findById(userId: string): Promise<IUser | null> {
-    const found = await prisma.user.findUnique({ where: { id: userId } });
-    return found ? UserMapper.toDomain(found) : null;
+    const found = await this.findById(userId);
+    return found;
   }
+
   async updateBlockStatus(
     userId: string,
     isBlocked: boolean
   ): Promise<IUser | null> {
-    const user = await prisma.user.update({
+    const user = await this.model.update({
       where: { id: userId },
       data: { isBlocked },
     });
@@ -41,13 +50,13 @@ export class UserRepository implements IUserRepository {
     providerId: string | null;
     role: Role;
   }): Promise<IUser> {
-    const existingUser = await prisma.user.findUnique({
+    const existingUser = await this.model.findUnique({
       where: { email: payload.email },
     });
 
     if (existingUser) {
-      const user = await prisma.user.update({
-        where: { email: payload.email },
+      const user = await this.model.update({
+        where: { email: payload.email } as Partial<User>,
         data: {
           providerId: payload.providerId ?? undefined,
           authProvider: AuthProvider.GOOGLE,
@@ -57,7 +66,7 @@ export class UserRepository implements IUserRepository {
       return UserMapper.toDomain(user);
     }
 
-    const user = await prisma.user.create({
+    const user = await this.model.create({
       data: {
         email: payload.email,
         providerId: payload.providerId ?? undefined,
@@ -65,34 +74,32 @@ export class UserRepository implements IUserRepository {
         authProvider: AuthProvider.GOOGLE,
         password: null,
         isVerified: true,
-      },
+      } as Partial<User>,
     });
 
     return UserMapper.toDomain(user);
   }
   async updateUser(userId: string, isVerified: boolean): Promise<IUser | null> {
-    const user = await prisma.user.update({
-      where: { id: userId },
-      data: { isVerified },
-    });
-    return user ? UserMapper.toDomain(user) : null;
+    return await this.update(userId,{isVerified});
   }
 
-  async resetPassword(userId: string, password: string): Promise<string> {
-    const updatedUser = await prisma.user.update({
+  async resetPassword(userId: string, password: string): Promise<boolean> {
+    const updatedUser = await this.model.update({
       where: { id: userId },
       data: {
         password: password,
       },
     });
-    UserMapper.toDomain(updatedUser);
-    return "Password reset successfully";
+    return updatedUser ?true:false;
   }
-  async updateProfileImage(userId: string, imageUrl: string): Promise<IUser | null> {
-    const user=await prisma.user.update({
-      where:{id:userId},
-      data:{profileimage:imageUrl}
-    })
+  async updateProfileImage(
+    userId: string,
+    imageUrl: string
+  ): Promise<IUser | null> {
+    const user = await this.model.update({
+      where: { id: userId },
+      data: { profileImage: imageUrl },
+    });
     return user ? UserMapper.toDomain(user) : null;
   }
 }

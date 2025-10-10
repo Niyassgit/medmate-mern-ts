@@ -14,6 +14,6 @@ export interface IUserRepository {
     role: Role;
   }): Promise<IUser>;
   updateUser(userId: string, isVerified: boolean): Promise<IUser | null>;
-  resetPassword(userId: string, password: string): Promise<string>;
+  resetPassword(userId: string, password: string): Promise<boolean>;
   updateProfileImage(userId:string,imageUrl:string):Promise<IUser | null>;
 }

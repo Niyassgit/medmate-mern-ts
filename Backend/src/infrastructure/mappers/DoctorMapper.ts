@@ -41,7 +41,7 @@ export class DoctorMapper {
     };
   }
 
-  static toListItem(doctor: Doctor & { user: User | null }): IDoctorListItem {
+  static toListItem(doctor: Doctor & { user?: User | null }): IDoctorListItem {
     return {
       id: doctor.id,
       name: doctor.name,
