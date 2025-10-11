@@ -13,6 +13,7 @@ export interface IMedicalRepRepository {
     limit: number,
     search:string,
   ): Promise<{ reps: IRepListItem[]; total: number }>;
+  findMedicalRepIdByUserId(userId:string):Promise<string | null>;
   getMedicalRepByUserId(id:string):Promise<IMedicalRepWithUser | null>;
   completeProfile(userId:string,data:Partial<IMedicalRep>):Promise<IMedicalRep | null>;
   

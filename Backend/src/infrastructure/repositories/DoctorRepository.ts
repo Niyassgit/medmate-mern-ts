@@ -18,6 +18,9 @@ export class DoctorRepository
     const mappedData = DoctorMapper.toPersistance(data);
     return await this.create(mappedData);
   }
+   constructor() {
+    super(prisma.doctor,(doctor)=>DoctorMapper.toDomain(doctor));
+  }
 
   async getDoctorById(id: string): Promise<IDoctorWithUser | null> {
     const doctor = await prisma.doctor.findFirst({

@@ -1,6 +1,5 @@
 import { IUser } from "../../../domain/common/entities/IUser";
-import { AuthProvider } from "../../../domain/common/value-objects/AuthProvider";
-import { Role } from "../../../domain/common/value-objects/Role";
+import { AuthProvider,Role } from "../../../shared/enums"; 
 import { UserProfileDTO } from "../dto/UserProfileDTO";
 
 export class UserMapper {

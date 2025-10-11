@@ -17,6 +17,10 @@ export class MedicalRepRepository
   >
   implements IMedicalRepRepository
 {
+  constructor() {
+    super(prisma.medicalRep, (rep) => MedicalRepMapper.toDomain(rep));
+  }
+
   async createMedicalRep(
     data: Omit<IMedicalRep, "id" | "createdAt" | "updatedAt">
   ): Promise<IMedicalRep> {
@@ -94,6 +98,13 @@ export class MedicalRepRepository
       total,
     };
   }
+  async findMedicalRepIdByUserId(userId: string): Promise<string | null> {
+    const rep = await prisma.medicalRep.findUnique({
+      where: { loginId: userId },
+      select: { id: true },
+    });
+    return rep ? rep.id : null;
+  }
   async getMedicalRepByUserId(id: string): Promise<IMedicalRepWithUser | null> {
     const user = await prisma.medicalRep.findFirst({
       where: { loginId: id },
@@ -103,7 +114,6 @@ export class MedicalRepRepository
         certificates: true,
       },
     });
-
     if (!user) return null;
     return MedicalRepWithUserMapper.toDomain(user);
   }

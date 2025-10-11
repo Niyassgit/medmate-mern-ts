@@ -8,6 +8,7 @@ import {
 import { LoginResponseDTO } from "../dto/LoginResponseDTO";
 import { UserMapper } from "../mapper/UserMapper";
 import { ILoginUserUseCase } from "../interfaces/ILoginUserUseCase";
+import { ErrorMessages } from "../../../shared/messages";
 
 export class LoginUserUseCase implements ILoginUserUseCase{
   constructor(
@@ -21,17 +22,17 @@ export class LoginUserUseCase implements ILoginUserUseCase{
     password: string
   ): Promise<LoginResponseDTO> {
     const user = await this._userLoginRepository.findByEmail(email);
-    if (!user) throw new BadRequestError("User not found");
+    if (!user) throw new BadRequestError(ErrorMessages.USER_NOT_FOUND);
 
-    if (!user.password) throw new BadRequestError("Password is required");
+    if (!user.password) throw new BadRequestError(ErrorMessages.PASSWORD_REQUIRED);
     const isValidUser = await this._bcryptServices.compare(
       password,
       user.password
     );
-    if (!isValidUser) throw new BadRequestError("Invalid password");
-    if (user.isBlocked) throw new ForbiddenError("User is blocked");
+    if (!isValidUser) throw new BadRequestError(ErrorMessages.INVALID_CREDENTIALS);
+    if (user.isBlocked) throw new ForbiddenError(ErrorMessages.USER_BLOCKED);
     if (!user.isVerified)
-      throw new ForbiddenError("Please verify email before logging in");
+      throw new ForbiddenError(ErrorMessages.VERIFY_EMAIL);
 
     const accessPayload = { userId: user.id, role: user.role };
     const refreshPayload = {

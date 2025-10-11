@@ -1,5 +1,5 @@
-import { AuthProvider } from "../value-objects/AuthProvider";
-import { Role } from "../value-objects/Role";
+import { AuthProvider } from "../../../shared/enums"; 
+import { Role } from "../../../shared/enums"; 
 
 export interface IUser {
   id: string;

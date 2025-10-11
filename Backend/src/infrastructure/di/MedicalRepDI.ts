@@ -11,7 +11,7 @@ import { CompleteRepProfileUseCase } from "../../application/medicalRep/use-case
 import { ProductPostRepository } from "../repositories/ProductPostRepository";
 import { CreatePostUseCase } from "../../application/productPost/use-case/CreatePostUseCase";
 import { EditProductPostUseCase } from "../../application/productPost/use-case/EditProductPostUseCase";
-import { GetProductPostListUseCase} from "../../application/productPost/use-case/GetProductPostListUseCase";
+import { GetProductPostListUseCase } from "../../application/productPost/use-case/GetProductPostListUseCase";
 
 const medicalRepRepository = new MedicalRepRepository();
 const userRepository = new UserRepository();
@@ -32,9 +32,7 @@ const getRepProfileByIdUseCase = new GetRepProfileByIdUseCase(
   medicalRepRepository,
   userRepository
 );
-const profileUpdateImageUseCase = new ProfileImageUpdateUseCase(
-  userRepository
-);
+const profileUpdateImageUseCase = new ProfileImageUpdateUseCase(userRepository);
 const completRepProfileUseCase = new CompleteRepProfileUseCase(
   userRepository,
   medicalRepRepository
@@ -42,13 +40,18 @@ const completRepProfileUseCase = new CompleteRepProfileUseCase(
 
 const createPostUseCase = new CreatePostUseCase(
   userRepository,
-  productPostRepository
+  productPostRepository,
+  medicalRepRepository
 );
 const editProductPostUseCase = new EditProductPostUseCase(
   userRepository,
   productPostRepository
 );
-const getProductPostListUseCase=new GetProductPostListUseCase(userRepository,productPostRepository);
+const getProductPostListUseCase = new GetProductPostListUseCase(
+  userRepository,
+  productPostRepository,
+  medicalRepRepository
+);
 
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
@@ -57,6 +60,5 @@ export const medicalRepController = new MedicalRepController(
   completRepProfileUseCase,
   createPostUseCase,
   editProductPostUseCase,
-  getProductPostListUseCase,
-
+  getProductPostListUseCase
 );

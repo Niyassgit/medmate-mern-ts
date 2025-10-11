@@ -1,9 +1,9 @@
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
 import morgan from "morgan";
+import {env} from "./config/env"
 import { fileURLToPath } from "url";
 import { connectDB } from "./config/db";
 import { LoginRoute } from "./presentation/http/routes/AuthRoute";
@@ -12,14 +12,14 @@ import { DoctorRoutes } from "./presentation/http/routes/DoctorRoutes";
 import { SuperAdminRoutes } from "./presentation/http/routes/SuperAdminRoutes";
 import { ErrorHandler } from "./presentation/http/middlewares/ErrorHandler";
 
-dotenv.config();
+
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(
   cors({
-    origin: process.env.ORIGIN,
+    origin:env.origin,
     credentials: true,
   })
 );
@@ -39,8 +39,8 @@ const startServer = async () => {
     app.use("/api/auth", new LoginRoute().router);
 
     app.use(ErrorHandler);
-    app.listen(process.env.PORT || 5000, () => {
-      console.log(` server running on port ${process.env.PORT || 5000}`);
+    app.listen(env.port, () => {
+      console.log(` server running on port ${env.port}`);
     });
   } catch (err) {
     console.error("Failed to start server:", err);

@@ -1,5 +1,6 @@
 import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 import { IProductPostRepository } from "../../../domain/product/repositories/IProductPostRepository";
+import { ErrorMessages, SuccessMessages } from "../../../shared/messages";
 import { BadRequestError, NotFoundError } from "../../errors";
 import { ProductPostDTO } from "../dto/ProductPostDTO";
 import { IEditProductPostUseCase } from "../interfaces/IEditProductPostUseCase";
@@ -15,12 +16,12 @@ export class EditProductPostUseCase implements IEditProductPostUseCase{
     ){}
 
     async execute(userId:string,dto:ProductPostDTO):Promise<string>{
-        if(!dto) throw new BadRequestError("Fill the missing field and continue...");
+        if(!dto) throw new BadRequestError(ErrorMessages.FILL_ALL_FILED);
         const rep=await this._userRepository.findById(userId);
-        if(!rep) throw new NotFoundError("User not found");
+        if(!rep) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
         const formatedData=ProductPostMapper.toProductPostEntity(dto);
         const updated=await this._productPostRepository.editPost(dto.id,formatedData);
-        if(!updated) throw new BadRequestError("Edit post Failed");
-        return "Post updated successfully";
+        if(!updated) throw new BadRequestError(ErrorMessages.UPLOAD_FAILE);
+        return SuccessMessages.UPLOAD_SUCCESS;
     }
 }

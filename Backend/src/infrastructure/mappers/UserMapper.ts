@@ -1,6 +1,5 @@
 import { IUser } from "../../domain/common/entities/IUser";
-import { Role as DomainRole } from "../../domain/common/value-objects/Role";
-import { AuthProvider as DomainAuthProvider } from "../../domain/common/value-objects/AuthProvider";
+import { AuthProvider as DomainAuthProvider,Role as DomainRole } from "../../shared/enums"; 
 import { Prisma, User } from "@prisma/client";
 
 export class UserMapper {
@@ -25,13 +24,13 @@ export class UserMapper {
   ): Prisma.UserCreateInput {
     return {
       email: domain.email,
-      password: domain.password ?? null, // fallback if undefined
+      password: domain.password ?? null, 
       authProvider: domain.authProvider,
       role: domain.role,
-      providerId: domain.providerId ?? null, // fallback
-      isBlocked: domain.isBlocked ?? false, // fallback
-      isVerified: domain.isVerified ?? false, // fallback
-      profileImage: domain.profileImage ?? null, // must match Prisma field name
+      providerId: domain.providerId ?? null, 
+      isBlocked: domain.isBlocked ?? false, 
+      isVerified: domain.isVerified ?? false, 
+      profileImage: domain.profileImage ?? null, 
       tokenVersion: 0,
     };
   }

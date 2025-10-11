@@ -6,6 +6,7 @@ import { RepDetailsMapper } from "../mapper/RepDetailsMapper";
 import { UserMapper } from "../../common/mapper/UserMapper";
 import { UserProfileDTO } from "../../common/dto/UserProfileDTO";
 import { IGetRepProfileByIdUseCase } from "../interfaces/IGetRepProfileByIdUseCase";
+import { ErrorMessages } from "../../../shared/messages";
 
 export class GetRepProfileByIdUseCase implements IGetRepProfileByIdUseCase{
   constructor(
@@ -19,7 +20,7 @@ export class GetRepProfileByIdUseCase implements IGetRepProfileByIdUseCase{
     const rep = await this._medicalRepRepository.getMedicalRepByUserId(userId);
     if (!rep) {
       const user = await this._userRepository.findById(userId);
-      if (!user) throw new NotFoundError("User is not found");
+      if (!user) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
       return UserMapper.toUserProfile(user);
     }
     return RepDetailsMapper.toMedicalRepDetails(rep);

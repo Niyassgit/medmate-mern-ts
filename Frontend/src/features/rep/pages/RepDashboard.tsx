@@ -27,19 +27,22 @@ const RepDashboard = () => {
     return getPostList(id);
   }, [id]);
 
-  const fetchProfile = useCallback(async() => {
+  const fetchProfile = useCallback(async () => {
     if (!id) return Promise.resolve(null);
-    const response=await getProfileRep(id);
+    const response = await getProfileRep(id);
     return response.data;
   }, [id]);
 
-  const { data: postList, loading:postLoading, error:postError } = useFetchList(fetchPosts);
+  const {
+    data: postList,
+    loading: postLoading,
+    error: postError,
+  } = useFetchList(fetchPosts);
   const {
     data: rep,
     loading: profileLoading,
     error: profileError,
   } = useFetchList<MedicalRepDetailsDTO | null>(fetchProfile);
-
 
   if (postError || profileError) return <p>{postError || profileError}</p>;
   if (postLoading || profileLoading) return <p>Loading...</p>;
@@ -78,14 +81,32 @@ const RepDashboard = () => {
             </div>
 
             <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-              {postList?.map((post: ProductListDTO) => (
-                <PostCard
-                  key={post.id}
-                  {...post}
-                  likes={119}
-                  category="Cardiac"
-                />
-              ))}
+              {postList && postList.length > 0 ? (
+                postList.map((post: ProductListDTO) => (
+                  <PostCard
+                    key={post.id}
+                    {...post}
+                    likes={119}
+                    category="Cardiac"
+                  />
+                ))
+              ) : (
+                <div className="flex flex-col items-center justify-center border rounded-2xl p-6 text-center shadow-sm bg-muted/10">
+                  <Plus className="h-10 w-10 text-primary mb-3" />
+                  <h3 className="text-lg font-semibold text-foreground mb-1">
+                    No Products Yet
+                  </h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    You haven’t uploaded any products yet. Start by adding one
+                    now!
+                  </p>
+                  <Link to="/rep/dashboard/add-post">
+                    <Button className="bg-primary hover:bg-primary/90">
+                      <Plus className="mr-2 h-4 w-4" /> Add Product
+                    </Button>
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
 

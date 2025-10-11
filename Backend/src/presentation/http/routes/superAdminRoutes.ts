@@ -4,7 +4,7 @@ import { ValidateSchema } from "../middlewares/ValidateSchema";
 import { SuperAdminRegisterSchema } from "../validators/SuperAdminRegisterSchema";
 import { Authenticate } from "../middlewares/Authenticate";
 import { AuthorizeRole } from "../middlewares/AuthorizeRole";
-import { Role } from "../../../domain/common/value-objects/Role";
+import { Role } from "../../../shared/enums";
 
 export class SuperAdminRoutes {
   public router: Router;

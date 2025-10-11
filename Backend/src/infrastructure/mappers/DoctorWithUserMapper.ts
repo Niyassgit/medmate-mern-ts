@@ -1,8 +1,7 @@
 import { IDoctorWithUser } from "../../domain/doctor/entities/IDoctorWithUser";
 import { Doctor,User } from "@prisma/client";
 import { DoctorMapper } from "./DoctorMapper";
-import { AuthProvider as DomainAuthProvider } from "../../domain/common/value-objects/AuthProvider";
-import { Role as DomainRole } from "../../domain/common/value-objects/Role";
+import { AuthProvider as DomainAuthProvider,Role as DomainRole } from "../../shared/enums";
 
 export class DoctorWithUserMapper {
   static toDomain(doctor: Doctor & { user?: User | null }): IDoctorWithUser {

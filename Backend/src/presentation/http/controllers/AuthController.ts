@@ -1,14 +1,15 @@
 import { Request, Response, NextFunction } from "express";
+import { env } from "../../../config/env";
 import { ILoginUserUseCase } from "../../../application/common/interfaces/ILoginUserUseCase";
-import { IGoogleLoginUseCase } from "../../../application/common/interfaces/IGoogleLoginUseCase"; 
+import { IGoogleLoginUseCase } from "../../../application/common/interfaces/IGoogleLoginUseCase";
 import { LoginRequestBody } from "../validators/LoginValidationSchema";
 import { AuthResponseDTO } from "../../dto/AuthResponseDTO";
 import { GoogleLoginDTO } from "../../../application/common/dto/GoogleLoginDTO";
-import { IGooglePrecheckUseCase } from "../../../application/common/interfaces/IGooglePrecheckUseCase"; 
-import { IGetNewAccessTokenUseCase } from "../../../application/common/interfaces/IGetNewAccessTokenUseCase"; 
+import { IGooglePrecheckUseCase } from "../../../application/common/interfaces/IGooglePrecheckUseCase";
+import { IGetNewAccessTokenUseCase } from "../../../application/common/interfaces/IGetNewAccessTokenUseCase";
 import { IResendOtpUseCase } from "../../../application/common/interfaces/IResendOtpUseCase";
 import { IVerifySignupOtpUseCase } from "../../../application/common/interfaces/IVerifySignupOtpUseCase";
-import { IForgotPasswordUseCase } from "../../../application/common/interfaces/IForgotPasswordUseCase"; 
+import { IForgotPasswordUseCase } from "../../../application/common/interfaces/IForgotPasswordUseCase";
 import { IVerifyForgotPasswordOtpUseCase } from "../../../application/common/interfaces/IVerifiyForgotPasswordOtpUseCase";
 import { IResetPasswordUseCase } from "../../../application/common/interfaces/IResetPasswordUseCase";
 import { IResetPasswordResendOtpUseCase } from "../../../application/common/interfaces/IResetPasswordResendOtpUseCase";
@@ -19,7 +20,7 @@ import {
   VerifyOtpBody,
   resendOtpBody,
   ForgotPasswordBody,
-} from "../../../types/express/auth";
+} from "../../types/auth";
 
 export class AuthController {
   constructor(
@@ -44,7 +45,7 @@ export class AuthController {
         httpOnly: true,
         sameSite: "strict",
         secure: process.env.NODE_ENV === "production",
-        maxAge: Number(process.env.MAX_AGE),
+        maxAge: env.maxAge,
       });
 
       const response: AuthResponseDTO = {
@@ -53,9 +54,9 @@ export class AuthController {
           id: result.mappedUser.id,
           email: result.mappedUser.email,
           role: result.mappedUser.role,
-          image:result.mappedUser.profileImage,
+          image: result.mappedUser.profileImage,
         },
-      };
+      };    
       res.json(response);
     } catch (error) {
       next(error);
@@ -80,12 +81,12 @@ export class AuthController {
   googleLogin = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { idToken, role } = req.body as GoogleLoginDTO;
-      const result = await this._googleLoginUseCase.execute({ idToken,role});
+      const result = await this._googleLoginUseCase.execute({ idToken, role });
       res.cookie("refreshtoken", result.refreshToken, {
         httpOnly: true,
         sameSite: "strict",
         secure: process.env.NODE_ENV === "production",
-        maxAge:Number(process.env.MAX_AGE),
+        maxAge: env.maxAge,
       });
 
       const response: AuthResponseDTO = {
@@ -113,10 +114,10 @@ export class AuthController {
         httpOnly: true,
         sameSite: "strict",
         secure: process.env.NODE_ENV === "production",
-        maxAge:Number(process.env.MAX_AGE),
+        maxAge: Number(process.env.MAX_AGE),
       });
-         
-      console.log("user role after the result",result.user.role);
+
+      console.log("user role after the result", result.user.role);
       const response: AuthResponseDTO = {
         accessToken: result.accessToken,
         user: {
@@ -197,8 +198,8 @@ export class AuthController {
       const { email, otp, password } = req.body as ResetPasswordBody;
       const response = await this._resetPasswordUseCase.execute(
         email,
+        password,
         otp,
-        password
       );
       res.json({ success: true, message: response });
     } catch (error) {

@@ -2,7 +2,6 @@ import { Mail, MapPin, Phone, User, Briefcase, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import profilePhoto from "@/assets/profile-photo.jpg";
 import { MedicalRepDetailsDTO } from "../dto/MedicalRepDetailsDTO";
 import { Link } from "react-router-dom";
 
@@ -18,7 +17,6 @@ const ProfileCard = ({ rep }: ProfileCardProps) => {
       </Card>
     );
   }
-  console.log("profile image for the rep:", rep.profileImage);
   return (
     <Card className="p-6">
       <div className="flex flex-col items-center text-center">

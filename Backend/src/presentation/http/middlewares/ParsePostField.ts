@@ -1,23 +1,38 @@
 import { Request, Response, NextFunction } from "express";
-
+import { ParsePostBody } from "../../types/ParsePostBody";
 
 export const parsePostField = (
-  req: Request,
+  req: Request<unknown, unknown, ParsePostBody>,
   res: Response,
   next: NextFunction
 ) => {
-  try {
-    if (req.body.ingredients && typeof req.body.ingredients === "string") {
-      req.body.ingredients = JSON.parse(req.body.ingredients).filter(Boolean);
+  const parseStringArray = (value: string | string[] | undefined): string[] => {
+    if (!value) return [];
+
+    if (typeof value === "string") {
+      try {
+        const parsed:unknown = JSON.parse(value);
+        if (Array.isArray(parsed)) {
+          return parsed.filter(
+            (item): item is string => typeof item === "string" && Boolean(item)
+          );
+        }
+      } catch {
+        return [];
+      }
     }
 
-    if (req.body.useCases && typeof req.body.useCases === "string") {
-      req.body.useCases = JSON.parse(req.body.useCases).filter(Boolean);
+    if (Array.isArray(value)) {
+      return value.filter(
+        (item): item is string => typeof item === "string" && Boolean(item)
+      );
     }
-  } catch (err) {
-    req.body.ingredients = [];
-    req.body.useCases = [];
-  }
+
+    return [];
+  };
+
+  req.body.ingredients = parseStringArray(req.body.ingredients);
+  req.body.useCases = parseStringArray(req.body.useCases);
 
   next();
 };

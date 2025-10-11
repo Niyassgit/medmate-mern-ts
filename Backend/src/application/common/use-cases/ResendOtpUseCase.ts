@@ -6,6 +6,7 @@ import { OtpPurpose } from "../../../domain/common/types/OtpPurpose";
 import { OtpResponseDTO } from "../dto/OtpResponseDTO";
 import { OtpMapper } from "../mapper/OtpMapper";
 import { IResendOtpUseCase } from "../interfaces/IResendOtpUseCase";
+import { ErrorMessages, NotificationMessages } from "../../../shared/messages";
 
 export class ResendOtpUseCase implements IResendOtpUseCase {
   constructor(
@@ -16,17 +17,19 @@ export class ResendOtpUseCase implements IResendOtpUseCase {
 
   async execute(email: string): Promise<OtpResponseDTO> {
     const user = await this._userLoginRepository.findByEmail(email);
-    if (!user) throw new NotFoundError("User not found");
+    if (!user) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
 
     const { otp, otpRecord } = await this._otpService.updateOtp(
       user.id,
       OtpPurpose.SIGNUP
     );
-
+    
     console.log("resend otp sended to user:", otp);
-    this._notificationService
-      .sendEmail(user.email, "Verify your account", `Your new OTP is ${otp}`)
-      .catch((err) => console.error("Failed to send OTP email:", err));
+    void this._notificationService.sendEmail(
+      user.email,
+      NotificationMessages.OTP_SUBJECT,
+      NotificationMessages.NEW_OTP_VERIFICATION(otp)
+    );
 
     return OtpMapper.toForgotResponse(user.email, otpRecord.expiredAt);
   }

@@ -1,4 +1,4 @@
-import { Role } from "../../../domain/common/value-objects/Role"
+import { Role } from "../../../shared/enums";
 
 interface User{
   id:string,

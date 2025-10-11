@@ -28,7 +28,8 @@ export class ProductPostRepository
     return this.update(postId, formatedData as Partial<ProductPost>);
   }
   async getProducts(userId: string): Promise<IProductPost[] | null> {
-    const products = await this.findAll({
+
+    const products = await prisma.productPost.findMany({
       where: { repId: userId },
       orderBy: { createdAt: "desc" },
     });

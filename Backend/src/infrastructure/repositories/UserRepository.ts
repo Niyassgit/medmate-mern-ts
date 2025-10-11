@@ -1,8 +1,7 @@
 import { prisma } from "../database/prisma";
 import { IUserRepository } from "../../domain/common/repositories/IUserRepository";
 import { IUser } from "../../domain/common/entities/IUser";
-import { AuthProvider } from "../../domain/common/value-objects/AuthProvider";
-import { Role } from "../../domain/common/value-objects/Role";
+import { AuthProvider,Role } from "../../shared/enums";
 import { UserMapper } from "../mappers/UserMapper";
 import { BaseRepository } from "../database/BaseRepository";
 import { User,Prisma } from "@prisma/client";
@@ -28,10 +27,10 @@ export class UserRepository
     return entity ? this.toDomain(entity) : null;
   }
 
-  async findById(userId: string): Promise<IUser | null> {
-    const found = await this.findById(userId);
-    return found;
-  }
+  async findById(userId: string) {
+  const entity = await this.model.findUnique({ where: { id: userId } });
+  return entity ? this.toDomain(entity) : null;
+}
 
   async updateBlockStatus(
     userId: string,

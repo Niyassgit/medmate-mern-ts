@@ -6,6 +6,7 @@ import { INotificationService } from "../../../domain/common/services/INotificat
 import { OtpResponseDTO } from "../dto/OtpResponseDTO";
 import { OtpMapper } from "../mapper/OtpMapper";
 import { IResetPasswordResendOtpUseCase } from "../interfaces/IResetPasswordResendOtpUseCase";
+import { ErrorMessages, NotificationMessages } from "../../../shared/messages";
 
 export class ResetPasswordResendOtpUseCase implements IResetPasswordResendOtpUseCase{
   constructor(
@@ -16,19 +17,19 @@ export class ResetPasswordResendOtpUseCase implements IResetPasswordResendOtpUse
 
   async execute(email: string): Promise<OtpResponseDTO> {
     const user = await this._userLoginRepository.findByEmail(email);
-    if (!user) throw new NotFoundError("User not found");
+    if (!user) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
 
     const { otp, otpRecord } = await this._otpService.updateOtp(
       user.id,
       OtpPurpose.RESET_PASSWORD
     );
-    if (!otp) throw new BadRequestError("Retry later");
+    if (!otp) throw new BadRequestError(ErrorMessages.RETRY_LATER);
     console.log("otp recreated :", otp);
 
     void this._notificationService.sendEmail(
       user.email,
-      "Verify your email",
-      `Your new OTP is ${otp}`
+      NotificationMessages.OTP_SUBJECT,
+      NotificationMessages.OTP_VERIFICATION(otp)
     );
 
     return OtpMapper.toForgotResponse(user.email, otpRecord?.expiredAt);

@@ -207,7 +207,6 @@ model ProductPost {
   termsOfUse   String
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-
   rep       MedicalRep @relation(fields: [repId], references: [id])
   territory Territory?  @relation(fields: [territoryId], references: [id])
   interests Interest[]
