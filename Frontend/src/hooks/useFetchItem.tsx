@@ -2,7 +2,7 @@ import {useState,useEffect} from 'react'
 
 
 
-const useFetchList = <T,>(fetchFn:()=>Promise<T>) => {
+const useFetchItem = <T,>(fetchFn:()=>Promise<T>) => {
 
   const [data,setData]=useState<T| null>(null);
   const [loading,setLoading]=useState(true);
@@ -28,4 +28,4 @@ const useFetchList = <T,>(fetchFn:()=>Promise<T>) => {
   
 }
 
-export default useFetchList
+export default useFetchItem

@@ -1,6 +1,7 @@
 import { IProductPost } from "../../../domain/product/entity/IProductPost";
 import { ProductPostDTO } from "../dto/ProductPostDTO";
 import { ProductListDTO } from "../dto/ProductListDTO";
+import { PostDetailsDTO } from "../dto/PostDetailsDTO";
 
 export class ProductPostMapper {
   static toProductPostEntity(
@@ -29,5 +30,21 @@ export class ProductPostMapper {
       date: product.createdAt,
       description: product.description,
     }));
+  }
+  
+  static toDomain(persistance:IProductPost):PostDetailsDTO{
+    return{
+      id:persistance.id,
+      brand:persistance.brand,
+      description:persistance.description,
+      imageUrl:persistance.imageUrl,
+      ingredients:persistance.ingredients,
+      repId:persistance.repId,
+      termsOfUse:persistance.termsOfUse,
+      title:persistance.title,
+      useCases:persistance.useCases,
+      territoryId:persistance.territoryId ?? "",
+      createdAt:persistance.createdAt,
+    }
   }
 }

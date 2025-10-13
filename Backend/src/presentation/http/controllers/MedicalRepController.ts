@@ -9,6 +9,7 @@ import { ICreatePostUseCase } from "../../../application/productPost/interfaces/
 import { ProductPostDTO } from "../../../application/productPost/dto/ProductPostDTO";
 import { IEditProductPostUseCase } from "../../../application/productPost/interfaces/IEditProductPostUseCase"; 
 import { IGetProductPostListUseCase } from "../../../application/productPost/interfaces/IGetProductPostListUseCase"; 
+import { IGetProductPostDetailsUseCase } from "../../../application/productPost/interfaces/IPostDetailsUseCase";
 
 export class MedicalRepController {
   constructor(
@@ -19,6 +20,7 @@ export class MedicalRepController {
     private _createPostUseCase: ICreatePostUseCase,
     private _editposUseCase: IEditProductPostUseCase,
     private _getProductsListUseCase:IGetProductPostListUseCase,
+    private _getPostDetailsUseCase:IGetProductPostDetailsUseCase
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -68,7 +70,18 @@ export class MedicalRepController {
     const response = await this._createPostUseCase.execute(userId, dto);
     return res.json({ success: true, message: response });
   };
-  editPost = async (req: Request, res: Response) => {
+  posts=async(req:Request,res:Response)=>{
+    const {userId}=req.params;
+    const response=await this._getProductsListUseCase.execute(userId);
+    return res.json({success:true,data:response});
+  }
+  postDetails=async(req:Request,res:Response)=>{
+    const {postId}=req.params;
+    const response=await this._getPostDetailsUseCase.execute(postId);
+    return res.json({success:true,data:response});
+  }
+
+   editPost = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const dto = req.body as ProductPostDTO;
     if (req.files && Array.isArray(req.files)) {
@@ -79,9 +92,5 @@ export class MedicalRepController {
     const response = await this._editposUseCase.execute(userId, dto);
     return res.json({ success: true, message: response });
   };
-  products=async(req:Request,res:Response)=>{
-    const {userId}=req.params;
-    const response=await this._getProductsListUseCase.execute(userId);
-    return res.json({success:true,data:response});
-  }
+
 }

@@ -9,6 +9,6 @@ export interface IProductPost {
   ingredients: string[];
   termsOfUse: string;
   territoryId: string |null;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }

@@ -12,6 +12,7 @@ import { ProductPostRepository } from "../repositories/ProductPostRepository";
 import { CreatePostUseCase } from "../../application/productPost/use-case/CreatePostUseCase";
 import { EditProductPostUseCase } from "../../application/productPost/use-case/EditProductPostUseCase";
 import { GetProductPostListUseCase } from "../../application/productPost/use-case/GetProductPostListUseCase";
+import { GetProductPostDetailsUseCase } from "../../application/productPost/use-case/GetProductPostDetailsUseCase";
 
 const medicalRepRepository = new MedicalRepRepository();
 const userRepository = new UserRepository();
@@ -53,6 +54,10 @@ const getProductPostListUseCase = new GetProductPostListUseCase(
   medicalRepRepository
 );
 
+const getProductPostDetailsUseCase = new GetProductPostDetailsUseCase(
+  productPostRepository
+);
+
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
   getRepProfileByIdUseCase,
@@ -60,5 +65,6 @@ export const medicalRepController = new MedicalRepController(
   completRepProfileUseCase,
   createPostUseCase,
   editProductPostUseCase,
-  getProductPostListUseCase
+  getProductPostListUseCase,
+  getProductPostDetailsUseCase
 );

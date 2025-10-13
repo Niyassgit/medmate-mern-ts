@@ -36,4 +36,8 @@ export class ProductPostRepository
     if (!products || products.length === 0) return null;
     return ProductPostMapper.toDomainList(products);
   }
+  async getPostDetails(postId: string): Promise<IProductPost | null> {
+    const product=await this.findById(postId);
+    return product?product:null;
+  }
 }

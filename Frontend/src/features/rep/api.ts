@@ -16,9 +16,6 @@ export const updateProfileImage=async(userId:string,file:File)=>{
   return response.data;
 }
 export const completeProfile=async(userId:string,formData:FormData)=>{
-  for(let [key,val] of formData.entries()){
-    console.log(key,val);
-  }
   return api.post(RepEndpoints.COMPLETE_PROFILE(userId),formData,{
     headers:{"Content-Type":"multipart/form-data"}
   })
@@ -31,4 +28,13 @@ export const addPost=async(id:string,formData:FormData)=>{
 export const getPostList=async(id:string)=>{
   const response=await api.get(RepEndpoints.GET_POSTS(id));
   return response.data?.data;
+}
+export const postDetails=async(id:string)=>{
+  const response=await api.get(RepEndpoints.POST_DETAILS(id));
+  return response.data?.data;
+}
+export const editPost=async(id:string,formData:FormData)=>{
+  return await api.post(RepEndpoints.EDIT_POST(id),formData,{
+   headers:{"Content-type":"multipart/form-data"}
+  });
 }

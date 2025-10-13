@@ -16,7 +16,7 @@ export const Authenticate = (
     const payload = jwt.verify(token, process.env.ACCESS_TOKEN!) as JwtPayload;
     req.user = payload;
     next();
-  } catch (error:unknown) {
-  return res.status(403).json({ message: "Invalid token" });
+  } catch (error: unknown) {
+    return res.status(403).json({ message: "Invalid token" });
   }
 };

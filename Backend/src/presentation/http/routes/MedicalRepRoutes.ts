@@ -5,12 +5,16 @@ import { ValidateSchema } from "../middlewares/ValidateSchema";
 import { registerMedicalRepSchema } from "../validators/RepSchemaValidator";
 import { Authenticate } from "../middlewares/Authenticate";
 import { AuthorizeRole } from "../middlewares/AuthorizeRole";
-import { Role } from "../../../shared/enums"; 
+import { Role } from "../../../shared/enums";
 import { uploadCloud } from "../../../infrastructure/storage/multer/MulterConfigCloudinary";
 import { MedicalRepProfileUpdateSchema } from "../validators/MedicalRepProfileUpdateSchema";
 import { parseArrayFields } from "../middlewares/ParseArrayField";
 import { productPostValidateSchema } from "../validators/ProductPostValidateSchema";
 import { parsePostField } from "../middlewares/ParsePostField";
+import { UserValidate } from "../../../infrastructure/di/UserValidateDi";
+import { makeValidateUserMiddleware } from "../middlewares/ValidateUserMiddleware";
+
+const validateUser=makeValidateUserMiddleware(UserValidate);
 
 export class MedicalRepRoutes {
   public router: Router;
@@ -58,19 +62,25 @@ export class MedicalRepRoutes {
       ValidateSchema(productPostValidateSchema),
       medicalRepController.createPost
     );
-
+    this.router.get(
+      "/posts/:userId",
+      Authenticate,
+      AuthorizeRole([Role.MEDICAL_REP]),
+      medicalRepController.posts
+    );
+    this.router.get(
+      "/post-details/:postId",
+      Authenticate,
+      AuthorizeRole([Role.MEDICAL_REP]),
+      validateUser, 
+      medicalRepController.postDetails
+    );
     this.router.post(
       "/edit-post/:userId",
       Authenticate,
       AuthorizeRole([Role.MEDICAL_REP]),
       uploadCloud.array("images", 5),
       medicalRepController.editPost
-    );
-    this.router.get(
-      "/products/:userId",
-      Authenticate,
-      AuthorizeRole([Role.MEDICAL_REP]),
-      medicalRepController.products
     );
   }
 }

@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 
 import { useSelector } from "react-redux";
 import { getPostList, getProfileRep } from "../api";
-import useFetchList from "@/hooks/useFetchList";
+import useFetchList from "@/hooks/useFetchItem";
 import { useCallback } from "react";
 import { ProductListDTO } from "../dto/productListDto";
 import { MedicalRepDetailsDTO } from "../dto/MedicalRepDetailsDTO";

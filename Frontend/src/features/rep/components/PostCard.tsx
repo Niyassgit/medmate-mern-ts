@@ -3,8 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface PostCardProps {
+  id: string;
   image: string;
   category: string;
   title: string;
@@ -13,7 +15,16 @@ interface PostCardProps {
   likes: number;
 }
 
-const PostCard = ({ image, category, title, date, description, likes }: PostCardProps) => {
+const PostCard = ({
+  id,
+  image,
+  category,
+  title,
+  date,
+  description,
+  likes,
+}: PostCardProps) => {
+  const navigate = useNavigate();
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(likes);
 
@@ -21,17 +32,22 @@ const PostCard = ({ image, category, title, date, description, likes }: PostCard
     setLiked(!liked);
     setLikeCount(liked ? likeCount - 1 : likeCount + 1);
   };
-
+  const handleCardClick = () => {
+    navigate(`/rep/dashboard/post-details/${id}`);
+  };
   return (
-    <Card className="overflow-hidden transition-shadow hover:shadow-lg">
+    <Card
+      className="overflow-hidden transition-shadow hover:shadow-lg cursor-pointer"
+      onClick={handleCardClick} 
+    >
       <div className="aspect-video overflow-hidden">
-        <img 
-          src={image} 
-          alt={title} 
+        <img
+          src={image}
+          alt={title}
           className="h-full w-full object-cover transition-transform hover:scale-105"
         />
       </div>
-      <div className="p-5">
+      <div className="p-5" onClick={(e) => e.stopPropagation()}>
         <div className="mb-3 flex items-center justify-between">
           <Badge variant="secondary" className="bg-muted text-muted-foreground">
             {category}
@@ -40,22 +56,28 @@ const PostCard = ({ image, category, title, date, description, likes }: PostCard
             onClick={handleLike}
             className="flex items-center gap-1 text-muted-foreground transition-colors hover:text-secondary"
           >
-            <Heart className={`h-4 w-4 ${liked ? "fill-secondary text-secondary" : ""}`} />
+            <Heart
+              className={`h-4 w-4 ${
+                liked ? "fill-secondary text-secondary" : ""
+              }`}
+            />
           </button>
         </div>
-        
+
         <h3 className="mb-2 text-lg font-semibold text-foreground line-clamp-2">
           {title}
         </h3>
-        
+
         <p className="mb-1 text-sm text-muted-foreground">{date}</p>
-        
+
         <p className="mb-4 text-sm text-foreground/80 line-clamp-3">
           {description}
         </p>
-        
+
         <div className="flex items-center justify-between">
-          <span className="text-sm text-muted-foreground">{likeCount} Likes</span>
+          <span className="text-sm text-muted-foreground">
+            {likeCount} Likes
+          </span>
           <Button size="sm" className="bg-secondary hover:bg-secondary/90">
             <Share2 className="mr-1 h-4 w-4" />
             Share

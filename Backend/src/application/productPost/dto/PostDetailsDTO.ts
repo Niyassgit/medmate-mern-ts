@@ -1,0 +1,13 @@
+export interface PostDetailsDTO{
+  id :string,         
+  repId:string,       
+  title:string,
+  description:string,
+  imageUrl:string[],
+  brand:string,
+  territoryId?:string,
+  useCases:string[],
+  ingredients:string[],
+  termsOfUse:string,
+  createdAt:string,
+}
