@@ -6,8 +6,6 @@ export const parsePostField = (
   res: Response,
   next: NextFunction
 ) => {
-  console.log("Raw body before parsing:", req.body);
-
   const parseStringArray = (value: string | string[] | undefined): string[] => {
     if (!value) return [];
 
@@ -17,9 +15,9 @@ export const parsePostField = (
           if (typeof item === 'string') {
             if (item.startsWith('[') || item.startsWith('{')) {
               try {
-                const parsed = JSON.parse(item);
+                const parsed: unknown = JSON.parse(item);
                 if (Array.isArray(parsed)) {
-                  return parsed;
+                  return parsed.filter((p): p is string => typeof p === 'string');
                 }
                 return item;
               } catch {
@@ -42,7 +40,7 @@ export const parsePostField = (
       try {
         const parsed: unknown = JSON.parse(value);
         if (Array.isArray(parsed)) {
-          return parseStringArray(parsed);
+          return parseStringArray(parsed as string | string[]);
         }
       } catch {
         return [value].filter(Boolean);
@@ -55,7 +53,5 @@ export const parsePostField = (
   req.body.ingredients = parseStringArray(req.body.ingredients);
   req.body.useCases = parseStringArray(req.body.useCases);
   req.body.existingImages = parseStringArray(req.body.existingImages);
-
-  console.log("Parsed body:", req.body);
   next();
 };

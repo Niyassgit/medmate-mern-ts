@@ -34,10 +34,10 @@ export class DoctorController {
   };
   updateProfileImage = async (req: Request, res: Response) => {
     const { userId } = req.params;
-    const file = req.file ? req.file : null;
+    const fileUrl = req.file ? req.file.key : null;
     const response = await this._profileImageUpdateUseCase.execute(
       userId,
-      file
+      fileUrl
     );
     res.json({ success: true, message: response });
   };

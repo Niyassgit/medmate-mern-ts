@@ -12,7 +12,6 @@ export class EditProductPostUseCase implements IEditProductPostUseCase {
     const post = await this._productPostRepository.findPostById(postId);
     if (!post) throw new NotFoundError(ErrorMessages.POST_NOT_FOUND);
     const formatedData = ProductPostMapper.toProductPostEntity(dto);
-    console.log("the data after transform throufgh mapper:",formatedData);
     const updated = await this._productPostRepository.editPost(
       postId,
       formatedData

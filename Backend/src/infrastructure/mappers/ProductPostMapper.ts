@@ -50,7 +50,9 @@ export class ProductPostMapper {
         persistence.territory = { connect: { id: domain.territoryId } };
       }
     }
-
+    if (domain.repId !== undefined) {
+      persistence.rep = { connect: { id: domain.repId } };
+    }
     return persistence;
   }
 
@@ -70,7 +72,7 @@ export class ProductPostMapper {
       territoryId: product.territoryId,
     }));
   }
-  static toDomain(product: ProductPost): IProductPost{
+  static toDomain(product: ProductPost): IProductPost {
     return {
       id: product.id,
       brand: product.brand,

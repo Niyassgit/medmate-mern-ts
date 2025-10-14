@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { upload } from "../../../infrastructure/storage/multer/MulterConfigFile";
+import { upload } from "../../../infrastructure/storage/multer/MulterFactory";
 import { medicalRepController } from "../../../infrastructure/di/MedicalRepDI";
 import { ValidateSchema } from "../middlewares/ValidateSchema";
 import { registerMedicalRepSchema } from "../validators/RepSchemaValidator";
@@ -13,6 +13,7 @@ import { productPostValidateSchema } from "../validators/ProductPostValidateSche
 import { parsePostField } from "../middlewares/ParsePostField";
 import { UserValidate } from "../../../infrastructure/di/UserValidateDI";
 import { makeValidateUserMiddleware } from "../middlewares/ValidateUserMiddleware";
+import { uploadS3 } from "../../../infrastructure/storage/multer/MulterS3BucketConfig";
 
 const validateUser=makeValidateUserMiddleware(UserValidate);
 
@@ -41,7 +42,7 @@ export class MedicalRepRoutes {
       "/profile-image/:userId",
       Authenticate,
       AuthorizeRole([Role.MEDICAL_REP]),
-      uploadCloud.single("profileImage"),
+      uploadS3.single("profileImage"),
       medicalRepController.updateProfileImage
     );
     this.router.post(

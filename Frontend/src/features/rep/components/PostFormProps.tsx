@@ -98,7 +98,6 @@ const PostForm = ({ defaultValues, onSubmit, heading }: ProductFormProps) => {
   const handleSubmit = (values: ProductPostFormValues) => {
     onSubmit({ ...values, useCases, ingredients ,existingImages},uploadedImages);
   };
-  console.log("existing image inside the form:",existingImages);
 
   return (
     <div className="min-h-screen bg-background">

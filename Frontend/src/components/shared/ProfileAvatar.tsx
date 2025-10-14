@@ -34,7 +34,7 @@ const ProfileAvatar = ({
     <div className="relative inline-block">
       <Avatar className={`${className} rounded-full`}>
         <AvatarImage
-          src={preview || image || ""}
+          src={preview || `${import.meta.env.VITE_API_S3_CLOUD}${image}` || ""}
           alt="Profile"
           className="object-cover"
         />

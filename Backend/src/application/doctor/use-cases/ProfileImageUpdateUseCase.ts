@@ -9,12 +9,12 @@ export class ProfileImageUpdateUseCase implements IProfileImageUpdateUseCase {
 
   async execute(
     userId: string,
-    file: Express.Multer.File | null
+    fileUrl?: string | null
   ): Promise<string> {
-    if (!file) throw new BadRequestError("No file provided for profile image");
+    if (!fileUrl) throw new BadRequestError("No file provided for profile image");
     const user = await this._userRepository.findById(userId);
     if (!user) throw new NotFoundError("User not found");
-    const imageUrl = file.path;
+    const imageUrl = fileUrl;
     const res = await this._userRepository.updateProfileImage(userId, imageUrl);
     if (!res) throw new BadRequestError("Failed to update profile image");
     return "Profile picture addedd successfully";

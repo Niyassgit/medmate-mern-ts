@@ -28,13 +28,10 @@ const PostEditPage = () => {
   ) => {
     if (!id) return;
     const formData = new FormData();
-    const existingImages = post?.imageUrl || [];
-    console.log("image already present:", existingImages);
 
     Object.entries(values).forEach(([key, value]) => {
-      // Don't stringify existingImages here
       if (key === "existingImages") {
-        return; // Skip, we'll handle it separately
+        return;
       }
 
       if (Array.isArray(value)) {
@@ -44,16 +41,15 @@ const PostEditPage = () => {
       }
     });
 
-    // Send each existing image as a separate field - NO JSON.stringify
-    existingImages.forEach((img) => {
-      // Only append if it's a valid URL string (not already stringified)
-      if (typeof img === "string" && img.startsWith("http")) {
-        formData.append("existingImages", img);
-      }
-    });
+    if (values.existingImages && Array.isArray(values.existingImages)) {
+      values.existingImages.forEach((img) => {
+        if (typeof img === "string" && img.startsWith("http")) {
+          formData.append("existingImages", img);
+        }
+      });
+    }
 
     images.forEach((file) => formData.append("images", file));
-
     try {
       const res = await updatePost(id, formData);
       if (res.data.success) {

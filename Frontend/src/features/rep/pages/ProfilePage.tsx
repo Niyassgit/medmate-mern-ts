@@ -88,7 +88,7 @@ const ProfilePage = () => {
     if (completion >= 30) return "border-yellow-400";
     return "border-red-500";
   };
-
+  
   return (
     <div className="min-h-screen py-10 px-4">
       <div className="max-w-4xl mx-auto space-y-6">

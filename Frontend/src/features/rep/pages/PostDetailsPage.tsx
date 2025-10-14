@@ -43,6 +43,21 @@ const PostDetailsPage = () => {
     return chunks;
   };
 
+    if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <img src="/loading.gif" alt="Loading..." className="h-16 w-16" />
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <p className="text-red-500 text-lg">{error}</p>
+      </div>
+    );
+  }
+  
   if (!post) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-background to-secondary/30">
@@ -68,20 +83,7 @@ const PostDetailsPage = () => {
     );
   };
 
-  if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <img src="/loading.gif" alt="Loading..." className="h-16 w-16" />
-      </div>
-    );
-  }
-  if (error) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p className="text-red-500 text-lg">{error}</p>
-      </div>
-    );
-  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary/30">
       {/* Header */}

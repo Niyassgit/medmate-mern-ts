@@ -10,6 +10,7 @@ import { ProductPostDTO } from "../../../application/productPost/dto/ProductPost
 import { IEditProductPostUseCase } from "../../../application/productPost/interfaces/IEditProductPostUseCase";
 import { IGetProductPostListUseCase } from "../../../application/productPost/interfaces/IGetProductPostListUseCase";
 import { IGetProductPostDetailsUseCase } from "../../../application/productPost/interfaces/IPostDetailsUseCase";
+import { processImages } from "../utils/ImageHandler";
 
 export class MedicalRepController {
   constructor(
@@ -41,10 +42,11 @@ export class MedicalRepController {
   };
   updateProfileImage = async (req: Request, res: Response) => {
     const { userId } = req.params;
-    const file = req.file ? req.file : null;
+    console.log("image:",req.files,req.file);
+    const fileUrl = req.file ? req.file.key : null;
     const response = await this._ProfileImageUpdateUseCase.execute(
       userId,
-      file
+      fileUrl
     );
     return res.json({ success: true, message: response });
   };
@@ -83,27 +85,9 @@ export class MedicalRepController {
 
   editPost = async (req: Request, res: Response) => {
     const { postId } = req.params;
-    const dto = req.body as ProductPostDTO;
-    console.log("dto right after hitting controller🖼️:", dto);
-    console.log("newly added images🚀:", req.files);
-    let existingImages: string[] = [];
-    if (req.body.existingImages) {
-      existingImages = Array.isArray(req.body.existingImages)
-        ? req.body.existingImages
-        : [req.body.existingImages];
-    }
-    console.log("images already presented:", existingImages);
-    if (req.files && Array.isArray(req.files)) {
-      const newImageUrls = req.files.map((file) => file.path);
-      dto.imageUrl = [...existingImages, ...newImageUrls];
-    } else {
-      dto.imageUrl = existingImages;
-    }
-    console.log(
-      "the image after saving the exisitng and new image:",
-      dto.imageUrl
-    );
-    const response = await this._editposUseCase.execute(postId, dto);
+    const dto = req.body as Partial<ProductPostDTO>;
+    dto.imageUrl= processImages(req.body.existingImages,req.files);
+    const response = await this._editposUseCase.execute(postId, dto as ProductPostDTO);
     return res.json({ success: true, message: response });
   };
 }

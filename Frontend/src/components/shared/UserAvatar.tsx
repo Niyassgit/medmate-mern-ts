@@ -15,7 +15,7 @@ const UserAvatar = ({to}:UserAvatarProps) => {
         <Avatar
         className={`cursor-pointer border-2 ${isActive ? 'border-blue-500' : 'border-transparent'}`}>
             {user?.image ?(
-                <AvatarImage src={user.image}/>
+                <AvatarImage src={`${import.meta.env.VITE_API_S3_CLOUD}${user.image}`}/>
             ):(
                 <AvatarFallback>
                     {user?.email.charAt(0).toUpperCase() || "U"}

@@ -21,7 +21,7 @@ const ProfileCard = ({ rep }: ProfileCardProps) => {
     <Card className="p-6">
       <div className="flex flex-col items-center text-center">
         <Avatar className="mb-4 h-24 w-24">
-          <AvatarImage src={rep.profileImage || undefined} alt={rep.name} />
+          <AvatarImage src={`${import.meta.env.VITE_API_S3_CLOUD}${rep.profileImage}` || undefined} alt={rep.name} />
           <AvatarFallback>{rep.name?.slice(0, 2).toUpperCase()}</AvatarFallback>
         </Avatar>
 

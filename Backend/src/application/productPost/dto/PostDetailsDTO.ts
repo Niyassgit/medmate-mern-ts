@@ -9,5 +9,5 @@ export interface PostDetailsDTO{
   useCases:string[],
   ingredients:string[],
   termsOfUse:string,
-  createdAt:string,
+  createdAt:Date,
 }
