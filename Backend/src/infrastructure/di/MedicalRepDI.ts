@@ -45,8 +45,7 @@ const createPostUseCase = new CreatePostUseCase(
   medicalRepRepository
 );
 const editProductPostUseCase = new EditProductPostUseCase(
-  userRepository,
-  productPostRepository
+  productPostRepository,
 );
 const getProductPostListUseCase = new GetProductPostListUseCase(
   userRepository,

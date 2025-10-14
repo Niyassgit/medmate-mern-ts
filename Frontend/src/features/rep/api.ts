@@ -33,7 +33,7 @@ export const postDetails=async(id:string)=>{
   const response=await api.get(RepEndpoints.POST_DETAILS(id));
   return response.data?.data;
 }
-export const editPost=async(id:string,formData:FormData)=>{
+export const updatePost=async(id:string,formData:FormData)=>{
   return await api.post(RepEndpoints.EDIT_POST(id),formData,{
    headers:{"Content-type":"multipart/form-data"}
   });

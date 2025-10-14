@@ -20,7 +20,7 @@ export const ErrorMessages = {
   FILL_ALL_FILED:"Fill all the required fields to continue posting",
   COMPLETE_PROFILE_ERROR:"You must complete your profile to continue posting...",
   UPLOAD_FAILE:"Upload operation failed",
-
+  POST_NOT_FOUND:"The post you have looking for is not found"
 
 }as const;
 
@@ -33,6 +33,7 @@ export const SuccessMessages = {
   ACCOUNT_VERIFIED_SUCCESS:"Account verified successfully",
   PROFILE_PIC_UPDATE:"Profile picture added Successfully",
   UPLOAD_SUCCESS:"Uploaded successfully",
+  POST_UPDATE_SUCCESS:"Post updated successfully",
 
  
 }as const;

@@ -6,8 +6,10 @@ export const productPostSchema = z.object({
   brand: z.string().min(2, "Brand is required"),
   territory: z.string().optional(),
   termsOfUse: z.string().min(10, "Terms & Conditions are required"),
-  useCases: z.string().optional(),
-  ingredients: z.string().optional(),
+   useCases: z.array(z.string()).optional(),      
+  ingredients: z.array(z.string()).optional(), 
+  images: z.array(z.string()).optional(),
+  existingImages: z.array(z.string()).optional(),
 });
 
 export type ProductPostFormValues = z.infer<typeof productPostSchema>;

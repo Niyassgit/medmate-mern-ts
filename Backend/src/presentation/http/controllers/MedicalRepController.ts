@@ -7,8 +7,8 @@ import { CompleteRepProfileDTO } from "../../../application/medicalRep/dto/Compl
 import { ICompleteRepProfileUseCase } from "../../../application/medicalRep/interfaces/ICompleteRepProfileUseCase";
 import { ICreatePostUseCase } from "../../../application/productPost/interfaces/ICreatePostUseCase";
 import { ProductPostDTO } from "../../../application/productPost/dto/ProductPostDTO";
-import { IEditProductPostUseCase } from "../../../application/productPost/interfaces/IEditProductPostUseCase"; 
-import { IGetProductPostListUseCase } from "../../../application/productPost/interfaces/IGetProductPostListUseCase"; 
+import { IEditProductPostUseCase } from "../../../application/productPost/interfaces/IEditProductPostUseCase";
+import { IGetProductPostListUseCase } from "../../../application/productPost/interfaces/IGetProductPostListUseCase";
 import { IGetProductPostDetailsUseCase } from "../../../application/productPost/interfaces/IPostDetailsUseCase";
 
 export class MedicalRepController {
@@ -19,8 +19,8 @@ export class MedicalRepController {
     private _completeRepProfileUseCase: ICompleteRepProfileUseCase,
     private _createPostUseCase: ICreatePostUseCase,
     private _editposUseCase: IEditProductPostUseCase,
-    private _getProductsListUseCase:IGetProductPostListUseCase,
-    private _getPostDetailsUseCase:IGetProductPostDetailsUseCase
+    private _getProductsListUseCase: IGetProductPostListUseCase,
+    private _getPostDetailsUseCase: IGetProductPostDetailsUseCase
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -70,27 +70,40 @@ export class MedicalRepController {
     const response = await this._createPostUseCase.execute(userId, dto);
     return res.json({ success: true, message: response });
   };
-  posts=async(req:Request,res:Response)=>{
-    const {userId}=req.params;
-    const response=await this._getProductsListUseCase.execute(userId);
-    return res.json({success:true,data:response});
-  }
-  postDetails=async(req:Request,res:Response)=>{
-    const {postId}=req.params;
-    const response=await this._getPostDetailsUseCase.execute(postId);
-    return res.json({success:true,data:response});
-  }
-
-   editPost = async (req: Request, res: Response) => {
+  posts = async (req: Request, res: Response) => {
     const { userId } = req.params;
-    const dto = req.body as ProductPostDTO;
-    if (req.files && Array.isArray(req.files)) {
-      dto.imageUrl = req.files.map((file) => file.path);
-    } else {
-      dto.imageUrl = [];
-    }
-    const response = await this._editposUseCase.execute(userId, dto);
-    return res.json({ success: true, message: response });
+    const response = await this._getProductsListUseCase.execute(userId);
+    return res.json({ success: true, data: response });
+  };
+  postDetails = async (req: Request, res: Response) => {
+    const { postId } = req.params;
+    const response = await this._getPostDetailsUseCase.execute(postId);
+    return res.json({ success: true, data: response });
   };
 
+  editPost = async (req: Request, res: Response) => {
+    const { postId } = req.params;
+    const dto = req.body as ProductPostDTO;
+    console.log("dto right after hitting controller🖼️:", dto);
+    console.log("newly added images🚀:", req.files);
+    let existingImages: string[] = [];
+    if (req.body.existingImages) {
+      existingImages = Array.isArray(req.body.existingImages)
+        ? req.body.existingImages
+        : [req.body.existingImages];
+    }
+    console.log("images already presented:", existingImages);
+    if (req.files && Array.isArray(req.files)) {
+      const newImageUrls = req.files.map((file) => file.path);
+      dto.imageUrl = [...existingImages, ...newImageUrls];
+    } else {
+      dto.imageUrl = existingImages;
+    }
+    console.log(
+      "the image after saving the exisitng and new image:",
+      dto.imageUrl
+    );
+    const response = await this._editposUseCase.execute(postId, dto);
+    return res.json({ success: true, message: response });
+  };
 }

@@ -11,7 +11,7 @@ import { MedicalRepProfileUpdateSchema } from "../validators/MedicalRepProfileUp
 import { parseArrayFields } from "../middlewares/ParseArrayField";
 import { productPostValidateSchema } from "../validators/ProductPostValidateSchema";
 import { parsePostField } from "../middlewares/ParsePostField";
-import { UserValidate } from "../../../infrastructure/di/UserValidateDi";
+import { UserValidate } from "../../../infrastructure/di/UserValidateDI";
 import { makeValidateUserMiddleware } from "../middlewares/ValidateUserMiddleware";
 
 const validateUser=makeValidateUserMiddleware(UserValidate);
@@ -76,10 +76,13 @@ export class MedicalRepRoutes {
       medicalRepController.postDetails
     );
     this.router.post(
-      "/edit-post/:userId",
+      "/post-edit/:postId",
       Authenticate,
       AuthorizeRole([Role.MEDICAL_REP]),
+      validateUser,
       uploadCloud.array("images", 5),
+      parsePostField,
+      ValidateSchema(productPostValidateSchema),
       medicalRepController.editPost
     );
   }

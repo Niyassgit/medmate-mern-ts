@@ -6,11 +6,16 @@ import { BaseRepository } from "../database/BaseRepository";
 import { Prisma, ProductPost } from "@prisma/client";
 
 export class ProductPostRepository
-  extends BaseRepository<IProductPost, ProductPost,Prisma.ProductPostCreateInput, "productPost">
+  extends BaseRepository<
+    IProductPost,
+    ProductPost,
+    Prisma.ProductPostCreateInput,
+    "productPost"
+  >
   implements IProductPostRepository
 {
   constructor() {
-    super(prisma.productPost,(product)=>ProductPostMapper.toDomain(product));
+    super(prisma.productPost, (product) => ProductPostMapper.toDomain(product));
   }
 
   async createPost(
@@ -27,8 +32,11 @@ export class ProductPostRepository
     const formatedData = ProductPostMapper.toPartialPersistance(data);
     return this.update(postId, formatedData as Partial<ProductPost>);
   }
+  async findPostById(postId: string): Promise<boolean> {
+    const post=await this.findById(postId);
+    return post?true:false;
+  }
   async getProducts(userId: string): Promise<IProductPost[] | null> {
-
     const products = await prisma.productPost.findMany({
       where: { repId: userId },
       orderBy: { createdAt: "desc" },
@@ -37,7 +45,7 @@ export class ProductPostRepository
     return ProductPostMapper.toDomainList(products);
   }
   async getPostDetails(postId: string): Promise<IProductPost | null> {
-    const product=await this.findById(postId);
-    return product?product:null;
+    const product = await this.findById(postId);
+    return product ? product : null;
   }
 }

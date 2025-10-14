@@ -12,7 +12,6 @@ export class UserValidationService implements IUserValidationService{
         if(!userId ) throw new UnautharizedError(ErrorMessages.UNAUTHORIZED);
 
         const user=await this._userRepository.findById(userId);
-        console.log("middle ware for validating user is checking and pass to controller if it do not fail✅");
         if(!user || !user?.isVerified || user.isBlocked) throw new UnautharizedError(ErrorMessages.UNAUTHORIZED);
     }
 }
