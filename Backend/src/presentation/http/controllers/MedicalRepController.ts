@@ -11,6 +11,7 @@ import { IEditProductPostUseCase } from "../../../application/productPost/interf
 import { IGetProductPostListUseCase } from "../../../application/productPost/interfaces/IGetProductPostListUseCase";
 import { IGetProductPostDetailsUseCase } from "../../../application/productPost/interfaces/IPostDetailsUseCase";
 import { processImages } from "../utils/ImageHandler";
+import { HttpStatusCode } from "../../../shared/HttpStatusCodes";
 
 export class MedicalRepController {
   constructor(
@@ -33,22 +34,25 @@ export class MedicalRepController {
       companyLogoUrl,
     };
     const response = await this._createMedicalRepUseCase.execute(data);
-    res.status(201).json({ success: true, ...response });
+    res.status(HttpStatusCode.OK).json({ success: true, ...response });
   };
   getRepProfileById = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const response = await this._getUserProfile.execute(userId);
-    return res.json({ success: true, data: response });
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
   };
   updateProfileImage = async (req: Request, res: Response) => {
     const { userId } = req.params;
-    console.log("image:",req.files,req.file);
-    const fileUrl = req.file ? req.file.key : null;
+    const fileKey = req.file ? req.file.key : null;
     const response = await this._ProfileImageUpdateUseCase.execute(
       userId,
-      fileUrl
+      fileKey
     );
-    return res.json({ success: true, message: response });
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
   };
   completeProfile = async (req: Request, res: Response) => {
     const { userId } = req.params;
@@ -59,35 +63,48 @@ export class MedicalRepController {
       data,
       file
     );
-    return res.json({ success: true, message: response });
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, message: response });
   };
   createPost = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const dto = req.body as ProductPostDTO;
     if (req.files && Array.isArray(req.files)) {
-      dto.imageUrl = req.files.map((file) => file.path);
+      dto.imageUrl = req.files.map((file) => file.key).filter((key):key is string=>!!key);
     } else {
       dto.imageUrl = [];
     }
     const response = await this._createPostUseCase.execute(userId, dto);
-    return res.json({ success: true, message: response });
+    return res
+      .status(HttpStatusCode.CREATED)
+      .json({ success: true, message: response });
   };
   posts = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const response = await this._getProductsListUseCase.execute(userId);
-    return res.json({ success: true, data: response });
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
   };
   postDetails = async (req: Request, res: Response) => {
     const { postId } = req.params;
     const response = await this._getPostDetailsUseCase.execute(postId);
-    return res.json({ success: true, data: response });
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
   };
 
   editPost = async (req: Request, res: Response) => {
     const { postId } = req.params;
     const dto = req.body as Partial<ProductPostDTO>;
-    dto.imageUrl= processImages(req.body.existingImages,req.files);
-    const response = await this._editposUseCase.execute(postId, dto as ProductPostDTO);
-    return res.json({ success: true, message: response });
+    dto.imageUrl = processImages(req.body.existingImages, req.files);
+    const response = await this._editposUseCase.execute(
+      postId,
+      dto as ProductPostDTO
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, message: response });
   };
 }

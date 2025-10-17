@@ -15,6 +15,7 @@ import { ForgotPasswordUseCase } from "../../application/common/use-cases/Forgot
 import { VerifyForgotPasswordOtpUseCase } from "../../application/common/use-cases/VerifyForgotPasswordOtpUseCase";
 import { ResetPasswordUseCase } from "../../application/common/use-cases/ResetPasswordUseCase";
 import { ResetPasswordResendOtpUseCase } from "../../application/common/use-cases/ResetPasswordResendOtpUseCase";
+import { s3StorageService } from "../services/S3StorageService";
 
 const userRepository = new UserRepository();
 const bcryptServices = new BcryptServices();
@@ -22,11 +23,12 @@ const jwtServices = new JWTServices();
 const googleAuthService = new GoogleAuthService();
 const otpService = new OtpService();
 const notificationService = new NotificationService();
-
+const storageSerivce=new s3StorageService()
 const loginUserUseCase = new LoginUserUseCase(
   userRepository,
   bcryptServices,
-  jwtServices
+  jwtServices,
+  storageSerivce
 );
 const googleLoginUseCase = new GoogleLoginUseCase(
   userRepository,

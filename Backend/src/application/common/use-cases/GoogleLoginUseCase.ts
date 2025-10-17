@@ -5,7 +5,7 @@ import { IJWtService } from "../../../domain/common/services/IJWTService";
 import { UnautharizedError } from "../../../domain/common/errors";
 import { GoogleLoginResponseDTO } from "../dto/GoogleLoginResponseDTO";
 import { IGoogleLoginUseCase } from "../interfaces/IGoogleLoginUseCase";
-import { ErrorMessages } from "../../../shared/messages";
+import { ErrorMessages } from "../../../shared/Messages";
 
 export class GoogleLoginUseCase implements IGoogleLoginUseCase{
   constructor(

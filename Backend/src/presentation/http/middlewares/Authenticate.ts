@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { JwtPayload } from "../../types/auth";
+import { ErrorMessages } from "../../../shared/Messages";
+import { HttpStatusCode } from "../../../shared/HttpStatusCodes";
 
 export const Authenticate = (
   req: Request,
@@ -9,7 +11,7 @@ export const Authenticate = (
 ) => {
   const authHeader = req.headers.authorization;
   if (!authHeader)
-    return res.status(401).json({ message: "No token provided" });
+    return res.status(HttpStatusCode.UNAUTHORIZED).json({ message: ErrorMessages.TOKEN_NOT_FOUND});
 
   const token = authHeader.split(" ")[1];
   try {
@@ -17,6 +19,6 @@ export const Authenticate = (
     req.user = payload;
     next();
   } catch (error: unknown) {
-    return res.status(403).json({ message: "Invalid token" });
+    return res.status(HttpStatusCode.FORBIDDEN).json({ message: ErrorMessages.INVALID_TOKEN });
   }
 };

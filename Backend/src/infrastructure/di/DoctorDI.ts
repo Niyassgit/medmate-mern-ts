@@ -9,13 +9,14 @@ import { GetDoctorProfileByIdUseCase } from "../../application/doctor/use-cases/
 import { ProfileImageUpdateUseCase } from "../../application/doctor/use-cases/ProfileImageUpdateUseCase";
 import { CloudinaryService } from "../services/CloudinaryService";
 import { CompleteProfileUseCase } from "../../application/doctor/use-cases/CompleteProfileUseCase";
+import { s3StorageService } from "../services/S3StorageService";
 
 const doctorRepository = new DoctorRepository();
 const bycryptServices = new BcryptServices();
 const userRepository = new UserRepository();
 const otpService = new OtpService();
 const notificationService = new NotificationService();
-const cloudinaryService=new CloudinaryService()
+const storageService = new s3StorageService();
 
 const createDoctorUseCase = new CreateDoctorUseCase(
   doctorRepository,
@@ -24,9 +25,19 @@ const createDoctorUseCase = new CreateDoctorUseCase(
   otpService,
   notificationService
 );
-const getDoctorprofileById=new GetDoctorProfileByIdUseCase(doctorRepository,userRepository);
-const profileImageUpdateUseCase=new ProfileImageUpdateUseCase(userRepository);
-const completeProfileUseCase=new CompleteProfileUseCase(userRepository,doctorRepository)
+const getDoctorprofileById = new GetDoctorProfileByIdUseCase(
+  doctorRepository,
+  userRepository,
+  storageService
+);
+const profileImageUpdateUseCase = new ProfileImageUpdateUseCase(
+  userRepository,
+  storageService
+);
+const completeProfileUseCase = new CompleteProfileUseCase(
+  userRepository,
+  doctorRepository
+);
 
 export const doctorController = new DoctorController(
   createDoctorUseCase,

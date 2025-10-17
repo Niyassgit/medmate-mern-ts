@@ -6,7 +6,7 @@ import { INotificationService } from "../../../domain/common/services/INotificat
 import { OtpResponseDTO } from "../dto/OtpResponseDTO";
 import { OtpMapper } from "../mapper/OtpMapper";
 import { IResetPasswordResendOtpUseCase } from "../interfaces/IResetPasswordResendOtpUseCase";
-import { ErrorMessages, NotificationMessages } from "../../../shared/messages";
+import { ErrorMessages, NotificationMessages } from "../../../shared/Messages";
 
 export class ResetPasswordResendOtpUseCase implements IResetPasswordResendOtpUseCase{
   constructor(

@@ -1,5 +1,5 @@
 import { IProductPostRepository } from "../../../domain/product/repositories/IProductPostRepository";
-import { ErrorMessages, SuccessMessages } from "../../../shared/messages";
+import { ErrorMessages, SuccessMessages } from "../../../shared/Messages";
 import { BadRequestError, NotFoundError } from "../../errors";
 import { ProductPostDTO } from "../dto/ProductPostDTO";
 import { IEditProductPostUseCase } from "../interfaces/IEditProductPostUseCase";

@@ -15,12 +15,14 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { getPostList, getProfileRep } from "../api";
 import useFetchList from "@/hooks/useFetchItem";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ProductListDTO } from "../dto/productListDto";
 import { MedicalRepDetailsDTO } from "../dto/MedicalRepDetailsDTO";
+import toast from "react-hot-toast";
 
 const RepDashboard = () => {
   const id = useSelector((state: any) => state.auth.user?.id);
+  const [posts, setPosts] = useState<ProductListDTO[]>([]);
 
   const fetchPosts = useCallback(() => {
     if (!id) return Promise.resolve([]);
@@ -34,16 +36,28 @@ const RepDashboard = () => {
   }, [id]);
 
   const {
-    data: postList,
+    data: fetchedPost,
     loading: postLoading,
     error: postError,
   } = useFetchList(fetchPosts);
+  useEffect(() => {
+    if (fetchedPost) setPosts(fetchedPost);
+  }, [fetchedPost]);
+
   const {
     data: rep,
     loading: profileLoading,
     error: profileError,
   } = useFetchList<MedicalRepDetailsDTO | null>(fetchProfile);
 
+  const refreshSingnedUrls = async () => {
+    try {
+      const updatePosts = await fetchPosts();
+      setPosts(updatePosts);
+    } catch (error) {
+      toast.error("Failed to refresh signed URLs");
+    }
+  };
   if (postError || profileError) return <p>{postError || profileError}</p>;
   if (postLoading || profileLoading) return <p>Loading...</p>;
 
@@ -81,13 +95,14 @@ const RepDashboard = () => {
             </div>
 
             <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-              {postList && postList.length > 0 ? (
-                postList.map((post: ProductListDTO) => (
+              {posts && posts.length > 0 ? (
+                posts.map((post: ProductListDTO) => (
                   <PostCard
                     key={post.id}
                     {...post}
                     likes={119}
                     category="Cardiac"
+                    onImageError={refreshSingnedUrls}
                   />
                 ))
               ) : (

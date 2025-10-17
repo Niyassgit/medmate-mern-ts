@@ -1,39 +1,41 @@
 import { Request, Response } from "express";
-import { CreateSuperAdminUseCase } from "../../../application/superAdmin/auth/CreateSuperAdminUseCase";
-import { GetSuperAdminByEmailIdUseCase } from "../../../application/superAdmin/auth/GetSuperAdminByEmailIdUseCase";
+import { ICreateSuperAdminUseCase } from "../../../application/superAdmin/interfaces/ICreateSuperAdminUseCase";
+import { IGetSuperAdminByEmailUseCase } from "../../../application/superAdmin/interfaces/IGetSuperAdminByEmailUseCase";
 import { RegisterSuperAdminDTO } from "../../../application/superAdmin/dto/RegisterSuperAdminDTO";
-import { GetAllDoctorsUseCase } from "../../../application/superAdmin/useCases/GetAllDoctorsUseCase";
-import { GetAllRepsUseCase } from "../../../application/superAdmin/useCases/GetAllRepsUseCase";
-import { BlockUserUseCase } from "../../../application/superAdmin/useCases/BlockUserUseCase";
-import { UnBlockUserUseCase } from "../../../application/superAdmin/useCases/UnblockUserUseCase";
-import { GetDoctorDetailsUseCase } from "../../../application/superAdmin/useCases/GetDoctorDetailsUseCase";
-import { GetMedicalRepDetailsUseCase } from "../../../application/superAdmin/useCases/GetMedicalRepDetails";
+import { IGetAllDoctorsUseCase } from "../../../application/superAdmin/interfaces/IGetAllDoctorsUseCase";
+import { IGetAllRepsUseCase } from "../../../application/superAdmin/interfaces/IGetAllRespsUseCase";
+import { IBlockUserUseCase } from "../../../application/superAdmin/interfaces/IBlockUserUseCase";
+import { IUnblockUserUseCase } from "../../../application/superAdmin/interfaces/IUnblockUserUseCase";
+import { IGetDoctorDetailsUseCase } from "../../../application/superAdmin/interfaces/IGetDoctorDetailsUseCase";
+import { IGetMedicalRepDetailsUseCase } from "../../../application/superAdmin/interfaces/IGetMedicalRepDetailsUseCase";
+import { HttpStatusCode } from "../../../shared/HttpStatusCodes";
+import { SuccessMessages } from "../../../shared/Messages";
 
 export class SuperAdminController {
   constructor(
-    private _createSuperAdminUseCase: CreateSuperAdminUseCase,
-    private _getSuperAdminByEmailIdUseCase: GetSuperAdminByEmailIdUseCase,
-    private _getAllDoctorsUseCase: GetAllDoctorsUseCase,
-    private _getAllRepsUseCase: GetAllRepsUseCase,
-    private _blockUserUseCase: BlockUserUseCase,
-    private _unblockUserUseCase: UnBlockUserUseCase,
-    private _getDoctorDetails:GetDoctorDetailsUseCase,
-    private _getMedicalRepDetails:GetMedicalRepDetailsUseCase
+    private _createSuperAdminUseCase: ICreateSuperAdminUseCase,
+    private _getSuperAdminByEmailUseCase: IGetSuperAdminByEmailUseCase,
+    private _getAllDoctorsUseCase: IGetAllDoctorsUseCase,
+    private _getAllRepsUseCase: IGetAllRepsUseCase,
+    private _blockUserUseCase: IBlockUserUseCase,
+    private _unblockUserUseCase: IUnblockUserUseCase,
+    private _getDoctorDetails:IGetDoctorDetailsUseCase,
+    private _getMedicalRepDetails:IGetMedicalRepDetailsUseCase
   ) {}
 
   createSuperAdmin = async (req: Request, res: Response) => {
     const SuperAdmin = await this._createSuperAdminUseCase.execute(
       req.body as RegisterSuperAdminDTO
     );
-    res.status(201).json({ success: true, data: SuperAdmin });
+    res.status(HttpStatusCode.OK).json({ success: true, data: SuperAdmin });
   };
 
   getSuperAdminByEmail = async (req: Request, res: Response) => {
     const dto = req.body as RegisterSuperAdminDTO;
-    const superAdmin = await this._getSuperAdminByEmailIdUseCase.execute(
+    const superAdmin = await this._getSuperAdminByEmailUseCase.execute(
       dto.email
     );
-    res.status(200).json({ success: true, data: superAdmin });
+    res.status(HttpStatusCode.OK).json({ success: true, data: superAdmin });
   };
 
   getAllDoctors = async (req: Request, res: Response) => {
@@ -41,7 +43,7 @@ export class SuperAdminController {
     const limit = parseInt(req.query.limit as string) || 10;
     const search = req.query.search as string || "";
     const doctors = await this._getAllDoctorsUseCase.execute(page, limit,search);
-    res.json({ success: true, data: doctors, page, limit });
+    res.status(HttpStatusCode.OK).json({ success: true, data: doctors, page, limit });
   };
 
   getAllReps = async (req: Request, res: Response) => {
@@ -49,15 +51,15 @@ export class SuperAdminController {
     const limit = parseInt(req.query.limit as string) || 8;
     const search= req.query.search as string || "";
     const reps = await this._getAllRepsUseCase.execute(page, limit,search);
-    res.json({ success: true, data: reps, page, limit });
+    res.status(HttpStatusCode.OK).json({ success: true, data: reps, page, limit });
   };
   blockUser = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const updatedUser = await this._blockUserUseCase.execute(userId);
 
-    return res.json({
+    return res.status(HttpStatusCode.OK).json({
       success: true,
-      message: "User blocked successfully",
+      message: SuccessMessages.BLOCK_SUCCESS,
       updatedUser,
     });
   };
@@ -65,21 +67,20 @@ export class SuperAdminController {
     const { userId } = req.params;
     const updatedUser = await this._unblockUserUseCase.execute(userId);
 
-    return res.json({
+    return res.status(HttpStatusCode.OK).json({
       success: true,
-      message: "User unblocked successfully",
+      message: SuccessMessages.UNBLOCK_SUCCESS,
       updatedUser,
     });
   };
   doctorDetails=async (req:Request,res:Response)=>{
     const {userId}=req.params;
     const user=await this._getDoctorDetails.execute(userId);
-    return res.json({success:true,data:user})
+    return res.status(HttpStatusCode.OK).json({success:true,data:user})
   }
   repDetails=async (req:Request,res:Response)=>{
     const {userId}=req.params;
     const user=await this._getMedicalRepDetails.execute(userId);
-    console.log("medical details:",user);
-    return res.json({success:true,data:user})
+    return res.status(HttpStatusCode.OK).json({success:true,data:user})
   }
 }

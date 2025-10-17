@@ -1,5 +1,5 @@
 import { IUser } from "../../domain/common/entities/IUser";
-import { AuthProvider as DomainAuthProvider,Role as DomainRole } from "../../shared/enums"; 
+import { AuthProvider as DomainAuthProvider,Role as DomainRole } from "../../shared/Enums"; 
 import { Prisma, User } from "@prisma/client";
 
 export class UserMapper {

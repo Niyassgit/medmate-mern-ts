@@ -2,7 +2,10 @@ import { IMedicalRepWithUser } from "../../../domain/medicalRep/entities/IMedica
 import { MedicalRepDetailsDTO } from "../dto/MedicalRepDetailsDTO";
 
 export class RepDetailsMapper {
-  static toMedicalRepDetails(rep: IMedicalRepWithUser): MedicalRepDetailsDTO {
+  static toMedicalRepDetails(
+    rep: IMedicalRepWithUser,
+    profileImageUrl: string | null
+  ): MedicalRepDetailsDTO {
     return {
       id: rep.id,
       name: rep.name,
@@ -14,10 +17,11 @@ export class RepDetailsMapper {
       isBlocked: rep.user?.isBlocked ?? null,
       maxConnectionsPerDay: rep.maxConnectionsPerDay ?? null,
       subscriptionStatus: rep.subscriptionStatus ?? null,
-      profileImage: rep.user?.profileImage ?? null,
+      profileImage: profileImageUrl,
       about: rep.about ?? null,
       educations: rep.educations ?? [],
       certificates: rep.certificates ?? [],
+      loginId:rep.loginId,
     };
   }
 }

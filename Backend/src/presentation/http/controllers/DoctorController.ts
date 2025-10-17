@@ -5,6 +5,7 @@ import { IGetDoctorProfileByIdUseCase } from "../../../application/doctor/interf
 import { IProfileImageUpdateUseCase } from "../../../application/doctor/interfaces/IProfileImageUpdateUseCase"; 
 import { ICompleteProfileUseCase } from "../../../application/doctor/interfaces/ICompleteProfileUseCase";
 import { CompleteDoctorProfileDTO } from "../../../application/doctor/dto/CompleteProfileDTO";
+import { HttpStatusCode } from "../../../shared/HttpStatusCodes";
 
 
 export class DoctorController {
@@ -25,26 +26,26 @@ export class DoctorController {
       licenseImageUrl,
     };
     const response = await this._createDoctorUseCase.execute(data);
-    res.status(201).json({ success: true, ...response });
+    res.status(HttpStatusCode.CREATED).json({ success: true, ...response });
   };
   getDoctorprofileById = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const response = await this._getDoctorProfileByIdUseCase.execute(userId);
-    return res.json({ success: true, data: response });
+    return res.status(HttpStatusCode.OK).json({ success: true, data: response });
   };
   updateProfileImage = async (req: Request, res: Response) => {
     const { userId } = req.params;
-    const fileUrl = req.file ? req.file.key : null;
+    const fileKey = req.file ? req.file.key : null;
     const response = await this._profileImageUpdateUseCase.execute(
       userId,
-      fileUrl
+      fileKey
     );
-    res.json({ success: true, message: response });
+    res.status(HttpStatusCode.OK).json({ success: true, message: response });
   };
   completeProfile = async (req: Request, res: Response) => {
     const { userId} = req.params;
     const data = req.body as CompleteDoctorProfileDTO;
     const response = await this._compeletProfileUseCase.execute(userId, data);
-    return res.json({ success: true, message: response });
+    return res.status(HttpStatusCode.OK).json({ success: true, message: response });
   };
 }

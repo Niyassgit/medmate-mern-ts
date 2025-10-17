@@ -13,6 +13,7 @@ interface PostCardProps {
   date: string;
   description: string;
   likes: number;
+  onImageError?:()=>void;
 }
 
 const PostCard = ({
@@ -22,6 +23,7 @@ const PostCard = ({
   title,
   date,
   description,
+  onImageError,
   likes,
 }: PostCardProps) => {
   const navigate = useNavigate();
@@ -35,6 +37,7 @@ const PostCard = ({
   const handleCardClick = () => {
     navigate(`/rep/dashboard/post-details/${id}`);
   };
+
   return (
     <Card
       className="overflow-hidden transition-shadow hover:shadow-lg cursor-pointer"
@@ -45,6 +48,7 @@ const PostCard = ({
           src={image}
           alt={title}
           className="h-full w-full object-cover transition-transform hover:scale-105"
+          onError={onImageError}
         />
       </div>
       <div className="p-5" onClick={(e) => e.stopPropagation()}>

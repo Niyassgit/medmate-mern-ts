@@ -13,6 +13,7 @@ import { IForgotPasswordUseCase } from "../../../application/common/interfaces/I
 import { IVerifyForgotPasswordOtpUseCase } from "../../../application/common/interfaces/IVerifiyForgotPasswordOtpUseCase";
 import { IResetPasswordUseCase } from "../../../application/common/interfaces/IResetPasswordUseCase";
 import { IResetPasswordResendOtpUseCase } from "../../../application/common/interfaces/IResetPasswordResendOtpUseCase";
+import { HttpStatusCode } from "../../../shared/HttpStatusCodes";
 import {
   Cookie,
   ResetPasswordBody,
@@ -57,7 +58,7 @@ export class AuthController {
           image: result.mappedUser.profileImage,
         },
       };    
-      res.json(response);
+      res.status(HttpStatusCode.OK).json(response);
     } catch (error) {
       next(error);
     }
@@ -67,12 +68,12 @@ export class AuthController {
     try {
       const cookies = req.cookies as Cookie;
       const token = cookies.refreshtoken;
-      if (!token) return res.status(401).json({ message: " No refresh token" });
+      if (!token) return res.status(HttpStatusCode.UNAUTHORIZED).json({ message: " No refresh token" });
 
       const newAccessToken = await this._getNewAccessTokenUsecase.execute(
         token
       );
-      res.json({ accessToken: newAccessToken });
+      res.status(HttpStatusCode.OK).json({ accessToken: newAccessToken });
     } catch (error) {
       next(error);
     }
@@ -98,7 +99,7 @@ export class AuthController {
         },
       };
 
-      res.json(response);
+      res.status(HttpStatusCode.OK).json(response);
     } catch (error) {
       next(error);
     }
@@ -117,7 +118,6 @@ export class AuthController {
         maxAge: Number(process.env.MAX_AGE),
       });
 
-      console.log("user role after the result", result.user.role);
       const response: AuthResponseDTO = {
         accessToken: result.accessToken,
         user: {
@@ -127,7 +127,7 @@ export class AuthController {
         },
       };
 
-      res.json({ exists: true, ...response });
+      res.status(HttpStatusCode.OK).json({ exists: true, ...response });
     } catch (error) {
       next(error);
     }
@@ -137,7 +137,7 @@ export class AuthController {
     try {
       const { email, otp } = req.body as VerifyOtpBody;
       const response = await this._verifySignupOtpUseCase.execute(email, otp);
-      res.json({ success: true, message: response });
+      res.status(HttpStatusCode.OK).json({ success: true, message: response });
     } catch (error) {
       next(error);
     }
@@ -147,7 +147,7 @@ export class AuthController {
     try {
       const { email } = req.body as resendOtpBody;
       const response = await this._resendOtpUseCase.execute(email);
-      res.json({ success: true, ...response });
+      res.status(HttpStatusCode.OK).json({ success: true, ...response });
     } catch (error) {
       next(error);
     }
@@ -157,7 +157,7 @@ export class AuthController {
     try {
       const { email } = req.body as ForgotPasswordBody;
       const response = await this._forgotPasswordUseCase.execute(email);
-      res.json({ success: true, ...response });
+      res.status(HttpStatusCode.OK).json({ success: true, ...response });
     } catch (error) {
       next(error);
     }
@@ -174,7 +174,7 @@ export class AuthController {
         email,
         otp
       );
-      res.json({ success: true, message: response });
+      res.status(HttpStatusCode.OK).json({ success: true, message: response });
     } catch (error) {
       next(error);
     }
@@ -201,7 +201,7 @@ export class AuthController {
         password,
         otp,
       );
-      res.json({ success: true, message: response });
+      res.status(HttpStatusCode.OK).json({ success: true, message: response });
     } catch (error) {
       next(error);
     }
@@ -213,6 +213,6 @@ export class AuthController {
       sameSite: "strict",
       secure: process.env.NODE_ENV === "production",
     });
-    return res.json({ message: "Logged out successfully" });
+    return res.status(HttpStatusCode.NO_CONTENT).json({ message: "Logged out successfully" });
   };
 }

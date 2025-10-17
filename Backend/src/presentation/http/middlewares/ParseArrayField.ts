@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { EducationDTO } from "../validators/EducationSchema";
 import { CertificateDTO } from "../validators/CertificateSchema";
+import { ErrorMessages } from "../../../shared/Messages";
+import { HttpStatusCode } from "../../../shared/HttpStatusCodes";
 
 interface ParseStringToArray {
   educations?: EducationDTO[] | string;
@@ -16,7 +18,7 @@ export const parseArrayFields = (
     try {
       req.body.educations = JSON.parse(req.body.educations) as EducationDTO[];
     } catch {
-      return res.status(400).json({ message: "Invalid educations format" });
+      return res.status(HttpStatusCode.BAD_REQUEST).json({ message:ErrorMessages.INVALID_EDUCATION });
     }
   }
 
@@ -26,7 +28,7 @@ export const parseArrayFields = (
         req.body.certificates
       ) as CertificateDTO[];
     } catch {
-      return res.status(400).json({ message: "Invalid certificates format" });
+      return res.status(HttpStatusCode.BAD_REQUEST).json({ message: ErrorMessages.INVALID_CERTIFICATE });
     }
   }
   next();

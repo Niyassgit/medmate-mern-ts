@@ -1,6 +1,6 @@
 import { SuperAdminController } from "../../presentation/http/controllers/SuperAdminController";
 import { CreateSuperAdminUseCase } from "../../application/superAdmin/auth/CreateSuperAdminUseCase";
-import { GetSuperAdminByEmailIdUseCase } from "../../application/superAdmin/auth/GetSuperAdminByEmailIdUseCase";
+import { GetSuperAdminByEmailUseCase } from "../../application/superAdmin/auth/GetSuperAdminByEmailUseCase";
 import { BcryptServices } from "../services/BcryptService";
 import { SuperAdminRepository } from "../repositories/SuperAdminRepository";
 import { UserRepository } from "../repositories/UserRepository";
@@ -11,7 +11,7 @@ import { GetAllRepsUseCase } from "../../application/superAdmin/useCases/GetAllR
 import { BlockUserUseCase } from "../../application/superAdmin/useCases/BlockUserUseCase";
 import { UnBlockUserUseCase } from "../../application/superAdmin/useCases/UnblockUserUseCase";
 import { GetDoctorDetailsUseCase } from "../../application/superAdmin/useCases/GetDoctorDetailsUseCase";
-import { GetMedicalRepDetailsUseCase } from "../../application/superAdmin/useCases/GetMedicalRepDetails";
+import { GetMedicalRepDetailsUseCase } from "../../application/superAdmin/useCases/GetMedicalRepDetailsUseCase";
 
 const superAdminRepositories = new SuperAdminRepository();
 const userLoginRepository = new UserRepository();
@@ -24,7 +24,7 @@ const createSuperAdminUseCase = new CreateSuperAdminUseCase(
   userLoginRepository,
   bycryptServices
 );
-const getSuperAdminByEmailIdUseCase = new GetSuperAdminByEmailIdUseCase(
+const getSuperAdminByEmailIdUseCase = new GetSuperAdminByEmailUseCase(
   superAdminRepositories
 );
 const getAllDoctorsUseCase = new GetAllDoctorsUseCase(doctorRepository);

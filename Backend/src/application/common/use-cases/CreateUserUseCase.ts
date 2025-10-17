@@ -1,11 +1,11 @@
 import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 import { IBcryptService } from "../../../domain/common/services/IHashService";
-import { AuthProvider } from "../../../shared/enums";
+import { AuthProvider } from "../../../shared/Enums";
 import { ConflictError, BadRequestError } from "../../../domain/common/errors";
 import { IUser } from "../../../domain/common/entities/IUser";
 import { CreateUserDTO } from "../dto/CreateUserDTO";
 import { ICreateUserUseCase } from "../interfaces/ICreateUserUseCase";
-import { ErrorMessages } from "../../../shared/messages";
+import { ErrorMessages } from "../../../shared/Messages";
 
 
 export class CreateUserUseCase implements ICreateUserUseCase{

@@ -38,7 +38,7 @@ const ProfilePage = () => {
     };
     fetchProfile();
   }, [id]);
-
+ 
   const handleAvatarChange = (file: File) => {
     setSelectedFile(file);
     setOpenConfirm(true);
@@ -89,6 +89,17 @@ const ProfilePage = () => {
     return "border-red-500";
   };
   
+  const handleImageError=async()=>{
+    try {
+      const res=await getProfileRep(id);
+      if(res.success && res.data?.profileImage){
+        return res.data.profileImage;
+      }
+    } catch (error) {
+      toast.error("Failed to refresh profile Image");
+    }
+    return null;
+  }
   return (
     <div className="min-h-screen py-10 px-4">
       <div className="max-w-4xl mx-auto space-y-6">
@@ -129,7 +140,9 @@ const ProfilePage = () => {
               image={rep.profileImage}
               name={rep.name}
               email={rep.email}
+              userId={id}
               editable
+              onImageError={handleImageError}
               onImageChange={handleAvatarChange}
               className="w-32 h-32 border-4 border-white"
             />

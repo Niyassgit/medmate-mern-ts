@@ -8,13 +8,15 @@ import {
 import { LoginResponseDTO } from "../dto/LoginResponseDTO";
 import { UserMapper } from "../mapper/UserMapper";
 import { ILoginUserUseCase } from "../interfaces/ILoginUserUseCase";
-import { ErrorMessages } from "../../../shared/messages";
+import { ErrorMessages } from "../../../shared/Messages";
+import { IStorageService } from "../services/IStorageService";
 
 export class LoginUserUseCase implements ILoginUserUseCase{
   constructor(
     private _userLoginRepository: IUserRepository,
     private _bcryptServices: IBcryptService,
-    private _jwtServices: IJWtService
+    private _jwtServices: IJWtService,
+    private _storageService:IStorageService
   ) {}
 
   async execute(
@@ -42,7 +44,9 @@ export class LoginUserUseCase implements ILoginUserUseCase{
     };
     const accessToken = this._jwtServices.signAccessToken(accessPayload);
     const refreshToken = this._jwtServices.signRefreshToken(refreshPayload);
-    const mappedUser=UserMapper.toUserProfile(user);
+   const signedUrl=user.profileImage?await this._storageService.generateSignedUrl(user.profileImage):null;
+
+    const mappedUser=UserMapper.toUserProfile(user,signedUrl);
     return { accessToken, refreshToken, mappedUser};
   }
 }

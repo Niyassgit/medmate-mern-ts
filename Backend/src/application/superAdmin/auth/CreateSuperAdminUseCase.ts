@@ -2,12 +2,14 @@ import { ISuperAdminRepository } from "../../../domain/superAdmin/repositories/I
 import { IBcryptService } from "../../../domain/common/services/IHashService";
 import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 import { RegisterSuperAdminDTO } from "../dto/RegisterSuperAdminDTO";
-import { Role } from "../../../shared/enums"; 
+import { Role } from "../../../shared/Enums"; 
 import { ConflictError, BadRequestError } from "../../../domain/common/errors";
 import { UserMapper } from "../../common/mapper/UserMapper";
 import { SuperAdminMapper } from "../mappers/SuperAdminMapper";
-import { ErrorMessages, SuccessMessages } from "../../../shared/messages";
-export class CreateSuperAdminUseCase {
+import { ErrorMessages, SuccessMessages } from "../../../shared/Messages";
+import { ICreateSuperAdminUseCase } from "../interfaces/ICreateSuperAdminUseCase";
+
+export class CreateSuperAdminUseCase implements ICreateSuperAdminUseCase{
   constructor(
     private _superAdminRepository: ISuperAdminRepository,
     private _userLoginRepository: IUserRepository,

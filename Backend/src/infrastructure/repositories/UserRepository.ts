@@ -1,7 +1,7 @@
 import { prisma } from "../database/prisma";
 import { IUserRepository } from "../../domain/common/repositories/IUserRepository";
 import { IUser } from "../../domain/common/entities/IUser";
-import { AuthProvider,Role } from "../../shared/enums";
+import { AuthProvider,Role } from "../../shared/Enums";
 import { UserMapper } from "../mappers/UserMapper";
 import { BaseRepository } from "../database/BaseRepository";
 import { User,Prisma } from "@prisma/client";

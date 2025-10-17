@@ -8,6 +8,7 @@ import { updateProfileImage } from "../api";
 import toast from "react-hot-toast";
 import LogoutButton from "@/components/shared/LogoutButton";
 import { useNavigate } from "react-router-dom";
+import { getProfileRep } from "@/features/rep/api";
 
 
 const ProfilePage = () => {
@@ -93,6 +94,18 @@ const ProfilePage = () => {
     return "border-red-500";
   };
 
+  const handleImageError=async ()=>{
+    try {
+      const res=await getProfileRep(id);
+      if(res.success && res.data?.profileImage){
+        return res.data.profileImage
+      }
+    } catch (error) {
+      toast.error("Failed to refresh profile image");
+    }
+    return null
+  }
+
   return (
     <div className="min-h-screen bg-gray-100 py-10 px-4">
       <div className="max-w-4xl mx-auto space-y-6">
@@ -133,6 +146,7 @@ const ProfilePage = () => {
               name={doctor.name}
               email={doctor.email}
               image={doctor.profileImage}
+              onImageError={handleImageError}
               editable
               onImageChange={handleAvatarChange}
               className="w-32 h-32 border-4 border-white"

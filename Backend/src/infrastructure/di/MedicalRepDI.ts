@@ -13,6 +13,7 @@ import { CreatePostUseCase } from "../../application/productPost/use-case/Create
 import { EditProductPostUseCase } from "../../application/productPost/use-case/EditProductPostUseCase";
 import { GetProductPostListUseCase } from "../../application/productPost/use-case/GetProductPostListUseCase";
 import { GetProductPostDetailsUseCase } from "../../application/productPost/use-case/GetProductPostDetailsUseCase";
+import { s3StorageService } from "../services/S3StorageService";
 
 const medicalRepRepository = new MedicalRepRepository();
 const userRepository = new UserRepository();
@@ -20,6 +21,7 @@ const bcryptServices = new BcryptServices();
 const otpService = new OtpService();
 const notificationService = new NotificationService();
 const productPostRepository = new ProductPostRepository();
+const storageService = new s3StorageService();
 
 const createMedicalRepUseCase = new CreateMedicalRepUseCase(
   medicalRepRepository,
@@ -31,9 +33,13 @@ const createMedicalRepUseCase = new CreateMedicalRepUseCase(
 
 const getRepProfileByIdUseCase = new GetRepProfileByIdUseCase(
   medicalRepRepository,
-  userRepository
+  userRepository,
+  storageService
 );
-const profileUpdateImageUseCase = new ProfileImageUpdateUseCase(userRepository);
+const profileUpdateImageUseCase = new ProfileImageUpdateUseCase(
+  userRepository,
+  storageService
+);
 const completRepProfileUseCase = new CompleteRepProfileUseCase(
   userRepository,
   medicalRepRepository
@@ -45,16 +51,18 @@ const createPostUseCase = new CreatePostUseCase(
   medicalRepRepository
 );
 const editProductPostUseCase = new EditProductPostUseCase(
-  productPostRepository,
+  productPostRepository
 );
 const getProductPostListUseCase = new GetProductPostListUseCase(
   userRepository,
   productPostRepository,
-  medicalRepRepository
+  medicalRepRepository,
+  storageService
 );
 
 const getProductPostDetailsUseCase = new GetProductPostDetailsUseCase(
-  productPostRepository
+  productPostRepository,
+  storageService
 );
 
 export const medicalRepController = new MedicalRepController(

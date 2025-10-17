@@ -1,7 +1,7 @@
 import { MedicalRep, User } from "@prisma/client";
 import { IMedicalRepWithUser } from "../../domain/medicalRep/entities/IMedicalRepWithUser";
 import { MedicalRepMapper } from "./MedicalRepMapper";
-import { Role as DomainRole,AuthProvider as DomainAuthProvider } from "../../shared/enums"; 
+import { Role as DomainRole,AuthProvider as DomainAuthProvider } from "../../shared/Enums"; 
 
 export class MedicalRepWithUserMapper{
 

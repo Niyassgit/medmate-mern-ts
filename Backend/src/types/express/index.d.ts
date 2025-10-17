@@ -6,10 +6,10 @@ declare global {
       user?: JwtPayload;
     }
 
-    namespace Multer{
-      interface File{
-        location?:string;
-        key?:string;
+    namespace Multer {
+      interface File {
+        location?: string;
+        key?: string;
       }
     }
   }

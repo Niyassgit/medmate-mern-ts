@@ -4,7 +4,7 @@ import { IBcryptService } from "../../../domain/common/services/IHashService";
 import { BadRequestError, NotFoundError } from "../../../domain/common/errors";
 import { OtpPurpose } from "../../../domain/common/types/OtpPurpose";
 import { IResetPasswordUseCase } from "../interfaces/IResetPasswordUseCase";
-import { ErrorMessages, SuccessMessages } from "../../../shared/messages";
+import { ErrorMessages, SuccessMessages } from "../../../shared/Messages";
 
 export class ResetPasswordUseCase implements IResetPasswordUseCase{
   constructor(

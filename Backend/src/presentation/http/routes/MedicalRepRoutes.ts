@@ -5,8 +5,7 @@ import { ValidateSchema } from "../middlewares/ValidateSchema";
 import { registerMedicalRepSchema } from "../validators/RepSchemaValidator";
 import { Authenticate } from "../middlewares/Authenticate";
 import { AuthorizeRole } from "../middlewares/AuthorizeRole";
-import { Role } from "../../../shared/enums";
-import { uploadCloud } from "../../../infrastructure/storage/multer/MulterConfigCloudinary";
+import { Role } from "../../../shared/Enums";
 import { MedicalRepProfileUpdateSchema } from "../validators/MedicalRepProfileUpdateSchema";
 import { parseArrayFields } from "../middlewares/ParseArrayField";
 import { productPostValidateSchema } from "../validators/ProductPostValidateSchema";
@@ -15,7 +14,7 @@ import { UserValidate } from "../../../infrastructure/di/UserValidateDI";
 import { makeValidateUserMiddleware } from "../middlewares/ValidateUserMiddleware";
 import { uploadS3 } from "../../../infrastructure/storage/multer/MulterS3BucketConfig";
 
-const validateUser=makeValidateUserMiddleware(UserValidate);
+const validateUser = makeValidateUserMiddleware(UserValidate);
 
 export class MedicalRepRoutes {
   public router: Router;
@@ -58,7 +57,7 @@ export class MedicalRepRoutes {
       "/add-post/:userId",
       Authenticate,
       AuthorizeRole([Role.MEDICAL_REP]),
-      uploadCloud.array("images", 5),
+      uploadS3.array("images", 5),
       parsePostField,
       ValidateSchema(productPostValidateSchema),
       medicalRepController.createPost
@@ -73,7 +72,7 @@ export class MedicalRepRoutes {
       "/post-details/:postId",
       Authenticate,
       AuthorizeRole([Role.MEDICAL_REP]),
-      validateUser, 
+      validateUser,
       medicalRepController.postDetails
     );
     this.router.post(
@@ -81,7 +80,7 @@ export class MedicalRepRoutes {
       Authenticate,
       AuthorizeRole([Role.MEDICAL_REP]),
       validateUser,
-      uploadCloud.array("images", 5),
+      uploadS3.array("images", 5),
       parsePostField,
       ValidateSchema(productPostValidateSchema),
       medicalRepController.editPost

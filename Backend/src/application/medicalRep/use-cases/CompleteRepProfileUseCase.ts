@@ -1,6 +1,6 @@
 import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
-import { ErrorMessages, SuccessMessages } from "../../../shared/messages";
+import { ErrorMessages, SuccessMessages } from "../../../shared/Messages";
 import { NotFoundError } from "../../errors";
 import { CompleteRepProfileDTO } from "../dto/CompleteRepProfileDTO";
 import { ICompleteRepProfileUseCase } from "../interfaces/ICompleteRepProfileUseCase";

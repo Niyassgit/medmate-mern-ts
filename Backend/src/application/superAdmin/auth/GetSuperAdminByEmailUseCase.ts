@@ -1,7 +1,8 @@
 import { ISuperAdmin } from "../../../domain/superAdmin/entities/ISuperAdmin";
 import { ISuperAdminRepository } from "../../../domain/superAdmin/repositories/ISuperAdminRepository";
+import { IGetSuperAdminByEmailUseCase } from "../interfaces/IGetSuperAdminByEmailUseCase";
 
-export class GetSuperAdminByEmailIdUseCase {
+export class GetSuperAdminByEmailUseCase implements IGetSuperAdminByEmailUseCase{
   constructor(private _superAdminRepository: ISuperAdminRepository) {}
 
   async execute(email: string): Promise<ISuperAdmin | null> {

@@ -5,8 +5,7 @@ import { upload } from "../../../infrastructure/storage/multer/MulterFactory";
 import { DoctorRegisterSchema } from "../validators/DoctorRegisterSchemaValidator";
 import { Authenticate } from "../middlewares/Authenticate";
 import { AuthorizeRole } from "../middlewares/AuthorizeRole";
-import { Role } from "../../../shared/enums"; 
-import { uploadCloud } from "../../../infrastructure/storage/multer/MulterConfigCloudinary";
+import { Role } from "../../../shared/Enums"; 
 import { DoctorProfileUpdateSchema } from "../validators/DoctorProfileUpdateSchema";
 import { uploadS3 } from "../../../infrastructure/storage/multer/MulterS3BucketConfig";
 

@@ -4,8 +4,8 @@ function isUploadedFile(file: unknown): file is UploadedFile {
   return (
     typeof file === "object" &&
     file !== null &&
-    "path" in file &&
-    typeof (file as Record<string, unknown>).path === "string"
+    "key" in file &&
+    typeof (file as Record<string, unknown>).key === "string"
   );
 }
 
@@ -30,8 +30,8 @@ export const processImages = (
   if (files && Array.isArray(files)) {
     newImages = files
       .filter(isUploadedFile) 
-      .map((file) => file.path) 
-      .filter((path): path is string => path.trim() !== ""); 
+      .map((file) => file.key) 
+       .filter((key): key is string => typeof key === "string" && key.trim() !== "");
   }
 
   return [...existing, ...newImages];

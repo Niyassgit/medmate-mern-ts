@@ -2,7 +2,7 @@ import { IJWtService } from "../../../domain/common/services/IJWTService";
 import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 import { UnautharizedError } from "../../../domain/common/errors";
 import { IGetNewAccessTokenUseCase } from "../interfaces/IGetNewAccessTokenUseCase";
-import { ErrorMessages } from "../../../shared/messages";
+import { ErrorMessages } from "../../../shared/Messages";
 
 export class GetNewAccessTokenUseCase implements IGetNewAccessTokenUseCase{
   constructor(

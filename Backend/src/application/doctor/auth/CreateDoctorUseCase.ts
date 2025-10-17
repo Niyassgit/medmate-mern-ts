@@ -3,7 +3,7 @@ import { RegisterResponseDTO } from "../dto/RegisterResponseDTO";
 import { IBcryptService } from "../../../domain/common/services/IHashService";
 import { RegisterDoctorDTO } from "../dto/RegisterDoctorDTO";
 import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
-import { Role } from "../../../shared/enums";
+import { Role } from "../../../shared/Enums";
 import { ConflictError, BadRequestError } from "../../../domain/common/errors";
 import { INotificationService } from "../../../domain/common/services/INotificationService";
 import { OtpPurpose } from "../../../domain/common/types/OtpPurpose";
@@ -12,7 +12,7 @@ import { DoctorAuthMapper } from "../mapper/DoctorAuthMapper";
 import { DoctorMapper } from "../mapper/DoctorMapper";
 import { UserMapper } from "../../common/mapper/UserMapper";
 import { ICreateDoctorUseCase } from "../interfaces/ICreateDoctorUseCase";
-import { ErrorMessages, NotificationMessages } from "../../../shared/messages";
+import { ErrorMessages, NotificationMessages } from "../../../shared/Messages";
 
 export class CreateDoctorUseCase implements ICreateDoctorUseCase {
   constructor(

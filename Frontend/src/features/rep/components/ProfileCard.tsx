@@ -4,12 +4,16 @@ import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MedicalRepDetailsDTO } from "../dto/MedicalRepDetailsDTO";
 import { Link } from "react-router-dom";
+import { getProfileRep } from "../api";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 interface ProfileCardProps {
   rep: MedicalRepDetailsDTO | null;
 }
 
 const ProfileCard = ({ rep }: ProfileCardProps) => {
+  const [imageUrl, setImageUrl] = useState(rep?.profileImage || null);
   if (!rep) {
     return (
       <Card className="p-6 text-center">
@@ -17,11 +21,32 @@ const ProfileCard = ({ rep }: ProfileCardProps) => {
       </Card>
     );
   }
+
+  const handleImageError = async () => {
+    try {
+      const response = await getProfileRep(rep.loginId);
+      if (
+        (response.data.success && response.data?.data?.profileImage) ||
+        null
+      ) {
+        setImageUrl(response.data.data.profileimage);
+      } else {
+        setImageUrl(null);
+      }
+    } catch (error) {
+      toast.error("Failed to refresh signed URL");
+      setImageUrl(null);
+    }
+  };
   return (
     <Card className="p-6">
       <div className="flex flex-col items-center text-center">
         <Avatar className="mb-4 h-24 w-24">
-          <AvatarImage src={`${import.meta.env.VITE_API_S3_CLOUD}${rep.profileImage}` || undefined} alt={rep.name} />
+          <AvatarImage
+            src={imageUrl || undefined}
+            alt={rep.name}
+            onError={handleImageError}
+          />
           <AvatarFallback>{rep.name?.slice(0, 2).toUpperCase()}</AvatarFallback>
         </Avatar>
 

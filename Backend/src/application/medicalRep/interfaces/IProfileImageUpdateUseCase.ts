@@ -1,3 +1,3 @@
 export interface IProfileImageUpdateUseCase{
-    execute(userId:string,fileUrl?:string|null):Promise<string>;
+    execute(userId:string,fileKey?:string|null):Promise<{message:string,signedUrl:string }>;
 }

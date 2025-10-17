@@ -1,4 +1,4 @@
-import { Role } from "../../../shared/enums";
+import { Role } from "../../../shared/Enums";
 
 interface User{
   id:string,

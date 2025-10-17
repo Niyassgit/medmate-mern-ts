@@ -1,7 +1,7 @@
 import { IUserValidationService } from "../../../domain/common/services/IUserValidationService";
 import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 import { UnautharizedError } from "../../../domain/common/errors";
-import { ErrorMessages } from "../../../shared/messages";
+import { ErrorMessages } from "../../../shared/Messages";
 
 
 

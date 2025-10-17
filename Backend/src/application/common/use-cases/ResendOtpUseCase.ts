@@ -6,7 +6,7 @@ import { OtpPurpose } from "../../../domain/common/types/OtpPurpose";
 import { OtpResponseDTO } from "../dto/OtpResponseDTO";
 import { OtpMapper } from "../mapper/OtpMapper";
 import { IResendOtpUseCase } from "../interfaces/IResendOtpUseCase";
-import { ErrorMessages, NotificationMessages } from "../../../shared/messages";
+import { ErrorMessages, NotificationMessages } from "../../../shared/Messages";
 
 export class ResendOtpUseCase implements IResendOtpUseCase {
   constructor(

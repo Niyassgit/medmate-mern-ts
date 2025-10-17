@@ -10,7 +10,7 @@ import { INotificationService } from "../../../domain/common/services/INotificat
 import { ForgotResponseDTO } from "../dto/ForgotResponseDTO";
 import { OtpMapper } from "../mapper/OtpMapper";
 import { IForgotPasswordUseCase } from "../interfaces/IForgotPasswordUseCase";
-import { NotificationMessages, ErrorMessages } from "../../../shared/messages";
+import { NotificationMessages, ErrorMessages } from "../../../shared/Messages";
 
 export class ForgotPasswordUseCase implements IForgotPasswordUseCase {
   constructor(

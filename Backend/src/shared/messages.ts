@@ -3,6 +3,7 @@ export const ErrorMessages = {
   ACCOUNT_EXIST:"User already exists",
   INVALID_CREDENTIALS: "Invalid email or password",
   UNAUTHORIZED: "Unauthorized access",
+  FORBIDDEN:"Forbidden",
   SERVER_ERROR: "Internal server error",
   EMAIL_ALREADY_EXISTS : "Email already exists",
   PASSWORD_REQUIRED : "Password is required",
@@ -20,7 +21,12 @@ export const ErrorMessages = {
   FILL_ALL_FILED:"Fill all the required fields to continue posting",
   COMPLETE_PROFILE_ERROR:"You must complete your profile to continue posting...",
   UPLOAD_FAILE:"Upload operation failed",
-  POST_NOT_FOUND:"The post you have looking for is not found"
+  POST_NOT_FOUND:"The post you have looking for is not found",
+  TOKEN_NOT_FOUND:"No token Provided",
+  INVALID_TOKEN:"Invalid Token",
+  INVALID_EDUCATION:"Invalid educations format",
+  INVALID_CERTIFICATE:"Invalid certificate format",
+  BLOCK_FAILURE:"User BLocking Fails"
 
 }as const;
 
@@ -34,6 +40,9 @@ export const SuccessMessages = {
   PROFILE_PIC_UPDATE:"Profile picture added Successfully",
   UPLOAD_SUCCESS:"Uploaded successfully",
   POST_UPDATE_SUCCESS:"Post updated successfully",
+  LOGOUT_SUCCESS:"User logout successfully",
+  BLOCK_SUCCESS:"User Blocked successfully",
+  UNBLOCK_SUCCESS:"User Unblocked successfully"
 
  
 }as const;

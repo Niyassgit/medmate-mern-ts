@@ -4,7 +4,7 @@ import { BadRequestError, NotFoundError } from "../../errors";
 import { ProductPostDTO } from "../dto/ProductPostDTO";
 import { ICreatePostUseCase } from "../interfaces/ICreatePostUseCase";
 import { ProductPostMapper } from "../mappers/ProductPostMapper";
-import { ErrorMessages, SuccessMessages } from "../../../shared/messages";
+import { ErrorMessages, SuccessMessages } from "../../../shared/Messages";
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
 export class CreatePostUseCase implements ICreatePostUseCase {
   constructor(

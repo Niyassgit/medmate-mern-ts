@@ -4,7 +4,7 @@ import { OtpPurpose } from "../../../domain/common/types/OtpPurpose";
 import { IBcryptService } from "../../../domain/common/services/IHashService";
 import { IOtpService } from "../../../domain/common/services/IOtpService";
 import { IVerifyForgotPasswordOtpUseCase } from "../interfaces/IVerifiyForgotPasswordOtpUseCase";
-import { ErrorMessages, SuccessMessages } from "../../../shared/messages";
+import { ErrorMessages, SuccessMessages } from "../../../shared/Messages";
 
 export class VerifyForgotPasswordOtpUseCase implements IVerifyForgotPasswordOtpUseCase {
   constructor(

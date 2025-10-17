@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -17,10 +17,12 @@ import {
 import { PostDetailsDTO } from "../dto/PostDetailsDTO";
 import { postDetails } from "../api";
 import useFetchItem from "@/hooks/useFetchItem";
+import toast from "react-hot-toast";
 
 const PostDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const fetchPostDetails = useCallback(() => {
@@ -34,6 +36,12 @@ const PostDetailsPage = () => {
     error,
   } = useFetchItem<PostDetailsDTO | null>(fetchPostDetails);
 
+  useEffect(() => {
+    if (post?.imageUrl) {
+      setImageUrls(post.imageUrl);
+    }
+  }, [post]);
+
   const splitIngredient = (ingredient: string) => {
     const words = ingredient.split(/\s+/);
     const chunks: string[] = [];
@@ -43,7 +51,7 @@ const PostDetailsPage = () => {
     return chunks;
   };
 
-    if (loading) {
+  if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <img src="/loading.gif" alt="Loading..." className="h-16 w-16" />
@@ -57,7 +65,7 @@ const PostDetailsPage = () => {
       </div>
     );
   }
-  
+
   if (!post) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-background to-secondary/30">
@@ -83,6 +91,18 @@ const PostDetailsPage = () => {
     );
   };
 
+  const handleErrorImage = async (idx:number) => {
+    try {
+      const res = await postDetails(id!);
+      if (res.success && res.data?.data?.imageUrl) {
+          setImageUrls(res.data.data.imageUrl);
+      }
+    } catch (error) {
+      toast.error(
+        "Something went wriong!..undable to acess data right the moment"
+      );
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary/30">
@@ -118,9 +138,10 @@ const PostDetailsPage = () => {
             <div className="space-y-6 animate-fade-in">
               <Card className="relative aspect-square overflow-hidden border-border bg-muted">
                 <img
-                  src={post.imageUrl[currentImageIndex]}
+                  src={imageUrls[currentImageIndex]}
                   alt={post.title}
                   className="h-full w-full object-cover"
+                  onError={() => handleErrorImage(currentImageIndex)}
                 />
 
                 {post.imageUrl.length > 1 && (
@@ -150,9 +171,9 @@ const PostDetailsPage = () => {
               </Card>
 
               {/* Thumbnail Gallery */}
-              {post.imageUrl.length > 1 && (
+              {imageUrls.length > 1 && (
                 <div className="flex gap-2 overflow-x-auto">
-                  {post.imageUrl.map((url, idx) => (
+                  {imageUrls.map((url, idx) => (
                     <button
                       key={idx}
                       onClick={() => setCurrentImageIndex(idx)}
@@ -163,9 +184,11 @@ const PostDetailsPage = () => {
                       }`}
                     >
                       <img
+                        key={idx}
                         src={url}
                         alt={`${post.title} ${idx + 1}`}
                         className="h-full w-full object-cover"
+                        onError={()=>handleErrorImage(idx)}
                       />
                     </button>
                   ))}

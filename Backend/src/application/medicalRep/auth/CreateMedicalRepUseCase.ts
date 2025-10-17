@@ -1,7 +1,7 @@
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
 import { IBcryptService } from "../../../domain/common/services/IHashService";
 import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
-import { Role } from "../../../shared/enums";
+import { Role } from "../../../shared/Enums";
 import { RegisterMedicalRepDTO } from "../dto/RegisterMedicalRepDTO";
 import { ConflictError, BadRequestError } from "../../../domain/common/errors";
 import { IOtpService } from "../../../domain/common/services/IOtpService";
@@ -12,7 +12,7 @@ import { UserMapper } from "../../common/mapper/UserMapper";
 import { MedicalRepMapper } from "../mapper/MedicalRepMapper";
 import { MedicalRepAuthMapper } from "../mapper/MedicalRepAuthMapper";
 import { ICreateMedicalRepUseCase } from "../interfaces/ICreateMedicalRepUseCase";
-import { ErrorMessages, NotificationMessages } from "../../../shared/messages";
+import { ErrorMessages, NotificationMessages } from "../../../shared/Messages";
 
 export class CreateMedicalRepUseCase implements ICreateMedicalRepUseCase {
   constructor(
