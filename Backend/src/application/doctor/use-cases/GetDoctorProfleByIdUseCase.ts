@@ -3,7 +3,7 @@ import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRe
 import { ErrorMessages } from "../../../shared/Messages";
 import { UserProfileDTO } from "../../common/dto/UserProfileDTO";
 import { UserMapper } from "../../common/mapper/UserMapper";
-import { IStorageService } from "../../common/services/IStorageService";
+import { IStorageService } from "../../../domain/common/services/IStorageService";
 import { NotFoundError } from "../../errors";
 import { DoctorDetailsDTO } from "../dto/DoctorDetailsDTO";
 import { IGetDoctorProfileByIdUseCase } from "../interfaces/IGetDoctoraProfileByIdUseCase";

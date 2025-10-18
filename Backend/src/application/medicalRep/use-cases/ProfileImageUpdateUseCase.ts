@@ -1,6 +1,6 @@
 import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 import { ErrorMessages, SuccessMessages } from "../../../shared/Messages";
-import { IStorageService } from "../../common/services/IStorageService";
+import { IStorageService } from "../../../domain/common/services/IStorageService";
 import { BadRequestError, NotFoundError } from "../../errors";
 import { IProfileImageUpdateUseCase } from "../interfaces/IProfileImageUpdateUseCase";
 

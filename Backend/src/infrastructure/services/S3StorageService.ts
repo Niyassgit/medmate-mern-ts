@@ -2,7 +2,7 @@ import { DeleteObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import {s3} from "../../config/S3Client";
 import {env} from "../../config/env";
-import { IStorageService } from "../../application/common/services/IStorageService";
+import { IStorageService } from "../../domain/common/services/IStorageService";
 
 
 export class s3StorageService implements IStorageService{

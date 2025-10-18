@@ -9,7 +9,7 @@ import { LoginResponseDTO } from "../dto/LoginResponseDTO";
 import { UserMapper } from "../mapper/UserMapper";
 import { ILoginUserUseCase } from "../interfaces/ILoginUserUseCase";
 import { ErrorMessages } from "../../../shared/Messages";
-import { IStorageService } from "../services/IStorageService";
+import { IStorageService } from "../../../domain/common/services/IStorageService";
 
 export class LoginUserUseCase implements ILoginUserUseCase{
   constructor(

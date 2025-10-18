@@ -7,7 +7,7 @@ import { UserMapper } from "../../common/mapper/UserMapper";
 import { UserProfileDTO } from "../../common/dto/UserProfileDTO";
 import { IGetRepProfileByIdUseCase } from "../interfaces/IGetRepProfileByIdUseCase";
 import { ErrorMessages } from "../../../shared/Messages";
-import { IStorageService } from "../../common/services/IStorageService";
+import { IStorageService } from "../../../domain/common/services/IStorageService";
 
 export class GetRepProfileByIdUseCase implements IGetRepProfileByIdUseCase {
   constructor(

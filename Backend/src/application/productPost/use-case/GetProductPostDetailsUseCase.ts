@@ -1,7 +1,7 @@
 import { NotFoundError } from "../../../domain/common/errors";
 import { IProductPostRepository } from "../../../domain/product/repositories/IProductPostRepository";
 import { ErrorMessages } from "../../../shared/Messages";
-import { IStorageService } from "../../common/services/IStorageService";
+import { IStorageService } from "../../../domain/common/services/IStorageService";
 import { PostDetailsDTO } from "../dto/PostDetailsDTO";
 import { IGetProductPostDetailsUseCase } from "../interfaces/IPostDetailsUseCase";
 import { ProductPostMapper } from "../mappers/ProductPostMapper";
