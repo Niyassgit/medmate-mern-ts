@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Pencil } from "lucide-react";
-import { getProfileRep } from "@/features/rep/api";
-import toast from "react-hot-toast";
+import { deletePost } from "@/features/rep/api";
 
 interface ProfileAvatarProps {
   image?: string | null;

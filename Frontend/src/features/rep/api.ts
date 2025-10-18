@@ -15,6 +15,9 @@ export const updateProfileImage=async(userId:string,file:File)=>{
   });
   return response.data;
 }
+export const deletePost=async(userId:string,url:string)=>{
+   return api.delete(RepEndpoints.DELETE_IMAGE(userId,url));
+}
 export const completeProfile=async(userId:string,formData:FormData)=>{
   return api.post(RepEndpoints.COMPLETE_PROFILE(userId),formData,{
     headers:{"Content-Type":"multipart/form-data"}

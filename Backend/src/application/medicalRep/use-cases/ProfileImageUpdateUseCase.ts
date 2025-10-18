@@ -15,8 +15,12 @@ export class ProfileImageUpdateUseCase implements IProfileImageUpdateUseCase{
         if(!fileKey) throw new BadRequestError(ErrorMessages.PROFILE_IMAGE_REQUIRED);
         const user=await this._userRepository.findById(userId);
         if(!user) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
-        const res=await this._userRepository.updateProfileImage(userId,fileKey);
-        if(!res) throw new BadRequestError(ErrorMessages.PROFILE_UPDATE_FAIL);
+        let oldFileKey=user.profileImage;
+        const updatedUser=await this._userRepository.updateProfileImage(userId,fileKey);
+        if(!updatedUser) throw new BadRequestError(ErrorMessages.PROFILE_UPDATE_FAIL);
+        if(oldFileKey && oldFileKey !==fileKey){
+        await this._storageService.deleteFile(oldFileKey);
+        }
         const signedUrl=await this._storageService.generateSignedUrl(fileKey);
         return {message:SuccessMessages.PROFILE_PIC_UPDATE,signedUrl};
     }

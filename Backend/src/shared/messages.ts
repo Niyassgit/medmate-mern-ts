@@ -38,6 +38,7 @@ export const SuccessMessages = {
   PASSWORD_RESET_SUCCESS:"Password changed successfully",
   ACCOUNT_VERIFIED_SUCCESS:"Account verified successfully",
   PROFILE_PIC_UPDATE:"Profile picture added Successfully",
+  PROFILE_PIC_DELETE:"Profile picture deletd Successfully",
   UPLOAD_SUCCESS:"Uploaded successfully",
   POST_UPDATE_SUCCESS:"Post updated successfully",
   LOGOUT_SUCCESS:"User logout successfully",

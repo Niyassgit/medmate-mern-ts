@@ -1,4 +1,4 @@
-import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { DeleteObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import {s3} from "../../config/S3Client";
 import {env} from "../../config/env";
@@ -14,5 +14,12 @@ export class s3StorageService implements IStorageService{
 
 
         return await getSignedUrl(s3,command,{expiresIn:3600});
+    }
+   async  deleteFile(fileKey: string): Promise<void> {
+        const command=new DeleteObjectCommand({
+            Bucket:env.s3.bucketName,
+            Key:fileKey
+        });
+        await s3.send(command);
     }
 }

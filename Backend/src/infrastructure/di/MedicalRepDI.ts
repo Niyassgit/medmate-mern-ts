@@ -51,7 +51,8 @@ const createPostUseCase = new CreatePostUseCase(
   medicalRepRepository
 );
 const editProductPostUseCase = new EditProductPostUseCase(
-  productPostRepository
+  productPostRepository,
+  storageService
 );
 const getProductPostListUseCase = new GetProductPostListUseCase(
   userRepository,
@@ -73,5 +74,5 @@ export const medicalRepController = new MedicalRepController(
   createPostUseCase,
   editProductPostUseCase,
   getProductPostListUseCase,
-  getProductPostDetailsUseCase
+  getProductPostDetailsUseCase,
 );

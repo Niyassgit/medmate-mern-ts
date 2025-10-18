@@ -13,6 +13,7 @@ import { IGetProductPostDetailsUseCase } from "../../../application/productPost/
 import { processImages } from "../utils/ImageHandler";
 import { HttpStatusCode } from "../../../shared/HttpStatusCodes";
 
+
 export class MedicalRepController {
   constructor(
     private _createMedicalRepUseCase: ICreateMedicalRepUseCase,
@@ -22,7 +23,8 @@ export class MedicalRepController {
     private _createPostUseCase: ICreatePostUseCase,
     private _editposUseCase: IEditProductPostUseCase,
     private _getProductsListUseCase: IGetProductPostListUseCase,
-    private _getPostDetailsUseCase: IGetProductPostDetailsUseCase
+    private _getPostDetailsUseCase: IGetProductPostDetailsUseCase,
+
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -71,7 +73,9 @@ export class MedicalRepController {
     const { userId } = req.params;
     const dto = req.body as ProductPostDTO;
     if (req.files && Array.isArray(req.files)) {
-      dto.imageUrl = req.files.map((file) => file.key).filter((key):key is string=>!!key);
+      dto.imageUrl = req.files
+        .map((file) => file.key)
+        .filter((key): key is string => !!key);
     } else {
       dto.imageUrl = [];
     }

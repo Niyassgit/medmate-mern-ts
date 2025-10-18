@@ -32,9 +32,9 @@ export class ProductPostRepository
     const formatedData = ProductPostMapper.toPartialPersistance(data);
     return this.update(postId, formatedData as Partial<ProductPost>);
   }
-  async findPostById(postId: string): Promise<boolean> {
+  async findPostById(postId: string): Promise<IProductPost | null> {
     const post=await this.findById(postId);
-    return post?true:false;
+    return post?post:null;
   }
   async getProducts(userId: string): Promise<IProductPost[] | null> {
     const products = await prisma.productPost.findMany({

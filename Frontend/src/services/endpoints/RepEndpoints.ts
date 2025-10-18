@@ -8,5 +8,6 @@ export const RepEndpoints= {
   GET_POSTS:((userId:string)=>`/rep/posts/${userId}`),
   POST_DETAILS:((postId:string)=>`/rep/post-details/${postId}`),
   EDIT_POST:((postId:string)=>`/rep/post-edit/${postId}`),
-  
+  DELETE_IMAGE:((userId:string,url:string)=>`/rep/profile-image/${userId}/${url}`),
+
 }
