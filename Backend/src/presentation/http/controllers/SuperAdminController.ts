@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, response, Response } from "express";
 import { ICreateSuperAdminUseCase } from "../../../application/superAdmin/interfaces/ICreateSuperAdminUseCase";
 import { IGetSuperAdminByEmailUseCase } from "../../../application/superAdmin/interfaces/IGetSuperAdminByEmailUseCase";
 import { RegisterSuperAdminDTO } from "../../../application/superAdmin/dto/RegisterSuperAdminDTO";
@@ -10,6 +10,9 @@ import { IGetDoctorDetailsUseCase } from "../../../application/superAdmin/interf
 import { IGetMedicalRepDetailsUseCase } from "../../../application/superAdmin/interfaces/IGetMedicalRepDetailsUseCase";
 import { HttpStatusCode } from "../../../shared/HttpStatusCodes";
 import { SuccessMessages } from "../../../shared/Messages";
+import { IGetTerritoriesUseCase } from "../../../application/territory/interfaces/IGetTerritoriesUseCase";
+import { ICreateTerritoryUseCase } from "../../../application/territory/interfaces/ICreateTerritoryUseCase";
+import { TerritorySchemaDTO } from "../validators/TerritoryValidateSchema";
 
 export class SuperAdminController {
   constructor(
@@ -19,8 +22,10 @@ export class SuperAdminController {
     private _getAllRepsUseCase: IGetAllRepsUseCase,
     private _blockUserUseCase: IBlockUserUseCase,
     private _unblockUserUseCase: IUnblockUserUseCase,
-    private _getDoctorDetails:IGetDoctorDetailsUseCase,
-    private _getMedicalRepDetails:IGetMedicalRepDetailsUseCase
+    private _getDoctorDetails: IGetDoctorDetailsUseCase,
+    private _getMedicalRepDetails: IGetMedicalRepDetailsUseCase,
+    private _getTerritoriesUseCase: IGetTerritoriesUseCase,
+    private _createTerritoryUseCase: ICreateTerritoryUseCase
   ) {}
 
   createSuperAdmin = async (req: Request, res: Response) => {
@@ -41,17 +46,25 @@ export class SuperAdminController {
   getAllDoctors = async (req: Request, res: Response) => {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
-    const search = req.query.search as string || "";
-    const doctors = await this._getAllDoctorsUseCase.execute(page, limit,search);
-    res.status(HttpStatusCode.OK).json({ success: true, data: doctors, page, limit });
+    const search = (req.query.search as string) || "";
+    const doctors = await this._getAllDoctorsUseCase.execute(
+      page,
+      limit,
+      search
+    );
+    res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: doctors, page, limit });
   };
 
   getAllReps = async (req: Request, res: Response) => {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 8;
-    const search= req.query.search as string || "";
-    const reps = await this._getAllRepsUseCase.execute(page, limit,search);
-    res.status(HttpStatusCode.OK).json({ success: true, data: reps, page, limit });
+    const search = (req.query.search as string) || "";
+    const reps = await this._getAllRepsUseCase.execute(page, limit, search);
+    res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: reps, page, limit });
   };
   blockUser = async (req: Request, res: Response) => {
     const { userId } = req.params;
@@ -73,14 +86,29 @@ export class SuperAdminController {
       updatedUser,
     });
   };
-  doctorDetails=async (req:Request,res:Response)=>{
-    const {userId}=req.params;
-    const user=await this._getDoctorDetails.execute(userId);
-    return res.status(HttpStatusCode.OK).json({success:true,data:user})
-  }
-  repDetails=async (req:Request,res:Response)=>{
-    const {userId}=req.params;
-    const user=await this._getMedicalRepDetails.execute(userId);
-    return res.status(HttpStatusCode.OK).json({success:true,data:user})
-  }
+  doctorDetails = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const user = await this._getDoctorDetails.execute(userId);
+    return res.status(HttpStatusCode.OK).json({ success: true, data: user });
+  };
+  repDetails = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const user = await this._getMedicalRepDetails.execute(userId);
+    return res.status(HttpStatusCode.OK).json({ success: true, data: user });
+  };
+  territories = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const response = await this._getTerritoriesUseCase.execute(userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+  addTerritory = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const data = req.body as TerritorySchemaDTO;
+    const response = await this._createTerritoryUseCase.execute(userId, data);
+    return res
+      .status(HttpStatusCode.CREATED)
+      .json({ success: true, message: response });
+  };
 }

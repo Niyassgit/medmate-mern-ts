@@ -61,5 +61,17 @@ export class SuperAdminRoutes {
       AuthorizeRole([Role.SUPER_ADMIN]),
       superAdminController.repDetails
     );
+    this.router.get(
+      "/territories/:userId",
+      Authenticate,
+      AuthorizeRole([Role.SUPER_ADMIN]),
+      superAdminController.territories
+    );
+    this.router.post(
+      "/territories/add/:userId",
+      Authenticate,
+      AuthorizeRole([Role.SUPER_ADMIN]),
+      superAdminController.addTerritory
+    );
   }
 }

@@ -43,7 +43,9 @@ export const SuccessMessages = {
   POST_UPDATE_SUCCESS:"Post updated successfully",
   LOGOUT_SUCCESS:"User logout successfully",
   BLOCK_SUCCESS:"User Blocked successfully",
-  UNBLOCK_SUCCESS:"User Unblocked successfully"
+  UNBLOCK_SUCCESS:"User Unblocked successfully",
+  TERRITORY_ADDED:"New Territory added succesfully",
+  
 
  
 }as const;

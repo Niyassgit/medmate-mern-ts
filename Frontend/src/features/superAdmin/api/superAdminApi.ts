@@ -25,3 +25,10 @@ export const viewRep=async(userId:string)=>{
     const response=await api.get(AdminEndpoints.REP_DETAILS(userId));
     return response.data;
 }
+export const territories=async(userId:string)=>{
+    const response=await api.get(AdminEndpoints.GET_TERRITORIES(userId));
+    return response.data;
+}
+export const addTerritory = async (userId: string, formData: FormData) => {
+  return api.post(AdminEndpoints.ADD_TERRITORY(userId), formData);
+};

@@ -12,16 +12,20 @@ import { BlockUserUseCase } from "../../application/superAdmin/useCases/BlockUse
 import { UnBlockUserUseCase } from "../../application/superAdmin/useCases/UnblockUserUseCase";
 import { GetDoctorDetailsUseCase } from "../../application/superAdmin/useCases/GetDoctorDetailsUseCase";
 import { GetMedicalRepDetailsUseCase } from "../../application/superAdmin/useCases/GetMedicalRepDetailsUseCase";
+import { CreateTerritoryUseCase } from "../../application/territory/use-cases/CreateTerritoryUseCase";
+import { TerritoryRepository } from "../repositories/TerritoryRepository";
+import { GetTerritoriesUseCase } from "../../application/territory/use-cases/GetTerritoriesUseCase";
 
 const superAdminRepositories = new SuperAdminRepository();
-const userLoginRepository = new UserRepository();
+const userRepository = new UserRepository();
 const bycryptServices = new BcryptServices();
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
+const terrritoryRepository= new TerritoryRepository();
 
 const createSuperAdminUseCase = new CreateSuperAdminUseCase(
   superAdminRepositories,
-  userLoginRepository,
+  userRepository,
   bycryptServices
 );
 const getSuperAdminByEmailIdUseCase = new GetSuperAdminByEmailUseCase(
@@ -29,10 +33,12 @@ const getSuperAdminByEmailIdUseCase = new GetSuperAdminByEmailUseCase(
 );
 const getAllDoctorsUseCase = new GetAllDoctorsUseCase(doctorRepository);
 const getAllRepUseCase = new GetAllRepsUseCase(medicalRepRepository);
-const blockUserUseCase = new BlockUserUseCase(userLoginRepository);
-const unblockUserUseCase = new UnBlockUserUseCase(userLoginRepository);
+const blockUserUseCase = new BlockUserUseCase(userRepository);
+const unblockUserUseCase = new UnBlockUserUseCase(userRepository);
 const doctorDetails = new GetDoctorDetailsUseCase(doctorRepository);
 const medicalRepDetails = new GetMedicalRepDetailsUseCase(medicalRepRepository);
+const getTerritoryUseCase=new GetTerritoriesUseCase(userRepository,terrritoryRepository)
+const createTerritoryUseCase=new CreateTerritoryUseCase(userRepository,terrritoryRepository)
 
 export const superAdminController = new SuperAdminController(
   createSuperAdminUseCase,
@@ -42,5 +48,7 @@ export const superAdminController = new SuperAdminController(
   blockUserUseCase,
   unblockUserUseCase,
   doctorDetails,
-  medicalRepDetails
+  medicalRepDetails,
+  getTerritoryUseCase,
+  createTerritoryUseCase,
 );

@@ -2,8 +2,8 @@ import useFetchList from "@/hooks/useFetchItem";
 import { getAllDoctors, blockUser, unblockUser } from "../api/superAdminApi";
 import { useCallback, useState } from "react";
 import toast from "react-hot-toast";
-import { Doctor } from "../Schemas/Doctor";
-import { DoctorResponse } from "../Schemas/DoctorResponse";
+import { Doctor } from "../dto/Doctor";
+import { DoctorResponse } from "../dto/DoctorResponse";
 import { useNavigate } from "react-router-dom";
 import { AdminTable } from "../components/AdminTable";
 

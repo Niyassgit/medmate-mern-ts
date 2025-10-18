@@ -7,6 +7,8 @@ import RepDetails from "@/features/superAdmin/pages/RepDetails";
 import DoctorDetails from "@/features/superAdmin/pages/DoctorDetails";
 import PrivateRoute from "@/components/shared/PrivateRoute";
 import { Role } from "@/types/Role";
+import TerritorryManagement from "@/features/superAdmin/pages/TerritorryManagement";
+import AddTerritory from "@/features/superAdmin/pages/AddTerritory";
 
 export const AdminRoutes = {
   path: "/admin",
@@ -22,5 +24,7 @@ export const AdminRoutes = {
     { path: "reps/:id", element: <RepDetails /> },
     { path: "doctors", element: <DoctorsList /> },
     { path: "doctors/:id", element: <DoctorDetails /> },
+    {path:"territory",element:<TerritorryManagement />},
+    {path:"territory/add",element:<AddTerritory />}
   ],
 };

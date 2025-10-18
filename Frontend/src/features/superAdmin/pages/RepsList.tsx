@@ -3,8 +3,8 @@ import { getAllReps, blockUser, unblockUser } from "../api/superAdminApi";
 import { useCallback, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { MedicalRep } from "../Schemas/MedicalRep";
-import { MedicalRepResponse } from "../Schemas/MedicalRepResponse";
+import { MedicalRep } from "../dto/MedicalRep";
+import { MedicalRepResponse } from "../dto/MedicalRepResponse";
 import { AdminTable } from "../components/AdminTable";
 
 const RepsList = () => {
