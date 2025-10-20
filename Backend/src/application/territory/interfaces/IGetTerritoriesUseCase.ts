@@ -1,5 +1,5 @@
-import { TerritoriesDTO } from "../dto/TerritoriesDTO";
+import {TerritoryDTO } from "../dto/TerritoriesDTO";
 
 export interface IGetTerritoriesUseCase{
-    execute(userId:string):Promise<TerritoriesDTO[] | null>
+    execute(userId:string):Promise<TerritoryDTO[] | null>
 }

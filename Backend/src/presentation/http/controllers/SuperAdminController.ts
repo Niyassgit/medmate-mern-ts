@@ -13,6 +13,11 @@ import { SuccessMessages } from "../../../shared/Messages";
 import { IGetTerritoriesUseCase } from "../../../application/territory/interfaces/IGetTerritoriesUseCase";
 import { ICreateTerritoryUseCase } from "../../../application/territory/interfaces/ICreateTerritoryUseCase";
 import { TerritorySchemaDTO } from "../validators/TerritoryValidateSchema";
+import { IEditTerritoryUseCase } from "../../../application/territory/interfaces/IEditTerritoryUseCase";
+import { DepartmentSchemaDTO } from "../validators/DepartmentShema";
+import { ICreateDepartmentUseCase } from "../../../application/department/interfaces/ICreateDepartmentUseCase";
+import { IGetAllDepartmentsUseCase } from "../../../application/department/interfaces/IGetAllDepartmentsUseCase";
+import { IEditDepartmentUseCase } from "../../../application/department/interfaces/IEditDepartmentUseCase";
 
 export class SuperAdminController {
   constructor(
@@ -25,7 +30,11 @@ export class SuperAdminController {
     private _getDoctorDetails: IGetDoctorDetailsUseCase,
     private _getMedicalRepDetails: IGetMedicalRepDetailsUseCase,
     private _getTerritoriesUseCase: IGetTerritoriesUseCase,
-    private _createTerritoryUseCase: ICreateTerritoryUseCase
+    private _createTerritoryUseCase: ICreateTerritoryUseCase,
+    private _edtiTerritoryUseCase: IEditTerritoryUseCase,
+    private _createDepartmentUseCase: ICreateDepartmentUseCase,
+    private _getAllDepartmentsUseCase: IGetAllDepartmentsUseCase,
+    private _editDepartmentUseCase: IEditDepartmentUseCase
   ) {}
 
   createSuperAdmin = async (req: Request, res: Response) => {
@@ -98,6 +107,7 @@ export class SuperAdminController {
   };
   territories = async (req: Request, res: Response) => {
     const { userId } = req.params;
+    console.log("user id :", userId);
     const response = await this._getTerritoriesUseCase.execute(userId);
     return res
       .status(HttpStatusCode.OK)
@@ -109,6 +119,47 @@ export class SuperAdminController {
     const response = await this._createTerritoryUseCase.execute(userId, data);
     return res
       .status(HttpStatusCode.CREATED)
+      .json({ success: true, message: response });
+  };
+  editTerritory = async (req: Request, res: Response) => {
+    const { territoryId } = req.params;
+    const userId = req.user?.userId;
+    const data = req.body as TerritorySchemaDTO;
+    const response = await this._edtiTerritoryUseCase.execute(
+      territoryId,
+      data,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, message: response });
+  };
+  createDepartment = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const data = req.body as DepartmentSchemaDTO;
+    const response = await this._createDepartmentUseCase.execute(userId, data);
+    return res
+      .status(HttpStatusCode.CREATED)
+      .json({ succes: true, message: response });
+  };
+  departments = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const response = await this._getAllDepartmentsUseCase.execute(userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+  editDepartment = async (req: Request, res: Response) => {
+    const { departmentId } = req.params;
+    const userId = req.user?.userId;
+    const data = req.body as DepartmentSchemaDTO;
+    const response = await this._editDepartmentUseCase.execute(
+      departmentId,
+      data,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
       .json({ success: true, message: response });
   };
 }

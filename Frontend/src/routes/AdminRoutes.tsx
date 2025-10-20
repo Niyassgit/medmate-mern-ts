@@ -24,7 +24,7 @@ export const AdminRoutes = {
     { path: "reps/:id", element: <RepDetails /> },
     { path: "doctors", element: <DoctorsList /> },
     { path: "doctors/:id", element: <DoctorDetails /> },
-    {path:"territory",element:<TerritorryManagement />},
-    {path:"territory/add",element:<AddTerritory />}
+    {path:"territories",element:<TerritorryManagement />},
+    {path:"territories/add",element:<AddTerritory />}
   ],
 };

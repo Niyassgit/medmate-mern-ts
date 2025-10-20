@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import AppPagination from "@/components/shared/AppPagination";
 import SearchInput from "./SearchInput";
+import { Pencil } from "lucide-react";
 
 interface Column<T> {
   key: keyof T | string;
@@ -20,6 +21,7 @@ interface AdminTableProps<T> {
   search?: string;
   onSearchChange?: (value: string) => void;
   onView?: (id: string) => void;
+  onEdit?: (id: string) => void;
   onBlockToggle?: (item: T) => void;
   blockLoadingId?: string | null;
   getId: (item: T) => string;
@@ -37,6 +39,7 @@ export function AdminTable<T extends object>({
   search,
   onSearchChange,
   onView,
+  onEdit,
   onBlockToggle,
   blockLoadingId,
   getId,
@@ -72,8 +75,8 @@ export function AdminTable<T extends object>({
                     {col.label}
                   </th>
                 ))}
-                {(onView || onBlockToggle) && (
-                  <th className="p-3 text-center">Actions</th>
+                {(onView || onEdit || onBlockToggle) && (
+                  <th className="p-3 text-center w-48">Actions</th> // fixed width
                 )}
               </tr>
             </thead>
@@ -81,6 +84,7 @@ export function AdminTable<T extends object>({
               {data.map((item) => {
                 const id = getId(item);
                 const blocked = isBlocked ? isBlocked(item) : false;
+
                 return (
                   <tr key={id} className="border-b hover:bg-gray-50">
                     {columns.map((col) => (
@@ -92,21 +96,34 @@ export function AdminTable<T extends object>({
                           : null}
                       </td>
                     ))}
-                    {(onView || onBlockToggle) && (
-                      <td className="p-3 flex justify-center gap-2">
+
+                    {(onView || onEdit || onBlockToggle) && (
+                      <td className="p-3 text-center whitespace-nowrap">
                         {onView && (
                           <Button
                             variant="outline"
                             size="sm"
+                            className="mr-1"
                             onClick={() => onView(id)}
                           >
                             View
+                          </Button>
+                        )}
+                        {onEdit && (
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            className="mx-1"  
+                            onClick={() => onEdit(id)}
+                          >
+                            <Pencil/>
                           </Button>
                         )}
                         {onBlockToggle && (
                           <Button
                             variant={blocked ? "default" : "destructive"}
                             size="sm"
+                            className="ml-1"
                             onClick={() => onBlockToggle(item)}
                             disabled={blockLoadingId === id}
                           >

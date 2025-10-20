@@ -5,6 +5,8 @@ export const AdminEndpoints= {
   UNBLOCK_USER : (userId: string) => `/admin/unblock/${userId}`,
   DOCTOR_DETAILS:(userId:string)=>`/admin/doctors/${userId}`,
   REP_DETAILS:(userId:string)=>`/admin/reps/${userId}`,
-  GET_TERRITORIES:(userId:string)=>`/admin/territories/:${userId}`,
-  ADD_TERRITORY:(userId:string)=>`/admin/add-territory/:${userId}`,
+  GET_TERRITORIES:(userId:string)=>`/admin/territories/${userId}`,
+  ADD_TERRITORY:(userId:string)=>`/admin/territories/add/${userId}`,
+  EDIT_TERRITORY:(territoryId:string)=>`/admin/territories/edit/${territoryId}`,
+
 }

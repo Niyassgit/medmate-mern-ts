@@ -26,7 +26,10 @@ export const ErrorMessages = {
   INVALID_TOKEN:"Invalid Token",
   INVALID_EDUCATION:"Invalid educations format",
   INVALID_CERTIFICATE:"Invalid certificate format",
-  BLOCK_FAILURE:"User BLocking Fails"
+  BLOCK_FAILURE:"User BLocking Fails",
+  TERR_NOT_FOUND:"Territory not found", 
+  REGISTER_ERROR:"Registeration failed",
+  DEP_NOT_FOUND:"departments not found",
 
 }as const;
 
@@ -45,7 +48,9 @@ export const SuccessMessages = {
   BLOCK_SUCCESS:"User Blocked successfully",
   UNBLOCK_SUCCESS:"User Unblocked successfully",
   TERRITORY_ADDED:"New Territory added succesfully",
-  
+  UPDATE_SUCCESS:"Updated successfully",
+  DEPARTMENT_SUCCESS:"New Department added successfully",
+  Dep_UPDATED:"Department updated successfully",
 
  
 }as const;

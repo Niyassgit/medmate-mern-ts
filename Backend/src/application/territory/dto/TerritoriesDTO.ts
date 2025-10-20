@@ -1,4 +1,4 @@
-export interface TerritoriesDTO{
+export interface TerritoryDTO{
  id:string,
  name:string,
  region:string,

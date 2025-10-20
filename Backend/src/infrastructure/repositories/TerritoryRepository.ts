@@ -19,7 +19,7 @@ export class TerritoryRepository
     constructor(){
         super(prisma.territory,(territory)=>TerritoryMapper.toDomain(territory))
     }
-  async findAllTerritories(userId: string): Promise<ITerritory[] | null> {
+  async findAllTerritories(): Promise<ITerritory[] | null> {
     const territories = await prisma.territory.findMany({
       orderBy: { createdAt: "desc" },
       include: {
@@ -38,12 +38,15 @@ export class TerritoryRepository
     });
     return territories.length >0 ? territories : null;
   }
-  async createTerritory(dto: CreateTerritoryDTO): Promise<ITerritory | null> {
-    const formatted=TerritoryMapper.toPersistance(dto);
-    if(!formatted) return null;
-      const territory=await prisma.territory.create({
-        data:formatted
-      });
-      return territory? territory :null;
+  async createTerritory(data: CreateTerritoryDTO): Promise<ITerritory | null> {
+    const formatted=TerritoryMapper.toPersistance(data);
+    const response=await this.create(formatted);
+    return response?response:null;
+
   }
+  async updateTerritory(territoryId: string, data: CreateTerritoryDTO): Promise<ITerritory | null> {
+     const response=await this.update(territoryId,data);
+     return response;
+  }
+
 }

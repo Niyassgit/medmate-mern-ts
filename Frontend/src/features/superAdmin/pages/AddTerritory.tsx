@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -12,34 +12,64 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { addTerritory } from "../api/superAdminApi";
+import { addTerritory, updateTerritory } from "../api/superAdminApi";
 import { useSelector } from "react-redux";
-import { TeritorySchema, TerritorySchemaDTO } from "../Schemas/TerritorySchema"; // import your schema
+import { TeritorySchema, TerritorySchemaDTO } from "../Schemas/TerritorySchema";
+import toast from "react-hot-toast";
 
 const AddTerritory = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const userId = useSelector((state: any) => state.auth.user?.id);
+
+  const state = location.state as {
+    existingData?: TerritorySchemaDTO;
+    territoryId?: string;
+  };
+
+  const existingData = state?.existingData;
+  const territoryId = state?.territoryId;
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const form = useForm<TerritorySchemaDTO>({
     resolver: zodResolver(TeritorySchema),
-    defaultValues: { name: "", region: "" },
+    defaultValues: existingData || { name: "", region: "" },
   });
 
   const onSubmit = async (values: TerritorySchemaDTO) => {
-    const formData = new FormData();
-    formData.append("name", values.name);
-    formData.append("region", values.region);
-
     try {
       setLoading(true);
       setError(null);
-      await addTerritory(userId, formData);
-      navigate("/admin/territories");
+
+      let res;
+
+      if (territoryId) {
+        res = await updateTerritory(territoryId, values);
+      } else {
+        res = await addTerritory(userId, values);
+      }
+
+      if (res?.data?.success) {
+        toast.success(
+          res.data.data?.message ||
+            `Territory ${territoryId ? "updated" : "added"} successfully!`
+        );
+
+        await new Promise((resolve) => setTimeout(resolve, 800));
+        navigate("/admin/territories");
+      } else {
+        toast.error(
+          res?.data?.data?.message ||
+            `Failed to ${territoryId ? "update" : "add"} territory`
+        );
+      }
     } catch (err: any) {
-      setError(err.response?.data?.message || "Failed to create territory");
+      const errorMsg =
+        err.response?.data?.message || "Failed to save territory";
+      setError(errorMsg);
+      toast.error(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -48,7 +78,7 @@ const AddTerritory = () => {
   return (
     <div className="max-w-md mx-auto mt-10 bg-white p-6 rounded-xl shadow-md">
       <h2 className="text-2xl font-bold mb-6 text-gray-700">
-        Add New Territory
+        {territoryId ? "Edit Territory" : "Add New Territory"}
       </h2>
 
       {error && <p className="text-red-500 mb-4">{error}</p>}
@@ -87,7 +117,13 @@ const AddTerritory = () => {
           />
 
           <Button type="submit" disabled={loading}>
-            {loading ? "Adding..." : "Add Territory"}
+            {loading
+              ? territoryId
+                ? "Updating..."
+                : "Adding..."
+              : territoryId
+              ? "Update Territory"
+              : "Add Territory"}
           </Button>
         </form>
       </Form>
