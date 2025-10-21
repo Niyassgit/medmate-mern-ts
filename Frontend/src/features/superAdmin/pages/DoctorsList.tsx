@@ -52,7 +52,6 @@ const DoctorsList = () => {
           : prev
       );
     } catch (err) {
-      console.log("falied to toggle block button", err);
       alert("Something went wrong while updating block status");
     } finally {
       setBlockLoading(null);

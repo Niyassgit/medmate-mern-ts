@@ -27,12 +27,28 @@ export class DepartmentRepository
     const response = await this.create(data);
     return response ? response : null;
   }
-  async findAllDepartments(): Promise<IDepartment[] | null> {
-    const resp = await this.model.findMany({
-      orderBy: { createdAt: "desc" },
-    });
-    return resp ? resp : null;
-  }
+ async findAllDepartments(page: number, limit: number, search: string): Promise<{departments:IDepartment[];total:number}> {
+  const skip=(page-1)*limit;
+  const where:Prisma.DepartmentWhereInput=search?{
+    OR:[
+      {name:{contains:search,mode:"insensitive"}}
+    ]
+  }:{};
+  const [departments,total]=await Promise.all([
+    prisma.department.findMany({
+      where,
+      orderBy:{createdAt:"desc"},
+      skip,
+      take:limit,
+    }),
+    prisma.department.count({where}),
+  ])
+
+    return {
+      departments:DepartmentMapper.toListDepartments(departments),
+      total,
+    }
+ }
   async updateDepartment(
     departmentId: string,
     entity: DepartmentDTO

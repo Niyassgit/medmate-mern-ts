@@ -6,7 +6,7 @@ import {
   Handshake,
   MapPin,
   FilePen,
-  Globe,
+  Building2,
 } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import AdminNavbar from "@/components/navbar/AdminNavbar";
@@ -88,6 +88,22 @@ const AdminLayout = () => {
                 <span>Territory Management</span>
               </NavLink>
             </li>
+            
+                 <li>
+              <NavLink
+                to={"departments"}
+                className={({ isActive }) => `
+    flex items-center gap-2 px-3 py-2 rounded-md ${
+      isActive
+        ? "bg-gray-200 text-black font-semibold"
+        : "text-white hover:bg-[#a81519]"
+    }`}
+              >
+                <Building2 className="w-5 h-5" />
+                <span>Department </span>
+              </NavLink>
+            </li>
+            
 
             <li>
               <NavLink

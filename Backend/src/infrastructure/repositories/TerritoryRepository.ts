@@ -19,24 +19,28 @@ export class TerritoryRepository
     constructor(){
         super(prisma.territory,(territory)=>TerritoryMapper.toDomain(territory))
     }
-  async findAllTerritories(): Promise<ITerritory[] | null> {
-    const territories = await prisma.territory.findMany({
-      orderBy: { createdAt: "desc" },
-      include: {
-        doctors: {
-          select: { id: true, name: true },
-        },
-        repTerritories: {
-          select: {
-            repId: true,
-            rep: {
-              select: { id: true, name: true },
-            },
-          },
-        },
-      },
-    });
-    return territories.length >0 ? territories : null;
+  async findAllTerritories(page: number, limit: number, search: string): Promise<{ territories: ITerritory[]; total: number; }> {
+    const skip=(page-1)*limit;
+    const where:Prisma.TerritoryWhereInput=search?{
+      OR:[
+        {name:{contains:search,mode:"insensitive"}}
+      ]
+    }:{}
+    const [territories,total]=await Promise.all([
+      prisma.territory.findMany({
+        where,
+        orderBy:{createdAt:"desc"},
+        skip,
+        take:limit
+      }),
+      prisma.territory.count({where})
+    ]);
+
+    return{
+      territories:TerritoryMapper.toListTerritories(territories),
+      total
+    }
+
   }
   async createTerritory(data: CreateTerritoryDTO): Promise<ITerritory | null> {
     const formatted=TerritoryMapper.toPersistance(data);

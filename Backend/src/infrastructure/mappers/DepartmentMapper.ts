@@ -18,4 +18,13 @@ export class DepartmentMapper{
             updatedAt:persistane.updatedAt
         }
     }
+    static toListDepartments(persistane:Department[]):IDepartment[]{
+        return persistane.map((dep)=>({
+            id:dep.id,
+            name:dep.name,
+            isActive:dep.isActive,
+            createdAt:dep.createdAt,
+            updatedAt:dep.updatedAt
+        }))
+    }
 }

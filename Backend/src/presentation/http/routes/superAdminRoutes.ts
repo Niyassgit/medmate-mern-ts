@@ -84,20 +84,20 @@ export class SuperAdminRoutes {
       superAdminController.editTerritory
     );
     this.router.post(
-      "/department/add/:userId",
+      "/departments/add/:userId",
       Authenticate,
       AuthorizeRole([Role.SUPER_ADMIN]),
       ValidateSchema(DepartmentSchema),
       superAdminController.createDepartment
     );
     this.router.get(
-      "/department/:userId",
+      "/departments/:userId",
       Authenticate,
       AuthorizeRole([Role.SUPER_ADMIN]),
       superAdminController.departments
     );
     this.router.patch(
-      "/department/edit/:departmentId",
+      "/departments/edit/:departmentId",
       Authenticate,
       AuthorizeRole([Role.SUPER_ADMIN]),
       ValidateSchema(DepartmentSchema),

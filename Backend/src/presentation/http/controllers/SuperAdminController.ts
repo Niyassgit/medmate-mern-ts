@@ -107,11 +107,13 @@ export class SuperAdminController {
   };
   territories = async (req: Request, res: Response) => {
     const { userId } = req.params;
-    console.log("user id :", userId);
-    const response = await this._getTerritoriesUseCase.execute(userId);
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const search = (req.query.search as string) || "";
+    const response = await this._getTerritoriesUseCase.execute(userId,page,limit,search);
     return res
       .status(HttpStatusCode.OK)
-      .json({ success: true, data: response });
+      .json({ success: true, data: response,page,limit,search});
   };
   addTerritory = async (req: Request, res: Response) => {
     const { userId } = req.params;
@@ -144,10 +146,14 @@ export class SuperAdminController {
   };
   departments = async (req: Request, res: Response) => {
     const { userId } = req.params;
-    const response = await this._getAllDepartmentsUseCase.execute(userId);
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 8;
+    const search = (req.query.search as string) || "";
+    console.log("search query:",search);
+    const response = await this._getAllDepartmentsUseCase.execute(userId,page,limit,search);
     return res
       .status(HttpStatusCode.OK)
-      .json({ success: true, data: response });
+      .json({ success: true, data: response ,page,limit});
   };
   editDepartment = async (req: Request, res: Response) => {
     const { departmentId } = req.params;

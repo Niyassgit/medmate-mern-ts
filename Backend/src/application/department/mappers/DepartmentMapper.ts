@@ -15,7 +15,7 @@ export class DepartmentMapper{
         return entities.map((entity)=>({
             id:entity.id,
             name:entity.name,
-            createAt:entity.createdAt,
+            createdAt:entity.createdAt,
             isActive:entity.isActive
         }))
     }

@@ -1,5 +1,4 @@
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
-import { RepListDTO } from "../dto/RepListDTO";
 import { RepsListResponseDTO } from "../dto/RepsListResponseDTO";
 import { IGetAllRepsUseCase } from "../interfaces/IGetAllRespsUseCase";
 import { RepListMapper } from "../mappers/RepListMapper";

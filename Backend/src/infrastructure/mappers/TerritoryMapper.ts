@@ -17,4 +17,14 @@ export class TerritoryMapper{
             updatedAt:territory.updatedAt
         }
     }
+      static toListTerritories(persistane:Territory[]):ITerritory[]{
+            return persistane.map((ter)=>({
+                id:ter.id,
+                name:ter.name,
+                region:ter.region,
+                createdAt:ter.createdAt,
+                updatedAt:ter.updatedAt,
+
+            }))
+        }
 }

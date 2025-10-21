@@ -1,6 +1,6 @@
-export interface DepartmentListDTO{
+export interface DepartmentDTO{
     id:string,
     name:string,
     isActive:boolean,
-    createdAt:Date,
+    createdAt:string,
 }

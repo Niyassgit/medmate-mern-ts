@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import AppPagination from "@/components/shared/AppPagination";
 import SearchInput from "./SearchInput";
 import { Pencil } from "lucide-react";
+import React from "react";
 
 interface Column<T> {
   key: keyof T | string;
@@ -27,6 +28,7 @@ interface AdminTableProps<T> {
   getId: (item: T) => string;
   isBlocked?: (item: T) => boolean;
 }
+
 export function AdminTable<T extends object>({
   title,
   data,
@@ -47,8 +49,10 @@ export function AdminTable<T extends object>({
 }: AdminTableProps<T>) {
   return (
     <div className="min-h-screen bg-gray-50 p-4">
-      <h1 className="font-bold text-2xl text-gray-600 mb-3">{title}</h1>
+      {/* Header Section */}
+      <h1 className="font-bold text-2xl text-gray-700 mb-3">{title}</h1>
 
+      {/* Search */}
       {onSearchChange && (
         <div className="flex items-center gap-2 p-2">
           <SearchInput
@@ -59,36 +63,41 @@ export function AdminTable<T extends object>({
         </div>
       )}
 
-      <div className="p-6 bg-white rounded-xl shadow-md mt-3">
+      {/* Table Container */}
+      <div className="p-6 bg-white rounded-xl shadow-md mt-3 overflow-x-auto">
         {loading ? (
-          <p className="text-gray-500">Loading...</p>
+          <p className="text-gray-500 text-center py-6">Loading...</p>
         ) : error ? (
-          <p className="text-red-500">{error}</p>
+          <p className="text-red-500 text-center py-6">{error}</p>
         ) : data.length === 0 ? (
-          <p className="text-gray-500">No records found</p>
+          <p className="text-gray-500 text-center py-6">No records found.</p>
         ) : (
-          <table className="w-full border-collapse">
+          <table className="w-full border-collapse min-w-[600px]">
             <thead>
-              <tr className="bg-gray-100 text-left text-sm font-medium">
+              <tr className="bg-gray-100 text-left text-sm font-semibold text-gray-600">
                 {columns.map((col) => (
                   <th key={String(col.key)} className="p-3">
                     {col.label}
                   </th>
                 ))}
                 {(onView || onEdit || onBlockToggle) && (
-                  <th className="p-3 text-center w-48">Actions</th> // fixed width
+                  <th className="p-3 text-center w-48">Actions</th>
                 )}
               </tr>
             </thead>
+
             <tbody>
               {data.map((item) => {
                 const id = getId(item);
                 const blocked = isBlocked ? isBlocked(item) : false;
 
                 return (
-                  <tr key={id} className="border-b hover:bg-gray-50">
+                  <tr
+                    key={id}
+                    className="border-b hover:bg-gray-50 transition-colors"
+                  >
                     {columns.map((col) => (
-                      <td key={String(col.key)} className="p-3">
+                      <td key={String(col.key)} className="p-3 text-gray-700">
                         {col.render
                           ? col.render(item)
                           : typeof col.key === "string" && col.key in item
@@ -98,32 +107,32 @@ export function AdminTable<T extends object>({
                     ))}
 
                     {(onView || onEdit || onBlockToggle) && (
-                      <td className="p-3 text-center whitespace-nowrap">
+                      <td className="p-3 text-center space-x-2 whitespace-nowrap">
                         {onView && (
                           <Button
                             variant="outline"
                             size="sm"
-                            className="mr-1"
                             onClick={() => onView(id)}
                           >
                             View
                           </Button>
                         )}
+
                         {onEdit && (
                           <Button
                             variant="secondary"
                             size="sm"
-                            className="mx-1"  
                             onClick={() => onEdit(id)}
+                            className="inline-flex items-center justify-center"
                           >
-                            <Pencil/>
+                            <Pencil className="h-4 w-4" />
                           </Button>
                         )}
+
                         {onBlockToggle && (
                           <Button
                             variant={blocked ? "default" : "destructive"}
                             size="sm"
-                            className="ml-1"
                             onClick={() => onBlockToggle(item)}
                             disabled={blockLoadingId === id}
                           >
@@ -140,6 +149,7 @@ export function AdminTable<T extends object>({
         )}
       </div>
 
+      {/* Pagination */}
       <AppPagination
         page={page}
         totalPages={totalPages}

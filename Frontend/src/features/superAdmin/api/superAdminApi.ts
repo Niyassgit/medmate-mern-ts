@@ -1,6 +1,7 @@
 import { api } from "@/services/api";
 import { AdminEndpoints } from "@/services/endpoints/AdminEndpoints";
 import { TerritorySchemaDTO } from "../Schemas/TerritorySchema";
+import { DepartmentSchemaDTO } from "../Schemas/DepartmentSchema";
 
 export const getAllDoctors=async(page:number=1,limit:number=10,search:string="")=>{
    const response=await api.get(AdminEndpoints.GET_DOCTORS(page,limit,search));
@@ -26,8 +27,8 @@ export const viewRep=async(userId:string)=>{
     const response=await api.get(AdminEndpoints.REP_DETAILS(userId));
     return response.data;
 }
-export const territories=async(userId:string)=>{
-    const response=await api.get(AdminEndpoints.GET_TERRITORIES(userId));
+export const territories=async(userId:string,page:number=1,limit:number=10,search:string="")=>{
+    const response=await api.get(AdminEndpoints.GET_TERRITORIES(userId,page,limit,search));
     return response.data;
 }
 export const addTerritory = async (userId: string, data:TerritorySchemaDTO) => {
@@ -35,4 +36,14 @@ export const addTerritory = async (userId: string, data:TerritorySchemaDTO) => {
 };
 export const updateTerritory=async (territoryId:string,data:TerritorySchemaDTO)=>{
     return api.patch(AdminEndpoints.EDIT_TERRITORY(territoryId),data);
+}
+export const departments=async(userId:string,page:number=1,limit:number=10,search:string="")=>{
+    const response=await api.get(AdminEndpoints.GET_DEPARTMENTS(userId,page,limit,search))
+    return response.data;
+}
+export const createDepartment=async(userId:string,data:DepartmentSchemaDTO)=>{
+    return api.post(AdminEndpoints.CREATE_DEPARTMENT(userId),data);
+}
+export const updateDepartment=async(postId:string,data:DepartmentSchemaDTO)=>{
+    return api.patch(AdminEndpoints.EDIT_DEPARTMENTS(postId),data);
 }
