@@ -4,7 +4,7 @@ import { DoctorMapper } from "./DoctorMapper";
 import { AuthProvider as DomainAuthProvider,Role as DomainRole } from "../../shared/Enums";
 
 export class DoctorWithUserMapper {
-  static toDomain(doctor: Doctor & { user?: User | null }): IDoctorWithUser {
+  static toDomain(doctor: Doctor & { user?: User | null;}): IDoctorWithUser {
     return {
       ...DoctorMapper.toDomain(doctor),
       user: doctor.user

@@ -5,7 +5,7 @@ import Feed from "@/features/doctor/pages/Feed";
 import Connections from "@/features/doctor/pages/Connections";
 import Network from "@/features/rep/pages/Network";
 import DoctorLayout from "@/features/doctor/components/DoctorLayout";
-import CompleteProfilePage from "@/features/doctor/components/CompleteProfilePage";
+import CompleteProfilePage from "@/features/doctor/pages/CompleteProfilePage";
 
 export const DoctorRoutes={
     path:"/doctor",

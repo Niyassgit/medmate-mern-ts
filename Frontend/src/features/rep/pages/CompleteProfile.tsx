@@ -75,7 +75,6 @@ export default function CompleteRepProfilePage() {
       try {
         const response = await getProfileRep(id!);
         const data = response.data;
-
         const selectedTerritories = territories
           .filter((t) => data.territories.includes(t.name))
           .map((t) => t.id);

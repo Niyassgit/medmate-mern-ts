@@ -5,17 +5,17 @@ import { Prisma } from "@prisma/client";
 
 export class DoctorMapper {
   static toDomain(
-    doctor: Doctor & { educations?: Education[]; certificates?: Certificate[] }
+    doctor: Doctor & { educations?: Education[]; certificates?: Certificate[]; department?:{name:string}| null; territory?:{name:string}|null}
   ): IDoctor {
     return {
       id: doctor.id,
       name: doctor.name,
       phone: doctor.phone,
-      departmentId: doctor.departmentId ?? null,
+      departmentId: doctor.department?.name ?? null,
       experienceYears: doctor.experienceYears ?? null,
       hasOwnClinic: doctor.hasOwnClinic ?? null,
       doctorClass: doctor.doctorClass ?? null,
-      territoryId: doctor.territoryId ?? null,
+      territoryId: doctor.territory?.name ?? null,
       loginId: doctor.loginId ?? null,
       registrationId: doctor.registrationId,
       hospital: doctor.hospital,

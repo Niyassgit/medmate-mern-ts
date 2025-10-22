@@ -4,10 +4,11 @@ import SignupRep from './SignupRep';
 import SignupDoctor from './SignupDoctor';
 import { Link } from 'react-router-dom';
 
+
+
 const RegisterPage = () => {
   const { type } = useParams<{ type?: string }>();
 
-  // Initialize directly from param
   const [formType, setFormType] = useState<"doctor" | "rep">(
     type === "rep" ? "rep" : "doctor"
   );

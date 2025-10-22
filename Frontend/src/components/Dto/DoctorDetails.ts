@@ -6,6 +6,8 @@ export interface DoctorDetails {
   name: string;
   email: string | null;
   isBlocked: boolean | null;
+  departmentId:string | null;
+  territoryId:string | null;
   phone: string;
   hasOwnClinic: boolean | null;
   hospital: string;

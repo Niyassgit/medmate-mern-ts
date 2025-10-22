@@ -12,19 +12,31 @@ import {
 } from "@/components/ui/form";
 import { registerRep } from "../api";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { RegisterRepBody,registerMedicalRepSchema } from "../schemas/RegisterRepSchema";
+import { useState, useEffect } from "react";
+import {
+  RegisterRepBody,
+  registerMedicalRepSchema,
+} from "../schemas/RegisterRepSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
-
+import {
+  getTerritories,
+  getDepartments,
+} from "@/features/shared/api/SharedApi";
 
 const SignupRep = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showCPassword, setShowCPassword] = useState(false);
+  const [departments, setDepartments] = useState<
+    { id: string; name: string }[]
+  >([]);
+  const [territories, setTerritories] = useState<
+    { id: string; name: string }[]
+  >([]);
 
   const form = useForm<RegisterRepBody>({
-    resolver:zodResolver(registerMedicalRepSchema),
+    resolver: zodResolver(registerMedicalRepSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -34,34 +46,56 @@ const SignupRep = () => {
       companyName: "",
       companyLogoUrl: null,
       employeeId: "",
-      // territoryId: "",
-      // departmentId: ""
+      territories: [],
+      departmentId: "",
     },
   });
+  useEffect(() => {
+    async function fetchDropdownData() {
+      try {
+        const deptData = await getDepartments();
+        setDepartments(deptData.data.data);
+
+        const terrData = await getTerritories();
+        setTerritories(terrData.data.data);
+      } catch (error) {
+        toast.error("Failed to load departments or territories");
+      }
+    }
+    fetchDropdownData();
+  }, []);
 
   const onSubmit = async (data: RegisterRepBody) => {
+  try {
+    const formData = new FormData();
 
-    try {
-      const formData = new FormData();
-      {Object.entries(data).forEach(([key,val])=>{
-        if(key==="companyLogoUrl" && val instanceof File){
-             formData.append(key,val);
-        }else if(val !==null && val !== undefined){
-            formData.append(key,String(val));
-        }
-      })}
-     
-      const res=await registerRep(formData);
-      if(res.data.success && res.data.email){
-        toast.success(res.data.success && res.data.message && res.data.expiredAt);
-        navigate("/verifyotp", {state:{email:res.data.email,purpose:"signup",expiredAt:res.data.expiredAt}});
+    Object.entries(data).forEach(([key, val]) => {
+      if (key === "companyLogoUrl" && val instanceof File) {
+        formData.append(key, val);
+      } else if (Array.isArray(val)) {
+        formData.append(key, JSON.stringify(val)); 
+      } else if (val !== null && val !== undefined) {
+        formData.append(key, String(val));
       }
- 
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "Something went wrong");
+    });
 
+    const res = await registerRep(formData);
+
+    if (res.data.success && res.data.email) {
+      toast.success(res.data.message || "Registered successfully!");
+
+      navigate("/verifyotp", {
+        state: {
+          email: res.data.email,
+          purpose: "signup",
+          expiredAt: res.data.expiredAt,
+        },
+      });
     }
-  };
+  } catch (error: any) {
+    toast.error(error.response?.data?.message || "Something went wrong");
+  }
+};
 
   return (
     <Form {...form}>
@@ -193,6 +227,85 @@ const SignupRep = () => {
             )}
           />
         </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="departmentId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Department</FormLabel>
+                <select
+                  {...field}
+                  value={field.value ?? ""}
+                  className="
+            w-full 
+            border 
+            rounded-lg 
+            px-3 
+            py-2 
+            appearance-none 
+            bg-gray-50 
+            hover:bg-gray-100 
+            focus:bg-gray-100 
+            focus:ring-2 
+            focus:ring-gray-400 
+            focus:border-gray-500 
+            transition-all 
+            duration-150
+          "
+                >
+                  <option value="">Select Department</option>
+                  {departments.map((dept) => (
+                    <option key={dept.id} value={dept.id}>
+                      {dept.name}
+                    </option>
+                  ))}
+                </select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="territories"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Department</FormLabel>
+                <select
+                  value={field.value?.[0] ?? ""} 
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    field.onChange(value ? [value] : []); 
+                  }}
+                  className="
+          w-full 
+          border 
+          rounded-lg 
+          px-3 
+          py-2 
+          appearance-none 
+          bg-gray-50 
+          hover:bg-gray-100 
+          focus:bg-gray-100 
+          focus:ring-2 
+          focus:ring-gray-400 
+          focus:border-gray-500 
+          transition-all 
+          duration-150
+        "
+                >
+                  <option value="">Select Territory</option>
+                  {territories.map((terr) => (
+                    <option key={terr.id} value={terr.id}>
+                      {terr.name}
+                    </option>
+                  ))}
+                </select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         {/* Employee ID + Department */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -209,21 +322,6 @@ const SignupRep = () => {
               </FormItem>
             )}
           />
-
-          {/* <FormField
-                        control={form.control}
-                        name="departmentId"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Department</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Department" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    /> */}
-
           {/* Company Logo */}
           <FormField
             control={form.control}

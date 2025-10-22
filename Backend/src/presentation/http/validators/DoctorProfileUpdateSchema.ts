@@ -16,7 +16,7 @@ export const DoctorProfileUpdateSchema = z.object({
 
   profileImage: z.string().url().nullable().optional(),
 
-  departmentId: z.string().uuid().nullable().optional(),
+  departmentId: z.string().min(1, "Department is required"),
 
   experienceYears: z
     .number()
@@ -34,7 +34,7 @@ export const DoctorProfileUpdateSchema = z.object({
     .nullable()
     .optional(),
 
-  territoryId: z.string().uuid().nullable().optional(),
+  territoryId:z.string().min(1, "Department is required"),
 
   hospital: z
     .string()

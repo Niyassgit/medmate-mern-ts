@@ -19,13 +19,39 @@ import {
   RegisterDoctorSchema,
   RegisterDoctorBody,
 } from "../schemas/RegisterDoctorSchema";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import {
+  getDepartments,
+  getTerritories,
+} from "@/features/shared/api/SharedApi";
 
 const SignupDoctor = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showCPassword, setShowCPassword] = useState(false);
+  const [departments, setDepartments] = useState<
+    { id: string; name: string }[]
+  >([]);
+  const [territories, setTerritories] = useState<
+    { id: string; name: string }[]
+  >([]);
+
+  useEffect(() => {
+
+    async function fetchDropdownData() {
+      try {
+        const deptData = await getDepartments();
+        setDepartments(deptData.data.data);
+
+        const terrData = await getTerritories();
+        setTerritories(terrData.data.data);
+      } catch (error) {
+        toast.error("Failed to load departments or territories");
+      }
+    }
+    fetchDropdownData();
+  }, []);
 
   const form = useForm<RegisterDoctorBody>({
     resolver: zodResolver(RegisterDoctorSchema),
@@ -35,8 +61,8 @@ const SignupDoctor = () => {
       phone: "",
       password: "",
       Cpassword: "",
-      // departmentId:"",
-      // territoryId:"",
+      departmentId: "",
+      territoryId: "",
       hospital: "",
       registrationId: "",
       licenseImageUrl: null,
@@ -56,13 +82,18 @@ const SignupDoctor = () => {
         }
       });
 
-      const res=await registerDoctor(formData);
+      const res = await registerDoctor(formData);
 
-      if(res.data.success && res.data.email && res.data.expiredAt){
+      if (res.data.success && res.data.email && res.data.expiredAt) {
         toast.success(res.data.message);
-          navigate("/verifyotp", {state:{email:res.data.email,purpose:"signup",expiredAt:res.data.expiredAt}});
+        navigate("/verifyotp", {
+          state: {
+            email: res.data.email,
+            purpose: "signup",
+            expiredAt: res.data.expiredAt,
+          },
+        });
       }
-
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Something went wrong");
     }
@@ -115,20 +146,82 @@ const SignupDoctor = () => {
               </FormItem>
             )}
           />
-
-          {/* <FormField
-                        control={form.control}
-                        name="departmentId"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Department</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Department" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    /> */}
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="departmentId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Department</FormLabel>
+                <select
+                  {...field}
+                  value={field.value ?? ""}
+                  className="
+            w-full 
+            border 
+            rounded-lg 
+            px-3 
+            py-2 
+            appearance-none 
+            bg-gray-50 
+            hover:bg-gray-100 
+            focus:bg-gray-100 
+            focus:ring-2 
+            focus:ring-gray-400 
+            focus:border-gray-500 
+            transition-all 
+            duration-150
+          "
+                >
+                  <option value="">Select Department</option>
+                  {departments.map((dept) => (
+                    <option key={dept.id} value={dept.id}>
+                      {dept.name}
+                    </option>
+                  ))}
+                </select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="territoryId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Department</FormLabel>
+                <select
+                  {...field}
+                  value={field.value ?? ""}
+                  className="
+            w-full 
+            border 
+            rounded-lg 
+            px-3 
+            py-2 
+            appearance-none 
+            bg-gray-50 
+            hover:bg-gray-100 
+            focus:bg-gray-100 
+            focus:ring-2 
+            focus:ring-gray-400 
+            focus:border-gray-500 
+            transition-all 
+            duration-150
+          "
+                >
+                  <option value="">Select Territory</option>
+                  {territories.map((terr) => (
+                    <option key={terr.id} value={terr.id}>
+                      {terr.name}
+                    </option>
+                  ))}
+                </select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

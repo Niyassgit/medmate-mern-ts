@@ -14,6 +14,9 @@ export const registerMedicalRepSchema = z.object({
   companyName: z.string().min(1),
   companyLogoUrl: z.any(),
   employeeId: z.string().min(1, "Employee Id required"),
-  //    territoryId:z.string().min(1,"Territory required")
-  //    departmentId: z.string().optional(),
+  territories: z
+    .array(z.string().min(1))
+    .min(1, "At least one territory is required"),
+
+  departmentId: z.string().min(1, "Department is required"),
 });
