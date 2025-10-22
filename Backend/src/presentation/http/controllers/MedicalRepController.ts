@@ -33,8 +33,6 @@ export class MedicalRepController {
       ...(req.body as RegisterMedicalRepDTO),
       companyLogoUrl,
     };
-    console.log("medical rep details:",data);
-    return;
     const response = await this._createMedicalRepUseCase.execute(data);
     res.status(HttpStatusCode.OK).json({ success: true, ...response });
   };

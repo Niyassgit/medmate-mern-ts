@@ -20,6 +20,8 @@ export class MedicalRepMapper {
       about: (dto as CompleteRepProfileDTO).about ?? null,
       educations: (dto as CompleteRepProfileDTO).educations ?? [],
       certificates: (dto as CompleteRepProfileDTO).certificates ?? [],
+      departmentId:dto.departmentId,
+      territories:dto.territories,
     };
   }
   static updateMedicalRepEntity(

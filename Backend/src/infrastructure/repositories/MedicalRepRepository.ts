@@ -29,6 +29,9 @@ export class MedicalRepRepository
       include: {
         educations: true,
         certificates: true,
+        territories:{
+          include:{territory:true}
+        },
       },
     });
     return MedicalRepMapper.toDomain(created);

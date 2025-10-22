@@ -28,6 +28,7 @@ export class MedicalRepRoutes {
     this.router.post(
       "/signup",
       upload.single("companyLogoUrl"),
+      parsePostField,
       ValidateSchema(registerMedicalRepSchema),
       medicalRepController.createMedicalRep
     );

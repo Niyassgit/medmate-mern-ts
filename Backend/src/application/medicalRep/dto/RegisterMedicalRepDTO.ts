@@ -7,4 +7,5 @@ export interface RegisterMedicalRepDTO {
   companyLogoUrl: string | null;
   employeeId: string;
   departmentId?: string;
+  territories?:string[];
 }

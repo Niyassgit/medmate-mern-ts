@@ -13,8 +13,8 @@ export class MedicalRepMapper {
     rep: MedicalRep & {
       educations?: Education[];
       certificates?: Certificate[];
-      territories?: { territory:{name: string }}[];
-      department?:{name:string} | null;
+      territories?: { territory: { name: string } }[];
+      department?: { name: string } | null;
     }
   ): IMedicalRep {
     return {
@@ -33,7 +33,7 @@ export class MedicalRepMapper {
       loginId: rep.loginId,
       createdAt: rep.createdAt,
       updatedAt: rep.updatedAt,
-      departmentId: rep.department?.name?? null,
+      departmentId: rep.department?.name ?? null,
       territories: rep.territories?.map((t) => t.territory.name) ?? [],
 
       educations: rep.educations?.map((edu) => ({
@@ -111,6 +111,16 @@ export class MedicalRepMapper {
                 name: cert.name,
                 issuedBy: cert.issuedBy ?? null,
                 year: cert.year ?? null,
+              })),
+            },
+          }
+        : {}),
+
+      ...(domain.territories && domain.territories.length > 0
+        ? {
+            territories: {
+              create: domain.territories.map((tId) => ({
+                territory: { connect: { id: tId } },
               })),
             },
           }

@@ -48,7 +48,8 @@ export class CreateMedicalRepUseCase implements ICreateMedicalRepUseCase {
       user.id,
       logoUrl
     );
-
+    console.log("data before send to repository:",medicalRepEntity);
+    
     await this._medicalRepRepository.createMedicalRep(medicalRepEntity);
 
     const { otp, record } = await this._otpService.generateOtp(
