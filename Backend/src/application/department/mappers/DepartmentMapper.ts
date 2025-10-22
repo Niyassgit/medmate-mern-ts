@@ -1,6 +1,7 @@
 import { IDepartment } from "../../../domain/department/enitity/IDepartment";
-import { DepartmentDTO } from "../dto/DepartmentDTO";
-import { DepartmentListDTO } from "../dto/DepartmentListDTO";
+import { DepartmentDTO } from "../../superAdmin/dto/DepartmentDTO";
+import { DepartmentListDTO } from "../../superAdmin/dto/DepartmentListDTO";
+import { DepartmentOptionsDTO } from "../dto/DepartmentOptionsDTO";
 
 
 
@@ -19,4 +20,11 @@ export class DepartmentMapper{
             isActive:entity.isActive
         }))
     }
+    static toDomainOptions(entities:IDepartment[]):DepartmentOptionsDTO[]{
+        return entities.map((dep)=>({
+            id:dep.id,
+            name:dep.name
+        }))
+    }
+
 }

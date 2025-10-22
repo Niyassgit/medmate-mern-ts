@@ -20,6 +20,10 @@ import {
 } from "@/components/ui/form";
 import toast from "react-hot-toast";
 import ConfirmDialog from "@/components/shared/ConfirmDialog";
+import {
+  getDepartments,
+  getTerritories,
+} from "@/features/shared/api/SharedApi";
 
 export default function CompleteRepProfilePage() {
   const { id } = useParams();
@@ -28,6 +32,12 @@ export default function CompleteRepProfilePage() {
   const [formData, setFormData] = useState<FormData | null>(null);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [departments, setDepartments] = useState<
+    { id: string; name: string }[]
+  >([]);
+  const [territories, setTerritories] = useState<
+    { id: string; name: string }[]
+  >([]);
 
   const form = useForm<CompleteRepProfileDTO>({
     resolver: zodResolver(CompleteRepProfileSchema),
@@ -36,6 +46,8 @@ export default function CompleteRepProfilePage() {
       phone: "",
       companyName: "",
       employeeId: "",
+      departmentId: "",
+      territories: [],
       about: "",
       companyLogoUrl: "",
       educations: [{ degree: "", institute: "", year: null }],
@@ -44,10 +56,33 @@ export default function CompleteRepProfilePage() {
   });
 
   useEffect(() => {
+    async function fetchDropdownData() {
+      try {
+        const deptData = await getDepartments();
+        setDepartments(deptData.data.data);
+
+        const terrData = await getTerritories();
+        setTerritories(terrData.data.data);
+      } catch (error) {
+        toast.error("Failed to load departments or territories");
+      }
+    }
+    fetchDropdownData();
+  }, []);
+
+  useEffect(() => {
     async function fetchProfile() {
       try {
         const response = await getProfileRep(id!);
         const data = response.data;
+
+        const selectedTerritories = territories
+          .filter((t) => data.territories.includes(t.name))
+          .map((t) => t.id);
+
+        const selectedDepartment = departments.find(
+          (d) => d.name === data.departmentId
+        )?.id;
 
         form.reset({
           name: data.name ?? "",
@@ -56,6 +91,8 @@ export default function CompleteRepProfilePage() {
           employeeId: data.employeeId ?? "",
           about: data.about ?? "",
           companyLogoUrl: data.companyLogoUrl ?? "",
+          departmentId: selectedDepartment ?? "",
+          territories: selectedTerritories ?? [],
           educations:
             data.educations?.length > 0
               ? data.educations
@@ -71,24 +108,25 @@ export default function CompleteRepProfilePage() {
       }
     }
 
-    if (id) fetchProfile();
-  }, [id, form]);
+    if (id && territories.length && departments.length) fetchProfile();
+  }, [id, form, territories, departments]);
 
   const handleFormSubmit = (values: CompleteRepProfileDTO) => {
     const formPayload = new FormData();
 
-    // Append all simple fields
     formPayload.append("name", values.name);
     formPayload.append("phone", values.phone);
     formPayload.append("companyName", values.companyName || "");
     formPayload.append("employeeId", values.employeeId || "");
     formPayload.append("about", values.about || "");
+    formPayload.append("departmentId", values.departmentId || "");
+    values.territories.forEach((id) => {
+      formPayload.append("territories[]", id);
+    });
 
-    // Append arrays
     formPayload.append("educations", JSON.stringify(values.educations));
     formPayload.append("certificates", JSON.stringify(values.certificates));
 
-    // Append logo file (if selected)
     if (logoFile) {
       formPayload.append("companyLogoUrl", logoFile);
     }
@@ -115,7 +153,6 @@ export default function CompleteRepProfilePage() {
     }
   };
 
-  // Logo file change + preview
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -124,8 +161,6 @@ export default function CompleteRepProfilePage() {
       form.setValue("companyLogoUrl", file);
     }
   };
-  console.log("the logo file which is meant to append:",logoFile);
-
   const existingLogo = form.watch("companyLogoUrl");
 
   return (
@@ -133,7 +168,10 @@ export default function CompleteRepProfilePage() {
       <h1 className="text-2xl font-bold mb-6">Complete Your Profile</h1>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-4">
+        <form
+          onSubmit={form.handleSubmit(handleFormSubmit)}
+          className="space-y-4"
+        >
           {/* Name */}
           <FormField
             control={form.control}
@@ -216,6 +254,84 @@ export default function CompleteRepProfilePage() {
               </FormItem>
             )}
           />
+          {/* Department Dropdown */}
+          <FormField
+            control={form.control}
+            name="departmentId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Department</FormLabel>
+                <select
+                  {...field}
+                  className="
+            w-full 
+            border 
+            rounded-lg 
+            px-3 
+            py-2 
+            appearance-none 
+            bg-gray-50 
+            hover:bg-gray-100 
+            focus:bg-gray-100 
+            focus:ring-2 
+            focus:ring-gray-400 
+            focus:border-gray-500 
+            transition-all 
+            duration-150
+          "
+                >
+                  <option value="">Select Department</option>
+                  {departments.map((dept) => (
+                    <option key={dept.id} value={dept.id}>
+                      {dept.name}
+                    </option>
+                  ))}
+                </select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Territory Dropdown */}
+          <FormField
+            control={form.control}
+            name="territories"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Territories (Select multiple)</FormLabel>
+                <div className="border rounded-lg p-4 bg-gray-50 max-h-60 overflow-y-auto">
+                  {territories.map((terr) => (
+                    <div key={terr.id} className="flex items-center gap-2 mb-2">
+                      <input
+                        type="checkbox"
+                        id={`territory-${terr.id}`}
+                        value={terr.id}
+                        checked={field.value?.includes(terr.id) || false}
+                        onChange={(e) => {
+                          const currentValues = field.value || [];
+                          if (e.target.checked) {
+                            field.onChange([...currentValues, terr.id]);
+                          } else {
+                            field.onChange(
+                              currentValues.filter((id) => id !== terr.id)
+                            );
+                          }
+                        }}
+                        className="w-4 h-4 rounded border-gray-300 text-gray-600 focus:ring-gray-500"
+                      />
+                      <label
+                        htmlFor={`territory-${terr.id}`}
+                        className="text-sm cursor-pointer"
+                      >
+                        {terr.name}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           {/* About */}
           <FormField
@@ -240,7 +356,12 @@ export default function CompleteRepProfilePage() {
             fields={[
               { label: "Degree", name: "degree" },
               { label: "Institute", name: "institute" },
-              { label: "Year", name: "year", type: "number", placeholder: "YYYY" },
+              {
+                label: "Year",
+                name: "year",
+                type: "number",
+                placeholder: "YYYY",
+              },
             ]}
           />
 
@@ -250,13 +371,22 @@ export default function CompleteRepProfilePage() {
             fields={[
               { label: "Certificate", name: "name" },
               { label: "Issued By", name: "issuedBy" },
-              { label: "Year", name: "year", type: "number", placeholder: "YYYY" },
+              {
+                label: "Year",
+                name: "year",
+                type: "number",
+                placeholder: "YYYY",
+              },
             ]}
           />
 
           {/* Submit */}
           <div className="flex justify-end gap-2 mt-4">
-            <Button type="button" variant="outline" onClick={() => navigate(-1)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => navigate(-1)}
+            >
               Cancel
             </Button>
             <Button type="submit" className="bg-gray-400 hover:bg-gray-600">

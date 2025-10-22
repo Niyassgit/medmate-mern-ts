@@ -4,7 +4,7 @@ import { ErrorMessages } from "../../../shared/Messages";
 import { NotFoundError } from "../../errors";
 import { TerritoriesListDTO } from "../dto/TerritoriesListDTO";
 import { IGetTerritoriesUseCase } from "../interfaces/IGetTerritoriesUseCase";
-import { TerritoryMapper } from "../mappers/TerritoryMapper";
+import { TerritoryMapper } from "../../territory/mappers/TerritoryMapper";
 
 export class GetTerritoriesUseCase implements IGetTerritoriesUseCase {
   constructor(

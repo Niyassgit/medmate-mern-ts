@@ -12,14 +12,14 @@ import { BlockUserUseCase } from "../../application/superAdmin/useCases/BlockUse
 import { UnBlockUserUseCase } from "../../application/superAdmin/useCases/UnblockUserUseCase";
 import { GetDoctorDetailsUseCase } from "../../application/superAdmin/useCases/GetDoctorDetailsUseCase";
 import { GetMedicalRepDetailsUseCase } from "../../application/superAdmin/useCases/GetMedicalRepDetailsUseCase";
-import { CreateTerritoryUseCase } from "../../application/territory/use-cases/CreateTerritoryUseCase";
+import { CreateTerritoryUseCase } from "../../application/superAdmin/useCases/CreateTerritoryUseCase";
 import { TerritoryRepository } from "../repositories/TerritoryRepository";
-import { GetTerritoriesUseCase } from "../../application/territory/use-cases/GetTerritoriesUseCase";
-import { EditTerritoryUseCase } from "../../application/territory/use-cases/EditTerrritoryUseCase";
-import { CreateDepartmentUseCase } from "../../application/department/use-cases/CreateDepartmentUseCase";
+import { GetTerritoriesUseCase } from "../../application/superAdmin/useCases/GetTerritoriesUseCase";
+import { EditTerritoryUseCase } from "../../application/superAdmin/useCases/EditTerrritoryUseCase";
+import { CreateDepartmentUseCase } from "../../application/superAdmin/useCases/CreateDepartmentUseCase";
 import { DepartmentRepository } from "../repositories/DepatmentRepository";
-import { GetAllDepartmentsUseCase } from "../../application/department/use-cases/GetAllDepartmentsUseCase";
-import { EditDepartmentUseCase } from "../../application/department/use-cases/EditDepartmentUseCase";
+import { GetAllDepartmentsUseCase } from "../../application/superAdmin/useCases/GetAllDepartmentsUseCase";
+import { EditDepartmentUseCase } from "../../application/superAdmin/useCases/EditDepartmentUseCase";
 
 const superAdminRepositories = new SuperAdminRepository();
 const userRepository = new UserRepository();

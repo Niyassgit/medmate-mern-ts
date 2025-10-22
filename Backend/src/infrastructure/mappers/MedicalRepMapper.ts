@@ -10,7 +10,12 @@ import {
 
 export class MedicalRepMapper {
   static toDomain(
-    rep: MedicalRep & { educations?: Education[]; certificates?: Certificate[] }
+    rep: MedicalRep & {
+      educations?: Education[];
+      certificates?: Certificate[];
+      territories?: { territory:{name: string }}[];
+      department?:{name:string} | null;
+    }
   ): IMedicalRep {
     return {
       id: rep.id,
@@ -19,7 +24,6 @@ export class MedicalRepMapper {
       companyName: rep.companyName,
       companyLogoUrl: rep.companyLogoUrl ?? null,
       employeeId: rep.employeeId ?? null,
-      departmentId: rep.departmentId ?? null,
       about: rep.about ?? null,
       subscriptionPlanId: rep.subscriptionPlanId ?? null,
       subscriptionStatus: rep.subscriptionStatus,
@@ -29,6 +33,8 @@ export class MedicalRepMapper {
       loginId: rep.loginId,
       createdAt: rep.createdAt,
       updatedAt: rep.updatedAt,
+      departmentId: rep.department?.name?? null,
+      territories: rep.territories?.map((t) => t.territory.name) ?? [],
 
       educations: rep.educations?.map((edu) => ({
         id: edu.id,
@@ -149,24 +155,21 @@ export class MedicalRepMapper {
         : { disconnect: true };
     }
 
-    // relations
     if (domain.departmentId !== undefined) {
       persistence.department = domain.departmentId
         ? { connect: { id: domain.departmentId } }
         : { disconnect: true };
     }
 
-    // multiple territories (if needed)
-    // if (domain.territories) {
-    //   persistence.territories = {
-    //     deleteMany: {},
-    //     create: domain.territories.map(t => ({
-    //       territoryId: t.territoryId,
-    //     })),
-    //   };
-    // }
+    if (domain.territories) {
+      persistence.territories = {
+        deleteMany: {},
+        create: domain.territories.map((tId) => ({
+          territory: { connect: { id: tId } },
+        })),
+      };
+    }
 
-    // nested relations
     if (domain.educations) {
       persistence.educations = {
         deleteMany: {},

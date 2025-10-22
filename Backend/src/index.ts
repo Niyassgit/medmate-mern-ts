@@ -11,6 +11,7 @@ import { MedicalRepRoutes } from "./presentation/http/routes/MedicalRepRoutes";
 import { DoctorRoutes } from "./presentation/http/routes/DoctorRoutes";
 import { SuperAdminRoutes } from "./presentation/http/routes/SuperAdminRoutes";
 import { ErrorHandler } from "./presentation/http/middlewares/ErrorHandler";
+import { CommonRoutes } from "./presentation/http/routes/CommonRoutes";
 
 
 const app = express();
@@ -37,6 +38,7 @@ const startServer = async () => {
     app.use("/api/rep", new MedicalRepRoutes().router);
     app.use("/api/admin", new SuperAdminRoutes().router);
     app.use("/api/auth", new LoginRoute().router);
+    app.use("/api/common",new CommonRoutes().router );
 
     app.use(ErrorHandler);
     app.listen(env.port, () => {

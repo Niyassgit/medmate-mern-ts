@@ -112,6 +112,8 @@ export class MedicalRepRepository
         user: true,
         educations: true,
         certificates: true,
+        territories:{include:{territory:true}},
+        department:true,
       },
     });
     if (!user) return null;
@@ -130,6 +132,7 @@ export class MedicalRepRepository
         user: true,
         educations: true,
         certificates: true,
+        territories:{include:{territory:true}},
       },
     });
     return MedicalRepMapper.toDomain(updatedRep);

@@ -10,14 +10,14 @@ import { IGetDoctorDetailsUseCase } from "../../../application/superAdmin/interf
 import { IGetMedicalRepDetailsUseCase } from "../../../application/superAdmin/interfaces/IGetMedicalRepDetailsUseCase";
 import { HttpStatusCode } from "../../../shared/HttpStatusCodes";
 import { SuccessMessages } from "../../../shared/Messages";
-import { IGetTerritoriesUseCase } from "../../../application/territory/interfaces/IGetTerritoriesUseCase";
-import { ICreateTerritoryUseCase } from "../../../application/territory/interfaces/ICreateTerritoryUseCase";
+import { IGetTerritoriesUseCase } from "../../../application/superAdmin/interfaces/IGetTerritoriesUseCase";
+import { ICreateTerritoryUseCase } from "../../../application/superAdmin/interfaces/ICreateTerritoryUseCase";
 import { TerritorySchemaDTO } from "../validators/TerritoryValidateSchema";
-import { IEditTerritoryUseCase } from "../../../application/territory/interfaces/IEditTerritoryUseCase";
+import { IEditTerritoryUseCase } from "../../../application/superAdmin/interfaces/IEditTerritoryUseCase";
 import { DepartmentSchemaDTO } from "../validators/DepartmentShema";
-import { ICreateDepartmentUseCase } from "../../../application/department/interfaces/ICreateDepartmentUseCase";
-import { IGetAllDepartmentsUseCase } from "../../../application/department/interfaces/IGetAllDepartmentsUseCase";
-import { IEditDepartmentUseCase } from "../../../application/department/interfaces/IEditDepartmentUseCase";
+import { ICreateDepartmentUseCase } from "../../../application/superAdmin/interfaces/ICreateDepartmentUseCase";
+import { IGetAllDepartmentsUseCase } from "../../../application/superAdmin/interfaces/IGetAllDepartmentsUseCase";
+import { IEditDepartmentUseCase } from "../../../application/superAdmin/interfaces/IEditDepartmentUseCase";
 
 export class SuperAdminController {
   constructor(

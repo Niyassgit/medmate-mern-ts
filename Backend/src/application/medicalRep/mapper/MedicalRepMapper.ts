@@ -35,8 +35,10 @@ export class MedicalRepMapper {
       employeeId: dto.employeeId ?? existingRep.employeeId,
       companyLogoUrl: logoUrl ?? existingRep.companyLogoUrl,
       about: dto.about ?? existingRep.about,
+      departmentId: dto.departmentId ?? existingRep.departmentId,
       educations: dto.educations ?? existingRep.educations,
       certificates: dto.certificates ?? existingRep.certificates,
+      territories:dto.territories ?? existingRep.territories, 
     };
   }
 }

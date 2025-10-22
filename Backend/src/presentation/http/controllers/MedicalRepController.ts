@@ -13,7 +13,6 @@ import { IGetProductPostDetailsUseCase } from "../../../application/productPost/
 import { processImages } from "../utils/ImageHandler";
 import { HttpStatusCode } from "../../../shared/HttpStatusCodes";
 
-
 export class MedicalRepController {
   constructor(
     private _createMedicalRepUseCase: ICreateMedicalRepUseCase,
@@ -23,8 +22,7 @@ export class MedicalRepController {
     private _createPostUseCase: ICreatePostUseCase,
     private _editposUseCase: IEditProductPostUseCase,
     private _getProductsListUseCase: IGetProductPostListUseCase,
-    private _getPostDetailsUseCase: IGetProductPostDetailsUseCase,
-
+    private _getPostDetailsUseCase: IGetProductPostDetailsUseCase
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -58,11 +56,11 @@ export class MedicalRepController {
   };
   completeProfile = async (req: Request, res: Response) => {
     const { userId } = req.params;
-    const data = req.body as CompleteRepProfileDTO;
     const file = req.file || null;
+    const dto = req.body as CompleteRepProfileDTO;
     const response = await this._completeRepProfileUseCase.execute(
       userId,
-      data,
+      dto,
       file
     );
     return res

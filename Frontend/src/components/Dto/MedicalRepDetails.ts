@@ -15,4 +15,6 @@ export interface MedicalRepDetails {
   profileImage: string;
   educations?: Education[];
   certificates?: Certificate[];
+  departmentId:string,
+  territories:string[],
 }

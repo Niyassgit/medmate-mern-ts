@@ -9,6 +9,7 @@ export interface CompleteRepProfileDTO {
   companyLogoUrl?: string | null;
   employeeId?: string | null;
   departmentId?: string | null;
+  territories?: string[];
   about?: string | null;
 
   educations?: EducationDTO[];

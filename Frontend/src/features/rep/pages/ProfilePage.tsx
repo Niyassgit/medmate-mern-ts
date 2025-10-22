@@ -38,7 +38,6 @@ const ProfilePage = () => {
     };
     fetchProfile();
   }, [id]);
- 
   const handleAvatarChange = (file: File) => {
     setSelectedFile(file);
     setOpenConfirm(true);
@@ -88,18 +87,18 @@ const ProfilePage = () => {
     if (completion >= 30) return "border-yellow-400";
     return "border-red-500";
   };
-  
-  const handleImageError=async()=>{
+
+  const handleImageError = async () => {
     try {
-      const res=await getProfileRep(id);
-      if(res.success && res.data?.profileImage){
+      const res = await getProfileRep(id);
+      if (res.success && res.data?.profileImage) {
         return res.data.profileImage;
       }
     } catch (error) {
       toast.error("Failed to refresh profile Image");
     }
     return null;
-  }
+  };
   return (
     <div className="min-h-screen py-10 px-4">
       <div className="max-w-4xl mx-auto space-y-6">
@@ -200,6 +199,7 @@ const ProfilePage = () => {
         </div>
 
         {/* Info Cards */}
+        {/* Info Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-white rounded-xl shadow p-4">
             <h2 className="font-semibold text-gray-800">Email</h2>
@@ -242,6 +242,26 @@ const ProfilePage = () => {
             >
               {rep.isBlocked ? "Blocked" : "Active"}
             </p>
+          </div>
+
+          {/* Newly Added Department */}
+          <div className="bg-white rounded-xl shadow p-4">
+            <h2 className="font-semibold text-gray-800">Department</h2>
+            <p className="text-gray-700">{rep.departmentId || "N/A"}</p>
+          </div>
+
+          {/* Newly Added Territories */}
+          <div className="bg-white rounded-xl shadow p-4">
+            <h2 className="font-semibold text-gray-800">Territories</h2>
+            {rep.territories && rep.territories.length > 0 ? (
+              <ul className="list-disc list-inside text-gray-700 mt-2 space-y-1">
+                {rep.territories.map((territory, index) => (
+                  <li key={index}>{territory}</li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-gray-500 mt-2">Not assigned yet</p>
+            )}
           </div>
         </div>
 

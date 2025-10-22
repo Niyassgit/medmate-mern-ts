@@ -1,4 +1,4 @@
-import { DepartmentListDTO } from "./DepartmentListDTO";
+import { DepartmentListDTO } from "../../superAdmin/dto/DepartmentListDTO";
 
 export interface DepartmentsListResponseDTO{
     departments:DepartmentListDTO[],

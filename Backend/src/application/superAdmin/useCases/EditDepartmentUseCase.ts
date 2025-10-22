@@ -4,7 +4,7 @@ import { ErrorMessages, SuccessMessages } from "../../../shared/Messages";
 import { NotFoundError, UnautharizedError } from "../../errors";
 import { DepartmentDTO } from "../dto/DepartmentDTO";
 import { IEditDepartmentUseCase } from "../interfaces/IEditDepartmentUseCase";
-import { DepartmentMapper } from "../mappers/DepartmentMapper";
+import { DepartmentMapper } from "../../department/mappers/DepartmentMapper";
 
 export class EditDepartmentUseCase implements IEditDepartmentUseCase {
   constructor(

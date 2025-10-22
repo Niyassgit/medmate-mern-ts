@@ -20,6 +20,7 @@ export interface IMedicalRep {
   subscriptionEnd?: Date | null;
   maxConnectionsPerDay?: number | null;
 
-  educations?:IEducation[];
-  certificates?:ICertificate[];
+  educations?: IEducation[];
+  certificates?: ICertificate[];
+  territories?: string[];
 }

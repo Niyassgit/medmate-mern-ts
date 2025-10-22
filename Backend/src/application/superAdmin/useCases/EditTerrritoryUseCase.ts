@@ -4,7 +4,7 @@ import { ITerritoryRepository } from "../../../domain/territory/ITerritoryReposi
 import { ErrorMessages, SuccessMessages } from "../../../shared/Messages";
 import { EditTerritoryDTO } from "../dto/EditTerritoryDTO";
 import { IEditTerritoryUseCase } from "../interfaces/IEditTerritoryUseCase";
-import { TerritoryMapper } from "../mappers/TerritoryMapper";
+import { TerritoryMapper } from "../../territory/mappers/TerritoryMapper";
 
 
 export class EditTerritoryUseCase implements IEditTerritoryUseCase{

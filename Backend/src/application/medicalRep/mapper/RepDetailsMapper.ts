@@ -22,6 +22,8 @@ export class RepDetailsMapper {
       educations: rep.educations ?? [],
       certificates: rep.certificates ?? [],
       loginId:rep.loginId,
+      departmentId:rep.departmentId ?? null,
+      territories:rep.territories ?? null,
     };
   }
 }

@@ -3,8 +3,8 @@ import { IUserRepository } from "../../../domain/common/repositories/IUserReposi
 import { IDepartmentRepository } from "../../../domain/department/repositories/IDepartmentRepository";
 import { ErrorMessages } from "../../../shared/Messages";
 import { DepartmentsListResponseDTO } from "../dto/DepartmentsListResponseDTO";
-import { IGetAllDepartmentsUseCase } from "../interfaces/IGetAllDepartmentsUseCase";
-import { DepartmentMapper } from "../mappers/DepartmentMapper";
+import { IGetAllDepartmentsUseCase } from "../../superAdmin/interfaces/IGetAllDepartmentsUseCase";
+import { DepartmentMapper } from "../../department/mappers/DepartmentMapper";
 
 
 export class GetAllDepartmentsUseCase implements IGetAllDepartmentsUseCase{

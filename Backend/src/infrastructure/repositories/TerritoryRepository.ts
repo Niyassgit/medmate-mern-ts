@@ -3,7 +3,7 @@ import { ITerritory } from "../../domain/territory/entity/ITerritories";
 import { ITerritoryRepository } from "../../domain/territory/ITerritoryRepository";
 import { BaseRepository } from "../database/BaseRepository";
 import { prisma } from "../../config/db";
-import { CreateTerritoryDTO } from "../../application/territory/dto/CreateTerritoryDTO";
+import { CreateTerritoryDTO } from "../../application/superAdmin/dto/CreateTerritoryDTO";
 import { TerritoryMapper } from "../mappers/TerritoryMapper";
 
 export class TerritoryRepository
@@ -52,5 +52,7 @@ export class TerritoryRepository
      const response=await this.update(territoryId,data);
      return response;
   }
-
+  async getAllTerritories(): Promise<ITerritory[] | null> {
+    return this.findAll();
+  }
 }

@@ -4,7 +4,7 @@ import { ErrorMessages, SuccessMessages } from "../../../shared/Messages";
 import { BadRequestError, NotFoundError } from "../../errors";
 import { DepartmentDTO } from "../dto/DepartmentDTO";
 import { ICreateDepartmentUseCase } from "../interfaces/ICreateDepartmentUseCase";
-import { DepartmentMapper } from "../mappers/DepartmentMapper";
+import { DepartmentMapper } from "../../department/mappers/DepartmentMapper";
 
 export class CreateDepartmentUseCase implements ICreateDepartmentUseCase {
   constructor(

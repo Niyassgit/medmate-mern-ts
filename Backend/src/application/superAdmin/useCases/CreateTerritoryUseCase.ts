@@ -4,7 +4,7 @@ import { ErrorMessages, SuccessMessages } from "../../../shared/Messages";
 import { NotFoundError } from "../../errors";
 import { CreateTerritoryDTO } from "../dto/CreateTerritoryDTO";
 import { ICreateTerritoryUseCase } from "../interfaces/ICreateTerritoryUseCase";
-import { TerritoryMapper } from "../mappers/TerritoryMapper";
+import { TerritoryMapper } from "../../territory/mappers/TerritoryMapper";
 
 
 export class CreateTerritoryUseCase implements ICreateTerritoryUseCase{

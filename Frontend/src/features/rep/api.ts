@@ -41,3 +41,4 @@ export const updatePost=async(id:string,formData:FormData)=>{
    headers:{"Content-type":"multipart/form-data"}
   });
 }
+

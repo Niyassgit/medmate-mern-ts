@@ -2,7 +2,7 @@ import { z } from "zod";
 import { EducationSchema } from "@/features/shared/schemas/EducationSchema";
 import { CertificateSchema } from "@/features/shared/schemas/CertificateSchema";
 export const CompleteRepProfileSchema = z.object({
- name: z
+  name: z
     .string()
     .min(2, "Name is required")
     .regex(/^[A-Za-z\s]+$/, "Name must contain only letters"),
@@ -14,6 +14,12 @@ export const CompleteRepProfileSchema = z.object({
   employeeId: z.string().optional(),
   about: z.string().optional(),
   companyLogoUrl: z.any(),
+  departmentId: z.string().min(1, "Department is required"),
+ territories : z
+  .array(z.string().min(1))
+  .min(1, "At least one territory is required"),
+
+
   educations: z.array(EducationSchema).optional(),
   certificates: z.array(CertificateSchema).optional(),
 });

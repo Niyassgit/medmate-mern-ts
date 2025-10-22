@@ -15,8 +15,14 @@ export const MedicalRepProfileUpdateSchema = z.object({
   employeeId: z.string().optional(),
   about: z.string().optional(),
   companyLogoUrl: z.any(),
+  departmentId: z.string().min(1, "Department is required"),
+  territories: z
+    .array(z.string().min(1))
+    .min(1, "At least one territory is required"),
   educations: z.array(EducationSchema).optional(),
   certificates: z.array(CertificateSchema).optional(),
 });
 
-export type CompleteRepProfileDTO = z.infer<typeof MedicalRepProfileUpdateSchema>;
+export type CompleteRepProfileDTO = z.infer<
+  typeof MedicalRepProfileUpdateSchema
+>;

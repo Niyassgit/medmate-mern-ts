@@ -1,6 +1,7 @@
 import { ITerritory } from "../../../domain/territory/entity/ITerritories";
-import { CreateTerritoryDTO } from "../dto/CreateTerritoryDTO";
-import { TerritoryDTO } from "../dto/TerritoriesDTO";
+import { CreateTerritoryDTO } from "../../superAdmin/dto/CreateTerritoryDTO";
+import { TerritoryDTO } from "../../superAdmin/dto/TerritoriesDTO";
+import { TerritoryOptionsDTO } from "../dto/TerritoryOptionsDTO";
 
 
 export class TerritoryMapper{
@@ -17,6 +18,12 @@ export class TerritoryMapper{
         createdAt:entity.createdAt,
         name:entity.name,
         region:entity.region,
+    }))
+   }
+   static toDomainOptions(entities:ITerritory[]):TerritoryOptionsDTO[]{
+    return entities.map((entity)=>({
+        id:entity.id,
+        name:entity.name
     }))
    }
 }

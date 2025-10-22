@@ -193,6 +193,14 @@ model Territory {
   // requirements   DoctorRequirementPost[]
   repTerritories MedicalRepTerritory[]
 }
+model MedicalRepTerritory {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  repId       String @db.ObjectId
+  territoryId String @db.ObjectId
+
+  rep       MedicalRep @relation(fields: [repId], references: [id])
+  territory Territory  @relation(fields: [territoryId], references: [id])
+}
 
 model ProductPost {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
@@ -315,14 +323,7 @@ model Notification {
   rep    MedicalRep? @relation(fields: [repId], references: [id])
 }
 
-model MedicalRepTerritory {
-  id          String @id @default(auto()) @map("_id") @db.ObjectId
-  repId       String @db.ObjectId
-  territoryId String @db.ObjectId
 
-  rep       MedicalRep @relation(fields: [repId], references: [id])
-  territory Territory  @relation(fields: [territoryId], references: [id])
-}
 
 model Conversation {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
