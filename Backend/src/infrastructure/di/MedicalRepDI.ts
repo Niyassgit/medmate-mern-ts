@@ -15,8 +15,11 @@ import { GetProductPostListUseCase } from "../../application/productPost/use-cas
 import { GetProductPostDetailsUseCase } from "../../application/productPost/use-case/GetProductPostDetailsUseCase";
 import { s3StorageService } from "../services/S3StorageService";
 import { ProductPostPresentationService } from "../../application/common/services/ProductPostPresentationService";
+import { GetNetworksUseCase } from "../../application/medicalRep/use-cases/GetNetworksUseCase";
+import { DoctorRepository } from "../repositories/DoctorRepository";
 
 const medicalRepRepository = new MedicalRepRepository();
+const doctorRepository = new DoctorRepository();
 const userRepository = new UserRepository();
 const bcryptServices = new BcryptServices();
 const otpService = new OtpService();
@@ -68,6 +71,12 @@ const getProductPostDetailsUseCase = new GetProductPostDetailsUseCase(
   productPostRepository,
   storageService
 );
+const getNetworksUseCase = new GetNetworksUseCase(
+  userRepository,
+  doctorRepository,
+  medicalRepRepository,
+  storageService
+);
 
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
@@ -77,5 +86,6 @@ export const medicalRepController = new MedicalRepController(
   createPostUseCase,
   editProductPostUseCase,
   getProductPostListUseCase,
-  getProductPostDetailsUseCase
+  getProductPostDetailsUseCase,
+  getNetworksUseCase
 );

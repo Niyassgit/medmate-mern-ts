@@ -11,7 +11,7 @@ export interface IMedicalRep {
   companyName: string;
   companyLogoUrl?: string | null;
   employeeId?: string | null;
-  departmentId?: string | null;
+  departmentId: string;
   about?: string | null;
 
   subscriptionPlanId?: string | null;
@@ -22,7 +22,7 @@ export interface IMedicalRep {
 
   educations?: IEducation[];
   certificates?: ICertificate[];
-  territories?: string[];
+  territories: string[];
   departmentName?:string;
   territoryNames?:string[];
 }

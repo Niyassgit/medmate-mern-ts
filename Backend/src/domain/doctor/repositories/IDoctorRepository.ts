@@ -15,4 +15,5 @@ export interface IDoctorRepository {
   ): Promise<{ doctors: IDoctorListItem[]; total: number }>;
   getDoctorByUserId(id:string):Promise<IDoctorWithUser |null>;
   updateDoctor(userId:string,data:Partial<IDoctor>):Promise<IDoctor | null>;
+  findByTerritoryAndDepartment(departmentId:string,territories:string[]):Promise<IDoctorWithUser[]>;
 }

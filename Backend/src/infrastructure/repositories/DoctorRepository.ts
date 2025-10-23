@@ -113,4 +113,18 @@ export class DoctorRepository
 
     return DoctorWithUserMapper.toDomain(updateDoctor);
   }
+  async findByTerritoryAndDepartment(departmentId: string, territories: string[]): Promise<IDoctorWithUser[]> {
+    const doctors= await prisma.doctor.findMany({
+      where:{
+        departmentId,
+        territoryId:{in:territories}
+      },
+      include:{
+        user:true,
+        department:true,
+        territory:true,
+      }
+    });
+    return doctors.map((doc)=>DoctorWithUserMapper.toDomain(doc));
+  }
 }

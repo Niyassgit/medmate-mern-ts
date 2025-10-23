@@ -46,6 +46,8 @@ export class DoctorRoutes {
     );
     this.router.get(
       "/networks/:userId",
+      Authenticate,
+      AuthorizeRole([Role.DOCTOR]),
       doctorController.networks
     );
   }

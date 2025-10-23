@@ -12,6 +12,7 @@ import { IGetProductPostListUseCase } from "../../../application/productPost/int
 import { IGetProductPostDetailsUseCase } from "../../../application/productPost/interfaces/IPostDetailsUseCase";
 import { processImages } from "../utils/ImageHandler";
 import { HttpStatusCode } from "../../../shared/HttpStatusCodes";
+import { IGetNetworksUseCase } from "../../../application/medicalRep/interfaces/IGetNetWorksUseCase";
 
 export class MedicalRepController {
   constructor(
@@ -22,7 +23,8 @@ export class MedicalRepController {
     private _createPostUseCase: ICreatePostUseCase,
     private _editposUseCase: IEditProductPostUseCase,
     private _getProductsListUseCase: IGetProductPostListUseCase,
-    private _getPostDetailsUseCase: IGetProductPostDetailsUseCase
+    private _getPostDetailsUseCase: IGetProductPostDetailsUseCase,
+    private _getNetworksUseCase: IGetNetworksUseCase
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -108,5 +110,11 @@ export class MedicalRepController {
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, message: response });
+  };
+
+  networks = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const resposne = await this._getNetworksUseCase.execute(userId);
+    res.status(HttpStatusCode.OK).json({ success: true, data: resposne });
   };
 }

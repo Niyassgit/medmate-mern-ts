@@ -45,15 +45,15 @@ export class MedicalRepRoutes {
       uploadS3.single("profileImage"),
       medicalRepController.updateProfileImage
     );
-      this.router.post(
-        "/profile/complete/:userId",
-        Authenticate,
-        AuthorizeRole([Role.MEDICAL_REP]),
-        upload.single("companyLogoUrl"),
-        parseArrayFields,
-        ValidateSchema(MedicalRepProfileUpdateSchema),
-        medicalRepController.completeProfile
-      );
+    this.router.post(
+      "/profile/complete/:userId",
+      Authenticate,
+      AuthorizeRole([Role.MEDICAL_REP]),
+      upload.single("companyLogoUrl"),
+      parseArrayFields,
+      ValidateSchema(MedicalRepProfileUpdateSchema),
+      medicalRepController.completeProfile
+    );
     this.router.post(
       "/add-post/:userId",
       Authenticate,
@@ -85,6 +85,12 @@ export class MedicalRepRoutes {
       parsePostField,
       ValidateSchema(productPostValidateSchema),
       medicalRepController.editPost
+    );
+    this.router.get(
+      "/networks/:userId",
+      Authenticate,
+      AuthorizeRole,
+      medicalRepController.networks
     );
   }
 }

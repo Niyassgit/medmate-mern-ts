@@ -17,7 +17,7 @@ export class NetworksUseCase implements INetworkUseCase {
     private _medicalRepRepository: IMedicalRepRepository,
     private _storageService:IStorageService
   ) {}
-  async execute(userId: string): Promise<NetworkResponseDTO[]> {
+  async execute(userId: string): Promise<NetworkResponseDTO[] | null> {
     const user = await this._userRepository.findById(userId);
     if (!user) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
     if (user.role !== Role.DOCTOR)
@@ -29,6 +29,7 @@ export class NetworksUseCase implements INetworkUseCase {
       territoryId,
       departmentId
     );
+    if(!reps) return null;
     return await  NetworkMapper.toResponselist(reps,this._storageService);
   }
 }
