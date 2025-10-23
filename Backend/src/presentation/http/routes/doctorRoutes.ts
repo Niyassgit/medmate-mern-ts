@@ -5,7 +5,7 @@ import { upload } from "../../../infrastructure/storage/multer/MulterFactory";
 import { DoctorRegisterSchema } from "../validators/DoctorRegisterSchemaValidator";
 import { Authenticate } from "../middlewares/Authenticate";
 import { AuthorizeRole } from "../middlewares/AuthorizeRole";
-import { Role } from "../../../shared/Enums"; 
+import { Role } from "../../../shared/Enums";
 import { DoctorProfileUpdateSchema } from "../validators/DoctorProfileUpdateSchema";
 import { uploadS3 } from "../../../infrastructure/storage/multer/MulterS3BucketConfig";
 
@@ -43,6 +43,10 @@ export class DoctorRoutes {
       AuthorizeRole([Role.DOCTOR]),
       ValidateSchema(DoctorProfileUpdateSchema),
       doctorController.completeProfile
+    );
+    this.router.get(
+      "/networks/:userId",
+      doctorController.networks
     );
   }
 }

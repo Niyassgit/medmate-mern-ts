@@ -2,18 +2,19 @@ import { Request, Response } from "express";
 import { ICreateDoctorUseCase } from "../../../application/doctor/interfaces/ICreateDoctorUseCase";
 import { RegisterDoctorDTO } from "../../../application/doctor/dto/RegisterDoctorDTO";
 import { IGetDoctorProfileByIdUseCase } from "../../../application/doctor/interfaces/IGetDoctoraProfileByIdUseCase";
-import { IProfileImageUpdateUseCase } from "../../../application/doctor/interfaces/IProfileImageUpdateUseCase"; 
+import { IProfileImageUpdateUseCase } from "../../../application/doctor/interfaces/IProfileImageUpdateUseCase";
 import { ICompleteProfileUseCase } from "../../../application/doctor/interfaces/ICompleteProfileUseCase";
 import { CompleteDoctorProfileDTO } from "../../../application/doctor/dto/CompleteProfileDTO";
 import { HttpStatusCode } from "../../../shared/HttpStatusCodes";
-
+import { INetworkUseCase } from "../../../application/doctor/interfaces/INetworkUseCase";
 
 export class DoctorController {
   constructor(
     private _createDoctorUseCase: ICreateDoctorUseCase,
     private _getDoctorProfileByIdUseCase: IGetDoctorProfileByIdUseCase,
     private _profileImageUpdateUseCase: IProfileImageUpdateUseCase,
-    private _compeletProfileUseCase: ICompleteProfileUseCase
+    private _compeletProfileUseCase: ICompleteProfileUseCase,
+    private _networkUseCase: INetworkUseCase
   ) {}
 
   createDoctor = async (req: Request, res: Response) => {
@@ -31,7 +32,9 @@ export class DoctorController {
   getDoctorprofileById = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const response = await this._getDoctorProfileByIdUseCase.execute(userId);
-    return res.status(HttpStatusCode.OK).json({ success: true, data: response });
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
   };
   updateProfileImage = async (req: Request, res: Response) => {
     const { userId } = req.params;
@@ -43,9 +46,16 @@ export class DoctorController {
     res.status(HttpStatusCode.OK).json({ success: true, message: response });
   };
   completeProfile = async (req: Request, res: Response) => {
-    const { userId} = req.params;
+    const { userId } = req.params;
     const data = req.body as CompleteDoctorProfileDTO;
     const response = await this._compeletProfileUseCase.execute(userId, data);
-    return res.status(HttpStatusCode.OK).json({ success: true, message: response });
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, message: response });
+  };
+  networks = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const response = await this._networkUseCase.execute(userId);
+    res.status(HttpStatusCode.OK).json({ success: true, data: response });
   };
 }

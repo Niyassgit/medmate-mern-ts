@@ -2,7 +2,7 @@ import { Prisma, Territory } from "@prisma/client";
 import { ITerritory } from "../../domain/territory/entity/ITerritories";
 import { ITerritoryRepository } from "../../domain/territory/ITerritoryRepository";
 import { BaseRepository } from "../database/BaseRepository";
-import { prisma } from "../../config/db";
+import { prisma } from "../config/db";
 import { CreateTerritoryDTO } from "../../application/superAdmin/dto/CreateTerritoryDTO";
 import { TerritoryMapper } from "../mappers/TerritoryMapper";
 

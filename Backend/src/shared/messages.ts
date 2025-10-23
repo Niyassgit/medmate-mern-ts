@@ -30,6 +30,7 @@ export const ErrorMessages = {
   TERR_NOT_FOUND:"Territory not found", 
   REGISTER_ERROR:"Registeration failed",
   DEP_NOT_FOUND:"departments not found",
+  DOCTOR_ACCESS:"Only doctors can access this network data"
 
 }as const;
 

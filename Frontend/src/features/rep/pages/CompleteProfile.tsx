@@ -76,11 +76,11 @@ export default function CompleteRepProfilePage() {
         const response = await getProfileRep(id!);
         const data = response.data;
         const selectedTerritories = territories
-          .filter((t) => data.territories.includes(t.name))
+          .filter((t) => data.territoryNames.includes(t.name))
           .map((t) => t.id);
 
         const selectedDepartment = departments.find(
-          (d) => d.name === data.departmentId
+          (d) => d.name === data.departmentName
         )?.id;
 
         form.reset({

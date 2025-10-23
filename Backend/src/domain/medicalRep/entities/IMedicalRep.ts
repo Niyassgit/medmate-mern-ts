@@ -23,4 +23,6 @@ export interface IMedicalRep {
   educations?: IEducation[];
   certificates?: ICertificate[];
   territories?: string[];
+  departmentName?:string;
+  territoryNames?:string[];
 }

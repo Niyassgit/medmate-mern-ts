@@ -16,6 +16,6 @@ export interface MedicalRepDetailsDTO {
   educations?: EducationDTO[];
   certificates?: CertificateDTO[];
   loginId:string | null;
-  departmentId:string | null,
-  territories:string[] | null,
+  departmentName:string | null,
+  territoryNames:string[],
 }

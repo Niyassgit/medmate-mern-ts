@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { env } from "../../../config/env";
+import { env } from "../../../infrastructure/config/env";
 import { ILoginUserUseCase } from "../../../application/common/interfaces/ILoginUserUseCase";
 import { IGoogleLoginUseCase } from "../../../application/common/interfaces/IGoogleLoginUseCase";
 import { LoginRequestBody } from "../validators/LoginValidationSchema";

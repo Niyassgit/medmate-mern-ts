@@ -2,7 +2,7 @@ import { IDepartmentRepository } from "../../domain/department/repositories/IDep
 import { BaseRepository } from "../database/BaseRepository";
 import { IDepartment } from "../../domain/department/enitity/IDepartment";
 import { Department, Prisma } from "@prisma/client";
-import { prisma } from "../../config/db";
+import { prisma } from "../config/db";
 import { DepartmentMapper } from "../mappers/DepartmentMapper";
 import { DepartmentDTO } from "../../application/superAdmin/dto/DepartmentDTO";
 

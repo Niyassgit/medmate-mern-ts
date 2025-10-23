@@ -79,10 +79,10 @@ export default function CompleteProfilePage() {
         const response = await getProfileDoctor(id!);
         const data = response.data;
         const selectedDepartment = departments.find(
-          (d) => d.name === data.departmentId
+          (d) => d.name === data.departmentName
         )?.id;
         const selectedTerritory = territories.find(
-          (t) => t.name === data.territoryId
+          (t) => t.name === data.territoryName
         )?.id;
         if (data) {
           form.reset({

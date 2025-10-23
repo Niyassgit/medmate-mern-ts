@@ -9,11 +9,11 @@ export interface DoctorDetailsDTO {
   phone: string;
   profileImage: string | null;
 
-  departmentId?: string | null;
+  departmentName: string | null;
   experienceYears?: number | null;
   hasOwnClinic?: boolean | null;
   doctorClass?: string | null;
-  territoryId?: string | null;
+  territoryName: string | null;
   hospital: string;
   registrationId: string;
   opHours?: string | null;

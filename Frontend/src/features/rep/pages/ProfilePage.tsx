@@ -247,15 +247,15 @@ const ProfilePage = () => {
           {/* Newly Added Department */}
           <div className="bg-white rounded-xl shadow p-4">
             <h2 className="font-semibold text-gray-800">Department</h2>
-            <p className="text-gray-700">{rep.departmentId || "N/A"}</p>
+            <p className="text-gray-700">{rep.departmentName || "N/A"}</p>
           </div>
 
           {/* Newly Added Territories */}
           <div className="bg-white rounded-xl shadow p-4">
             <h2 className="font-semibold text-gray-800">Territories</h2>
-            {rep.territories && rep.territories.length > 0 ? (
+            {rep.territoryNames && rep.territoryNames.length > 0 ? (
               <ul className="list-disc list-inside text-gray-700 mt-2 space-y-1">
-                {rep.territories.map((territory, index) => (
+                {rep.territoryNames.map((territory, index) => (
                   <li key={index}>{territory}</li>
                 ))}
               </ul>

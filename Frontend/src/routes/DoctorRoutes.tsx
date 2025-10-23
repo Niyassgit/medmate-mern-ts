@@ -3,9 +3,9 @@ import { Role } from "@/types/Role";
 import ProfilePage from "@/features/doctor/pages/ProfilePage";
 import Feed from "@/features/doctor/pages/Feed";
 import Connections from "@/features/doctor/pages/Connections";
-import Network from "@/features/rep/pages/Network";
 import DoctorLayout from "@/features/doctor/components/DoctorLayout";
 import CompleteProfilePage from "@/features/doctor/pages/CompleteProfilePage";
+import NetworkPage from "@/features/doctor/pages/NetworkPage";
 
 export const DoctorRoutes={
     path:"/doctor",
@@ -19,6 +19,6 @@ export const DoctorRoutes={
       {path:"profile", element:<ProfilePage/>},
       {path:"profile/complete/:id",element:<CompleteProfilePage />},
       {path:"connections",element:<Connections />},
-      {path:"network",element:<Network />}
+      {path:"network",element:<NetworkPage />}
     ]
 };

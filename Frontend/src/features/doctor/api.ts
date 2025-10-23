@@ -21,3 +21,7 @@ export const completeProfile=async(id:string,values:CompleteDoctorProfileDTO)=>{
         headers: { "Content-Type": "application/json" },
     });
 }
+export const getNetworks=async(id:string)=>{
+    const resp=await api.get(DoctorEndpoints.NETWORKS(id));
+    return resp.data.data;
+}

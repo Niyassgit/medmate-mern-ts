@@ -1,4 +1,4 @@
-import cloudinary from "../../config/cloudinaryConfig";
+import cloudinary from "../config/cloudinaryConfig";
 import { ICloudinaryService } from "../../domain/common/services/ICloudinaryService";
 import streamifier from "streamifier";
 

@@ -85,8 +85,8 @@ export class DoctorRepository
         user: true,
         educations: true,
         certificates: true,
-        department:true,
         territory:true,
+        department:true,
       },
     });
 

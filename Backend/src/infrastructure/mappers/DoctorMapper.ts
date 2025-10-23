@@ -5,23 +5,30 @@ import { Prisma } from "@prisma/client";
 
 export class DoctorMapper {
   static toDomain(
-    doctor: Doctor & { educations?: Education[]; certificates?: Certificate[]; department?:{name:string}| null; territory?:{name:string}|null}
+    doctor: Doctor & {
+      educations?: Education[];
+      certificates?: Certificate[];
+      department?: { name: string } | null;
+      territory?: { name: string } | null;
+    }
   ): IDoctor {
     return {
       id: doctor.id,
       name: doctor.name,
       phone: doctor.phone,
-      departmentId: doctor.department?.name ?? null,
+      departmentId: doctor.departmentId,
       experienceYears: doctor.experienceYears ?? null,
       hasOwnClinic: doctor.hasOwnClinic ?? null,
       doctorClass: doctor.doctorClass ?? null,
-      territoryId: doctor.territory?.name ?? null,
+      territoryId: doctor.territoryId,
       loginId: doctor.loginId ?? null,
       registrationId: doctor.registrationId,
       hospital: doctor.hospital,
       licenseImageUrl: doctor.licenseImageUrl,
       opHours: doctor.opHours ?? null,
       about: doctor.about ?? null,
+      departmentName:doctor.department?.name,
+      territoryName:doctor.territory?.name,
       createdAt: doctor.createdAt,
       updatedAt: doctor.updatedAt,
 
@@ -95,57 +102,62 @@ export class DoctorMapper {
     };
   }
 
- static toPartialPersistence(domain: Partial<IDoctor>): Prisma.DoctorUpdateInput {
-  const data: Prisma.DoctorUpdateInput = {};
+  static toPartialPersistence(
+    domain: Partial<IDoctor>
+  ): Prisma.DoctorUpdateInput {
+    const data: Prisma.DoctorUpdateInput = {};
 
-  // simple fields
-  if (domain.name !== undefined) data.name = domain.name;
-  if (domain.phone !== undefined) data.phone = domain.phone;
-  if (domain.hospital !== undefined) data.hospital = domain.hospital;
-  if (domain.registrationId !== undefined) data.registrationId = domain.registrationId;
-  if (domain.licenseImageUrl !== undefined) data.licenseImageUrl = domain.licenseImageUrl;
-  if (domain.opHours !== undefined) data.opHours = domain.opHours;
-  if (domain.about !== undefined) data.about = domain.about;
-  if (domain.experienceYears !== undefined) data.experienceYears = domain.experienceYears;
-  if (domain.hasOwnClinic !== undefined) data.hasOwnClinic = domain.hasOwnClinic;
-  if (domain.doctorClass !== undefined) data.doctorClass = domain.doctorClass;
+    // simple fields
+    if (domain.name !== undefined) data.name = domain.name;
+    if (domain.phone !== undefined) data.phone = domain.phone;
+    if (domain.hospital !== undefined) data.hospital = domain.hospital;
+    if (domain.registrationId !== undefined)
+      data.registrationId = domain.registrationId;
+    if (domain.licenseImageUrl !== undefined)
+      data.licenseImageUrl = domain.licenseImageUrl;
+    if (domain.opHours !== undefined) data.opHours = domain.opHours;
+    if (domain.about !== undefined) data.about = domain.about;
+    if (domain.experienceYears !== undefined)
+      data.experienceYears = domain.experienceYears;
+    if (domain.hasOwnClinic !== undefined)
+      data.hasOwnClinic = domain.hasOwnClinic;
+    if (domain.doctorClass !== undefined) data.doctorClass = domain.doctorClass;
 
-  // relations
-  if (domain.departmentId !== undefined) {
-    data.department = domain.departmentId
-      ? { connect: { id: domain.departmentId } }
-      : { disconnect: true };
+    // relations
+    if (domain.departmentId !== undefined) {
+      data.department = domain.departmentId
+        ? { connect: { id: domain.departmentId } }
+        : { disconnect: true };
+    }
+    if (domain.territoryId !== undefined) {
+      data.territory = domain.territoryId
+        ? { connect: { id: domain.territoryId } }
+        : { disconnect: true };
+    }
+
+    // nested relations
+    if (domain.educations) {
+      data.educations = {
+        deleteMany: {},
+        create: domain.educations.map((edu) => ({
+          degree: edu.degree,
+          institute: edu.institute,
+          year: edu.year ?? null,
+        })),
+      };
+    }
+
+    if (domain.certificates) {
+      data.certificates = {
+        deleteMany: {},
+        create: domain.certificates.map((cert) => ({
+          name: cert.name,
+          issuedBy: cert.issuedBy ?? null,
+          year: cert.year ?? null,
+        })),
+      };
+    }
+
+    return data;
   }
-  if (domain.territoryId !== undefined) {
-    data.territory = domain.territoryId
-      ? { connect: { id: domain.territoryId } }
-      : { disconnect: true };
-  }
-
-  // nested relations
-  if (domain.educations) {
-    data.educations = {
-      deleteMany: {},
-      create: domain.educations.map(edu => ({
-        degree: edu.degree,
-        institute: edu.institute,
-        year: edu.year ?? null,
-      })),
-    };
-  }
-
-  if (domain.certificates) {
-    data.certificates = {
-      deleteMany: {},
-      create: domain.certificates.map(cert => ({
-        name: cert.name,
-        issuedBy: cert.issuedBy ?? null,
-        year: cert.year ?? null,
-      })),
-    };
-  }
-
-  return data;
-}
-
 }

@@ -1,6 +1,6 @@
 import { IProductPost } from "../../domain/product/entity/IProductPost";
 import { IProductPostRepository } from "../../domain/product/repositories/IProductPostRepository";
-import { prisma } from "../../config/db";
+import { prisma } from "../config/db";
 import { ProductPostMapper } from "../mappers/ProductPostMapper";
 import { BaseRepository } from "../database/BaseRepository";
 import { Prisma, ProductPost } from "@prisma/client";

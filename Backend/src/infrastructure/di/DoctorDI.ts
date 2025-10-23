@@ -10,8 +10,11 @@ import { ProfileImageUpdateUseCase } from "../../application/doctor/use-cases/Pr
 import { CloudinaryService } from "../services/CloudinaryService";
 import { CompleteProfileUseCase } from "../../application/doctor/use-cases/CompleteProfileUseCase";
 import { s3StorageService } from "../services/S3StorageService";
+import { NetworksUseCase } from "../../application/doctor/use-cases/NetworksUseCase";
+import { MedicalRepRepository } from "../repositories/MedicalRepRepository";
 
 const doctorRepository = new DoctorRepository();
+const medicalRepRepository = new MedicalRepRepository();
 const bycryptServices = new BcryptServices();
 const userRepository = new UserRepository();
 const otpService = new OtpService();
@@ -38,10 +41,17 @@ const completeProfileUseCase = new CompleteProfileUseCase(
   userRepository,
   doctorRepository
 );
+const networkUseCase = new NetworksUseCase(
+  userRepository,
+  doctorRepository,
+  medicalRepRepository,
+  storageService
+);
 
 export const doctorController = new DoctorController(
   createDoctorUseCase,
   getDoctorprofileById,
   profileImageUpdateUseCase,
-  completeProfileUseCase
+  completeProfileUseCase,
+  networkUseCase
 );

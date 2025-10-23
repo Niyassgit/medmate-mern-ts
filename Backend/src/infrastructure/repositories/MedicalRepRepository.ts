@@ -29,8 +29,8 @@ export class MedicalRepRepository
       include: {
         educations: true,
         certificates: true,
-        territories:{
-          include:{territory:true}
+        territories: {
+          include: { territory: true },
         },
       },
     });
@@ -115,8 +115,8 @@ export class MedicalRepRepository
         user: true,
         educations: true,
         certificates: true,
-        territories:{include:{territory:true}},
-        department:true,
+        territories: { include: { territory: true } },
+        department: true,
       },
     });
     if (!user) return null;
@@ -135,9 +135,32 @@ export class MedicalRepRepository
         user: true,
         educations: true,
         certificates: true,
-        territories:{include:{territory:true}},
+        territories: { include: { territory: true } },
       },
     });
     return MedicalRepMapper.toDomain(updatedRep);
+  }
+  async findByTerritoryAndDepartment(
+    territoryId: string,
+    departmentId: string
+  ): Promise<IMedicalRepWithUser[]> {
+    const reps = await prisma.medicalRep.findMany({
+      where: {
+        departmentId: departmentId,
+        territories: {
+          some: {
+            territoryId: territoryId,
+          },
+        },
+      },
+      include: {
+        user: true,
+        territories: {
+          include: { territory: true },
+        },
+        department:true,
+      },
+    });
+    return reps.map((rep) => MedicalRepWithUserMapper.toDomain(rep));
   }
 }
