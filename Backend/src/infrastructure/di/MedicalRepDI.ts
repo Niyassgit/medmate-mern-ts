@@ -17,6 +17,9 @@ import { s3StorageService } from "../services/S3StorageService";
 import { ProductPostPresentationService } from "../../application/common/services/ProductPostPresentationService";
 import { GetNetworksUseCase } from "../../application/medicalRep/use-cases/GetNetworksUseCase";
 import { DoctorRepository } from "../repositories/DoctorRepository";
+import { MakeConnectionRequestUseCase } from "../../application/medicalRep/use-cases/MakeConnectionRequestUseCase";
+import { ConnectionRepository } from "../repositories/ConnectionRepository";
+import { AcceptingConnectionRequest } from "../../application/medicalRep/use-cases/AcceptConnectionRequestUseCase";
 
 const medicalRepRepository = new MedicalRepRepository();
 const doctorRepository = new DoctorRepository();
@@ -29,6 +32,8 @@ const storageService = new s3StorageService();
 const productPostPresentationService = new ProductPostPresentationService(
   storageService
 );
+const connectionRepository = new ConnectionRepository();
+
 const createMedicalRepUseCase = new CreateMedicalRepUseCase(
   medicalRepRepository,
   bcryptServices,
@@ -77,7 +82,16 @@ const getNetworksUseCase = new GetNetworksUseCase(
   medicalRepRepository,
   storageService
 );
-
+const makeConnectionRequestUseCase = new MakeConnectionRequestUseCase(
+  medicalRepRepository,
+  doctorRepository,
+  connectionRepository
+);
+const acceptConnectionRequestUseCase = new AcceptingConnectionRequest(
+  medicalRepRepository,
+  doctorRepository,
+  connectionRepository
+);
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
   getRepProfileByIdUseCase,
@@ -87,5 +101,7 @@ export const medicalRepController = new MedicalRepController(
   editProductPostUseCase,
   getProductPostListUseCase,
   getProductPostDetailsUseCase,
-  getNetworksUseCase
+  getNetworksUseCase,
+  makeConnectionRequestUseCase,
+  acceptConnectionRequestUseCase
 );

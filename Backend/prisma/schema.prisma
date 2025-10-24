@@ -8,13 +8,13 @@ datasource db {
 }
 
 model Department {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  id        String       @id @default(auto()) @map("_id") @db.ObjectId
   name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  isActive Boolean   @default(true)
-  doctors Doctor[]
-  reps    MedicalRep[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  isActive  Boolean      @default(true)
+  doctors   Doctor[]
+  reps      MedicalRep[]
 }
 
 model otpVerification {
@@ -147,23 +147,23 @@ model SuperAdmin {
 }
 
 model Education {
-  id        String @id @default(auto()) @map("_id") @db.ObjectId
-  degree    String
-  institute String
-  year      Int?
-  doctorId  String? @db.ObjectId
-  doctor    Doctor? @relation(fields: [doctorId], references: [id])
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
+  degree       String
+  institute    String
+  year         Int?
+  doctorId     String?     @db.ObjectId
+  doctor       Doctor?     @relation(fields: [doctorId], references: [id])
   medicalRepId String?     @db.ObjectId
   medicalRep   MedicalRep? @relation(fields: [medicalRepId], references: [id])
 }
 
 model Certificate {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  name     String
-  issuedBy String?
-  year     Int?
-  doctorId String?  @db.ObjectId
-  doctor   Doctor?  @relation(fields: [doctorId], references: [id])
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  issuedBy     String?
+  year         Int?
+  doctorId     String?     @db.ObjectId
+  doctor       Doctor?     @relation(fields: [doctorId], references: [id])
   medicalRepId String?     @db.ObjectId
   medicalRep   MedicalRep? @relation(fields: [medicalRepId], references: [id])
 }
@@ -193,6 +193,7 @@ model Territory {
   // requirements   DoctorRequirementPost[]
   repTerritories MedicalRepTerritory[]
 }
+
 model MedicalRepTerritory {
   id          String @id @default(auto()) @map("_id") @db.ObjectId
   repId       String @db.ObjectId
@@ -203,21 +204,21 @@ model MedicalRepTerritory {
 }
 
 model ProductPost {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  repId        String   @db.ObjectId
-  title        String
-  description  String
-  imageUrl     String[]
-  brand        String
-  territoryId  String?   @db.ObjectId
-  useCases     String[]
-  ingredients  String[]
-  termsOfUse   String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  rep       MedicalRep @relation(fields: [repId], references: [id])
-  territory Territory?  @relation(fields: [territoryId], references: [id])
-  interests Interest[]
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  repId       String     @db.ObjectId
+  title       String
+  description String
+  imageUrl    String[]
+  brand       String
+  territoryId String?    @db.ObjectId
+  useCases    String[]
+  ingredients String[]
+  termsOfUse  String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  rep         MedicalRep @relation(fields: [repId], references: [id])
+  territory   Territory? @relation(fields: [territoryId], references: [id])
+  interests   Interest[]
 }
 
 model Interest {
@@ -232,16 +233,33 @@ model Interest {
   product ProductPost @relation(fields: [productId], references: [id])
 }
 
+enum ConnectionStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELLED
+}
+
+enum ConnectionInitiator {
+  DOCTOR
+  REP
+}
+
 model Connection {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  doctorId  String   @db.ObjectId
-  repId     String   @db.ObjectId
-  status    String
-  createdAt DateTime @default(now())
+  id          String             @id @default(auto()) @map("_id") @db.ObjectId
+  doctorId    String             @db.ObjectId
+  repId       String             @db.ObjectId
+  status      ConnectionStatus   @default(PENDING)
+  initiator   ConnectionInitiator
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
 
   doctor Doctor     @relation(fields: [doctorId], references: [id])
   rep    MedicalRep @relation(fields: [repId], references: [id])
+
+  @@unique([doctorId, repId], name: "doctorId_repId")
 }
+
 
 model DoctorConnection {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
@@ -322,8 +340,6 @@ model Notification {
   doctor Doctor?     @relation(fields: [doctorId], references: [id])
   rep    MedicalRep? @relation(fields: [repId], references: [id])
 }
-
-
 
 model Conversation {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId

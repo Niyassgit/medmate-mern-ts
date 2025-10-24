@@ -9,11 +9,11 @@ export interface IDoctor {
 
   name: string;
   phone: string;
-  departmentId: string;
+  departmentId: string | null;
   experienceYears?: number | null;
   hasOwnClinic?: boolean | null;
   doctorClass?: string | null;
-  territoryId: string;
+  territoryId: string | null;
   hospital: string;
   registrationId: string;
   licenseImageUrl: string | null;

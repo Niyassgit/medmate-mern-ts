@@ -37,6 +37,21 @@ export class MedicalRepRepository
     return MedicalRepMapper.toDomain(created);
   }
 
+  async existById(id: string): Promise<boolean> {
+    const rep=await prisma.medicalRep.findFirst({
+      where:{id},
+      select:{id:true},
+    });
+    return !!rep;
+  }
+  
+  async getRepIdByUserId(userId: string): Promise<{ repId: string | null; }> {
+    const rep=await prisma.medicalRep.findFirst({
+      where:{loginId:userId},
+      select:{id:true},
+    });
+    return {repId:rep? rep.id :null};
+  }
   async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {
     const user = await prisma.medicalRep.findUnique({
       where: { id },

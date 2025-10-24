@@ -7,6 +7,8 @@ import { ICompleteProfileUseCase } from "../../../application/doctor/interfaces/
 import { CompleteDoctorProfileDTO } from "../../../application/doctor/dto/CompleteProfileDTO";
 import { HttpStatusCode } from "../../../shared/HttpStatusCodes";
 import { INetworkUseCase } from "../../../application/doctor/interfaces/INetworkUseCase";
+import { IConnectionRequestUseCase } from "../../../application/doctor/interfaces/IConnectionRequestUseCase";
+import { IAcceptConnectionRequestUseCase } from "../../../application/medicalRep/interfaces/IAcceptConnectionRequestUseCase";
 
 export class DoctorController {
   constructor(
@@ -14,7 +16,9 @@ export class DoctorController {
     private _getDoctorProfileByIdUseCase: IGetDoctorProfileByIdUseCase,
     private _profileImageUpdateUseCase: IProfileImageUpdateUseCase,
     private _compeletProfileUseCase: ICompleteProfileUseCase,
-    private _networkUseCase: INetworkUseCase
+    private _networkUseCase: INetworkUseCase,
+    private _connectionRequestUseCase: IConnectionRequestUseCase,
+    private _acceptConnectionRequestUseCase: IAcceptConnectionRequestUseCase
   ) {}
 
   createDoctor = async (req: Request, res: Response) => {
@@ -57,5 +61,23 @@ export class DoctorController {
     const { userId } = req.params;
     const response = await this._networkUseCase.execute(userId);
     res.status(HttpStatusCode.OK).json({ success: true, data: response });
+  };
+  connectionRequest = async (req: Request, res: Response) => {
+    const { repId } = req.params;
+    const userId = req.user?.userId;
+    const response = await this._connectionRequestUseCase.execute(
+      repId,
+      userId
+    );
+    res.status(HttpStatusCode.OK).json({ success: true, message: response });
+  };
+  acceptConnection = async (req: Request, res: Response) => {
+    const { repId } = req.params;
+    const userId = req.user?.userId;
+    const response = await this._acceptConnectionRequestUseCase.execute(
+      repId,
+      userId
+    );
+    res.status(HttpStatusCode.OK).json({ success: true, message: response });
   };
 }

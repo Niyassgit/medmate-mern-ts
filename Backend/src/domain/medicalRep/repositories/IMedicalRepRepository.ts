@@ -6,6 +6,8 @@ export interface IMedicalRepRepository {
   createMedicalRep(
     data: Omit<IMedicalRep, "id" | "createdAt" | "updatedAt">
   ): Promise<IMedicalRep>;
+  existById(id:string):Promise<boolean>;
+  getRepIdByUserId(userId:string):Promise<{repId:string|null}>;
   getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null>;
   getMedicalRepByEmail(email: string): Promise<IMedicalRep | null>;
   getAllMedicalReps(

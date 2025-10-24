@@ -13,6 +13,8 @@ import { IGetProductPostDetailsUseCase } from "../../../application/productPost/
 import { processImages } from "../utils/ImageHandler";
 import { HttpStatusCode } from "../../../shared/HttpStatusCodes";
 import { IGetNetworksUseCase } from "../../../application/medicalRep/interfaces/IGetNetWorksUseCase";
+import { IMakeConnectionRequestUseCase } from "../../../application/medicalRep/interfaces/IMakeConnectionRequestUseCase";
+import { IAcceptConnectionRequestUseCase } from "../../../application/medicalRep/interfaces/IAcceptConnectionRequestUseCase";
 
 export class MedicalRepController {
   constructor(
@@ -24,7 +26,9 @@ export class MedicalRepController {
     private _editposUseCase: IEditProductPostUseCase,
     private _getProductsListUseCase: IGetProductPostListUseCase,
     private _getPostDetailsUseCase: IGetProductPostDetailsUseCase,
-    private _getNetworksUseCase: IGetNetworksUseCase
+    private _getNetworksUseCase: IGetNetworksUseCase,
+    private _makeConnectionRequestUsecase: IMakeConnectionRequestUseCase,
+    private _acceptConnectionRequestUseCase: IAcceptConnectionRequestUseCase
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -116,5 +120,27 @@ export class MedicalRepController {
     const { userId } = req.params;
     const resposne = await this._getNetworksUseCase.execute(userId);
     res.status(HttpStatusCode.OK).json({ success: true, data: resposne });
+  };
+  connectionRequest = async (req: Request, res: Response) => {
+    const { doctorId } = req.params;
+    const userId = req.user?.userId;
+    const response = await this._makeConnectionRequestUsecase.execute(
+      doctorId,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, message: response });
+  };
+  acceptingConnectionRequest = async (req: Request, res: Response) => {
+    const { doctorId } = req.params;
+    const userId = req.user?.userId;
+    const response = await this._acceptConnectionRequestUseCase.execute(
+      doctorId,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, message: response });
   };
 }

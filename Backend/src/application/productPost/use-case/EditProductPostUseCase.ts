@@ -18,7 +18,7 @@ export class EditProductPostUseCase implements IEditProductPostUseCase {
     const oldImages=post.imageUrl || [];
     const newImages=dto.imageUrl || [];
     const removedImages=oldImages.filter((img)=>!newImages.includes(img));
-    for(let imgKey of removedImages){
+    for(const imgKey of removedImages){
       await this._storageService.deleteFile(imgKey);
     }
     const formatedData = ProductPostMapper.toProductPostEntity(dto);

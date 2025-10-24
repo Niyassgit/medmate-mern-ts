@@ -77,7 +77,21 @@ export class DoctorRepository
       total,
     };
   }
-
+ 
+  async existById(id: string): Promise<boolean> {
+    const user=await prisma.doctor.findFirst({
+      where:{id},
+      select:{id:true},
+    });
+    return !!user;
+  }
+  async getDoctorIdByUserId(userId: string): Promise<{ doctorId: string | null; }> {
+    const doctor=await prisma.doctor.findFirst({
+      where:{loginId:userId},
+      select:{id:true},
+    });
+    return {doctorId:doctor?doctor.id:null};
+  }
   async getDoctorByUserId(id: string): Promise<IDoctorWithUser | null> {
     const user = await prisma.doctor.findFirst({
       where: { loginId: id },

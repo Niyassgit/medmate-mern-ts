@@ -16,7 +16,7 @@ export class DoctorMapper {
       id: doctor.id,
       name: doctor.name,
       phone: doctor.phone,
-      departmentId: doctor.departmentId,
+      departmentId: doctor.departmentId ?? null,
       experienceYears: doctor.experienceYears ?? null,
       hasOwnClinic: doctor.hasOwnClinic ?? null,
       doctorClass: doctor.doctorClass ?? null,

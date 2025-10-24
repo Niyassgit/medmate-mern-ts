@@ -50,5 +50,17 @@ export class DoctorRoutes {
       AuthorizeRole([Role.DOCTOR]),
       doctorController.networks
     );
+    this.router.post(
+      "/connect/:repId",
+      Authenticate,
+      AuthorizeRole([Role.DOCTOR]),
+      doctorController.connectionRequest
+    );
+    this.router.post(
+      "/connections/accept/:repId",
+      Authenticate,
+      AuthorizeRole([Role.DOCTOR]),
+      doctorController.acceptConnection
+    )
   }
 }

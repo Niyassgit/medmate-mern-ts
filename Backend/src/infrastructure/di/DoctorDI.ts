@@ -7,11 +7,13 @@ import { NotificationService } from "../services/NotificationService";
 import { OtpService } from "../services/OtpService";
 import { GetDoctorProfileByIdUseCase } from "../../application/doctor/use-cases/GetDoctorProfleByIdUseCase";
 import { ProfileImageUpdateUseCase } from "../../application/doctor/use-cases/ProfileImageUpdateUseCase";
-import { CloudinaryService } from "../services/CloudinaryService";
 import { CompleteProfileUseCase } from "../../application/doctor/use-cases/CompleteProfileUseCase";
 import { s3StorageService } from "../services/S3StorageService";
 import { NetworksUseCase } from "../../application/doctor/use-cases/NetworksUseCase";
 import { MedicalRepRepository } from "../repositories/MedicalRepRepository";
+import { ConnectionRequestUseCase } from "../../application/doctor/use-cases/ConnectionRequestUseCase";
+import { ConnectionRepository } from "../repositories/ConnectionRepository";
+import { AcceptConnectionRequestUseCase } from "../../application/doctor/use-cases/AcceptConnectionRequestUseCase";
 
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
@@ -20,7 +22,7 @@ const userRepository = new UserRepository();
 const otpService = new OtpService();
 const notificationService = new NotificationService();
 const storageService = new s3StorageService();
-
+const connectionRepository = new ConnectionRepository();
 const createDoctorUseCase = new CreateDoctorUseCase(
   doctorRepository,
   bycryptServices,
@@ -47,11 +49,22 @@ const networkUseCase = new NetworksUseCase(
   medicalRepRepository,
   storageService
 );
-
+const connectionRequestUseCase = new ConnectionRequestUseCase(
+  doctorRepository,
+  medicalRepRepository,
+  connectionRepository
+);
+const acceptConnectionRequestUseCase = new AcceptConnectionRequestUseCase(
+  medicalRepRepository,
+  doctorRepository,
+  connectionRepository
+);
 export const doctorController = new DoctorController(
   createDoctorUseCase,
   getDoctorprofileById,
   profileImageUpdateUseCase,
   completeProfileUseCase,
-  networkUseCase
+  networkUseCase,
+  connectionRequestUseCase,
+  acceptConnectionRequestUseCase
 );

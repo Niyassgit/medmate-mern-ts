@@ -8,4 +8,14 @@ export enum Role {
   MEDICAL_REP = "MEDICAL_REP",
 }
 
-//status
+export enum ConnectionStatus {
+  PENDING = "PENDING",
+  ACCEPTED = "ACCEPTED",
+  REJECTED = "REJECTED",
+  CANCELLED = "CANCELLED",
+}
+
+export enum ConnectionInitiator {
+  DOCTOR = "DOCTOR",
+  REP = "REP",
+}

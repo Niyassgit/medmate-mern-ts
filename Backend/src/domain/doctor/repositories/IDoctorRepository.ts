@@ -7,6 +7,8 @@ export interface IDoctorRepository {
     data: Omit<IDoctor, "id" | "updatedAt" | "createdAt">
   ): Promise<IDoctor>;
   getDoctorById(id: string): Promise<IDoctorWithUser | null>;
+  existById(id:string):Promise<boolean>;
+  getDoctorIdByUserId(userId:string):Promise<{doctorId:string | null}>;
   getDoctorByEmail(email: string): Promise<IDoctor | null>;
   getAllDoctors(
     page: number,

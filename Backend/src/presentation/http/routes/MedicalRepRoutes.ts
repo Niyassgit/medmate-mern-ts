@@ -92,5 +92,17 @@ export class MedicalRepRoutes {
       AuthorizeRole([Role.MEDICAL_REP]),
       medicalRepController.networks
     );
+    this.router.post(
+      "/connect/:doctorId",
+      Authenticate,
+      AuthorizeRole([Role.MEDICAL_REP]),
+      medicalRepController.connectionRequest
+    );
+    this.router.post(
+      "/connection/accept/:doctorId",
+      Authenticate,
+      AuthorizeRole([Role.MEDICAL_REP]),
+      medicalRepController.acceptingConnectionRequest
+    )
   }
 }
