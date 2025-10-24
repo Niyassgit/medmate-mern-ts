@@ -17,6 +17,13 @@ export class NetworkMapper {
       department: doc.departmentName ?? null,
       hospitalName: doc.hospital,
       profileImage: signedUrl || doc.user?.profileImage,
+      institution:
+        doc.educations && doc.educations.length > 0
+          ? `${doc.educations[0].degree} - ${doc.educations[0].institute}`
+          : null,
+      speciality:doc.departmentName ?? null,
+      territory:doc.territoryName ?? null,
+      schedule:doc.opHours ?? null,
     };
   }
 

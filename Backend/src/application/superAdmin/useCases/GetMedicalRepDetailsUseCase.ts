@@ -1,3 +1,4 @@
+import { IStorageService } from "../../../domain/common/services/IStorageService";
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
 import { ErrorMessages } from "../../../shared/Messages";
 import { NotFoundError } from "../../errors";
@@ -8,12 +9,19 @@ import { IGetMedicalRepDetailsUseCase } from "../interfaces/IGetMedicalRepDetail
 export class GetMedicalRepDetailsUseCase
   implements IGetMedicalRepDetailsUseCase
 {
-  constructor(private _medicalRepRepository: IMedicalRepRepository) {}
+  constructor(
+    private _medicalRepRepository: IMedicalRepRepository,
+    private _storageService:IStorageService,
+  ) {}
 
   async execute(userId: string): Promise<MedicalRepDetailsDTO | null> {
-    const user = await this._medicalRepRepository.getMedicalRepById(userId);
-    if (!user) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
-    const userDetails = RepDetailsMapper.toMedicalRepDetails(user);
+    const rep = await this._medicalRepRepository.getMedicalRepById(userId);
+    if (!rep) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
+    let signedUrl=null;
+    if(rep.user?.profileImage){
+      signedUrl=await this._storageService.generateSignedUrl(rep.user.profileImage);
+    }
+    const userDetails = RepDetailsMapper.toMedicalRepDetails(rep,signedUrl);
     return userDetails;
   }
 }

@@ -41,4 +41,7 @@ export const updatePost=async(id:string,formData:FormData)=>{
    headers:{"Content-type":"multipart/form-data"}
   });
 }
-
+export const networks=async(id:string)=>{
+  const resp=await api.get(RepEndpoints.NETWORKS(id));
+  return resp.data.data;
+}

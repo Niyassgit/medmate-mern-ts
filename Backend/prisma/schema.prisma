@@ -66,11 +66,11 @@ model Doctor {
   id              String   @id @default(auto()) @map("_id") @db.ObjectId
   name            String
   phone           String
-  departmentId    String  @db.ObjectId
+  departmentId    String?  @db.ObjectId
   experienceYears Int?
   hasOwnClinic    Boolean?
   doctorClass     String?
-  territoryId     String  @db.ObjectId
+  territoryId     String?  @db.ObjectId
   hospital        String
   licenseImageUrl String?
   opHours         String?

@@ -20,10 +20,12 @@ import { CreateDepartmentUseCase } from "../../application/superAdmin/useCases/C
 import { DepartmentRepository } from "../repositories/DepatmentRepository";
 import { GetAllDepartmentsUseCase } from "../../application/superAdmin/useCases/GetAllDepartmentsUseCase";
 import { EditDepartmentUseCase } from "../../application/superAdmin/useCases/EditDepartmentUseCase";
+import { s3StorageService } from "../services/S3StorageService";
 
 const superAdminRepositories = new SuperAdminRepository();
 const userRepository = new UserRepository();
 const bycryptServices = new BcryptServices();
+const storageService = new s3StorageService();
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
 const terrritoryRepository = new TerritoryRepository();
@@ -41,8 +43,14 @@ const getAllDoctorsUseCase = new GetAllDoctorsUseCase(doctorRepository);
 const getAllRepUseCase = new GetAllRepsUseCase(medicalRepRepository);
 const blockUserUseCase = new BlockUserUseCase(userRepository);
 const unblockUserUseCase = new UnBlockUserUseCase(userRepository);
-const doctorDetails = new GetDoctorDetailsUseCase(doctorRepository);
-const medicalRepDetails = new GetMedicalRepDetailsUseCase(medicalRepRepository);
+const doctorDetails = new GetDoctorDetailsUseCase(
+  doctorRepository,
+  storageService
+);
+const medicalRepDetails = new GetMedicalRepDetailsUseCase(
+  medicalRepRepository,
+  storageService
+);
 const getTerritoryUseCase = new GetTerritoriesUseCase(
   userRepository,
   terrritoryRepository

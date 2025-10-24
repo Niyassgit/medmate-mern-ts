@@ -89,7 +89,7 @@ export class MedicalRepRoutes {
     this.router.get(
       "/networks/:userId",
       Authenticate,
-      AuthorizeRole,
+      AuthorizeRole([Role.MEDICAL_REP]),
       medicalRepController.networks
     );
   }

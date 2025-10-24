@@ -123,6 +123,7 @@ export class DoctorRepository
         user:true,
         department:true,
         territory:true,
+        educations:true,
       }
     });
     return doctors.map((doc)=>DoctorWithUserMapper.toDomain(doc));

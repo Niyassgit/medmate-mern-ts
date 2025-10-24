@@ -4,13 +4,21 @@ import { DoctorDetailsDTO } from "../../doctor/dto/DoctorDetailsDTO";
 import { DoctorDetailsMapper } from "../../doctor/mapper/DoctorDetailsMapper";
 import { IGetDoctorDetailsUseCase } from "../interfaces/IGetDoctorDetailsUseCase";
 import { ErrorMessages } from "../../../shared/Messages";
+import { IStorageService } from "../../../domain/common/services/IStorageService";
 
 export class GetDoctorDetailsUseCase implements IGetDoctorDetailsUseCase {
-  constructor(private _doctorRepository: IDoctorRepository) {}
+  constructor(
+    private _doctorRepository: IDoctorRepository,
+    private _storageService:IStorageService
+  ) {}
 
   async execute(userId: string): Promise<DoctorDetailsDTO | null> {
-    const user = await this._doctorRepository.getDoctorById(userId);
-    if (!user) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
-    return DoctorDetailsMapper.toDoctorDetails(user);
+    const doctor = await this._doctorRepository.getDoctorById(userId);
+    if (!doctor) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
+    let signedUrl=null;
+    if(doctor.user?.profileImage){
+      signedUrl=await this._storageService.generateSignedUrl(doctor.user.profileImage);
+    }
+    return DoctorDetailsMapper.toDoctorDetails(doctor,signedUrl);
   }
 }
