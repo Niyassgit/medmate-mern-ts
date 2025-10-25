@@ -5,7 +5,9 @@ import { DoctorNetworkCardDTO } from "../dto/DocrtorNetworkCardDTO";
 export class NetworkMapper {
   static async toResponse(
     doc: IDoctorWithUser,
-    storageService: IStorageService
+    storageService: IStorageService,
+    connectionStatus: string | null = null,
+    connectionInitiator: string | null = null
   ): Promise<DoctorNetworkCardDTO> {
     let signedUrl = null;
     if (doc.user?.profileImage) {
@@ -21,9 +23,11 @@ export class NetworkMapper {
         doc.educations && doc.educations.length > 0
           ? `${doc.educations[0].degree} - ${doc.educations[0].institute}`
           : null,
-      speciality:doc.departmentName ?? null,
-      territory:doc.territoryName ?? null,
-      schedule:doc.opHours ?? null,
+      speciality: doc.departmentName ?? null,
+      territory: doc.territoryName ?? null,
+      schedule: doc.opHours ?? null,
+      connectionStatus,
+      connectionInitiator,
     };
   }
 

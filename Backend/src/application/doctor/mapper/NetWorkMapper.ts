@@ -5,7 +5,9 @@ import { NetworkResponseDTO } from "../dto/NetworkResponseDTO";
 export class NetworkMapper {
   static async toResponse(
     rep: IMedicalRepWithUser,
-    storageService: IStorageService
+    storageService: IStorageService,
+    connectionStatus: string | null = null,
+    connectionInitiator: string | null = null
   ): Promise<NetworkResponseDTO> {
     let signedUrl = null;
     if (rep.user?.profileImage) {
@@ -17,6 +19,8 @@ export class NetworkMapper {
       about: rep.about,
       profileImage: signedUrl || rep.user?.profileImage,
       companyName: rep.companyName,
+      connectionStatus,
+      connectionInitiator,
     };
   }
 

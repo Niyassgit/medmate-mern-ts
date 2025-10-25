@@ -13,7 +13,7 @@ export interface IDoctor {
   experienceYears?: number | null;
   hasOwnClinic?: boolean | null;
   doctorClass?: string | null;
-  territoryId: string | null;
+  territoryId: string ;
   hospital: string;
   registrationId: string;
   licenseImageUrl: string | null;

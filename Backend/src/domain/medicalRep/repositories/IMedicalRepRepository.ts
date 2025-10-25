@@ -18,6 +18,6 @@ export interface IMedicalRepRepository {
   findMedicalRepIdByUserId(userId:string):Promise<string | null>;
   getMedicalRepByUserId(id:string):Promise<IMedicalRepWithUser | null>;
   completeProfile(userId:string,data:Partial<IMedicalRep>):Promise<IMedicalRep | null>;
-  findByTerritoryAndDepartment(territoryId:string,departmentId:string):Promise<IMedicalRepWithUser[]>;
+  findByTerritoryAndDepartment(territoryId:string | null,departmentId:string | null):Promise<IMedicalRepWithUser[]>;
   
 }

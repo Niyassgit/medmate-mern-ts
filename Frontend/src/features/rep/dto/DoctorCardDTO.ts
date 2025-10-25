@@ -4,8 +4,10 @@ export interface DoctorCardDTO {
   department: string;
   hospitalName: string;
   profileImage: string;
-  institution:string;
-  territory:string;
-  speciality:string,
-  schedule:string,
+  institution: string;
+  territory: string;
+  specialty: string;
+  schedule: string;
+  connectionStatus: string | null;
+  connectionInitiator: string | null;
 }

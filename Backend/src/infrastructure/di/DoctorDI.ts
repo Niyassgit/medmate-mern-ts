@@ -47,7 +47,8 @@ const networkUseCase = new NetworksUseCase(
   userRepository,
   doctorRepository,
   medicalRepRepository,
-  storageService
+  storageService,
+  connectionRepository
 );
 const connectionRequestUseCase = new ConnectionRequestUseCase(
   doctorRepository,

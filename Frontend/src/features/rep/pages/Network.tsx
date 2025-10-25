@@ -28,11 +28,11 @@ const Network = () => {
     error,
   } = useFetchItem<DoctorCardDTO[]>(fetchDoctors);
 
+
   if (loading) return <p className="text-center py-6">Loading...</p>;
   if (error) return <p className="text-center text-red-600">{error}</p>;
   return (
     <div className="min-h-screen bg-background">
-
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-4">
@@ -71,15 +71,12 @@ const Network = () => {
           <main className="flex-1">
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {doctors &&
-                doctors.map((doctor) => (
+                doctors?.map((doctor) => (
                   <NetworkDoctorCard
                     key={doctor.id}
-                    name={doctor.name}
-                    image={doctor.profileImage}
-                    institution={doctor.institution}
+                    {...doctor}
                     location={doctor.territory}
-                    specialty={doctor.speciality}
-                    schedule={doctor.schedule}
+                    image={doctor.profileImage}
                   />
                 ))}
             </div>

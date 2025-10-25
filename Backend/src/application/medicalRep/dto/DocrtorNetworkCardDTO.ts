@@ -5,7 +5,9 @@ export interface DoctorNetworkCardDTO {
   hospitalName: string;
   profileImage?: string | null;
   institution: string | null;
-  territory: string  | null;
+  territory: string | null;
   speciality: string | null;
-  schedule:string | null;
+  schedule: string | null;
+  connectionStatus: string | null;
+  connectionInitiator: string | null;
 }

@@ -10,4 +10,7 @@ export interface IConnectionRepository{
     ):Promise<IConnection>;
     updateStatus(doctorId:string,repId:string,status:ConnectionStatus):Promise<IConnection>;
     deleteByDoctorAndRep(doctorId:string,repId:string):Promise<void>;
+    findConnectionsForRep(repId:string):Promise<IConnection[]>;
+    findConnectionsForDoctor(doctorId:string):Promise<IConnection[]>;
+    getAll():Promise<IConnection[]>;
 }

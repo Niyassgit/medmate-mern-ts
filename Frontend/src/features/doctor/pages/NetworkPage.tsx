@@ -15,64 +15,57 @@ export default function NetworkPage() {
   }, [id]);
 
   const {
-    data:reps,
+    data: reps,
     loading,
     error,
-  } = useFetchItem<RepCardDetailsDTO[]| null>(fetchReps);
+  } = useFetchItem<RepCardDetailsDTO[] | null>(fetchReps);
 
   if (loading) return <p className="text-center py-6">Loading...</p>;
   if (error) return <p className="text-center text-red-600">{error}</p>;
 
-  const handleConnect = (userId: string) => {
-    setConnections((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(userId)) {
-        newSet.delete(userId);
-      } else {
-        newSet.add(userId);
-      }
-      return newSet;
-    });
-  };
+  const handleConnect = (userId: string, status: string | null) => {
+  setConnections((prev) => {
+    const newSet = new Set(prev);
+    if (status === "ACCEPTED") {
+      newSet.add(userId);
+    } else {
+      newSet.delete(userId);
+    }
+    return newSet;
+  });
+};
+
 
   return (
     <main className="min-h-screen bg-background">
-      {/* Header */}
       <header className="border-b border-border bg-card sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-foreground">
-                Discover Connections
-              </h1>
-              <p className="text-muted-foreground mt-1">
-                Find and connect with professionals in your network
-              </p>
-            </div>
-            <div className="text-right">
-              <p className="text-sm text-muted-foreground">
-                Connected:{" "}
-                <span className="font-semibold text-foreground">
-                  {connections.size}
-                </span>
-              </p>
-            </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">
+              Discover Connections
+            </h1>
+            <p className="text-muted-foreground mt-1">
+              Find and connect with professionals in your network
+            </p>
           </div>
+          <p className="text-sm text-muted-foreground">
+            Connected:{" "}
+            <span className="font-semibold text-foreground">
+              {connections.size}
+            </span>
+          </p>
         </div>
       </header>
 
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {reps?.map((user) => (
-            <Networks
-              key={user.id}
-              user={user}
-              isConnected={connections.has(user.id)}
-              onConnect={() => handleConnect(user.id)}
-            />
-          ))}
-        </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {reps?.map((user) => (
+          <Networks
+            key={user.id}
+            user={user}
+            onConnect={handleConnect}
+            isConnected={connections.has(user.id)}
+          />
+        ))}
       </div>
     </main>
   );

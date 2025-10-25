@@ -15,4 +15,7 @@ export class ConnectionMappers{
 
         }
     }
+    static toListConnections(persistance:Connection[]):IConnection[]{
+        return persistance.map((connection)=>this.toDomain(connection));
+    }
 }

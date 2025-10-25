@@ -12,4 +12,6 @@ export const RepEndpoints = {
   DELETE_IMAGE: (userId: string, url: string) =>
     `/rep/profile-image/${userId}/${url}`,
   NETWORKS: (userId: string) => `/rep/networks/${userId}`,
+  CONNECTION_TOGGLE:(doctorId:string)=>`/rep/connect/${doctorId}`,
+  ACCEPT_REQUEST:(doctorId:string)=>`/rep/connection/accept/${doctorId}`,
 };

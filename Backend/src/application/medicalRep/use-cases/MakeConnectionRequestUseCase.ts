@@ -38,8 +38,8 @@ export class MakeConnectionRequestUseCase
       }
     }
     const requestRes = await this._connectionRepository.createConnection(
-      rep.repId,
       doctorId,
+      rep.repId,
       ConnectionInitiator.REP
     );
     if (!requestRes)

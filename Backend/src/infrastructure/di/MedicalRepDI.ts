@@ -80,7 +80,8 @@ const getNetworksUseCase = new GetNetworksUseCase(
   userRepository,
   doctorRepository,
   medicalRepRepository,
-  storageService
+  storageService,
+  connectionRepository
 );
 const makeConnectionRequestUseCase = new MakeConnectionRequestUseCase(
   medicalRepRepository,

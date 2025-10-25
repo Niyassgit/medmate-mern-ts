@@ -45,3 +45,10 @@ export const networks=async(id:string)=>{
   const resp=await api.get(RepEndpoints.NETWORKS(id));
   return resp.data.data;
 }
+export const connectionToggle=async(id:string)=>{
+   return await api.post(RepEndpoints.CONNECTION_TOGGLE(id));
+}
+export const  acceptConnection=async(id:string)=>{
+  const res=await api.post(RepEndpoints.ACCEPT_REQUEST(id));
+  return res.data;
+}
