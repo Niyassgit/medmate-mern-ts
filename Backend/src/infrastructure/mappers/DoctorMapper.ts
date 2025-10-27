@@ -2,6 +2,7 @@ import { IDoctor } from "../../domain/doctor/entities/IDoctor";
 import { IDoctorListItem } from "../../domain/doctor/entities/IDoctorListItem";
 import { Doctor, User, Education, Certificate } from "@prisma/client";
 import { Prisma } from "@prisma/client";
+import { IDoctorListOnRep } from "../../domain/doctor/entities/IDoctorListOnRep";
 
 export class DoctorMapper {
   static toDomain(
@@ -20,7 +21,7 @@ export class DoctorMapper {
       experienceYears: doctor.experienceYears ?? null,
       hasOwnClinic: doctor.hasOwnClinic ?? null,
       doctorClass: doctor.doctorClass ?? null,
-      territoryId: doctor.territoryId,
+      territoryId: doctor.territoryId ?? "",
       loginId: doctor.loginId ?? null,
       registrationId: doctor.registrationId,
       hospital: doctor.hospital,
@@ -159,5 +160,14 @@ export class DoctorMapper {
     }
 
     return data;
+  }
+  static toListOnRep(persistance:Doctor):IDoctorListOnRep{
+    return {
+      id:persistance.id,
+      name:persistance.name,
+      hospital:persistance.hospital,
+      departmentId:persistance.departmentId,
+      territoryId:persistance.territoryId,
+    }
   }
 }

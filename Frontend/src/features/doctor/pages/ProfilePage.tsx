@@ -53,7 +53,8 @@ const ProfilePage = () => {
     try {
       const response = await updateProfileImage(id, selectedFile);
       if (response.success) {
-        setDoctor({ ...doctor, profileImage: response.imageUrl });
+       setDoctor({ ...doctor, profileImage: response.data?.signedUrl || doctor.profileImage });
+
         toast.success(response.message || "Image changed");
       } else {
         toast.error(response.message || "Something has happened");

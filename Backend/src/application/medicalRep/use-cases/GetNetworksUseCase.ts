@@ -32,7 +32,7 @@ export class GetNetworksUseCase implements IGetNetworksUseCase {
     const connections = await this._connectionRepository.findConnectionsForRep(
       rep.id
     );
-    let result = [];
+    const result = [];
     for (const doc of doctors) {
       const connection = connections.find((conn) => conn.doctorId === doc.id);
       if (!connection) {

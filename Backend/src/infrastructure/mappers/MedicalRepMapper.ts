@@ -1,4 +1,5 @@
 import { IMedicalRep } from "../../domain/medicalRep/entities/IMedicalRep";
+import { IMedicalRepListOnDoc } from "../../domain/medicalRep/entities/IMedicalRepListOnDoc";
 import { IRepListItem } from "../../domain/medicalRep/entities/IRepListItem";
 import {
   MedicalRep,
@@ -205,5 +206,16 @@ export class MedicalRepMapper {
     }
 
     return persistence;
+  }
+
+  static toListOnDoctor( persistence: MedicalRep & { user: User | null } ):IMedicalRepListOnDoc{
+    return{
+      id:persistence.id,
+      name:persistence.name,
+      company:persistence.companyName,
+      departmentId:persistence.departmentId,
+      phone:persistence.phone,
+      image:persistence.user?.profileImage ??null,
+    }
   }
 }

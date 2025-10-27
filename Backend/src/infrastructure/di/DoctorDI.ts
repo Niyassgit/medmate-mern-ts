@@ -14,6 +14,8 @@ import { MedicalRepRepository } from "../repositories/MedicalRepRepository";
 import { ConnectionRequestUseCase } from "../../application/doctor/use-cases/ConnectionRequestUseCase";
 import { ConnectionRepository } from "../repositories/ConnectionRepository";
 import { AcceptConnectionRequestUseCase } from "../../application/doctor/use-cases/AcceptConnectionRequestUseCase";
+import { DoctorAnalyticsUseCase } from "../../application/doctor/use-cases/DoctorAnalyticsUseCase";
+import { DepartmentRepository } from "../repositories/DepatmentRepository";
 
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
@@ -23,6 +25,8 @@ const otpService = new OtpService();
 const notificationService = new NotificationService();
 const storageService = new s3StorageService();
 const connectionRepository = new ConnectionRepository();
+const departmentRepository = new DepartmentRepository();
+
 const createDoctorUseCase = new CreateDoctorUseCase(
   doctorRepository,
   bycryptServices,
@@ -60,6 +64,11 @@ const acceptConnectionRequestUseCase = new AcceptConnectionRequestUseCase(
   doctorRepository,
   connectionRepository
 );
+const analyticsUsecase = new DoctorAnalyticsUseCase(
+  doctorRepository,
+  connectionRepository,
+  departmentRepository
+);
 export const doctorController = new DoctorController(
   createDoctorUseCase,
   getDoctorprofileById,
@@ -67,5 +76,6 @@ export const doctorController = new DoctorController(
   completeProfileUseCase,
   networkUseCase,
   connectionRequestUseCase,
-  acceptConnectionRequestUseCase
+  acceptConnectionRequestUseCase,
+  analyticsUsecase
 );

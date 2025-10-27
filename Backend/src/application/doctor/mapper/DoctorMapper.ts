@@ -11,8 +11,8 @@ export class DoctorMapper {
     return {
       name: dto.name,
       phone: dto.phone,
-      departmentId: dto.departmentId,
-      territoryId: dto.territoryId,
+      departmentId: dto.departmentId ?? null,
+      territoryId: dto.territoryId ?? "",
       hospital: dto.hospital,
       registrationId: dto.registrationId,
       licenseImageUrl: dto.licenseImageUrl,
@@ -29,8 +29,8 @@ export class DoctorMapper {
     return {
       name: dto.name,
       phone: dto.phone,
-      departmentId: dto.departmentId,
-      territoryId: dto.territoryId,
+      departmentId: dto.departmentId ?? null,
+      territoryId: dto.territoryId ?? "",
       hospital: dto.hospital,
       registrationId: dto.registrationId,
       licenseImageUrl: dto.licenseImageUrl,

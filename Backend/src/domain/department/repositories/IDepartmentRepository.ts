@@ -12,4 +12,6 @@ export interface IDepartmentRepository {
     departmentId: string,
     entity: DepartmentDTO
   ): Promise<IDepartment | null>;
+  getDepartmentName(depId:string):Promise<string | null>;
+  
 }

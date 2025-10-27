@@ -33,3 +33,7 @@ export const acceptRequest=async(id:string)=>{
     const res=await api.post(DoctorEndpoints.ACCEPT_REQUEST(id));
     return res.data;
 }
+export const doctorAnltyics=async(id:string)=>{
+    const res=await api.get(DoctorEndpoints.NETWORK_ANALYTICS(id));
+    return res.data;
+}

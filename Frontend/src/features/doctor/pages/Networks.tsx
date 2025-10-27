@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 
 interface ConnectionCardProps {
   user: NetworkResponseDTO;
-  onConnect: (userId: string, status: string | null) => void; // notify parent
+  onConnect: (userId: string, status: string | null) => void; 
   isConnected: boolean;
 }
 
@@ -53,12 +53,10 @@ export default function Networks({
     }
   };
 
-  // Handle accepting rep's connection request
   const handleAcceptRequest = async () => {
     const previousStatus = status;
     const previousInitiator = initiator;
 
-    // Optimistic update
     setStatus("ACCEPTED");
     setInitiator(null);
     onConnect(user.id, "ACCEPTED");
@@ -68,12 +66,10 @@ export default function Networks({
       const data = await acceptRequest(user.id);
       toast.success(data.message || "Connection accepted");
 
-      // Trigger removal animation after short delay
       setTimeout(() => {
         setIsRemoving(true);
       }, 500);
     } catch (error: any) {
-      // Rollback if API fails
       setStatus(previousStatus);
       setInitiator(previousInitiator);
       onConnect(user.id, previousStatus);
@@ -83,12 +79,10 @@ export default function Networks({
     }
   };
 
-  // Handle cancel request
   const handleCancelRequest = async () => {
     const previousStatus = status;
     const previousInitiator = initiator;
 
-    // Optimistic update
     setStatus(null);
     setInitiator(null);
     onConnect(user.id, null);
@@ -98,7 +92,6 @@ export default function Networks({
       const data = await connectionToggle(user.id);
       toast.success(data.message || "Request cancelled");
     } catch (error: any) {
-      // Rollback if API fails
       setStatus(previousStatus);
       setInitiator(previousInitiator);
       onConnect(user.id, previousStatus);
@@ -120,13 +113,13 @@ export default function Networks({
   } else if (status === "PENDING" && initiator === "REP") {
     buttonLabel = "Follow Back";
     buttonClass = "bg-[#3175B4] hover:bg-[#25629A] text-white";
-    onClickHandler = handleAcceptRequest; // Use accept API
+    onClickHandler = handleAcceptRequest; 
   } else if (status === "ACCEPTED") {
     buttonLabel = "Connected";
     buttonClass = "bg-green-600 hover:bg-green-700 text-white";
   }
 
-  // Don't render if removing
+
   if (isRemoving) {
     return null;
   }

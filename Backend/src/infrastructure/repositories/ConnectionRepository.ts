@@ -9,6 +9,10 @@ import {
 import { ConnectionMappers } from "../mappers/ConnectionMappers";
 import { prisma } from "../config/db";
 import { ConnectionInitiator, ConnectionStatus } from "../../shared/Enums";
+import { IDoctorListOnRep } from "../../domain/doctor/entities/IDoctorListOnRep";
+import { DoctorMapper } from "../mappers/DoctorMapper";
+import { IMedicalRepListOnDoc } from "../../domain/medicalRep/entities/IMedicalRepListOnDoc";
+import { MedicalRepMapper } from "../mappers/MedicalRepMapper";
 
 export class ConnectionRepository
   extends BaseRepository<
@@ -68,20 +72,65 @@ export class ConnectionRepository
     });
   }
 
- async findConnectionsForRep(repId: string): Promise<IConnection[]> {
-   const connections= await prisma.connection.findMany({
-    where:{repId},
-   });
-   return ConnectionMappers.toListConnections(connections);
- }
-  async getAll(): Promise<IConnection[]> {
-    const resp=await this.findAll();
-    return resp;
-  }
-async findConnectionsForDoctor(doctorId: string): Promise<IConnection[]> {
-   const connections= await prisma.connection.findMany({
-      where:{doctorId},
+  async findConnectionsForRep(repId: string): Promise<IConnection[]> {
+    const connections = await prisma.connection.findMany({
+      where: { repId },
     });
     return ConnectionMappers.toListConnections(connections);
-}
+  }
+  async getAll(): Promise<IConnection[]> {
+    const resp = await this.findAll();
+    return resp;
+  }
+  async findConnectionsForDoctor(doctorId: string): Promise<IConnection[]> {
+    const connections = await prisma.connection.findMany({
+      where: { doctorId },
+    });
+    return ConnectionMappers.toListConnections(connections);
+  }
+
+  async repMutualConnections(repId: string): Promise<IDoctorListOnRep[]> {
+    const connections = await prisma.connection.findMany({
+      where: { repId, status: ConnectionStatus.ACCEPTED },
+      select: { doctor: true },
+    });
+
+    return connections.map((conn) => DoctorMapper.toListOnRep(conn.doctor));
+  }
+
+  async pendingRequestsForRep(repId: string): Promise<IDoctorListOnRep[]> {
+    const pendingConnections = await prisma.connection.findMany({
+      where: { repId, status: ConnectionStatus.PENDING },
+      select: { doctor: true },
+    });
+    return pendingConnections.map((conn) =>
+      DoctorMapper.toListOnRep(conn.doctor)
+    );
+  }
+  async doctorMutualConnections(
+    doctorId: string
+  ): Promise<IMedicalRepListOnDoc[]> {
+    const connections = await prisma.connection.findMany({
+      where: { doctorId, status: ConnectionStatus.ACCEPTED },
+      select: {
+        rep: {
+          include: { user: true },
+        },
+      },
+    });
+    return connections.map((conn) => MedicalRepMapper.toListOnDoctor(conn.rep));
+  }
+  async pendingConnectionForDoctor(
+    doctorId: string
+  ): Promise<IMedicalRepListOnDoc[]> {
+    const pendingConnections = await prisma.connection.findMany({
+      where: { doctorId, status: ConnectionStatus.PENDING },
+      select: { rep:{
+        include:{user:true},
+      }},
+    });
+    return pendingConnections.map((conn) =>
+      MedicalRepMapper.toListOnDoctor(conn.rep)
+    );
+  }
 }

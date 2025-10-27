@@ -9,6 +9,7 @@ import { HttpStatusCode } from "../../../shared/HttpStatusCodes";
 import { INetworkUseCase } from "../../../application/doctor/interfaces/INetworkUseCase";
 import { IConnectionRequestUseCase } from "../../../application/doctor/interfaces/IConnectionRequestUseCase";
 import { IAcceptConnectionRequestUseCase } from "../../../application/medicalRep/interfaces/IAcceptConnectionRequestUseCase";
+import { IDoctorAnalyticsUseCase } from "../../../application/doctor/interfaces/IDoctorAnalyticsUseCase";
 
 export class DoctorController {
   constructor(
@@ -18,7 +19,8 @@ export class DoctorController {
     private _compeletProfileUseCase: ICompleteProfileUseCase,
     private _networkUseCase: INetworkUseCase,
     private _connectionRequestUseCase: IConnectionRequestUseCase,
-    private _acceptConnectionRequestUseCase: IAcceptConnectionRequestUseCase
+    private _acceptConnectionRequestUseCase: IAcceptConnectionRequestUseCase,
+    private _analyticsUseCase: IDoctorAnalyticsUseCase
   ) {}
 
   createDoctor = async (req: Request, res: Response) => {
@@ -47,7 +49,7 @@ export class DoctorController {
       userId,
       fileKey
     );
-    res.status(HttpStatusCode.OK).json({ success: true, message: response });
+    res.status(HttpStatusCode.OK).json({ success: true, data: response });
   };
   completeProfile = async (req: Request, res: Response) => {
     const { userId } = req.params;
@@ -79,5 +81,12 @@ export class DoctorController {
       userId
     );
     res.status(HttpStatusCode.OK).json({ success: true, message: response });
+  };
+  analytics = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const response = await this._analyticsUseCase.execute(userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
   };
 }

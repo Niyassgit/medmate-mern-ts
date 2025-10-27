@@ -27,28 +27,32 @@ export class DepartmentRepository
     const response = await this.create(data);
     return response ? response : null;
   }
- async findAllDepartments(page: number, limit: number, search: string): Promise<{departments:IDepartment[];total:number}> {
-  const skip=(page-1)*limit;
-  const where:Prisma.DepartmentWhereInput=search?{
-    OR:[
-      {name:{contains:search,mode:"insensitive"}}
-    ]
-  }:{};
-  const [departments,total]=await Promise.all([
-    prisma.department.findMany({
-      where,
-      orderBy:{createdAt:"desc"},
-      skip,
-      take:limit,
-    }),
-    prisma.department.count({where}),
-  ])
+  async findAllDepartments(
+    page: number,
+    limit: number,
+    search: string
+  ): Promise<{ departments: IDepartment[]; total: number }> {
+    const skip = (page - 1) * limit;
+    const where: Prisma.DepartmentWhereInput = search
+      ? {
+          OR: [{ name: { contains: search, mode: "insensitive" } }],
+        }
+      : {};
+    const [departments, total] = await Promise.all([
+      prisma.department.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip,
+        take: limit,
+      }),
+      prisma.department.count({ where }),
+    ]);
 
     return {
-      departments:DepartmentMapper.toListDepartments(departments),
+      departments: DepartmentMapper.toListDepartments(departments),
       total,
-    }
- }
+    };
+  }
   async updateDepartment(
     departmentId: string,
     entity: DepartmentDTO
@@ -58,5 +62,12 @@ export class DepartmentRepository
   }
   async getAllDepartments(): Promise<IDepartment[] | null> {
     return await this.findAll();
+  }
+  async getDepartmentName(depId: string): Promise<string | null> {
+    const department = await prisma.department.findFirst({
+      where: { id: depId },
+      select:{name:true},
+    });
+    return department?.name ?? null
   }
 }

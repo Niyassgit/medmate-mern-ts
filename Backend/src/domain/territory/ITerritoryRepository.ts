@@ -14,4 +14,5 @@ export interface ITerritoryRepository {
     territoryId: string,
     data: CreateTerritoryDTO
   ): Promise<ITerritory | null>;
+  getTerritoryName(terrId:string):Promise<string | null>;
 }

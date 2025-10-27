@@ -15,6 +15,7 @@ import { HttpStatusCode } from "../../../shared/HttpStatusCodes";
 import { IGetNetworksUseCase } from "../../../application/medicalRep/interfaces/IGetNetWorksUseCase";
 import { IMakeConnectionRequestUseCase } from "../../../application/medicalRep/interfaces/IMakeConnectionRequestUseCase";
 import { IAcceptConnectionRequestUseCase } from "../../../application/medicalRep/interfaces/IAcceptConnectionRequestUseCase";
+import { IGetRepAnalyticsUseCase } from "../../../application/medicalRep/interfaces/IGetRepAnalyticsUseCase";
 
 export class MedicalRepController {
   constructor(
@@ -28,7 +29,8 @@ export class MedicalRepController {
     private _getPostDetailsUseCase: IGetProductPostDetailsUseCase,
     private _getNetworksUseCase: IGetNetworksUseCase,
     private _makeConnectionRequestUsecase: IMakeConnectionRequestUseCase,
-    private _acceptConnectionRequestUseCase: IAcceptConnectionRequestUseCase
+    private _acceptConnectionRequestUseCase: IAcceptConnectionRequestUseCase,
+    private _getRepAnalticsUseCase:IGetRepAnalyticsUseCase,
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -143,4 +145,9 @@ export class MedicalRepController {
       .status(HttpStatusCode.OK)
       .json({ success: true, message: response });
   };
+  analytics=async(req:Request,res:Response)=>{
+    const {userId}=req.params;
+    const response=await this._getRepAnalticsUseCase.execute(userId);
+    return res.status(HttpStatusCode.OK).json({success:true,data:response});
+  }
 }

@@ -55,4 +55,11 @@ export class TerritoryRepository
   async getAllTerritories(): Promise<ITerritory[] | null> {
     return this.findAll();
   }
+  async getTerritoryName(terrId: string): Promise<string |null> {
+    const territory=await prisma.territory.findFirst({
+      where:{id:terrId},
+      select:{name:true},
+    });
+    return territory?.name ?? null;
+  }
 }

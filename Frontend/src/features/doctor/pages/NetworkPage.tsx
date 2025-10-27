@@ -48,12 +48,12 @@ export default function NetworkPage() {
               Find and connect with professionals in your network
             </p>
           </div>
-          <p className="text-sm text-muted-foreground">
+          {/* <p className="text-sm text-muted-foreground">
             Connected:{" "}
             <span className="font-semibold text-foreground">
               {connections.size}
             </span>
-          </p>
+          </p> */}
         </div>
       </header>
 

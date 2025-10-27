@@ -20,6 +20,9 @@ import { DoctorRepository } from "../repositories/DoctorRepository";
 import { MakeConnectionRequestUseCase } from "../../application/medicalRep/use-cases/MakeConnectionRequestUseCase";
 import { ConnectionRepository } from "../repositories/ConnectionRepository";
 import { AcceptingConnectionRequest } from "../../application/medicalRep/use-cases/AcceptConnectionRequestUseCase";
+import { GetRepAnalyticsUseCase } from "../../application/medicalRep/use-cases/GetRepAnalyticsUseCase";
+import { DepartmentRepository } from "../repositories/DepatmentRepository";
+import { TerritoryRepository } from "../repositories/TerritoryRepository";
 
 const medicalRepRepository = new MedicalRepRepository();
 const doctorRepository = new DoctorRepository();
@@ -33,6 +36,8 @@ const productPostPresentationService = new ProductPostPresentationService(
   storageService
 );
 const connectionRepository = new ConnectionRepository();
+const departmentRepository = new DepartmentRepository();
+const territoryRepository = new TerritoryRepository();
 
 const createMedicalRepUseCase = new CreateMedicalRepUseCase(
   medicalRepRepository,
@@ -93,6 +98,12 @@ const acceptConnectionRequestUseCase = new AcceptingConnectionRequest(
   doctorRepository,
   connectionRepository
 );
+const getRepAnalyticsUseCase = new GetRepAnalyticsUseCase(
+  medicalRepRepository,
+  connectionRepository,
+  departmentRepository,
+  territoryRepository
+);
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
   getRepProfileByIdUseCase,
@@ -104,5 +115,6 @@ export const medicalRepController = new MedicalRepController(
   getProductPostDetailsUseCase,
   getNetworksUseCase,
   makeConnectionRequestUseCase,
-  acceptConnectionRequestUseCase
+  acceptConnectionRequestUseCase,
+  getRepAnalyticsUseCase
 );

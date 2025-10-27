@@ -61,6 +61,12 @@ export class DoctorRoutes {
       Authenticate,
       AuthorizeRole([Role.DOCTOR]),
       doctorController.acceptConnection
-    )
+    );
+    this.router.get(
+      "/analytics/:userId",
+      Authenticate,
+      AuthorizeRole([Role.DOCTOR]),
+      doctorController.analytics
+    );
   }
 }

@@ -103,6 +103,12 @@ export class MedicalRepRoutes {
       Authenticate,
       AuthorizeRole([Role.MEDICAL_REP]),
       medicalRepController.acceptingConnectionRequest
-    )
+    );
+    this.router.get(
+      "/analytics/:userId",
+      Authenticate,
+      AuthorizeRole([Role.MEDICAL_REP]),
+      medicalRepController.analytics
+    );
   }
 }
