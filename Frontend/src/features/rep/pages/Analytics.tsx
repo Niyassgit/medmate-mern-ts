@@ -41,7 +41,6 @@ const Analytics = () => {
       </div>
     );
 
-  // Filter doctors by search term
   const filteredDoctors = analytics.mutualConnections.filter((doc) =>
     doc.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
