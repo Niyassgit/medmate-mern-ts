@@ -1,0 +1,91 @@
+[2025-10-28 19:37:39] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 19:38:01] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 19:38:19] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 19:38:24] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 19:38:27] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 19:38:35] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 19:38:47] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 19:38:49] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 19:38:54] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 19:38:56] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 19:38:58] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 19:39:01] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 19:39:33] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 19:40:04] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 19:40:07] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 19:40:10] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 19:40:13] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 19:40:19] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 19:40:21] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 19:40:22] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 19:40:30] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 19:40:32] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 19:40:38] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 19:40:52] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 19:40:54] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 19:41:00] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 19:41:05] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 19:57:34] [31merror[39m: [31mFailed to start server:TypeError: Cannot read properties of undefined (reading 'router')[39m
+[2025-10-28 19:57:43] [31merror[39m: [31mFailed to start server:TypeError: argument handler is required[39m
+[2025-10-28 19:57:47] [31merror[39m: [31mFailed to start server:TypeError: argument handler is required[39m
+[2025-10-28 19:57:49] [31merror[39m: [31mFailed to start server:TypeError: argument handler is required[39m
+[2025-10-28 19:58:00] [31merror[39m: [31mFailed to start server:TypeError: argument handler is required[39m
+[2025-10-28 19:58:14] [31merror[39m: [31mFailed to start server:TypeError: argument handler is required[39m
+[2025-10-28 19:58:16] [31merror[39m: [31mFailed to start server:TypeError: Missing parameter name at 15: https://git.new/pathToRegexpError[39m
+[2025-10-28 19:58:30] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 19:58:32] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 20:11:43] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 20:11:58] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 20:12:05] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 20:12:21] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 20:12:28] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 20:12:30] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 20:13:09] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 20:13:32] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 20:13:50] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 20:13:54] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 20:14:02] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 20:14:56] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 20:15:04] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 20:15:06] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 20:15:09] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 20:15:12] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 20:15:48] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 20:15:50] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 20:15:52] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 20:16:00] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 20:16:03] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 20:16:06] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 20:17:22] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 20:17:30] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 20:17:33] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 20:17:37] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 20:50:46] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 20:57:15] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 20:57:23] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientKnownRequestError: [39m
+[31mInvalid `this.model.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\database\BaseRepository.ts:20:37[39m
+
+[31m  17 }[39m
+[31m  18 [39m
+[31m  19   async findById(id: string): Promise<TDomain | null> {[39m
+[31m→ 20   const entity = await this.model.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: ":68ef190038db9e2aad9b7391", length 25.[39m
+[2025-10-28 21:02:51] [31merror[39m: [31mFailed to start server:TypeError: argument handler is required[39m
+[2025-10-28 21:02:57] [31merror[39m: [31mFailed to start server:TypeError: argument handler is required[39m
+[2025-10-28 21:03:19] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 21:03:26] [31merror[39m: [31mFailed to start server:TypeError: argument handler must be a function[39m
+[2025-10-28 21:03:33] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 21:28:29] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 21:28:45] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 21:29:17] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 21:29:27] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 21:30:02] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 21:30:50] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 21:33:25] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 21:47:29] [33mwarn[39m: [33mAppError: Retry later[39m
+[2025-10-28 21:47:32] [33mwarn[39m: [33mAppError: Retry later[39m
+[2025-10-28 21:47:35] [33mwarn[39m: [33mAppError: Retry later[39m
+[2025-10-28 21:47:38] [33mwarn[39m: [33mAppError: Retry later[39m
+[2025-10-28 21:47:45] [33mwarn[39m: [33mAppError: Retry later[39m
+[2025-10-28 21:47:46] [33mwarn[39m: [33mAppError: Retry later[39m

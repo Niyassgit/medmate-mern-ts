@@ -60,3 +60,11 @@ export const networkAnalytics=async(userId:string)=>{
   const res=await api.get(RepEndpoints.NETWORK_ANALYTICS(userId));
   return res.data;
 }
+export const archivePost=async(postId:string)=>{
+  const res=await api.patch(RepEndpoints.ARCHIVE_POST(postId));
+  return res.data;
+}
+export const deleteProductPost=async(postId:string)=>{
+   const res=await api.delete(RepEndpoints.DELETE_POST(postId));
+   return res.data;
+}

@@ -16,6 +16,8 @@ import { IGetNetworksUseCase } from "../../../application/medicalRep/interfaces/
 import { IMakeConnectionRequestUseCase } from "../../../application/medicalRep/interfaces/IMakeConnectionRequestUseCase";
 import { IAcceptConnectionRequestUseCase } from "../../../application/medicalRep/interfaces/IAcceptConnectionRequestUseCase";
 import { IGetRepAnalyticsUseCase } from "../../../application/medicalRep/interfaces/IGetRepAnalyticsUseCase";
+import { IArchivePostUseCase } from "../../../application/productPost/interfaces/IArchivePostUseCase";
+import { IDeletePostUseCase } from "../../../application/productPost/interfaces/IDeletePostUseCase";
 
 export class MedicalRepController {
   constructor(
@@ -30,7 +32,9 @@ export class MedicalRepController {
     private _getNetworksUseCase: IGetNetworksUseCase,
     private _makeConnectionRequestUsecase: IMakeConnectionRequestUseCase,
     private _acceptConnectionRequestUseCase: IAcceptConnectionRequestUseCase,
-    private _getRepAnalticsUseCase:IGetRepAnalyticsUseCase,
+    private _getRepAnalticsUseCase: IGetRepAnalyticsUseCase,
+    private _archivePostUseCase: IArchivePostUseCase,
+    private _deletePostUseCase: IDeletePostUseCase
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -117,7 +121,22 @@ export class MedicalRepController {
       .status(HttpStatusCode.OK)
       .json({ success: true, message: response });
   };
-
+  archivePost = async (req: Request, res: Response) => {
+    const { postId } = req.params;
+    const userId = req.user?.userId;
+    const response = await this._archivePostUseCase.execute(postId, userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, message: response });
+  };
+  deletePost = async (req: Request, res: Response) => {
+    const { postId } = req.params;
+    const userId = req.user?.userId;
+    const response = await this._deletePostUseCase.execute(postId, userId);
+    return res
+      .status(HttpStatusCode.NO_CONTENT)
+      .json({ success: true, message: response });
+  };
   networks = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const resposne = await this._getNetworksUseCase.execute(userId);
@@ -145,9 +164,11 @@ export class MedicalRepController {
       .status(HttpStatusCode.OK)
       .json({ success: true, message: response });
   };
-  analytics=async(req:Request,res:Response)=>{
-    const {userId}=req.params;
-    const response=await this._getRepAnalticsUseCase.execute(userId);
-    return res.status(HttpStatusCode.OK).json({success:true,data:response});
-  }
+  analytics = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const response = await this._getRepAnalticsUseCase.execute(userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
 }

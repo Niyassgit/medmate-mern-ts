@@ -9,4 +9,6 @@ export interface IProductPostRepository{
     getProducts(userId:string):Promise<IProductPost[] | null>;
     getPostDetails(postId: string): Promise<IProductPost | null>;
     getPostsByIds(repIds:string[]):Promise<IProductPostForFeed[]>;
+    archivePost(postId:string):Promise<boolean>;
+    DeletePostUseCase(postId:string):Promise<boolean>;
 }

@@ -35,6 +35,7 @@ export const ErrorMessages = {
   CONNECTION_REQUEST: "Connection request failed",
   NO_PENDING_REQ: "No pending request found",
   ALREADY_CONNECTED: "You are already connected",
+  OPERATION_FAILE:"Operation failed",
 } as const;
 
 export const SuccessMessages = {
@@ -57,6 +58,8 @@ export const SuccessMessages = {
   CONNECTION_REQUEST: "Connection requested sented successfully",
   CANCEL_CONNECTION_REQ: "Connection request Cancelled",
   CONNECTED: "Connection accepted",
+  POST_ARCHIVE_SUCCESS:"Post archived successfully",
+  POST_DELETE_SUCCESS:"Post deleted successfully"
 } as const;
 
 export const NotificationMessages = {

@@ -209,6 +209,7 @@ model ProductPost {
   repId       String     @db.ObjectId
   title       String
   description String
+  isArchived  Boolean @default(false)
   imageUrl    String[]
   brand       String
   territoryId String?    @db.ObjectId

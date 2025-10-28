@@ -86,6 +86,18 @@ export class MedicalRepRoutes {
       ValidateSchema(productPostValidateSchema),
       medicalRepController.editPost
     );
+    this.router.patch(
+      "/post/archive/:postId",
+      Authenticate,
+      AuthorizeRole([Role.MEDICAL_REP]),
+      medicalRepController.archivePost
+    );
+    this.router.delete(
+      "/post/delete/:postId",
+      Authenticate,
+      AuthorizeRole([Role.MEDICAL_REP]),
+      medicalRepController.deletePost
+    );
     this.router.get(
       "/networks/:userId",
       Authenticate,

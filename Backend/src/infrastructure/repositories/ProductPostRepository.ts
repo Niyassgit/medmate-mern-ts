@@ -39,7 +39,7 @@ export class ProductPostRepository
   }
   async getProducts(userId: string): Promise<IProductPost[] | null> {
     const products = await prisma.productPost.findMany({
-      where: { repId: userId },
+      where: { repId: userId, isArchived: false },
       orderBy: { createdAt: "desc" },
     });
     if (!products || products.length === 0) return null;
@@ -62,9 +62,9 @@ export class ProductPostRepository
             id: true,
             name: true,
             companyName: true,
-            user:{
-              select:{profileImage:true},
-            }
+            user: {
+              select: { profileImage: true },
+            },
           },
         },
         _count: {
@@ -79,5 +79,18 @@ export class ProductPostRepository
       },
     });
     return ProductPostMapper.toFeedList(posts);
+  }
+  async archivePost(postId: string): Promise<boolean> {
+    const res = await prisma.productPost.update({
+      where: { id: postId },
+      data: { isArchived: true },
+    });
+    return !!res;
+  }
+  async DeletePostUseCase(postId: string): Promise<boolean> {
+    await prisma.productPost.delete({
+      where:{id:postId}
+    });
+    return true;
   }
 }

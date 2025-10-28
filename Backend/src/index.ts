@@ -12,7 +12,7 @@ import { DoctorRoutes } from "./presentation/http/routes/DoctorRoutes";
 import { SuperAdminRoutes } from "./presentation/http/routes/SuperAdminRoutes";
 import { ErrorHandler } from "./presentation/http/middlewares/ErrorHandler";
 import { CommonRoutes } from "./presentation/http/routes/CommonRoutes";
-
+import logger from "./infrastructure/logger/Logger";
 
 const app = express();
 app.use(express.json());
@@ -42,15 +42,15 @@ const startServer = async () => {
 
     app.use(ErrorHandler);
     app.listen(env.port, () => {
-      console.log(` server running on port ${env.port}`);
+      logger.info(` server running on port ${env.port}`);
     });
   } catch (err) {
-    console.error("Failed to start server:", err);
+    logger.error(`Failed to start server:${err}`);
     process.exit(1);
   }
 };
 
 startServer().catch((err) => {
-  console.error("Failed to start app:", err);
+  logger.error(`Failed to start app:${err}`);
   process.exit(1);
 });

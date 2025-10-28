@@ -15,4 +15,6 @@ export const RepEndpoints = {
   CONNECTION_TOGGLE:(doctorId:string)=>`/rep/connect/${doctorId}`,
   ACCEPT_REQUEST:(doctorId:string)=>`/rep/connection/accept/${doctorId}`,
   NETWORK_ANALYTICS:(userId:string)=>`/rep/analytics/${userId}`,
+  ARCHIVE_POST:(postId:string)=>`/rep/post/archive/${postId}`,
+  DELETE_POST:(postId:string)=>`/rep/post/delete/${postId}`,
 };

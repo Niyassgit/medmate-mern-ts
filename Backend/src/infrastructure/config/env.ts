@@ -9,6 +9,7 @@ function required(key: string, fallback?: string): string {
 
 
 export const env = {
+  node_env:required("NODE_ENV"),
   port: Number(required("PORT", "5000")),
   databaseUrl: required("DATABASE_URL"),
   origin: required("ORIGIN", "*"),

@@ -7,7 +7,7 @@ const DoctorNavbar = () => {
   return (
     <nav className="flex items-center justify-between px-6 h-16 py-3 bg-[#E8618C] shadow-md">
       {/* Logo */}
-       <div className="flex items-center">
+      <div className="flex items-center">
         <img
           src="/logo.png"
           alt="MedMate Logo"
@@ -56,8 +56,6 @@ const DoctorNavbar = () => {
             </Button>
           )}
         </NavLink>
-
-    
       </div>
 
       {/* Right Section */}
