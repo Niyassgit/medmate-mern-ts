@@ -31,7 +31,7 @@ const DoctorNavbar = () => {
           )}
         </NavLink>
 
-        <NavLink to="/doctor/connections">
+        <NavLink to="/doctor/analytics">
           {({ isActive }) => (
             <Button
               variant="ghost"
@@ -57,18 +57,7 @@ const DoctorNavbar = () => {
           )}
         </NavLink>
 
-         <NavLink to="/doctor/analytics">
-          {({ isActive }) => (
-            <Button
-              variant="ghost"
-              className={`hover:bg-transparent hover:text-gray-300 ${
-                isActive ? "text-blue-600 font-semibold" : "text-white"
-              }`}
-            >
-            Analytics
-            </Button>
-          )}
-        </NavLink>
+    
       </div>
 
       {/* Right Section */}

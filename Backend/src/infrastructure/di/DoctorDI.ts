@@ -16,6 +16,8 @@ import { ConnectionRepository } from "../repositories/ConnectionRepository";
 import { AcceptConnectionRequestUseCase } from "../../application/doctor/use-cases/AcceptConnectionRequestUseCase";
 import { DoctorAnalyticsUseCase } from "../../application/doctor/use-cases/DoctorAnalyticsUseCase";
 import { DepartmentRepository } from "../repositories/DepatmentRepository";
+import { GetFeedUseCase } from "../../application/doctor/use-cases/GetFeedUseCase";
+import { ProductPostRepository } from "../repositories/ProductPostRepository";
 
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
@@ -26,6 +28,7 @@ const notificationService = new NotificationService();
 const storageService = new s3StorageService();
 const connectionRepository = new ConnectionRepository();
 const departmentRepository = new DepartmentRepository();
+const productPostUseCase = new ProductPostRepository();
 
 const createDoctorUseCase = new CreateDoctorUseCase(
   doctorRepository,
@@ -70,6 +73,12 @@ const analyticsUsecase = new DoctorAnalyticsUseCase(
   departmentRepository,
   storageService
 );
+const getFeedUseCase = new GetFeedUseCase(
+  doctorRepository,
+  connectionRepository,
+  productPostUseCase,
+  storageService
+);
 export const doctorController = new DoctorController(
   createDoctorUseCase,
   getDoctorprofileById,
@@ -78,5 +87,6 @@ export const doctorController = new DoctorController(
   networkUseCase,
   connectionRequestUseCase,
   acceptConnectionRequestUseCase,
-  analyticsUsecase
+  analyticsUsecase,
+  getFeedUseCase,
 );

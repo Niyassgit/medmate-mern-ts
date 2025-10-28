@@ -37,3 +37,7 @@ export const doctorAnltyics=async(id:string)=>{
     const res=await api.get(DoctorEndpoints.NETWORK_ANALYTICS(id));
     return res.data;
 }
+export const getAllFeed=async(id:string)=>{
+    const res=await api.get(DoctorEndpoints.REP_FEED(id));
+    return res.data;
+}

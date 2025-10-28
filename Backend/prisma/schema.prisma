@@ -96,6 +96,7 @@ model Doctor {
 
   user    User?   @relation(fields: [loginId], references: [id])
   loginId String? @unique @db.ObjectId
+  Like    Like[]
 }
 
 model MedicalRep {
@@ -219,6 +220,17 @@ model ProductPost {
   rep         MedicalRep @relation(fields: [repId], references: [id])
   territory   Territory? @relation(fields: [territoryId], references: [id])
   interests   Interest[]
+  Likes        Like[]
+}
+
+model Like {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  doctorId  String   @db.ObjectId
+  productId String   @db.ObjectId
+  createdAt DateTime @default(now())
+
+  doctor  Doctor      @relation(fields: [doctorId], references: [id])
+  product ProductPost @relation(fields: [productId], references: [id])
 }
 
 model Interest {
@@ -246,20 +258,19 @@ enum ConnectionInitiator {
 }
 
 model Connection {
-  id          String             @id @default(auto()) @map("_id") @db.ObjectId
-  doctorId    String             @db.ObjectId
-  repId       String             @db.ObjectId
-  status      ConnectionStatus   @default(PENDING)
-  initiator   ConnectionInitiator
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
+  id        String              @id @default(auto()) @map("_id") @db.ObjectId
+  doctorId  String              @db.ObjectId
+  repId     String              @db.ObjectId
+  status    ConnectionStatus    @default(PENDING)
+  initiator ConnectionInitiator
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
 
   doctor Doctor     @relation(fields: [doctorId], references: [id])
   rep    MedicalRep @relation(fields: [repId], references: [id])
 
   @@unique([doctorId, repId], name: "doctorId_repId")
 }
-
 
 model DoctorConnection {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId

@@ -68,5 +68,9 @@ export class DoctorRoutes {
       AuthorizeRole([Role.DOCTOR]),
       doctorController.analytics
     );
+    this.router.get(
+      "/feed/:userId",
+      doctorController.getFeed
+    );
   }
 }

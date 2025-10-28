@@ -1,5 +1,7 @@
 import { IProductPost } from "../../domain/product/entity/IProductPost";
 import { Prisma, ProductPost } from "@prisma/client";
+import { ProductPostWithRelations } from "../types/ProductPostWithRelations";
+import { IProductPostForFeed } from "../../domain/product/entity/IProductPostForFeed";
 
 export class ProductPostMapper {
   static toPersistance(
@@ -87,5 +89,31 @@ export class ProductPostMapper {
       createdAt: product.createdAt,
       territoryId: product.territoryId,
     };
+  }
+  static toFeedList(posts: ProductPostWithRelations[]): IProductPostForFeed[] {
+    return posts.map((p) => ({
+      id: p.id,
+      repId: p.repId,
+      title: p.title,
+      description: p.description,
+      imageUrl: p.imageUrl,
+      brand: p.brand,
+      useCases: p.useCases,
+      ingredients: p.ingredients,
+      termsOfUse: p.termsOfUse,
+      territoryId: p.territoryId,
+      createdAt: p.createdAt,
+      updatedAt: p.updatedAt,
+      rep: {
+        id: p.rep.id,
+        name: p.rep.name,
+        company: p.rep.companyName,
+        image:p.rep.user?.profileImage,
+      },
+      _count: {
+        likes: p._count.Likes,
+        interests: p._count.interests,
+      },
+    }));
   }
 }

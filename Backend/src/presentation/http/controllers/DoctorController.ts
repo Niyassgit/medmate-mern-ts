@@ -10,6 +10,7 @@ import { INetworkUseCase } from "../../../application/doctor/interfaces/INetwork
 import { IConnectionRequestUseCase } from "../../../application/doctor/interfaces/IConnectionRequestUseCase";
 import { IAcceptConnectionRequestUseCase } from "../../../application/medicalRep/interfaces/IAcceptConnectionRequestUseCase";
 import { IDoctorAnalyticsUseCase } from "../../../application/doctor/interfaces/IDoctorAnalyticsUseCase";
+import { IGetFeedUseCase } from "../../../application/doctor/interfaces/IGetFeedUseCase";
 
 export class DoctorController {
   constructor(
@@ -20,7 +21,8 @@ export class DoctorController {
     private _networkUseCase: INetworkUseCase,
     private _connectionRequestUseCase: IConnectionRequestUseCase,
     private _acceptConnectionRequestUseCase: IAcceptConnectionRequestUseCase,
-    private _analyticsUseCase: IDoctorAnalyticsUseCase
+    private _analyticsUseCase: IDoctorAnalyticsUseCase,
+    private _getFeedUseCase: IGetFeedUseCase
   ) {}
 
   createDoctor = async (req: Request, res: Response) => {
@@ -85,6 +87,13 @@ export class DoctorController {
   analytics = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const response = await this._analyticsUseCase.execute(userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+  getFeed = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const response = await this._getFeedUseCase.execute(userId);
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });

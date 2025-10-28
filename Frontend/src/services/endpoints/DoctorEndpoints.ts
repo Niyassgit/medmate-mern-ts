@@ -7,4 +7,5 @@ export const DoctorEndpoints={
   CONNECTION_TOGGLE:(repId:string)=>`/doctor/connect/${repId}`,
   ACCEPT_REQUEST:(repId:string)=>`/doctor/connections/accept/${repId}`,
   NETWORK_ANALYTICS:(userId:string)=>`/doctor/analytics/${userId}`,
+  REP_FEED:(userId:string)=>`/doctor/feed/${userId}`,
 }

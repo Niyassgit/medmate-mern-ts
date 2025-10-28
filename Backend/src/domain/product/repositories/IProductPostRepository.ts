@@ -1,4 +1,5 @@
 import { IProductPost } from "../entity/IProductPost";
+import { IProductPostForFeed } from "../entity/IProductPostForFeed";
 
 
 export interface IProductPostRepository{
@@ -7,4 +8,5 @@ export interface IProductPostRepository{
     findPostById(postId:string):Promise<IProductPost | null>;
     getProducts(userId:string):Promise<IProductPost[] | null>;
     getPostDetails(postId: string): Promise<IProductPost | null>;
+    getPostsByIds(repIds:string[]):Promise<IProductPostForFeed[]>;
 }

@@ -4,6 +4,7 @@ import { prisma } from "../config/db";
 import { ProductPostMapper } from "../mappers/ProductPostMapper";
 import { BaseRepository } from "../database/BaseRepository";
 import { Prisma, ProductPost } from "@prisma/client";
+import { IProductPostForFeed } from "../../domain/product/entity/IProductPostForFeed";
 
 export class ProductPostRepository
   extends BaseRepository<
@@ -33,8 +34,8 @@ export class ProductPostRepository
     return this.update(postId, formatedData as Partial<ProductPost>);
   }
   async findPostById(postId: string): Promise<IProductPost | null> {
-    const post=await this.findById(postId);
-    return post?post:null;
+    const post = await this.findById(postId);
+    return post ? post : null;
   }
   async getProducts(userId: string): Promise<IProductPost[] | null> {
     const products = await prisma.productPost.findMany({
@@ -47,5 +48,36 @@ export class ProductPostRepository
   async getPostDetails(postId: string): Promise<IProductPost | null> {
     const product = await this.findById(postId);
     return product ? product : null;
+  }
+  async getPostsByIds(repIds: string[]): Promise<IProductPostForFeed[]> {
+    const posts = await prisma.productPost.findMany({
+      where: {
+        repId: {
+          in: repIds,
+        },
+      },
+      include: {
+        rep: {
+          select: {
+            id: true,
+            name: true,
+            companyName: true,
+            user:{
+              select:{profileImage:true},
+            }
+          },
+        },
+        _count: {
+          select: {
+            interests: true,
+            Likes: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return ProductPostMapper.toFeedList(posts);
   }
 }
