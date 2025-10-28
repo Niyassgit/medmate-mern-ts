@@ -92,7 +92,9 @@ export class ConnectionRepository
   async repMutualConnections(repId: string): Promise<IDoctorListOnRep[]> {
     const connections = await prisma.connection.findMany({
       where: { repId, status: ConnectionStatus.ACCEPTED },
-      select: { doctor: true },
+      select: { doctor:{
+        include:{user:true},
+      }},
     });
 
     return connections.map((conn) => DoctorMapper.toListOnRep(conn.doctor));
@@ -101,7 +103,9 @@ export class ConnectionRepository
   async pendingRequestsForRep(repId: string): Promise<IDoctorListOnRep[]> {
     const pendingConnections = await prisma.connection.findMany({
       where: { repId, status: ConnectionStatus.PENDING },
-      select: { doctor: true },
+      select: { doctor: {
+        include:{user:true},
+      }},
     });
     return pendingConnections.map((conn) =>
       DoctorMapper.toListOnRep(conn.doctor)

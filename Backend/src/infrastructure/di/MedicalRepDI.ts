@@ -102,7 +102,8 @@ const getRepAnalyticsUseCase = new GetRepAnalyticsUseCase(
   medicalRepRepository,
   connectionRepository,
   departmentRepository,
-  territoryRepository
+  territoryRepository,
+  storageService
 );
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,

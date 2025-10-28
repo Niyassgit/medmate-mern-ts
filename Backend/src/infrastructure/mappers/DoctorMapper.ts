@@ -161,13 +161,14 @@ export class DoctorMapper {
 
     return data;
   }
-  static toListOnRep(persistance:Doctor):IDoctorListOnRep{
+  static toListOnRep(persistance:Doctor& { user: User | null }):IDoctorListOnRep{
     return {
       id:persistance.id,
       name:persistance.name,
       hospital:persistance.hospital,
       departmentId:persistance.departmentId,
       territoryId:persistance.territoryId,
+      image:persistance.user?.profileImage ?? null,
     }
   }
 }

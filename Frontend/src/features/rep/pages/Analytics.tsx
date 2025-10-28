@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { AnalyticsDTO } from "../dto/AnalyticsDTO";
 import { networkAnalytics } from "../api";
 import toast from "react-hot-toast";
-import ConnectionTable from "../components/DoctorsTable";
+import ConnectionTable from "@/components/shared/ConnectionTable";
 
 const Analytics = () => {
   const id = useSelector((state: any) => state.auth.user?.id);
@@ -86,7 +86,7 @@ const Analytics = () => {
             />
           </div>
 
-          <ConnectionTable doctors={filteredDoctors} />
+          <ConnectionTable data={filteredDoctors} type="doctor" />
         </div>
       </main>
     </div>

@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import { Users, TrendingUp, Clock, UserPlus, Search } from "lucide-react";
+import { Users,Clock, UserPlus, Search } from "lucide-react";
 
 import StatsCard from "@/components/shared/StatusCard";
 import { Button } from "@/components/ui/button";

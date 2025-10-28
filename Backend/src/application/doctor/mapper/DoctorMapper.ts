@@ -1,6 +1,9 @@
 import { RegisterDoctorDTO } from "../dto/RegisterDoctorDTO";
 import { IDoctor } from "../../../domain/doctor/entities/IDoctor";
 import { CompleteDoctorProfileDTO } from "../dto/CompleteProfileDTO";
+import { IMedicalRepListOnDoc } from "../../../domain/medicalRep/entities/IMedicalRepListOnDoc";
+import { IDepartmentRepository } from "../../../domain/department/repositories/IDepartmentRepository";
+import { IStorageService } from "../../../domain/common/services/IStorageService";
 
 
 export class DoctorMapper {
@@ -42,7 +45,7 @@ export class DoctorMapper {
       loginId,
     };
   } 
-  
+ 
 
 
 }

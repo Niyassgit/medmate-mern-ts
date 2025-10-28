@@ -67,7 +67,8 @@ const acceptConnectionRequestUseCase = new AcceptConnectionRequestUseCase(
 const analyticsUsecase = new DoctorAnalyticsUseCase(
   doctorRepository,
   connectionRepository,
-  departmentRepository
+  departmentRepository,
+  storageService
 );
 export const doctorController = new DoctorController(
   createDoctorUseCase,

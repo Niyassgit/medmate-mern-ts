@@ -6,6 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { UserCircle2 } from "lucide-react";
 
 interface BaseUser {
   id: string;
@@ -85,7 +86,9 @@ const ConnectionTable = ({ data, type }: ConnectionTableProps) => {
                     className="w-8 h-8 rounded-full"
                   />
                 ) : (
-                  <div className="w-8 h-8 rounded-full bg-gray-300" />
+                  <div className="w-8 h-8 flex items-center justify-center rounded-full bg-muted">
+                    <UserCircle2 className="w-6 h-6 text-muted-foreground" />
+                  </div>
                 )}
                 {item.name}
               </TableCell>

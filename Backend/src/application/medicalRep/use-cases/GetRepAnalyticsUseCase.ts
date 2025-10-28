@@ -1,3 +1,4 @@
+import { IStorageService } from "../../../domain/common/services/IStorageService";
 import { IConnectionRepository } from "../../../domain/connection/repositories/IConnectionRepository";
 import { IDepartmentRepository } from "../../../domain/department/repositories/IDepartmentRepository";
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
@@ -13,7 +14,8 @@ export class GetRepAnalyticsUseCase implements IGetRepAnalyticsUseCase {
     private _medicalRepRepository: IMedicalRepRepository,
     private _connectionRepository: IConnectionRepository,
     private _departmentRepository: IDepartmentRepository,
-    private _territoryRepository: ITerritoryRepository
+    private _territoryRepository: ITerritoryRepository,
+    private _storageService: IStorageService
   ) {}
   async execute(userId: string): Promise<AnalyticsDTO | null> {
     const user = await this._medicalRepRepository.getRepIdByUserId(userId);
@@ -22,8 +24,8 @@ export class GetRepAnalyticsUseCase implements IGetRepAnalyticsUseCase {
     const mutualConnections =
       (await this._connectionRepository.repMutualConnections(user.repId)) ?? [];
     const pendingConnections =
-      (await this._connectionRepository.pendingRequestsForRep(user.repId)) ?? [];
-
+      (await this._connectionRepository.pendingRequestsForRep(user.repId)) ??
+      [];
 
     if (mutualConnections.length === 0 && pendingConnections.length === 0) {
       return {
@@ -32,22 +34,11 @@ export class GetRepAnalyticsUseCase implements IGetRepAnalyticsUseCase {
         mutualConnections: [],
       };
     }
-    const enrichedConnections = await Promise.all(
-      mutualConnections.map(async (doctor) => {
-        const department = doctor.departmentId
-          ? await this._departmentRepository.getDepartmentName(
-              doctor.departmentId
-            )
-          : null;
-        const territory = doctor.territoryId
-          ? await this._territoryRepository.getTerritoryName(doctor.territoryId)
-          : null;
-        return {
-          ...doctor,
-          departmentName: department ?? "",
-          territoryName: territory ?? "",
-        };
-      })
+    const enrichedConnections = await ConnectionMappers.enrichConnectionsForRep(
+      mutualConnections,
+      this._departmentRepository,
+      this._territoryRepository,
+      this._storageService
     );
     const mappedMutualConnections =
       ConnectionMappers.toRepDomainAnalticsList(enrichedConnections);

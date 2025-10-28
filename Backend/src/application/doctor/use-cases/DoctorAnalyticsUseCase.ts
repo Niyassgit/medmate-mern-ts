@@ -1,3 +1,4 @@
+import { IStorageService } from "../../../domain/common/services/IStorageService";
 import { IConnectionRepository } from "../../../domain/connection/repositories/IConnectionRepository";
 import { IDepartmentRepository } from "../../../domain/department/repositories/IDepartmentRepository";
 import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRepository";
@@ -11,7 +12,8 @@ export class DoctorAnalyticsUseCase implements IDoctorAnalyticsUseCase {
   constructor(
     private _doctorRepository: IDoctorRepository,
     private _conectionRepository: IConnectionRepository,
-    private _departmentRepository: IDepartmentRepository
+    private _departmentRepository: IDepartmentRepository,
+    private _storageService: IStorageService
   ) {}
   async execute(userId: string): Promise<AnalyticsResponseDTO | null> {
     const user = await this._doctorRepository.getDoctorIdByUserId(userId);
@@ -33,16 +35,10 @@ export class DoctorAnalyticsUseCase implements IDoctorAnalyticsUseCase {
         mutualConnections: [],
       };
     }
-    const enrichedConnections = await Promise.all(
-      mutualConnections.map(async (rep) => {
-        const department = rep.departmentId
-          ? await this._departmentRepository.getDepartmentName(rep.departmentId)
-          : null;
-        return {
-          ...rep,
-          departmentName: department ?? "",
-        };
-      })
+    const enrichedConnections = await ConnectionMappers.enrichConnectionForDoctor(
+      mutualConnections,
+      this._departmentRepository,
+      this._storageService
     );
     const mappedMutualConnections =
       ConnectionMappers.toDoctorDomainAnalticsList(enrichedConnections);
