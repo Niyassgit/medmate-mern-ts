@@ -1,25 +1,26 @@
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
 import morgan from "morgan";
+import {env} from "./infrastructure/config/env"
 import { fileURLToPath } from "url";
-import { connectDB } from "./config/db";
-import { LoginRoute } from "./presentation/http/routes/LoginRoute";
+import { connectDB } from "./infrastructure/config/db";
+import { LoginRoute } from "./presentation/http/routes/AuthRoute";
 import { MedicalRepRoutes } from "./presentation/http/routes/MedicalRepRoutes";
 import { DoctorRoutes } from "./presentation/http/routes/DoctorRoutes";
 import { SuperAdminRoutes } from "./presentation/http/routes/SuperAdminRoutes";
 import { ErrorHandler } from "./presentation/http/middlewares/ErrorHandler";
+import { CommonRoutes } from "./presentation/http/routes/CommonRoutes";
 
-dotenv.config();
+
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(
   cors({
-    origin: process.env.ORIGIN,
+    origin:env.origin,
     credentials: true,
   })
 );
@@ -33,15 +34,15 @@ app.use("/uploads", express.static(uploadsPath));
 const startServer = async () => {
   try {
     await connectDB();
-
     app.use("/api/doctor", new DoctorRoutes().router);
     app.use("/api/rep", new MedicalRepRoutes().router);
     app.use("/api/admin", new SuperAdminRoutes().router);
     app.use("/api/auth", new LoginRoute().router);
+    app.use("/api/common",new CommonRoutes().router );
 
     app.use(ErrorHandler);
-    app.listen(process.env.PORT || 5000, () => {
-      console.log(` server running on port ${process.env.PORT || 5000}`);
+    app.listen(env.port, () => {
+      console.log(` server running on port ${env.port}`);
     });
   } catch (err) {
     console.error("Failed to start server:", err);

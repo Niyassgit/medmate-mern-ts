@@ -30,7 +30,7 @@ export default function SelectRolePage() {
   
 
       if (response.data.user.role === Role.DOCTOR) {
-        navigate("/doctor/dashboard");
+        navigate("/doctor/feed");
       } else if (response.data.user.role === Role.MEDICAL_REP) {
         navigate("/rep/dashboard");
       } else if (response.data.user.role === Role.SUPER_ADMIN) {

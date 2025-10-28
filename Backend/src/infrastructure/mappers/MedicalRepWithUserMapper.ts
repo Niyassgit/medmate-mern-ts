@@ -1,7 +1,7 @@
 import { MedicalRep, User } from "@prisma/client";
 import { IMedicalRepWithUser } from "../../domain/medicalRep/entities/IMedicalRepWithUser";
 import { MedicalRepMapper } from "./MedicalRepMapper";
-import { Role as DomainRole, AuthProvider as DomainAuthProvider } from "../../domain/common/entities/IUser";
+import { Role as DomainRole,AuthProvider as DomainAuthProvider } from "../../shared/Enums"; 
 
 export class MedicalRepWithUserMapper{
 
@@ -15,6 +15,7 @@ export class MedicalRepWithUserMapper{
                         isBlocked: rep.user.isBlocked,
                         createdAt: rep.user.createdAt,
                         updatedAt: rep.user.updatedAt,
+                        profileImage:rep.user.profileImage,
                         role: rep.user.role as DomainRole,
                         authProvider: rep.user.authProvider as DomainAuthProvider,
                         providerId: rep.user.providerId ?? null,

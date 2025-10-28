@@ -13,7 +13,7 @@ const RepNavbar = () => {
           alt="MedMate Logo"
           className="h-18 w-auto object-contain"
         />
-        <span className="font-bold text-xl">MedMate</span>
+        <span className="font-bold text-xl -ml-6 mb-4">MedMate</span>
       </div>
 
       {/* Navigation links */}
@@ -101,7 +101,7 @@ const RepNavbar = () => {
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
         </div>
 
-        <UserAvatar  to="/rep/profile"/>
+        <UserAvatar to="/rep/profile" />
       </div>
     </nav>
   );

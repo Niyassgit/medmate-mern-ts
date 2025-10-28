@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { ZodSchema } from "zod";
+import { HttpStatusCode } from "../../../shared/HttpStatusCodes";
 
 export const ValidateSchema =
   <T>(schema: ZodSchema<T>) =>
@@ -7,7 +8,7 @@ export const ValidateSchema =
     try {
       const result = schema.safeParse(req.body);
       if (!result.success) {
-        return res.status(400).json({
+        return res.status(HttpStatusCode.BAD_REQUEST).json({
           message: result.error.issues[0].message,
         });
       }

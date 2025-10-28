@@ -8,13 +8,36 @@ import { OtpService } from "../services/OtpService";
 import { NotificationService } from "../services/NotificationService";
 import { ProfileImageUpdateUseCase } from "../../application/medicalRep/use-cases/ProfileImageUpdateUseCase";
 import { CompleteRepProfileUseCase } from "../../application/medicalRep/use-cases/CompleteRepProfileUseCase";
-import { UpdateCompanyLogoUseCase} from "../../application/medicalRep/use-cases/UpdateCompanyLogoUseCase";
+import { ProductPostRepository } from "../repositories/ProductPostRepository";
+import { CreatePostUseCase } from "../../application/productPost/use-case/CreatePostUseCase";
+import { EditProductPostUseCase } from "../../application/productPost/use-case/EditProductPostUseCase";
+import { GetProductPostListUseCase } from "../../application/productPost/use-case/GetProductPostListUseCase";
+import { GetProductPostDetailsUseCase } from "../../application/productPost/use-case/GetProductPostDetailsUseCase";
+import { s3StorageService } from "../services/S3StorageService";
+import { ProductPostPresentationService } from "../../application/common/services/ProductPostPresentationService";
+import { GetNetworksUseCase } from "../../application/medicalRep/use-cases/GetNetworksUseCase";
+import { DoctorRepository } from "../repositories/DoctorRepository";
+import { MakeConnectionRequestUseCase } from "../../application/medicalRep/use-cases/MakeConnectionRequestUseCase";
+import { ConnectionRepository } from "../repositories/ConnectionRepository";
+import { AcceptingConnectionRequest } from "../../application/medicalRep/use-cases/AcceptConnectionRequestUseCase";
+import { GetRepAnalyticsUseCase } from "../../application/medicalRep/use-cases/GetRepAnalyticsUseCase";
+import { DepartmentRepository } from "../repositories/DepatmentRepository";
+import { TerritoryRepository } from "../repositories/TerritoryRepository";
 
 const medicalRepRepository = new MedicalRepRepository();
+const doctorRepository = new DoctorRepository();
 const userRepository = new UserRepository();
 const bcryptServices = new BcryptServices();
 const otpService = new OtpService();
 const notificationService = new NotificationService();
+const productPostRepository = new ProductPostRepository();
+const storageService = new s3StorageService();
+const productPostPresentationService = new ProductPostPresentationService(
+  storageService
+);
+const connectionRepository = new ConnectionRepository();
+const departmentRepository = new DepartmentRepository();
+const territoryRepository = new TerritoryRepository();
 
 const createMedicalRepUseCase = new CreateMedicalRepUseCase(
   medicalRepRepository,
@@ -24,15 +47,75 @@ const createMedicalRepUseCase = new CreateMedicalRepUseCase(
   notificationService
 );
 
-const getRepProfileByIdUseCase=new GetRepProfileByIdUseCase(medicalRepRepository);
-const profileUpdateImageUseCase=new ProfileImageUpdateUseCase(medicalRepRepository);
-const completRepProfileUseCase=new CompleteRepProfileUseCase(userRepository,medicalRepRepository);
-const uploadCompanyLogo=new UpdateCompanyLogoUseCase(medicalRepRepository);
+const getRepProfileByIdUseCase = new GetRepProfileByIdUseCase(
+  medicalRepRepository,
+  userRepository,
+  storageService
+);
+const profileUpdateImageUseCase = new ProfileImageUpdateUseCase(
+  userRepository,
+  storageService
+);
+const completRepProfileUseCase = new CompleteRepProfileUseCase(
+  userRepository,
+  medicalRepRepository
+);
 
+const createPostUseCase = new CreatePostUseCase(
+  userRepository,
+  productPostRepository,
+  medicalRepRepository
+);
+const editProductPostUseCase = new EditProductPostUseCase(
+  productPostRepository,
+  storageService
+);
+const getProductPostListUseCase = new GetProductPostListUseCase(
+  userRepository,
+  productPostRepository,
+  medicalRepRepository,
+  productPostPresentationService
+);
+
+const getProductPostDetailsUseCase = new GetProductPostDetailsUseCase(
+  productPostRepository,
+  storageService
+);
+const getNetworksUseCase = new GetNetworksUseCase(
+  userRepository,
+  doctorRepository,
+  medicalRepRepository,
+  storageService,
+  connectionRepository
+);
+const makeConnectionRequestUseCase = new MakeConnectionRequestUseCase(
+  medicalRepRepository,
+  doctorRepository,
+  connectionRepository
+);
+const acceptConnectionRequestUseCase = new AcceptingConnectionRequest(
+  medicalRepRepository,
+  doctorRepository,
+  connectionRepository
+);
+const getRepAnalyticsUseCase = new GetRepAnalyticsUseCase(
+  medicalRepRepository,
+  connectionRepository,
+  departmentRepository,
+  territoryRepository,
+  storageService
+);
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
   getRepProfileByIdUseCase,
   profileUpdateImageUseCase,
   completRepProfileUseCase,
-  uploadCompanyLogo
+  createPostUseCase,
+  editProductPostUseCase,
+  getProductPostListUseCase,
+  getProductPostDetailsUseCase,
+  getNetworksUseCase,
+  makeConnectionRequestUseCase,
+  acceptConnectionRequestUseCase,
+  getRepAnalyticsUseCase
 );

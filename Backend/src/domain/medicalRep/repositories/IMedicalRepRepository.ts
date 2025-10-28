@@ -6,6 +6,8 @@ export interface IMedicalRepRepository {
   createMedicalRep(
     data: Omit<IMedicalRep, "id" | "createdAt" | "updatedAt">
   ): Promise<IMedicalRep>;
+  existById(id:string):Promise<boolean>;
+  getRepIdByUserId(userId:string):Promise<{repId:string|null}>;
   getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null>;
   getMedicalRepByEmail(email: string): Promise<IMedicalRep | null>;
   getAllMedicalReps(
@@ -13,8 +15,9 @@ export interface IMedicalRepRepository {
     limit: number,
     search:string,
   ): Promise<{ reps: IRepListItem[]; total: number }>;
+  findMedicalRepIdByUserId(userId:string):Promise<string | null>;
   getMedicalRepByUserId(id:string):Promise<IMedicalRepWithUser | null>;
-  updateProfileImage(id:string,imageUrl:string):Promise<void>;
   completeProfile(userId:string,data:Partial<IMedicalRep>):Promise<IMedicalRep | null>;
-  updateCompanyLogo(userId:string,LogoUrl:string):Promise<string>;
+  findByTerritoryAndDepartment(territoryId:string | null,departmentId:string | null):Promise<IMedicalRepWithUser[]>;
+  
 }

@@ -1,6 +1,6 @@
 import { SuperAdminController } from "../../presentation/http/controllers/SuperAdminController";
 import { CreateSuperAdminUseCase } from "../../application/superAdmin/auth/CreateSuperAdminUseCase";
-import { GetSuperAdminByEmailIdUseCase } from "../../application/superAdmin/auth/GetSuperAdminByEmailIdUseCase";
+import { GetSuperAdminByEmailUseCase } from "../../application/superAdmin/auth/GetSuperAdminByEmailUseCase";
 import { BcryptServices } from "../services/BcryptService";
 import { SuperAdminRepository } from "../repositories/SuperAdminRepository";
 import { UserRepository } from "../repositories/UserRepository";
@@ -11,28 +11,70 @@ import { GetAllRepsUseCase } from "../../application/superAdmin/useCases/GetAllR
 import { BlockUserUseCase } from "../../application/superAdmin/useCases/BlockUserUseCase";
 import { UnBlockUserUseCase } from "../../application/superAdmin/useCases/UnblockUserUseCase";
 import { GetDoctorDetailsUseCase } from "../../application/superAdmin/useCases/GetDoctorDetailsUseCase";
-import { GetMedicalRepDetailsUseCase } from "../../application/superAdmin/useCases/GetMedicalRepDetails";
+import { GetMedicalRepDetailsUseCase } from "../../application/superAdmin/useCases/GetMedicalRepDetailsUseCase";
+import { CreateTerritoryUseCase } from "../../application/superAdmin/useCases/CreateTerritoryUseCase";
+import { TerritoryRepository } from "../repositories/TerritoryRepository";
+import { GetTerritoriesUseCase } from "../../application/superAdmin/useCases/GetTerritoriesUseCase";
+import { EditTerritoryUseCase } from "../../application/superAdmin/useCases/EditTerrritoryUseCase";
+import { CreateDepartmentUseCase } from "../../application/superAdmin/useCases/CreateDepartmentUseCase";
+import { DepartmentRepository } from "../repositories/DepatmentRepository";
+import { GetAllDepartmentsUseCase } from "../../application/superAdmin/useCases/GetAllDepartmentsUseCase";
+import { EditDepartmentUseCase } from "../../application/superAdmin/useCases/EditDepartmentUseCase";
+import { s3StorageService } from "../services/S3StorageService";
 
 const superAdminRepositories = new SuperAdminRepository();
-const userLoginRepository = new UserRepository();
+const userRepository = new UserRepository();
 const bycryptServices = new BcryptServices();
+const storageService = new s3StorageService();
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
+const terrritoryRepository = new TerritoryRepository();
+const departmentRepository = new DepartmentRepository();
 
 const createSuperAdminUseCase = new CreateSuperAdminUseCase(
   superAdminRepositories,
-  userLoginRepository,
+  userRepository,
   bycryptServices
 );
-const getSuperAdminByEmailIdUseCase = new GetSuperAdminByEmailIdUseCase(
+const getSuperAdminByEmailIdUseCase = new GetSuperAdminByEmailUseCase(
   superAdminRepositories
 );
 const getAllDoctorsUseCase = new GetAllDoctorsUseCase(doctorRepository);
 const getAllRepUseCase = new GetAllRepsUseCase(medicalRepRepository);
-const blockUserUseCase = new BlockUserUseCase(userLoginRepository);
-const unblockUserUseCase = new UnBlockUserUseCase(userLoginRepository);
-const doctorDetails = new GetDoctorDetailsUseCase(doctorRepository);
-const medicalRepDetails = new GetMedicalRepDetailsUseCase(medicalRepRepository);
+const blockUserUseCase = new BlockUserUseCase(userRepository);
+const unblockUserUseCase = new UnBlockUserUseCase(userRepository);
+const doctorDetails = new GetDoctorDetailsUseCase(
+  doctorRepository,
+  storageService
+);
+const medicalRepDetails = new GetMedicalRepDetailsUseCase(
+  medicalRepRepository,
+  storageService
+);
+const getTerritoryUseCase = new GetTerritoriesUseCase(
+  userRepository,
+  terrritoryRepository
+);
+const createTerritoryUseCase = new CreateTerritoryUseCase(
+  userRepository,
+  terrritoryRepository
+);
+const editTerritoryUseCase = new EditTerritoryUseCase(
+  userRepository,
+  terrritoryRepository
+);
+const createDepartmentUseCase = new CreateDepartmentUseCase(
+  userRepository,
+  departmentRepository
+);
+const getAllDepartmentsUseCase = new GetAllDepartmentsUseCase(
+  userRepository,
+  departmentRepository
+);
+const editDepartmentUseCase = new EditDepartmentUseCase(
+  userRepository,
+  departmentRepository
+);
 
 export const superAdminController = new SuperAdminController(
   createSuperAdminUseCase,
@@ -42,5 +84,11 @@ export const superAdminController = new SuperAdminController(
   blockUserUseCase,
   unblockUserUseCase,
   doctorDetails,
-  medicalRepDetails
+  medicalRepDetails,
+  getTerritoryUseCase,
+  createTerritoryUseCase,
+  editTerritoryUseCase,
+  createDepartmentUseCase,
+  getAllDepartmentsUseCase,
+  editDepartmentUseCase
 );

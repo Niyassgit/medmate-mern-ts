@@ -3,7 +3,7 @@ import { RegisterResponseDTO } from "../dto/RegisterResponseDTO";
 import { IBcryptService } from "../../../domain/common/services/IHashService";
 import { RegisterDoctorDTO } from "../dto/RegisterDoctorDTO";
 import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
-import { Role } from "../../../domain/common/entities/IUser";
+import { Role } from "../../../shared/Enums";
 import { ConflictError, BadRequestError } from "../../../domain/common/errors";
 import { INotificationService } from "../../../domain/common/services/INotificationService";
 import { OtpPurpose } from "../../../domain/common/types/OtpPurpose";
@@ -11,8 +11,10 @@ import { IOtpService } from "../../../domain/common/services/IOtpService";
 import { DoctorAuthMapper } from "../mapper/DoctorAuthMapper";
 import { DoctorMapper } from "../mapper/DoctorMapper";
 import { UserMapper } from "../../common/mapper/UserMapper";
+import { ICreateDoctorUseCase } from "../interfaces/ICreateDoctorUseCase";
+import { ErrorMessages, NotificationMessages } from "../../../shared/Messages";
 
-export class CreateDoctorUseCase {
+export class CreateDoctorUseCase implements ICreateDoctorUseCase {
   constructor(
     private _doctorRepository: IDoctorRepository,
     private _bcryptServices: IBcryptService,
@@ -23,10 +25,10 @@ export class CreateDoctorUseCase {
 
   async execute(data: RegisterDoctorDTO): Promise<RegisterResponseDTO> {
     const userExist = await this._doctorRepository.getDoctorByEmail(data.email);
-    if (userExist) throw new ConflictError(`User already exists`);
+    if (userExist) throw new ConflictError(ErrorMessages.ACCOUNT_EXIST);
 
     if (!data.password)
-      throw new BadRequestError("Password is requred for signup");
+      throw new BadRequestError(ErrorMessages.PASSWORD_REQUIRED);
 
     const hashedPassword = await this._bcryptServices.hash(data.password);
 
@@ -45,10 +47,12 @@ export class CreateDoctorUseCase {
       OtpPurpose.SIGNUP
     );
     console.log("otp sended to user:", otp);
-    this._notificationService
-      .sendEmail(data.email, "Veryfy your account", `Your OTP is ${otp}`)
-      .catch((err) => console.error("Failed to send OTP email:", err));
-
+    void this._notificationService.sendEmail(
+      data.email,
+      NotificationMessages.OTP_SUBJECT,
+      NotificationMessages.OTP_VERIFICATION(otp)
+    );
+    
     return DoctorAuthMapper.toRegisterResponse(user, record?.expiredAt);
   }
 }

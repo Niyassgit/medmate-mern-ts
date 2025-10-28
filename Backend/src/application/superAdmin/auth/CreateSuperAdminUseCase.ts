@@ -2,11 +2,14 @@ import { ISuperAdminRepository } from "../../../domain/superAdmin/repositories/I
 import { IBcryptService } from "../../../domain/common/services/IHashService";
 import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 import { RegisterSuperAdminDTO } from "../dto/RegisterSuperAdminDTO";
-import { Role } from "../../../domain/common/entities/IUser";
+import { Role } from "../../../shared/Enums"; 
 import { ConflictError, BadRequestError } from "../../../domain/common/errors";
 import { UserMapper } from "../../common/mapper/UserMapper";
 import { SuperAdminMapper } from "../mappers/SuperAdminMapper";
-export class CreateSuperAdminUseCase {
+import { ErrorMessages, SuccessMessages } from "../../../shared/Messages";
+import { ICreateSuperAdminUseCase } from "../interfaces/ICreateSuperAdminUseCase";
+
+export class CreateSuperAdminUseCase implements ICreateSuperAdminUseCase{
   constructor(
     private _superAdminRepository: ISuperAdminRepository,
     private _userLoginRepository: IUserRepository,
@@ -17,10 +20,10 @@ export class CreateSuperAdminUseCase {
     const existAdmin = await this._superAdminRepository.getSuperAdminByEmail(
       data.email
     );
-    if (existAdmin) throw new ConflictError(`User already exists`);
+    if (existAdmin) throw new ConflictError(ErrorMessages.USER_NOT_FOUND);
 
     if (!data.password) {
-      throw new BadRequestError("Password is Required for signup");
+      throw new BadRequestError(ErrorMessages.PASSWORD_REQUIRED);
     }
 
     const hashedPassword = await this._bcryptServices.hash(data.password);
@@ -34,6 +37,6 @@ export class CreateSuperAdminUseCase {
 
     const adminEntity = SuperAdminMapper.toSuperAdminEntity(data, user.id);
     await this._superAdminRepository.createSuperAdmin(adminEntity);
-    return "Admin registered successfully";
+    return SuccessMessages.REGISTER_SUCCESS;
   }
 }

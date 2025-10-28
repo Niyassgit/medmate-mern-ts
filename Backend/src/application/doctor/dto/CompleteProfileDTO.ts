@@ -4,7 +4,6 @@ import { CertificateDTO } from "../../common/dto/CertificateDTO";
 export interface CompleteDoctorProfileDTO{
   name: string;
   phone: string;
-  profileImage:string | null,
   departmentId?: string | null;
   experienceYears?: number | null;
   hasOwnClinic?: boolean | null;

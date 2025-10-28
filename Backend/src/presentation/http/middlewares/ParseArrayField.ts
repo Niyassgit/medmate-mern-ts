@@ -1,0 +1,35 @@
+import { NextFunction, Request, Response } from "express";
+import { EducationDTO } from "../validators/EducationSchema";
+import { CertificateDTO } from "../validators/CertificateSchema";
+import { ErrorMessages } from "../../../shared/Messages";
+import { HttpStatusCode } from "../../../shared/HttpStatusCodes";
+
+interface ParseStringToArray {
+  educations?: EducationDTO[] | string;
+  certificates?: CertificateDTO[] | string;
+}
+
+export const parseArrayFields = (
+  req: Request<unknown, unknown, ParseStringToArray>,
+  res: Response,
+  next: NextFunction
+) => {
+  if (typeof req.body.educations === "string") {
+    try {
+      req.body.educations = JSON.parse(req.body.educations) as EducationDTO[];
+    } catch {
+      return res.status(HttpStatusCode.BAD_REQUEST).json({ message:ErrorMessages.INVALID_EDUCATION });
+    }
+  }
+
+  if (typeof req.body.certificates === "string") {
+    try {
+      req.body.certificates = JSON.parse(
+        req.body.certificates
+      ) as CertificateDTO[];
+    } catch {
+      return res.status(HttpStatusCode.BAD_REQUEST).json({ message: ErrorMessages.INVALID_CERTIFICATE });
+    }
+  }
+  next();
+};

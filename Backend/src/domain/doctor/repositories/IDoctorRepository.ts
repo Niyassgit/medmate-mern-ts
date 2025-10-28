@@ -7,13 +7,18 @@ export interface IDoctorRepository {
     data: Omit<IDoctor, "id" | "updatedAt" | "createdAt">
   ): Promise<IDoctor>;
   getDoctorById(id: string): Promise<IDoctorWithUser | null>;
+  existById(id: string): Promise<boolean>;
+  getDoctorIdByUserId(userId: string): Promise<{ doctorId: string | null }>;
   getDoctorByEmail(email: string): Promise<IDoctor | null>;
   getAllDoctors(
     page: number,
     limit: number,
-    search:string
+    search: string
   ): Promise<{ doctors: IDoctorListItem[]; total: number }>;
-  getDoctorByUserId(id:string):Promise<IDoctorWithUser |null>;
-  updateProfileImage(userId: string, imageUrl: string): Promise<void>;
-  updateDoctor(userId:string,data:Partial<IDoctor>):Promise<IDoctor | null>;
+  getDoctorByUserId(id: string): Promise<IDoctorWithUser | null>;
+  updateDoctor(userId: string, data: Partial<IDoctor>): Promise<IDoctor | null>;
+  findByTerritoryAndDepartment(
+    departmentId: string | null,
+    territories: string[] | null
+  ): Promise<IDoctorWithUser[]>;
 }

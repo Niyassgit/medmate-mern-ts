@@ -9,8 +9,10 @@ import { OtpPurpose } from "../../../domain/common/types/OtpPurpose";
 import { INotificationService } from "../../../domain/common/services/INotificationService";
 import { ForgotResponseDTO } from "../dto/ForgotResponseDTO";
 import { OtpMapper } from "../mapper/OtpMapper";
+import { IForgotPasswordUseCase } from "../interfaces/IForgotPasswordUseCase";
+import { NotificationMessages, ErrorMessages } from "../../../shared/Messages";
 
-export class ForgotPasswordUseCase {
+export class ForgotPasswordUseCase implements IForgotPasswordUseCase {
   constructor(
     private _userLoginRepository: IUserRepository,
     private _otpService: IOtpService,
@@ -19,24 +21,23 @@ export class ForgotPasswordUseCase {
 
   async execute(email: string): Promise<ForgotResponseDTO> {
     const user = await this._userLoginRepository.findByEmail(email);
-    if (!user) throw new NotFoundError("User not found");
-    if (user.isBlocked) throw new ForbiddenError("User is blocked by admin");
-    if (!user.isVerified) throw new UnautharizedError("User not verified");
+    if (!user) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
+    if (user.isBlocked) throw new ForbiddenError(ErrorMessages.USER_BLOCKED);
+    if (!user.isVerified) throw new UnautharizedError(ErrorMessages.UNAUTHORIZED);
 
     const { otp, record } = await this._otpService.generateOtp(
       user.id,
       OtpPurpose.RESET_PASSWORD
     );
     console.log("otp sent for reset password:", otp);
-
-    this._notificationService
+ 
+      void this._notificationService
       .sendEmail(
         user.email,
-        "Verify your account",
-        `Your OTP for reset passsword is ${otp}`
+        NotificationMessages.OTP_SUBJECT,
+        NotificationMessages.OTP_RESET_PASSWORD(otp)
       )
-      .catch((err) => console.log("Failed to send OTP email:", err));
-
+    
     return OtpMapper.toForgotResponse(user.email, record?.expiredAt);
   }
 }

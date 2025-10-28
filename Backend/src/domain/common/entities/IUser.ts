@@ -1,13 +1,5 @@
-export enum Role {
-  SUPER_ADMIN = "SUPER_ADMIN",
-  DOCTOR = "DOCTOR",
-  MEDICAL_REP = "MEDICAL_REP",
-}
-
-export enum AuthProvider {
-  NATIVE = "NATIVE",
-  GOOGLE = "GOOGLE",
-}
+import { AuthProvider } from "../../../shared/Enums"; 
+import { Role } from "../../../shared/Enums"; 
 
 export interface IUser {
   id: string;
@@ -16,6 +8,7 @@ export interface IUser {
   isBlocked: boolean;
   authProvider: AuthProvider;
   providerId?: string | null;
+  profileImage?:string | null;
   isVerified: boolean;
   tokenVersion: number;
   role: Role;

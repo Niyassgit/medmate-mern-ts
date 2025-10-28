@@ -1,5 +1,5 @@
 import { IUser } from "../entities/IUser";
-import { Role } from "../entities/IUser";
+import { Role } from "../../../shared/Enums";
 
 export interface IUserRepository {
   createUser(
@@ -14,5 +14,6 @@ export interface IUserRepository {
     role: Role;
   }): Promise<IUser>;
   updateUser(userId: string, isVerified: boolean): Promise<IUser | null>;
-  resetPassword(userId: string, password: string): Promise<string>;
+  resetPassword(userId: string, password: string): Promise<boolean>;
+  updateProfileImage(userId:string,imageUrl:string | null):Promise<IUser | null>;
 }

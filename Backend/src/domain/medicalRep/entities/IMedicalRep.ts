@@ -8,11 +8,10 @@ export interface IMedicalRep {
 
   name: string;
   phone: string;
-  profileImage?:string | null;
   companyName: string;
   companyLogoUrl?: string | null;
   employeeId?: string | null;
-  departmentId?: string | null;
+  departmentId: string | null;
   about?: string | null;
 
   subscriptionPlanId?: string | null;
@@ -21,6 +20,9 @@ export interface IMedicalRep {
   subscriptionEnd?: Date | null;
   maxConnectionsPerDay?: number | null;
 
-  educations?:IEducation[];
-  certificates?:ICertificate[];
+  educations?: IEducation[];
+  certificates?: ICertificate[];
+  territories: string[] | null;
+  departmentName?:string;
+  territoryNames?:string[];
 }

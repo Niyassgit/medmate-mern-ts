@@ -3,11 +3,24 @@ import { IMedicalRepRepository } from "../../domain/medicalRep/repositories/IMed
 import { IMedicalRep } from "../../domain/medicalRep/entities/IMedicalRep";
 import { IRepListItem } from "../../domain/medicalRep/entities/IRepListItem";
 import { MedicalRepMapper } from "../mappers/MedicalRepMapper";
-import { Prisma } from "@prisma/client";
+import { MedicalRep, Prisma } from "@prisma/client";
 import { IMedicalRepWithUser } from "../../domain/medicalRep/entities/IMedicalRepWithUser";
 import { MedicalRepWithUserMapper } from "../mappers/MedicalRepWithUserMapper";
+import { BaseRepository } from "../database/BaseRepository";
 
-export class MedicalRepRepository implements IMedicalRepRepository {
+export class MedicalRepRepository
+  extends BaseRepository<
+    IMedicalRep,
+    MedicalRep,
+    Prisma.MedicalRepCreateInput,
+    "medicalRep"
+  >
+  implements IMedicalRepRepository
+{
+  constructor() {
+    super(prisma.medicalRep, (rep) => MedicalRepMapper.toDomain(rep));
+  }
+
   async createMedicalRep(
     data: Omit<IMedicalRep, "id" | "createdAt" | "updatedAt">
   ): Promise<IMedicalRep> {
@@ -16,11 +29,29 @@ export class MedicalRepRepository implements IMedicalRepRepository {
       include: {
         educations: true,
         certificates: true,
+        territories: {
+          include: { territory: true },
+        },
       },
     });
     return MedicalRepMapper.toDomain(created);
   }
 
+  async existById(id: string): Promise<boolean> {
+    const rep=await prisma.medicalRep.findFirst({
+      where:{id},
+      select:{id:true},
+    });
+    return !!rep;
+  }
+  
+  async getRepIdByUserId(userId: string): Promise<{ repId: string | null; }> {
+    const rep=await prisma.medicalRep.findFirst({
+      where:{loginId:userId},
+      select:{id:true},
+    });
+    return {repId:rep? rep.id :null};
+  }
   async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {
     const user = await prisma.medicalRep.findUnique({
       where: { id },
@@ -85,24 +116,26 @@ export class MedicalRepRepository implements IMedicalRepRepository {
       total,
     };
   }
+  async findMedicalRepIdByUserId(userId: string): Promise<string | null> {
+    const rep = await prisma.medicalRep.findUnique({
+      where: { loginId: userId },
+      select: { id: true },
+    });
+    return rep ? rep.id : null;
+  }
   async getMedicalRepByUserId(id: string): Promise<IMedicalRepWithUser | null> {
     const user = await prisma.medicalRep.findFirst({
       where: { loginId: id },
       include: {
         user: true,
-        educations:true,
-        certificates:true,
+        educations: true,
+        certificates: true,
+        territories: { include: { territory: true } },
+        department: true,
       },
     });
-
     if (!user) return null;
     return MedicalRepWithUserMapper.toDomain(user);
-  }
-  async updateProfileImage(id: string, imageUrl: string): Promise<void> {
-    await prisma.medicalRep.update({
-      where: { id },
-      data: { profileImage: imageUrl },
-    });
   }
   async completeProfile(
     userId: string,
@@ -117,16 +150,32 @@ export class MedicalRepRepository implements IMedicalRepRepository {
         user: true,
         educations: true,
         certificates: true,
+        territories: { include: { territory: true } },
       },
     });
     return MedicalRepMapper.toDomain(updatedRep);
   }
-
-  async updateCompanyLogo(userId: string, LogoUrl: string): Promise<string> {
-    await prisma.medicalRep.update({
-      where: { id: userId },
-      data: { companyLogoUrl: LogoUrl },
+  async findByTerritoryAndDepartment(
+    territoryId: string,
+    departmentId: string
+  ): Promise<IMedicalRepWithUser[]> {
+    const reps = await prisma.medicalRep.findMany({
+      where: {
+        departmentId: departmentId,
+        territories: {
+          some: {
+            territoryId: territoryId,
+          },
+        },
+      },
+      include: {
+        user: true,
+        territories: {
+          include: { territory: true },
+        },
+        department:true,
+      },
     });
-    return LogoUrl;
+    return reps.map((rep) => MedicalRepWithUserMapper.toDomain(rep));
   }
 }

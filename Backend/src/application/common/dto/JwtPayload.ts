@@ -1,4 +1,4 @@
-import { Role } from "../../../domain/common/entities/IUser";
+import { Role } from "../../../shared/Enums";
 
 export interface JwtPayload {
   id: string;

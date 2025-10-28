@@ -4,7 +4,9 @@ import { ValidateSchema } from "../middlewares/ValidateSchema";
 import { SuperAdminRegisterSchema } from "../validators/SuperAdminRegisterSchema";
 import { Authenticate } from "../middlewares/Authenticate";
 import { AuthorizeRole } from "../middlewares/AuthorizeRole";
-import { Role } from "../../../domain/common/entities/IUser";
+import { Role } from "../../../shared/Enums";
+import { TeritorySchema } from "../validators/TerritoryValidateSchema";
+import { DepartmentSchema } from "../validators/DepartmentShema";
 
 export class SuperAdminRoutes {
   public router: Router;
@@ -60,6 +62,46 @@ export class SuperAdminRoutes {
       Authenticate,
       AuthorizeRole([Role.SUPER_ADMIN]),
       superAdminController.repDetails
+    );
+    this.router.get(
+      "/territories/:userId",
+      Authenticate,
+      AuthorizeRole([Role.SUPER_ADMIN]),
+      superAdminController.territories
+    );
+    this.router.post(
+      "/territories/add/:userId",
+      Authenticate,
+      AuthorizeRole([Role.SUPER_ADMIN]),
+      ValidateSchema(TeritorySchema),
+      superAdminController.addTerritory
+    );
+    this.router.patch(
+      "/territories/edit/:territoryId",
+      Authenticate,
+      AuthorizeRole([Role.SUPER_ADMIN]),
+      ValidateSchema(TeritorySchema),
+      superAdminController.editTerritory
+    );
+    this.router.post(
+      "/departments/add/:userId",
+      Authenticate,
+      AuthorizeRole([Role.SUPER_ADMIN]),
+      ValidateSchema(DepartmentSchema),
+      superAdminController.createDepartment
+    );
+    this.router.get(
+      "/departments/:userId",
+      Authenticate,
+      AuthorizeRole([Role.SUPER_ADMIN]),
+      superAdminController.departments
+    );
+    this.router.patch(
+      "/departments/edit/:departmentId",
+      Authenticate,
+      AuthorizeRole([Role.SUPER_ADMIN]),
+      ValidateSchema(DepartmentSchema),
+      superAdminController.editDepartment
     );
   }
 }

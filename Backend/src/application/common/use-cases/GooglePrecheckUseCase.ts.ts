@@ -2,8 +2,9 @@ import { IJWtService } from "../../../domain/common/services/IJWTService";
 import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 import { IGoogleAuthService } from "../../../domain/common/services/IGoogleAuthService";
 import { GooglePrecheckResultDTO } from "../dto/GooglePrecheckResultDTO";
+import { IGooglePrecheckUseCase } from "../interfaces/IGooglePrecheckUseCase";
 
-export class GooglePrecheckUseCase {
+export class GooglePrecheckUseCase implements IGooglePrecheckUseCase{
   constructor(
     private _userLoginRepository: IUserRepository,
     private _googleAuthService: IGoogleAuthService,

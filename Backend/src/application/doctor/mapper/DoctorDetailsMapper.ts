@@ -4,19 +4,19 @@ import { CompleteDoctorProfileDTO } from "../dto/CompleteProfileDTO";
 import { IDoctor } from "../../../domain/doctor/entities/IDoctor";
 
 export class DoctorDetailsMapper {
-  static toDoctorDetails(doctor: IDoctorWithUser): DoctorDetailsDTO {
+  static toDoctorDetails(doctor: IDoctorWithUser , profileImageUrl:string | null): DoctorDetailsDTO {
     return {
       id: doctor.id,
       name: doctor.name,
       phone: doctor.phone,
       email: doctor.user?.email ?? null,
       isBlocked: doctor.user?.isBlocked ?? null,
-      profileImage: doctor.profileImage ?? null,
-      departmentId: doctor.departmentId ?? null,
+      profileImage: profileImageUrl,
+      departmentName: doctor.departmentName ?? null,
       experienceYears: doctor.experienceYears ?? null,
       hasOwnClinic: doctor.hasOwnClinic ?? null,
       doctorClass: doctor.doctorClass ?? null,
-      territoryId: doctor.territoryId ?? null,
+      territoryName: doctor.territoryName ?? null,
       hospital: doctor.hospital ?? "",
       registrationId: doctor.registrationId ?? "",
       opHours: doctor.opHours ?? null,
@@ -31,7 +31,6 @@ export class DoctorDetailsMapper {
     return {
       name: doctor.name,
       phone: doctor.phone,
-      profileImage: doctor.profileImage ?? null,
       departmentId: doctor.departmentId ?? null,
       experienceYears: doctor.experienceYears ?? null,
       hasOwnClinic: doctor.hasOwnClinic ?? null,

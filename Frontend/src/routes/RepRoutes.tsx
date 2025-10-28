@@ -8,8 +8,10 @@ import Analytics from "@/features/rep/pages/Analytics";
 import Messages from "@/features/rep/pages/Messages";
 import Notifications from "@/features/rep/pages/Notifications";
 import Network from "@/features/rep/pages/Network";
-import CompleteProfile from "@/features/rep/components/CompleteProfile";
-
+import CompleteProfile from "@/features/rep/pages/CompleteProfile";
+import AddPost from "@/features/rep/pages/AddPost";
+import PostDetailsPage from "@/features/rep/pages/PostDetailsPage";
+import PostEditPage from "@/features/rep/pages/PostEditPage";
 export const RepRoutes={
 
     path:"/rep",
@@ -20,6 +22,9 @@ export const RepRoutes={
     ),
     children:[
         {path:"dashboard",element:<RepDashboard />},
+        {path:"dashboard/add-post",element:<AddPost />},
+        {path:"dashboard/post-details/:id",element:<PostDetailsPage/>},
+        {path:"post-edit/:id",element:<PostEditPage/>},
         {path:"profile",element:<ProfilePage/>},
         {path:"profile/complete/:id",element:<CompleteProfile />},
         {path:"subscription",element:<Subscription />},

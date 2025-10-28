@@ -2,10 +2,12 @@ import { IUserRepository } from "../../../domain/common/repositories/IUserReposi
 import { IGoogleAuthService } from "../../../domain/common/services/IGoogleAuthService";
 import { GoogleLoginDTO } from "../dto/GoogleLoginDTO";
 import { IJWtService } from "../../../domain/common/services/IJWTService";
-import { IUser } from "../../../domain/common/entities/IUser";
 import { UnautharizedError } from "../../../domain/common/errors";
+import { GoogleLoginResponseDTO } from "../dto/GoogleLoginResponseDTO";
+import { IGoogleLoginUseCase } from "../interfaces/IGoogleLoginUseCase";
+import { ErrorMessages } from "../../../shared/Messages";
 
-export class GoogleLoginUseCase {
+export class GoogleLoginUseCase implements IGoogleLoginUseCase{
   constructor(
     private _userRepository: IUserRepository,
     private _googleAuthService: IGoogleAuthService,
@@ -14,12 +16,12 @@ export class GoogleLoginUseCase {
 
   async execute(
     payload: GoogleLoginDTO
-  ): Promise<{ accessToken: string; refreshToken: string; user: IUser }> {
+  ): Promise<GoogleLoginResponseDTO> {
     const { email, providerId } = await this._googleAuthService.verifyIdToken(
       payload.idToken
     );
 
-    if (!email) throw new UnautharizedError("Google account has no email");
+    if (!email) throw new UnautharizedError(ErrorMessages.GOOGLE_UNAUTHRISED);
 
     const user = await this._userRepository.upsertGoogleUser({
       email,

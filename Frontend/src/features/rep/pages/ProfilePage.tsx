@@ -38,7 +38,6 @@ const ProfilePage = () => {
     };
     fetchProfile();
   }, [id]);
-
   const handleAvatarChange = (file: File) => {
     setSelectedFile(file);
     setOpenConfirm(true);
@@ -46,7 +45,7 @@ const ProfilePage = () => {
   const confirmAvatarChange = async () => {
     if (!rep || !selectedFile) return;
     try {
-      const response = await updateProfileImage(rep.id, selectedFile);
+      const response = await updateProfileImage(id, selectedFile);
       if (response.success) {
         setRep({ ...rep, profileImage: response.imageUrl });
         toast.success(response.message || "Image changed");
@@ -89,6 +88,17 @@ const ProfilePage = () => {
     return "border-red-500";
   };
 
+  const handleImageError = async () => {
+    try {
+      const res = await getProfileRep(id);
+      if (res.success && res.data?.profileImage) {
+        return res.data.profileImage;
+      }
+    } catch (error) {
+      toast.error("Failed to refresh profile Image");
+    }
+    return null;
+  };
   return (
     <div className="min-h-screen py-10 px-4">
       <div className="max-w-4xl mx-auto space-y-6">
@@ -129,7 +139,9 @@ const ProfilePage = () => {
               image={rep.profileImage}
               name={rep.name}
               email={rep.email}
+              userId={id}
               editable
+              onImageError={handleImageError}
               onImageChange={handleAvatarChange}
               className="w-32 h-32 border-4 border-white"
             />
@@ -187,6 +199,7 @@ const ProfilePage = () => {
         </div>
 
         {/* Info Cards */}
+        {/* Info Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-white rounded-xl shadow p-4">
             <h2 className="font-semibold text-gray-800">Email</h2>
@@ -229,6 +242,26 @@ const ProfilePage = () => {
             >
               {rep.isBlocked ? "Blocked" : "Active"}
             </p>
+          </div>
+
+          {/* Newly Added Department */}
+          <div className="bg-white rounded-xl shadow p-4">
+            <h2 className="font-semibold text-gray-800">Department</h2>
+            <p className="text-gray-700">{rep.departmentName || "N/A"}</p>
+          </div>
+
+          {/* Newly Added Territories */}
+          <div className="bg-white rounded-xl shadow p-4">
+            <h2 className="font-semibold text-gray-800">Territories</h2>
+            {rep.territoryNames && rep.territoryNames.length > 0 ? (
+              <ul className="list-disc list-inside text-gray-700 mt-2 space-y-1">
+                {rep.territoryNames.map((territory, index) => (
+                  <li key={index}>{territory}</li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-gray-500 mt-2">Not assigned yet</p>
+            )}
           </div>
         </div>
 

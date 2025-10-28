@@ -21,3 +21,19 @@ export const completeProfile=async(id:string,values:CompleteDoctorProfileDTO)=>{
         headers: { "Content-Type": "application/json" },
     });
 }
+export const getNetworks=async(id:string)=>{
+    const resp=await api.get(DoctorEndpoints.NETWORKS(id));
+    return resp.data.data;
+}
+export const connectionToggle=async (id:string)=>{
+    const resp=await api.post(DoctorEndpoints.CONNECTION_TOGGLE(id));
+    return resp.data;
+}
+export const acceptRequest=async(id:string)=>{
+    const res=await api.post(DoctorEndpoints.ACCEPT_REQUEST(id));
+    return res.data;
+}
+export const doctorAnltyics=async(id:string)=>{
+    const res=await api.get(DoctorEndpoints.NETWORK_ANALYTICS(id));
+    return res.data;
+}

@@ -23,5 +23,6 @@ export class NotificationService implements INotificationService {
       text: body,
       html: `<p>${body}</p>`,
     });
+    console.log(" email has been sented to the email:",to);
   }
 }

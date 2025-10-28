@@ -7,13 +7,13 @@ const DoctorNavbar = () => {
   return (
     <nav className="flex items-center justify-between px-6 h-16 py-3 bg-[#E8618C] shadow-md">
       {/* Logo */}
-      <div className="flex items-center">
+       <div className="flex items-center">
         <img
           src="/logo.png"
           alt="MedMate Logo"
           className="h-18 w-auto object-contain"
         />
-        <span className="font-bold text-xl text-white">MedMate</span>
+        <span className="font-bold text-xl -ml-6 mb-4">MedMate</span>
       </div>
 
       {/* Navigation links */}
@@ -53,6 +53,19 @@ const DoctorNavbar = () => {
               }`}
             >
               Search Network
+            </Button>
+          )}
+        </NavLink>
+
+         <NavLink to="/doctor/analytics">
+          {({ isActive }) => (
+            <Button
+              variant="ghost"
+              className={`hover:bg-transparent hover:text-gray-300 ${
+                isActive ? "text-blue-600 font-semibold" : "text-white"
+              }`}
+            >
+            Analytics
             </Button>
           )}
         </NavLink>

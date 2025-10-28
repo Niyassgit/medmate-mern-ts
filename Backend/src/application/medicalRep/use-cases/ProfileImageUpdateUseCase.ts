@@ -1,18 +1,27 @@
-import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
+import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
+import { ErrorMessages, SuccessMessages } from "../../../shared/Messages";
+import { IStorageService } from "../../../domain/common/services/IStorageService";
 import { BadRequestError, NotFoundError } from "../../errors";
+import { IProfileImageUpdateUseCase } from "../interfaces/IProfileImageUpdateUseCase";
 
 
-export class ProfileImageUpdateUseCase{
+export class ProfileImageUpdateUseCase implements IProfileImageUpdateUseCase{
     constructor(
-        private _medicalRepRepository:IMedicalRepRepository
+        private _userRepository:IUserRepository,
+        private _storageService:IStorageService
     ){}
 
-    async execute(userId:string,file:Express.Multer.File | null):Promise<string>{
-        if(!file) throw new BadRequestError("No file provided for profile image");
-        const user=await this._medicalRepRepository.getMedicalRepById(userId);
-        if(!user) throw new NotFoundError("User not found");
-        const imageUrl=file.path;
-        await this._medicalRepRepository.updateProfileImage(userId,imageUrl);
-        return "Profile picture added Successfully"
+    async execute(userId:string,fileKey?:string | null):Promise<{message:string,signedUrl:string}>{
+        if(!fileKey) throw new BadRequestError(ErrorMessages.PROFILE_IMAGE_REQUIRED);
+        const user=await this._userRepository.findById(userId);
+        if(!user) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
+        const oldFileKey=user.profileImage;
+        const updatedUser=await this._userRepository.updateProfileImage(userId,fileKey);
+        if(!updatedUser) throw new BadRequestError(ErrorMessages.PROFILE_UPDATE_FAIL);
+        if(oldFileKey && oldFileKey !==fileKey){
+        await this._storageService.deleteFile(oldFileKey);
+        }
+        const signedUrl=await this._storageService.generateSignedUrl(fileKey);
+        return {message:SuccessMessages.PROFILE_PIC_UPDATE,signedUrl};
     }
 }

@@ -1,17 +1,14 @@
-import { Button } from "@/components/ui/button";
-import useFetchList from "@/hooks/useFetchList";
+import useFetchList from "@/hooks/useFetchItem";
 import { getAllDoctors, blockUser, unblockUser } from "../api/superAdminApi";
 import { useCallback, useState } from "react";
-import AppPagination from "@/components/shared/AppPagination";
-import SearchInput from "../components/SearchInput";
 import toast from "react-hot-toast";
-import { Doctor} from "../Schemas/Doctor";
-import { DoctorResponse} from "../Schemas/DoctorResponse";
+import { Doctor } from "../dto/Doctor";
+import { DoctorResponse } from "../dto/DoctorResponse";
 import { useNavigate } from "react-router-dom";
-
+import { AdminTable } from "../components/AdminTable";
 
 const DoctorsList = () => {
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const limit = 8;
   const [search, setSearch] = useState("");
@@ -35,7 +32,7 @@ const DoctorsList = () => {
       if (doctor.isBlocked) {
         const res = await unblockUser(doctor.loginId);
         userUpdated = res?.updatedUser;
-        toast.success(res.message)
+        toast.success(res.message);
       } else {
         const res = await blockUser(doctor.loginId);
         userUpdated = res?.updatedUser;
@@ -55,116 +52,64 @@ const DoctorsList = () => {
           : prev
       );
     } catch (err) {
-      console.log("falied to toggle block button", err);
       alert("Something went wrong while updating block status");
     } finally {
       setBlockLoading(null);
     }
   };
 
-  const handleDetailPage= async (id:string)=>{
-         if(id){
-           navigate(`/admin/doctors/${id}`);
-         }else{
-          toast.error("Invalid request");
-         }
-         
-  }
+  const handleDetailPage = async (id: string) => {
+    if (id) {
+      navigate(`/admin/doctors/${id}`);
+    } else {
+      toast.error("Invalid request");
+    }
+  };
+  const columns = [
+    { key: "name", label: "Name" },
+    { key: "email", label: "Email" },
+    { key: "phone", label: "Phone" },
+    { key: "hospital", label: "Hospital" },
+    {
+      key: "createdAt",
+      label: "Registration Date",
+      render: (d: Doctor) => new Date(d.createdAt).toLocaleDateString(),
+    },
+    {
+      key: "isBlocked",
+      label: "Status",
+      render: (d: Doctor) => (
+        <span
+          className={`px-2 py-1 rounded-full text-xs font-medium ${
+            d.isBlocked
+              ? "bg-red-100 text-red-700"
+              : "bg-green-100 text-green-700"
+          }`}
+        >
+          {d.isBlocked ? "Blocked" : "Active"}
+        </span>
+      ),
+    },
+  ];
 
   return (
-    <>
-
-      <div className="min-h-screen bg-gray-50 p-4">
-        <span className="font-bold text-2xl text-gray-600">
-          Doctors Management
-        </span>
-
-        <div className="flex items-center gap-2 p-2">
-          <SearchInput
-            value={search}
-            onChange={setSearch}
-            placeholder="Search doctors..."
-          />
-        </div>
-
-        <div className="p-6  bg-white rounded-xl shadow-md mt-3">
-          <h2 className="text-xl font-semibold mb-4">Registered Doctors</h2>
-
-          {loading ? (
-            <p className="text-gray-500">Loading doctors...</p>
-          ) : error ? (
-            <p className="text-red-500">{error}</p>
-          ) : doctors.length === 0 ? (
-            <p className="text-gray-500">No doctors found</p>
-          ) : (
-            <table className="w-full border-collapse">
-              <thead>
-                <tr className="bg-gray-100 text-left text-sm font-medium">
-                  <th className="p-3">Name</th>
-                  <th className="p-3">Email</th>
-                  <th className="p-3">Phone</th>
-                  <th className="p-3">Hospital</th>
-                  <th className="p-3">Registration Date</th>
-                  <th className="p-3">Status</th>
-                  <th className="p-3 text-center">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {doctors.map((doctor) => (
-                  <tr key={doctor.id} className="border-b hover:bg-gray-50">
-                    <td className="p-3">{doctor.name}</td>
-                    <td className="p-3">{doctor.email}</td>
-                    <td className="p-3">{doctor.phone}</td>
-                    <td className="p-3">{doctor.hospital}</td>
-                    <td className="p-3">
-                      {new Date(doctor.createdAt).toLocaleDateString()}
-                    </td>
-                    <td className="p-3">
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          doctor.isBlocked
-                            ? "bg-red-100 text-red-700"
-                            : "bg-green-100 text-green-700"
-                        }`}
-                      >
-                        {doctor.isBlocked === undefined
-                          ? "Unknown"
-                          : doctor.isBlocked
-                          ? "Blocked"
-                          : "Active"}
-                      </span>
-                    </td>
-                    <td className="p-3 flex justify-center gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDetailPage(doctor.id)}
-                      >
-                        View
-                      </Button>
-                      <Button
-                        variant={doctor.isBlocked ? "default" : "destructive"}
-                        size="sm"
-                        disabled={blockLoading === doctor.loginId}
-                        onClick={() => handleBlockToggle(doctor)}
-                      >
-                        {doctor.isBlocked ? "Unblock" : "Block"}
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-
-        <AppPagination
-          page={page}
-          totalPages={totalPage}
-          onPageChange={setPage}
-        />
-      </div>
-    </>
+    <AdminTable
+      title="Doctors Management"
+      data={doctors}
+      columns={columns}
+      loading={loading}
+      error={error}
+      page={page}
+      totalPages={totalPage}
+      onPageChange={setPage}
+      search={search}
+      onSearchChange={setSearch}
+      onView={handleDetailPage}
+      onBlockToggle={handleBlockToggle}
+      blockLoadingId={blockLoading}
+      getId={(d) => d.id}
+      isBlocked={(d) => d.isBlocked}
+    />
   );
 };
 
