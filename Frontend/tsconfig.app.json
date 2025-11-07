@@ -32,5 +32,5 @@
   },
   "include": [
     "src"
-  ]
+, "src/routes/DoctorRoutes.tsx"  ]
 }

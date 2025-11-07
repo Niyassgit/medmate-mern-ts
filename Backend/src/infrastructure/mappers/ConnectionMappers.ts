@@ -1,7 +1,6 @@
 import { Connection, Prisma} from "@prisma/client";
 import { IConnection } from "../../domain/connection/entities/IConnection";
 import { ConnectionInitiator, ConnectionStatus } from "../../shared/Enums";
-import { AnalyticsDTO } from "../../application/medicalRep/dto/AnalyticsDTO";
 
 export class ConnectionMappers{
     static toDomain(persistance:Connection):IConnection{

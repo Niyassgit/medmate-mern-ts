@@ -5,6 +5,8 @@ import { ProductPostMapper } from "../mappers/ProductPostMapper";
 import { BaseRepository } from "../database/BaseRepository";
 import { Prisma, ProductPost } from "@prisma/client";
 import { IProductPostForFeed } from "../../domain/product/entity/IProductPostForFeed";
+import { IMedicalRepWithUser } from "../../domain/medicalRep/entities/IMedicalRepWithUser";
+import { MedicalRepWithUserMapper } from "../mappers/MedicalRepWithUserMapper";
 
 export class ProductPostRepository
   extends BaseRepository<
@@ -37,13 +39,26 @@ export class ProductPostRepository
     const post = await this.findById(postId);
     return post ? post : null;
   }
-  async getProducts(userId: string): Promise<IProductPost[] | null> {
+  async getProducts(userId: string): Promise<IProductPostForFeed[] | null> {
     const products = await prisma.productPost.findMany({
       where: { repId: userId, isArchived: false },
+       include:{
+        rep:{
+          include:{
+            user:true
+          }
+        },
+        _count:{
+          select:{
+            interests:true,
+            Likes:true,
+          }
+        }
+      },
       orderBy: { createdAt: "desc" },
     });
     if (!products || products.length === 0) return null;
-    return ProductPostMapper.toDomainList(products);
+    return ProductPostMapper.toFeedList(products);
   }
   async getPostDetails(postId: string): Promise<IProductPost | null> {
     const product = await this.findById(postId);
@@ -92,5 +107,39 @@ export class ProductPostRepository
       where:{id:postId}
     });
     return true;
+  }
+  async findRepByPostId(postId: string): Promise<IMedicalRepWithUser | null> {
+    const post=await prisma.productPost.findFirst({
+      where:{id:postId},
+    include:{
+      rep:{
+        include:{
+          user:true,
+        }
+      },
+    }
+    });
+    if(!post?.rep) return null;
+    return MedicalRepWithUserMapper.toDomain(post.rep);
+  }
+  async findPostsByRepId(repId: string): Promise<IProductPostForFeed[] | null> {
+    const posts=await prisma.productPost.findMany({
+      where:{repId},
+      include:{
+        rep:{
+          include:{
+            user:true
+          }
+        },
+        _count:{
+          select:{
+            interests:true,
+            Likes:true,
+          }
+        }
+      }
+    });
+    if(!posts) return null;
+    return ProductPostMapper.toFeedList(posts)
   }
 }

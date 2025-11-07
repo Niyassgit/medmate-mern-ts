@@ -41,3 +41,11 @@ export const getAllFeed=async(id:string)=>{
     const res=await api.get(DoctorEndpoints.REP_FEED(id));
     return res.data;
 }
+export const getPostDetails=async(postId:string)=>{
+    const res=await api.get(DoctorEndpoints.POST_DETAILS(postId));
+    return res.data;
+}
+export const repProfileDetails=async(repId:string)=>{
+    const res=await api.get(DoctorEndpoints.REP_DETAILS(repId));
+    return res.data;
+}

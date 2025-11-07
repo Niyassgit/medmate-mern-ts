@@ -24,6 +24,7 @@ export class DoctorDetailsMapper {
       licenseImageUrl:doctor.licenseImageUrl ?? null,
       educations: doctor.educations ?? [],
       certificates: doctor.certificates ?? [],
+      
     };
   }
 

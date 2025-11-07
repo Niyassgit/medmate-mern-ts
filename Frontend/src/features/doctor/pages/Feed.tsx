@@ -5,6 +5,7 @@ import { getAllFeed } from "../api";
 import toast from "react-hot-toast";
 import useFetchItem from "@/hooks/useFetchItem";
 import { FeedPostDTO } from "../dto/FeedPostDTO";
+import { SpinnerButton } from "@/components/shared/SpinnerButton";
 
 const Feed = () => {
   const id = useSelector((state: any) => state.auth.user?.id);
@@ -28,9 +29,7 @@ const Feed = () => {
 
   if (loading)
     return (
-      <div className="flex justify-center items-center min-h-screen text-muted">
-        Loading feed...
-      </div>
+      <SpinnerButton />
     );
 
   if (error)
@@ -39,7 +38,6 @@ const Feed = () => {
         Something went wrong
       </div>
     );
-  console.log("fetched data:", feedData);
 
   return (
     <div className="p-6 space-y-6">

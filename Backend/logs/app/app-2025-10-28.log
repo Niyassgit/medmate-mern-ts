@@ -89,3 +89,40 @@
 [2025-10-28 21:47:38] [33mwarn[39m: [33mAppError: Retry later[39m
 [2025-10-28 21:47:45] [33mwarn[39m: [33mAppError: Retry later[39m
 [2025-10-28 21:47:46] [33mwarn[39m: [33mAppError: Retry later[39m
+[2025-10-28 22:58:37] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 23:22:17] [31merror[39m: [31mFailed to start server:TypeError: argument handler is required[39m
+[2025-10-28 23:22:26] [31merror[39m: [31mFailed to start server:TypeError: argument handler is required[39m
+[2025-10-28 23:22:34] [31merror[39m: [31mFailed to start server:TypeError: Missing parameter name at 17: https://git.new/pathToRegexpError[39m
+[2025-10-28 23:22:56] [31merror[39m: [31mFailed to start server:TypeError: argument handler is required[39m
+[2025-10-28 23:23:02] [31merror[39m: [31mFailed to start server:ReferenceError: Auth is not defined[39m
+[2025-10-28 23:23:11] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 23:32:18] [31merror[39m: [31mFailed to start server:TypeError: argument handler must be a function[39m
+[2025-10-28 23:32:25] [31merror[39m: [31mFailed to start server:TypeError: argument handler must be a function[39m
+[2025-10-28 23:32:32] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 23:32:54] [31merror[39m: [31mFailed to start server:TypeError: argument handler is required[39m
+[2025-10-28 23:32:56] [31merror[39m: [31mFailed to start server:TypeError: argument handler is required[39m
+[2025-10-28 23:33:01] [31merror[39m: [31mFailed to start server:TypeError: argument handler is required[39m
+[2025-10-28 23:33:06] [31merror[39m: [31mFailed to start server:TypeError: argument handler is required[39m
+[2025-10-28 23:33:12] [31merror[39m: [31mFailed to start server:TypeError: Missing parameter name at 20: https://git.new/pathToRegexpError[39m
+[2025-10-28 23:33:15] [31merror[39m: [31mFailed to start server:TypeError: argument handler is required[39m
+[2025-10-28 23:38:35] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 23:44:45] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 23:44:57] [31merror[39m: [31m🔥 Unhandled Error:TypeError: Cannot read properties of undefined (reading 'execute')[39m
+[2025-10-28 23:46:09] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 23:46:18] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 23:46:21] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 23:46:42] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 23:46:47] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 23:47:01] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 23:47:06] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 23:47:09] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 23:47:15] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 23:47:23] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 23:47:26] [33mwarn[39m: [33mAppError: Retry later[39m
+[2025-10-28 23:48:23] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 23:48:30] [33mwarn[39m: [33mAppError: Retry later[39m
+[2025-10-28 23:49:32] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 23:49:36] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 23:50:00] [33mwarn[39m: [33mAppError: Retry later[39m
+[2025-10-28 23:50:16] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-28 23:59:16] [32minfo[39m: [32m server running on port 5000[39m

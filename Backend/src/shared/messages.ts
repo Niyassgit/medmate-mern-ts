@@ -36,6 +36,7 @@ export const ErrorMessages = {
   NO_PENDING_REQ: "No pending request found",
   ALREADY_CONNECTED: "You are already connected",
   OPERATION_FAILE:"Operation failed",
+  ICOMPLET_PROFILE:"Complete profile to continue",
 } as const;
 
 export const SuccessMessages = {

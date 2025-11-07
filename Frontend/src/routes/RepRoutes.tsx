@@ -12,6 +12,7 @@ import CompleteProfile from "@/features/rep/pages/CompleteProfile";
 import AddPost from "@/features/rep/pages/AddPost";
 import PostDetailsPage from "@/features/rep/pages/PostDetailsPage";
 import PostEditPage from "@/features/rep/pages/PostEditPage";
+import DoctorProfile from "@/features/rep/pages/DoctorProfile";
 export const RepRoutes={
 
     path:"/rep",
@@ -31,7 +32,8 @@ export const RepRoutes={
         {path:"network",element :<Network />},
         {path:"analytics",element:<Analytics/>},
         {path:"message",element:<Messages />},
-        {path:"notification",element:<Notifications/>}
+        {path:"notification",element:<Notifications/>},
+        {path:"doctor/details/:doctorId",element:<DoctorProfile />}
 
     ]
 }

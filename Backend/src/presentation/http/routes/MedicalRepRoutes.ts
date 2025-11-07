@@ -122,5 +122,11 @@ export class MedicalRepRoutes {
       AuthorizeRole([Role.MEDICAL_REP]),
       medicalRepController.analytics
     );
+    this.router.get(
+      "/doctor/details/:doctorId",
+      Authenticate,
+      AuthorizeRole([Role.MEDICAL_REP]),
+      medicalRepController.doctorDetails
+    );
   }
 }

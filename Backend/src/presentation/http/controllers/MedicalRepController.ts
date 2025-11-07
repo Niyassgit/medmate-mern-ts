@@ -18,6 +18,7 @@ import { IAcceptConnectionRequestUseCase } from "../../../application/medicalRep
 import { IGetRepAnalyticsUseCase } from "../../../application/medicalRep/interfaces/IGetRepAnalyticsUseCase";
 import { IArchivePostUseCase } from "../../../application/productPost/interfaces/IArchivePostUseCase";
 import { IDeletePostUseCase } from "../../../application/productPost/interfaces/IDeletePostUseCase";
+import { IGetDoctorDetailsOnRepSideUseCase } from "../../../application/medicalRep/interfaces/IGetDoctorDetailsOnRepSideUseCase";
 
 export class MedicalRepController {
   constructor(
@@ -34,7 +35,8 @@ export class MedicalRepController {
     private _acceptConnectionRequestUseCase: IAcceptConnectionRequestUseCase,
     private _getRepAnalticsUseCase: IGetRepAnalyticsUseCase,
     private _archivePostUseCase: IArchivePostUseCase,
-    private _deletePostUseCase: IDeletePostUseCase
+    private _deletePostUseCase: IDeletePostUseCase,
+    private _getDoctorDetailsOnRepSideUseCase: IGetDoctorDetailsOnRepSideUseCase
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -167,6 +169,18 @@ export class MedicalRepController {
   analytics = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const response = await this._getRepAnalticsUseCase.execute(userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+  doctorDetails = async (req: Request, res: Response) => {
+    const { repId } = req.params;
+    const userId = req.user?.userId;
+    const response = await this._getDoctorDetailsOnRepSideUseCase.execute(
+      repId,
+      userId
+    );
+    console.log("response:",response);
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });

@@ -7,6 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { UserCircle2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface BaseUser {
   id: string;
@@ -32,6 +33,7 @@ interface ConnectionTableProps {
 }
 
 const ConnectionTable = ({ data, type }: ConnectionTableProps) => {
+  const navigate = useNavigate();
   if (!data || data.length === 0) {
     return (
       <div className="rounded-lg border bg-card overflow-hidden">
@@ -78,24 +80,31 @@ const ConnectionTable = ({ data, type }: ConnectionTableProps) => {
         <TableBody>
           {data.map((item) => (
             <TableRow key={item.id} className="hover:bg-muted/50">
-              <TableCell className="font-medium flex items-center gap-3">
+              <TableCell
+                className="font-medium flex items-center gap-3 cursor-pointer"
+                onClick={() =>
+                  type === "rep"
+                    ? navigate(`/doctor/rep/details/${(item as RepUser).id}`)
+                    : navigate(`/rep/doctor/details/${(item as DoctorUser).id}`)
+                }
+              >
                 {item.image ? (
                   <img
                     src={item.image}
                     alt={item.name}
-                    className="w-8 h-8 rounded-full"
+                    className="w-8 h-8 rounded-full hover:opacity-80 transition-opacity"
                   />
                 ) : (
-                  <div className="w-8 h-8 flex items-center justify-center rounded-full bg-muted">
+                  <div className="w-8 h-8 flex items-center justify-center rounded-full bg-muted hover:opacity-80 transition-opacity">
                     <UserCircle2 className="w-6 h-6 text-muted-foreground" />
                   </div>
                 )}
-                {item.name}
+                <span className="hover:underline">{item.name}</span>
               </TableCell>
 
               {type === "doctor" ? (
                 <>
-                  <TableCell className="text-muted-foreground">
+                  <TableCell className="text-muted-foreground cursor-pointer">
                     {(item as DoctorUser).hospital ?? "—"}
                   </TableCell>
                   <TableCell className="text-muted-foreground">
@@ -107,7 +116,9 @@ const ConnectionTable = ({ data, type }: ConnectionTableProps) => {
                 </>
               ) : (
                 <>
-                  <TableCell className="text-muted-foreground">
+                  <TableCell
+                    className="text-muted-foreground"
+                  >
                     {(item as RepUser).company ?? "—"}
                   </TableCell>
                   <TableCell className="text-muted-foreground">

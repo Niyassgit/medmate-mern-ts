@@ -9,6 +9,31 @@
             "date": 1761660450247,
             "name": "logs\\error\\error-2025-10-28.log",
             "hash": "b1e87e8b271412c4ba25dce2e35fb591d6775ad539f205cb5b0178913e0326a8"
+        },
+        {
+            "date": 1761709372783,
+            "name": "logs\\error\\error-2025-10-29.log",
+            "hash": "6b9519814c84611e45113ad11313fd9eb0eda6b949536917f543f20aa67c29ab"
+        },
+        {
+            "date": 1761808554753,
+            "name": "logs\\error\\error-2025-10-30.log",
+            "hash": "625b482c6c32f0f39777b489e7f34d51ef287a81cc0e8a833d39ea03060b6227"
+        },
+        {
+            "date": 1761884968159,
+            "name": "logs\\error\\error-2025-10-31.log",
+            "hash": "d24ee7169ee9d6342f11991aa61a5258d8e3da856277b1051e80e13f9f79ce5d"
+        },
+        {
+            "date": 1762410359918,
+            "name": "logs\\error\\error-2025-11-06.log",
+            "hash": "58ff69f8fc6731a98b4f5c3af41d124687979976738376b1381049b6ff073ef8"
+        },
+        {
+            "date": 1762513112643,
+            "name": "logs\\error\\error-2025-11-07.log",
+            "hash": "659890261847d53e8c49805f44030d05ff09a2220b2888f96ca2378df254dc14"
         }
     ],
     "hashType": "sha256"

@@ -11,6 +11,8 @@ import { IConnectionRequestUseCase } from "../../../application/doctor/interface
 import { IAcceptConnectionRequestUseCase } from "../../../application/medicalRep/interfaces/IAcceptConnectionRequestUseCase";
 import { IDoctorAnalyticsUseCase } from "../../../application/doctor/interfaces/IDoctorAnalyticsUseCase";
 import { IGetFeedUseCase } from "../../../application/doctor/interfaces/IGetFeedUseCase";
+import { IPostDetailsUseCase } from "../../../application/doctor/interfaces/IPostDetailsUseCase";
+import { IGetRepDetailsOnDoctorUseCase } from "../../../application/doctor/interfaces/IGetRepDetailsOnDoctorUseCase";
 
 export class DoctorController {
   constructor(
@@ -22,7 +24,9 @@ export class DoctorController {
     private _connectionRequestUseCase: IConnectionRequestUseCase,
     private _acceptConnectionRequestUseCase: IAcceptConnectionRequestUseCase,
     private _analyticsUseCase: IDoctorAnalyticsUseCase,
-    private _getFeedUseCase: IGetFeedUseCase
+    private _getFeedUseCase: IGetFeedUseCase,
+    private _postDetailsUseCase: IPostDetailsUseCase,
+    private _getRepDetailsOnDoctorUseCase: IGetRepDetailsOnDoctorUseCase
   ) {}
 
   createDoctor = async (req: Request, res: Response) => {
@@ -94,6 +98,25 @@ export class DoctorController {
   getFeed = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const response = await this._getFeedUseCase.execute(userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+  postDetails = async (req: Request, res: Response) => {
+    const { postId } = req.params;
+    const userId = req.user?.userId;
+    const response = await this._postDetailsUseCase.execute(postId, userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+  RepDetails = async (req: Request, res: Response) => {
+    const { repId } = req.params;
+    const userId = req.user?.userId;
+    const response = await this._getRepDetailsOnDoctorUseCase.execute(
+      repId,
+      userId
+    );
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });

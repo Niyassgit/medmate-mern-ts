@@ -45,7 +45,5 @@ export class DoctorMapper {
       loginId,
     };
   } 
- 
-
 
 }

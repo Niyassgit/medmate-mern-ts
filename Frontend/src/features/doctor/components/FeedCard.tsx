@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { Heart, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -19,6 +20,7 @@ const FeedCard = ({
   hasLiked,
   onInterest,
 }: FeedCardProps) => {
+  const navigate = useNavigate();
   const { rep, title, image, likes, interests, useCases, createdAt } = post;
 
   const initials = rep?.name
@@ -29,8 +31,15 @@ const FeedCard = ({
         .toUpperCase()
     : "U";
 
+  const handleCardClick = () => {
+    navigate(`/doctor/feed/${post.id}`);
+  };
+
   return (
-    <Card className="max-w-xl mx-auto overflow-hidden transition-all hover:shadow-lg bg-card border border-border rounded-2xl">
+    <Card
+      className="max-w-xl mx-auto overflow-hidden transition-all hover:shadow-lg bg-card border border-border rounded-2xl cursor-pointer"
+      onClick={handleCardClick}
+    >
       {/* User Header */}
       <div className="flex items-center gap-3 p-4">
         <Avatar className="h-10 w-10">
@@ -71,7 +80,6 @@ const FeedCard = ({
           {title}
         </h2>
 
-        {/* Key Benefits */}
         {useCases?.length > 0 && (
           <div className="space-y-2">
             <h3 className="font-semibold text-card-foreground text-sm">
@@ -91,7 +99,6 @@ const FeedCard = ({
           </div>
         )}
 
-        {/* Engagement Metrics */}
         <div className="flex items-center justify-between pt-3 text-sm text-muted-foreground border-t border-border">
           <div className="flex items-center gap-1">
             <Heart className="h-4 w-4" />
@@ -103,8 +110,11 @@ const FeedCard = ({
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex gap-3 pt-3">
+        {/* Buttons — stop event from propagating */}
+        <div
+          className="flex gap-3 pt-3"
+          onClick={(e) => e.stopPropagation()} // prevents navigation when clicking buttons
+        >
           <Button
             variant={hasLiked ? "default" : "outline"}
             size="sm"

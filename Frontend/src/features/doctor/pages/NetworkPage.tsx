@@ -4,6 +4,7 @@ import { RepCardDetailsDTO } from "../dto/RepCardDetailsDTO";
 import { useSelector } from "react-redux";
 import { getNetworks } from "../api";
 import useFetchItem from "@/hooks/useFetchItem";
+import { SpinnerButton } from "@/components/shared/SpinnerButton";
 
 export default function NetworkPage() {
   const [connections, setConnections] = useState<Set<string>>(new Set());
@@ -20,7 +21,7 @@ export default function NetworkPage() {
     error,
   } = useFetchItem<RepCardDetailsDTO[] | null>(fetchReps);
 
-  if (loading) return <p className="text-center py-6">Loading...</p>;
+  if (loading) return (<SpinnerButton />);
   if (error) return <p className="text-center text-red-600">{error}</p>;
 
   const handleConnect = (userId: string, status: string | null) => {

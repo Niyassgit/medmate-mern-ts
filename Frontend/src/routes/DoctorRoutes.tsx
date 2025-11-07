@@ -7,6 +7,8 @@ import DoctorLayout from "@/features/doctor/components/DoctorLayout";
 import CompleteProfilePage from "@/features/doctor/pages/CompleteProfilePage";
 import NetworkPage from "@/features/doctor/pages/NetworkPage";
 import DoctorAnalyticsPage from "@/features/doctor/pages/DoctorAnalyticsPage";
+import PostDetails from "@/features/doctor/pages/ProductDetails";
+import { RepDetailsPage } from "@/features/doctor/pages/RepDetailsPage";
 
 export const DoctorRoutes={
     path:"/doctor",
@@ -17,10 +19,12 @@ export const DoctorRoutes={
     ),
     children:[
       {path:"feed",element:<Feed />},
+      {path:"feed/:postId",element:<PostDetails />},
       {path:"profile", element:<ProfilePage/>},
       {path:"profile/complete/:id",element:<CompleteProfilePage />},
       {path:"connections",element:<Connections />},
       {path:"network",element:<NetworkPage />},
-      {path:"analytics",element:<DoctorAnalyticsPage />}
-    ]
+      {path:"analytics",element:<DoctorAnalyticsPage />},
+      {path:"rep/details/:repId",element:<RepDetailsPage />}
+    ] 
 };

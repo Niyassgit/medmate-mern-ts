@@ -70,7 +70,21 @@ export class DoctorRoutes {
     );
     this.router.get(
       "/feed/:userId",
+      Authenticate,
+      AuthorizeRole([Role.DOCTOR]),
       doctorController.getFeed
+    );
+    this.router.get(
+      "/feed/post-details/:postId",
+      Authenticate,
+      AuthorizeRole([Role.DOCTOR]),
+      doctorController.postDetails
+    );
+    this.router.get(
+      "/rep/details/:repId",
+      Authenticate,
+      AuthorizeRole([Role.DOCTOR]),
+      doctorController.RepDetails
     );
   }
 }
