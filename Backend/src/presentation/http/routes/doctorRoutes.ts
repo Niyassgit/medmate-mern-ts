@@ -50,5 +50,6 @@ export class DoctorRoutes {
     this.router.get("/feed/:userId", doctorController.getFeed);
     this.router.get("/feed/post-details/:postId", doctorController.postDetails);
     this.router.get("/rep/details/:repId", doctorController.RepDetails);
+    this.router.post("/feed/:postId/like/toggle",doctorController.toggleLike);
   }
 }

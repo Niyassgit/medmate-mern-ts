@@ -14,7 +14,7 @@ import { IGetFeedUseCase } from "../../../application/doctor/interfaces/IGetFeed
 import { IPostDetailsUseCase } from "../../../application/doctor/interfaces/IPostDetailsUseCase";
 import { IGetRepDetailsOnDoctorUseCase } from "../../../application/doctor/interfaces/IGetRepDetailsOnDoctorUseCase";
 import { GetOptionalUserId } from "../utils/GetOptionalUserId";
-
+import { IToggleLikeOnPostUseCase } from "../../../application/Like/interfaces/IToggleLikeOnPostUseCase";
 
 export class DoctorController {
   constructor(
@@ -28,7 +28,8 @@ export class DoctorController {
     private _analyticsUseCase: IDoctorAnalyticsUseCase,
     private _getFeedUseCase: IGetFeedUseCase,
     private _postDetailsUseCase: IPostDetailsUseCase,
-    private _getRepDetailsOnDoctorUseCase: IGetRepDetailsOnDoctorUseCase
+    private _getRepDetailsOnDoctorUseCase: IGetRepDetailsOnDoctorUseCase,
+    private _toggleLikeOnPostUseCase: IToggleLikeOnPostUseCase
   ) {}
 
   createDoctor = async (req: Request, res: Response) => {
@@ -127,6 +128,18 @@ export class DoctorController {
     const userId = GetOptionalUserId(req.user);
     const response = await this._getRepDetailsOnDoctorUseCase.execute(
       repId,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  toggleLike = async (req: Request, res: Response) => {
+    const { postId } = req.params;
+    const userId =GetOptionalUserId(req.user);
+    const response = await this._toggleLikeOnPostUseCase.execute(
+      postId,
       userId
     );
     return res

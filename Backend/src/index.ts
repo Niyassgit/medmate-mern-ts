@@ -1,9 +1,10 @@
+import http from "http";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
 import morgan from "morgan";
-import {env} from "./infrastructure/config/env"
+import { env } from "./infrastructure/config/env";
 import { fileURLToPath } from "url";
 import { connectDB } from "./infrastructure/config/db";
 import { LoginRoute } from "./presentation/http/routes/AuthRoute";
@@ -12,6 +13,7 @@ import { DoctorRoutes } from "./presentation/http/routes/DoctorRoutes";
 import { SuperAdminRoutes } from "./presentation/http/routes/SuperAdminRoutes";
 import { ErrorHandler } from "./presentation/http/middlewares/ErrorHandler";
 import { CommonRoutes } from "./presentation/http/routes/CommonRoutes";
+import { initSocket } from "./infrastructure/realtime/SocketGateway";
 import logger from "./infrastructure/logger/Logger";
 
 const app = express();
@@ -20,7 +22,7 @@ app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(
   cors({
-    origin:env.origin,
+    origin: env.origin,
     credentials: true,
   })
 );
@@ -38,14 +40,18 @@ const startServer = async () => {
     app.use("/api/rep", new MedicalRepRoutes().router);
     app.use("/api/admin", new SuperAdminRoutes().router);
     app.use("/api/auth", new LoginRoute().router);
-    app.use("/api/common",new CommonRoutes().router );
+    app.use("/api/common", new CommonRoutes().router);
 
     app.use(ErrorHandler);
+
+    const server = http.createServer(app);
+    const io = initSocket(server);
+
     app.listen(env.port, () => {
       logger.info(` server running on port ${env.port}`);
     });
   } catch (err) {
-    const error=err as Error;
+    const error = err as Error;
     logger.error(`Failed to start server:${error.message}`);
     process.exit(1);
   }

@@ -49,3 +49,7 @@ export const repProfileDetails=async(repId:string)=>{
     const res=await api.get(DoctorEndpoints.REP_DETAILS(repId));
     return res.data;
 }
+export const handleLikeToggle=async(postId:string)=>{
+    const res=await api.post(DoctorEndpoints.LIKE_TOGGLE(postId));
+    return res.data;
+}

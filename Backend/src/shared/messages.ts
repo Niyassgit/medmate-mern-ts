@@ -38,6 +38,8 @@ export const ErrorMessages = {
   ALREADY_CONNECTED: "You are already connected",
   OPERATION_FAILE:"Operation failed",
   ICOMPLET_PROFILE:"Complete profile to continue",
+  TOGGLE_LIKE_ERROR:"Failed to update like,please try again",
+  LIKE_COUNT_ERROR:"Failed to fetch the count of the likes",
 } as const;
 
 export const SuccessMessages = {
@@ -61,7 +63,9 @@ export const SuccessMessages = {
   CANCEL_CONNECTION_REQ: "Connection request Cancelled",
   CONNECTED: "Connection accepted",
   POST_ARCHIVE_SUCCESS:"Post archived successfully",
-  POST_DELETE_SUCCESS:"Post deleted successfully"
+  POST_DELETE_SUCCESS:"Post deleted successfully",
+  LIKE_SUCCESS:"Post liked succesfully",
+  UNLIKE_SUCCESS:"Post unliked successfully",
 } as const;
 
 export const NotificationMessages = {

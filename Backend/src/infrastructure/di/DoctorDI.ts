@@ -18,9 +18,13 @@ import { DoctorAnalyticsUseCase } from "../../application/doctor/use-cases/Docto
 import { DepartmentRepository } from "../repositories/DepatmentRepository";
 import { GetFeedUseCase } from "../../application/doctor/use-cases/GetFeedUseCase";
 import { ProductPostRepository } from "../repositories/ProductPostRepository";
-import { GetProductPostDetailsUseCase } from "../../application/productPost/use-case/GetProductPostDetailsUseCase";
 import { PostDetailsUseCase } from "../../application/doctor/use-cases/PostDetailsUseCase";
 import { GetRepDetailsOnDoctorUseCase } from "../../application/doctor/use-cases/GetRepDetailsOnDoctorUseCase";
+import { ToggleLikeOnPostUseCase } from "../../application/Like/use-cases/ToggleLikeOnPostUseCase";
+import { LikeRepository } from "../repositories/LikeRepository";
+import { SocketEngagementEventPublisher } from "../realtime/publishers/SocketEngagementEventPublisher";
+
+
 
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
@@ -32,7 +36,8 @@ const storageService = new s3StorageService();
 const connectionRepository = new ConnectionRepository();
 const departmentRepository = new DepartmentRepository();
 const productPostRepository = new ProductPostRepository();
-
+const likeRepository = new LikeRepository();
+const eventPublisher=new SocketEngagementEventPublisher()
 const createDoctorUseCase = new CreateDoctorUseCase(
   doctorRepository,
   bycryptServices,
@@ -94,6 +99,11 @@ const getRepDetailsOnDoctorUseCase = new GetRepDetailsOnDoctorUseCase(
   productPostRepository,
   storageService
 );
+const toggleLikeOnPostUseCase = new ToggleLikeOnPostUseCase(
+  doctorRepository,
+  likeRepository,
+  eventPublisher
+);
 export const doctorController = new DoctorController(
   createDoctorUseCase,
   getDoctorprofileById,
@@ -106,4 +116,5 @@ export const doctorController = new DoctorController(
   getFeedUseCase,
   postDetailsUseCase,
   getRepDetailsOnDoctorUseCase,
+  toggleLikeOnPostUseCase
 );

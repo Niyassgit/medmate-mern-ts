@@ -25,7 +25,7 @@ export class ProductPostMapper {
     };
   }
 
-  static toProductList(persistance: IProductPost[],storageService:IStorageService): ProductListDTO[] {
+  static toProductList(persistance: IProductPost[]): ProductListDTO[] {
     return persistance.map((product) => ({
       id: product.id,
       image: product.imageUrl?.[0] || "",
