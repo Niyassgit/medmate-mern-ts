@@ -21,14 +21,24 @@ export const DoctorProfileHeader = ({ doctor }: DoctorProfileHeaderProps) => {
     <div className="bg-card border border-border rounded-lg p-6 mb-6 shadow-sm">
       <div className="flex flex-col md:flex-row gap-6">
         <Avatar className="h-24 w-24 border-4 border-primary/10">
-          <AvatarFallback className="bg-primary/10 text-primary text-2xl font-semibold">
-            {getInitials(doctor.name)}
-          </AvatarFallback>
+          {doctor.profileImage ? (
+            <img
+              src={doctor.profileImage}
+              alt={doctor.name}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <AvatarFallback className="bg-primary/10 text-primary text-2xl font-semibold">
+              {getInitials(doctor.name)}
+            </AvatarFallback>
+          )}
         </Avatar>
 
         <div className="flex-1 space-y-4">
           <div>
-            <h1 className="text-3xl font-bold text-foreground mb-2">{doctor.name}</h1>
+            <h1 className="text-3xl font-bold text-foreground mb-2">
+              {doctor.name}
+            </h1>
             <div className="flex flex-wrap gap-2 mb-3">
               {doctor.departmentName && (
                 <Badge variant="secondary" className="gap-1">

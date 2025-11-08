@@ -68,3 +68,7 @@ export const deleteProductPost=async(postId:string)=>{
    const res=await api.delete(RepEndpoints.DELETE_POST(postId));
    return res.data;
 }
+export const doctorDetails=async(doctorId:string)=>{
+  const res=await api.get(RepEndpoints.DOCTOR_PROFILE(doctorId));
+  return res.data;
+}

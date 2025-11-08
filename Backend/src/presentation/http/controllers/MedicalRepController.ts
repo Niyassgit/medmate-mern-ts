@@ -19,6 +19,7 @@ import { IGetRepAnalyticsUseCase } from "../../../application/medicalRep/interfa
 import { IArchivePostUseCase } from "../../../application/productPost/interfaces/IArchivePostUseCase";
 import { IDeletePostUseCase } from "../../../application/productPost/interfaces/IDeletePostUseCase";
 import { IGetDoctorDetailsOnRepSideUseCase } from "../../../application/medicalRep/interfaces/IGetDoctorDetailsOnRepSideUseCase";
+import { GetOptionalUserId } from "../utils/GetOptionalUserId";
 
 export class MedicalRepController {
   constructor(
@@ -125,15 +126,15 @@ export class MedicalRepController {
   };
   archivePost = async (req: Request, res: Response) => {
     const { postId } = req.params;
-    const userId = req.user?.userId;
+    const userId = GetOptionalUserId(req.user);
     const response = await this._archivePostUseCase.execute(postId, userId);
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, message: response });
   };
   deletePost = async (req: Request, res: Response) => {
-    const { postId } = req.params;
-    const userId = req.user?.userId;
+    const { postId } = req.params;  
+    const userId = GetOptionalUserId(req.user);
     const response = await this._deletePostUseCase.execute(postId, userId);
     return res
       .status(HttpStatusCode.NO_CONTENT)
@@ -146,7 +147,7 @@ export class MedicalRepController {
   };
   connectionRequest = async (req: Request, res: Response) => {
     const { doctorId } = req.params;
-    const userId = req.user?.userId;
+    const userId = GetOptionalUserId(req.user);
     const response = await this._makeConnectionRequestUsecase.execute(
       doctorId,
       userId
@@ -157,7 +158,7 @@ export class MedicalRepController {
   };
   acceptingConnectionRequest = async (req: Request, res: Response) => {
     const { doctorId } = req.params;
-    const userId = req.user?.userId;
+    const userId = req.user?.userId as string;
     const response = await this._acceptConnectionRequestUseCase.execute(
       doctorId,
       userId
@@ -174,15 +175,15 @@ export class MedicalRepController {
       .json({ success: true, data: response });
   };
   doctorDetails = async (req: Request, res: Response) => {
-    const { repId } = req.params;
-    const userId = req.user?.userId;
+    const { doctorId } = req.params;
+    const userId =GetOptionalUserId(req.user);
     const response = await this._getDoctorDetailsOnRepSideUseCase.execute(
-      repId,
+      doctorId,
       userId
     );
-    console.log("response:",response);
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
   };
 }
+ 

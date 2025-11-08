@@ -16,6 +16,7 @@ export interface DoctorDetailsOnRepDTO {
   id: string;
   createdAt: Date;
   name: string;
+  profileImage:string | null;
   phone: string;
   hasOwnClinic?: boolean | null;
   hospital: string;

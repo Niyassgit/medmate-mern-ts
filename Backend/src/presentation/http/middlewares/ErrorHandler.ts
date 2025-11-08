@@ -14,7 +14,8 @@ export const ErrorHandler = (
     logger.warn(`AppError: ${err.message}`);
     res.status(err.statusCode).json({ success: false, message: err.message });
   } else {
-    logger.error(`🔥 Unhandled Error:${err}`);
+    const error=err as Error;
+    logger.error(`🔥 Unhandled Error:${error.message}`);
     res
       .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
       .json({ success: false, message: ErrorMessages.SERVER_ERROR });

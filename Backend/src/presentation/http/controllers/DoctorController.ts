@@ -13,6 +13,8 @@ import { IDoctorAnalyticsUseCase } from "../../../application/doctor/interfaces/
 import { IGetFeedUseCase } from "../../../application/doctor/interfaces/IGetFeedUseCase";
 import { IPostDetailsUseCase } from "../../../application/doctor/interfaces/IPostDetailsUseCase";
 import { IGetRepDetailsOnDoctorUseCase } from "../../../application/doctor/interfaces/IGetRepDetailsOnDoctorUseCase";
+import { GetOptionalUserId } from "../utils/GetOptionalUserId";
+
 
 export class DoctorController {
   constructor(
@@ -72,7 +74,12 @@ export class DoctorController {
   };
   connectionRequest = async (req: Request, res: Response) => {
     const { repId } = req.params;
-    const userId = req.user?.userId;
+    const userId = GetOptionalUserId(req.user);
+    if (!userId) {
+      return res
+        .status(HttpStatusCode.UNAUTHORIZED)
+        .json({ success: false, message: "Unauthorized" });
+    }
     const response = await this._connectionRequestUseCase.execute(
       repId,
       userId
@@ -81,7 +88,12 @@ export class DoctorController {
   };
   acceptConnection = async (req: Request, res: Response) => {
     const { repId } = req.params;
-    const userId = req.user?.userId;
+    const userId = GetOptionalUserId(req.user);
+    if (!userId) {
+      return res
+        .status(HttpStatusCode.UNAUTHORIZED)
+        .json({ success: false, message: "Unauthorized" });
+    }
     const response = await this._acceptConnectionRequestUseCase.execute(
       repId,
       userId
@@ -104,7 +116,7 @@ export class DoctorController {
   };
   postDetails = async (req: Request, res: Response) => {
     const { postId } = req.params;
-    const userId = req.user?.userId;
+    const userId = GetOptionalUserId(req.user);
     const response = await this._postDetailsUseCase.execute(postId, userId);
     return res
       .status(HttpStatusCode.OK)
@@ -112,7 +124,7 @@ export class DoctorController {
   };
   RepDetails = async (req: Request, res: Response) => {
     const { repId } = req.params;
-    const userId = req.user?.userId;
+    const userId = GetOptionalUserId(req.user);
     const response = await this._getRepDetailsOnDoctorUseCase.execute(
       repId,
       userId

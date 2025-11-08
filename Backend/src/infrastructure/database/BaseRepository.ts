@@ -1,13 +1,16 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaModel } from "./PrismaModel";
 import { FindManyArgs } from "../types/FindManyArgs";
+import { IBaseRepository } from "../../domain/common/repositories/IBaseRepository";
 
 export class BaseRepository<
   TDomain extends { id: string},
   TPersistence extends { id: string },
   TCreateInput extends Record<string, unknown>,
-  K extends keyof PrismaClient
-> {
+  K extends keyof PrismaClient,
+  TFindManyArgs extends FindManyArgs<TPersistence> = FindManyArgs<TPersistence>,
+  TUpdateInput extends Partial<TPersistence> = Partial<TPersistence>
+> implements IBaseRepository<TDomain, TCreateInput, TUpdateInput, TFindManyArgs> {
   protected model: PrismaModel<TPersistence>;
   protected toDomain: (p: TPersistence) => TDomain;
 
@@ -16,12 +19,12 @@ export class BaseRepository<
     this.toDomain = toDomain;
   }
 
-    async findById(id: string): Promise<TDomain | null> {
+  async findById(id: string): Promise<TDomain | null> {
     const entity = await this.model.findUnique({ where: { id } as Partial<TPersistence>});
     return entity ? this.toDomain(entity) : null;
   }
-  async findAll(args?: FindManyArgs<TPersistence>): Promise<TDomain[]> {
-    const entities = await this.model.findMany(args ?? {});
+  async findAll(args?: TFindManyArgs): Promise<TDomain[]> {
+    const entities = await this.model.findMany((args ?? {}) as FindManyArgs<TPersistence>);
     return entities.map(this.toDomain);
   }
 
@@ -32,7 +35,7 @@ export class BaseRepository<
 
   async update(
     id: string,
-    data: Partial<TPersistence>
+    data: TUpdateInput
   ): Promise<TDomain | null> {
     const updated = await this.model.update({ where: { id } as Partial<TPersistence>, data });
     return updated ? this.toDomain(updated) : null;

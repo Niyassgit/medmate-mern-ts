@@ -31,7 +31,7 @@ const errorLogDir = path.join(logDir, "error");
 });
 
 const logFormat = printf(({ level, message, timestamp }) => {
-  return `[${timestamp}] ${level}: ${message}`;
+  return `[${String(timestamp)}] ${String(level)}: ${String(message)}`;
 });
 
 const logger = createLogger({

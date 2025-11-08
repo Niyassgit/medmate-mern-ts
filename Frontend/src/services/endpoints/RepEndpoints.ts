@@ -17,4 +17,5 @@ export const RepEndpoints = {
   NETWORK_ANALYTICS:(userId:string)=>`/rep/analytics/${userId}`,
   ARCHIVE_POST:(postId:string)=>`/rep/post/archive/${postId}`,
   DELETE_POST:(postId:string)=>`/rep/post/delete/${postId}`,
+  DOCTOR_PROFILE:(doctorId:string)=>`/rep/doctor/details/${doctorId}`,
 };

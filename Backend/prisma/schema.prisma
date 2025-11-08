@@ -232,6 +232,9 @@ model Like {
 
   doctor  Doctor      @relation(fields: [doctorId], references: [id])
   product ProductPost @relation(fields: [productId], references: [id])
+
+  @@unique([doctorId,productId])
+  @@index([productId])
 }
 
 model Interest {
@@ -244,6 +247,9 @@ model Interest {
   doctor  Doctor      @relation(fields: [doctorId], references: [id])
   rep     MedicalRep  @relation(fields: [repId], references: [id])
   product ProductPost @relation(fields: [productId], references: [id])
+  @@unique([doctorId,productId])
+  @@index([repId])
+  @@index([productId])
 }
 
 enum ConnectionStatus {

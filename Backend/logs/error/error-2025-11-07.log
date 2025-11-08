@@ -1,0 +1,203 @@
+[2025-11-07 16:46:28] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientValidationError: [39m
+[31mInvalid `prisma.connection.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\ConnectionRepository.ts:34:48[39m
+
+[31m  31   doctorId: string,[39m
+[31m  32   repId: string[39m
+[31m  33 ): Promise<IConnection | null> {[39m
+[31m→ 34   const connection = await prisma.connection.findUnique({[39m
+[31m         where: {[39m
+[31m           doctorId_repId: {[39m
+[31m             repId: "68b83b627dccd8670c027b50",[39m
+[31m       +     doctorId: String[39m
+[31m           }[39m
+[31m         }[39m
+[31m       })[39m
+
+[31mArgument `doctorId` is missing.[39m
+[2025-11-07 16:46:37] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientValidationError: [39m
+[31mInvalid `prisma.connection.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\ConnectionRepository.ts:34:48[39m
+
+[31m  31   doctorId: string,[39m
+[31m  32   repId: string[39m
+[31m  33 ): Promise<IConnection | null> {[39m
+[31m→ 34   const connection = await prisma.connection.findUnique({[39m
+[31m         where: {[39m
+[31m           doctorId_repId: {[39m
+[31m             repId: "68b83b627dccd8670c027b50",[39m
+[31m       +     doctorId: String[39m
+[31m           }[39m
+[31m         }[39m
+[31m       })[39m
+
+[31mArgument `doctorId` is missing.[39m
+[2025-11-07 16:46:38] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientValidationError: [39m
+[31mInvalid `prisma.connection.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\ConnectionRepository.ts:34:48[39m
+
+[31m  31   doctorId: string,[39m
+[31m  32   repId: string[39m
+[31m  33 ): Promise<IConnection | null> {[39m
+[31m→ 34   const connection = await prisma.connection.findUnique({[39m
+[31m         where: {[39m
+[31m           doctorId_repId: {[39m
+[31m             repId: "68b83b627dccd8670c027b50",[39m
+[31m       +     doctorId: String[39m
+[31m           }[39m
+[31m         }[39m
+[31m       })[39m
+
+[31mArgument `doctorId` is missing.[39m
+[2025-11-07 16:46:39] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientValidationError: [39m
+[31mInvalid `prisma.connection.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\ConnectionRepository.ts:34:48[39m
+
+[31m  31   doctorId: string,[39m
+[31m  32   repId: string[39m
+[31m  33 ): Promise<IConnection | null> {[39m
+[31m→ 34   const connection = await prisma.connection.findUnique({[39m
+[31m         where: {[39m
+[31m           doctorId_repId: {[39m
+[31m             repId: "68b83b627dccd8670c027b50",[39m
+[31m       +     doctorId: String[39m
+[31m           }[39m
+[31m         }[39m
+[31m       })[39m
+
+[31mArgument `doctorId` is missing.[39m
+[2025-11-07 16:46:40] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientValidationError: [39m
+[31mInvalid `prisma.connection.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\ConnectionRepository.ts:34:48[39m
+
+[31m  31   doctorId: string,[39m
+[31m  32   repId: string[39m
+[31m  33 ): Promise<IConnection | null> {[39m
+[31m→ 34   const connection = await prisma.connection.findUnique({[39m
+[31m         where: {[39m
+[31m           doctorId_repId: {[39m
+[31m             repId: "68b83b627dccd8670c027b50",[39m
+[31m       +     doctorId: String[39m
+[31m           }[39m
+[31m         }[39m
+[31m       })[39m
+
+[31mArgument `doctorId` is missing.[39m
+[2025-11-07 16:46:41] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientValidationError: [39m
+[31mInvalid `prisma.connection.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\ConnectionRepository.ts:34:48[39m
+
+[31m  31   doctorId: string,[39m
+[31m  32   repId: string[39m
+[31m  33 ): Promise<IConnection | null> {[39m
+[31m→ 34   const connection = await prisma.connection.findUnique({[39m
+[31m         where: {[39m
+[31m           doctorId_repId: {[39m
+[31m             repId: "68b83b627dccd8670c027b50",[39m
+[31m       +     doctorId: String[39m
+[31m           }[39m
+[31m         }[39m
+[31m       })[39m
+
+[31mArgument `doctorId` is missing.[39m
+[2025-11-07 16:46:43] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientValidationError: [39m
+[31mInvalid `prisma.connection.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\ConnectionRepository.ts:34:48[39m
+
+[31m  31   doctorId: string,[39m
+[31m  32   repId: string[39m
+[31m  33 ): Promise<IConnection | null> {[39m
+[31m→ 34   const connection = await prisma.connection.findUnique({[39m
+[31m         where: {[39m
+[31m           doctorId_repId: {[39m
+[31m             repId: "68b83b627dccd8670c027b50",[39m
+[31m       +     doctorId: String[39m
+[31m           }[39m
+[31m         }[39m
+[31m       })[39m
+
+[31mArgument `doctorId` is missing.[39m
+[2025-11-07 16:46:46] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientValidationError: [39m
+[31mInvalid `prisma.connection.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\ConnectionRepository.ts:34:48[39m
+
+[31m  31   doctorId: string,[39m
+[31m  32   repId: string[39m
+[31m  33 ): Promise<IConnection | null> {[39m
+[31m→ 34   const connection = await prisma.connection.findUnique({[39m
+[31m         where: {[39m
+[31m           doctorId_repId: {[39m
+[31m             repId: "68b83b627dccd8670c027b50",[39m
+[31m       +     doctorId: String[39m
+[31m           }[39m
+[31m         }[39m
+[31m       })[39m
+
+[31mArgument `doctorId` is missing.[39m
+[2025-11-07 16:46:47] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientValidationError: [39m
+[31mInvalid `prisma.connection.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\ConnectionRepository.ts:34:48[39m
+
+[31m  31   doctorId: string,[39m
+[31m  32   repId: string[39m
+[31m  33 ): Promise<IConnection | null> {[39m
+[31m→ 34   const connection = await prisma.connection.findUnique({[39m
+[31m         where: {[39m
+[31m           doctorId_repId: {[39m
+[31m             repId: "68b83b627dccd8670c027b50",[39m
+[31m       +     doctorId: String[39m
+[31m           }[39m
+[31m         }[39m
+[31m       })[39m
+
+[31mArgument `doctorId` is missing.[39m
+[2025-11-07 16:47:27] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientValidationError: [39m
+[31mInvalid `prisma.connection.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\ConnectionRepository.ts:34:48[39m
+
+[31m  31   doctorId: string,[39m
+[31m  32   repId: string[39m
+[31m  33 ): Promise<IConnection | null> {[39m
+[31m→ 34   const connection = await prisma.connection.findUnique({[39m
+[31m         where: {[39m
+[31m           doctorId_repId: {[39m
+[31m             repId: "68b83b627dccd8670c027b50",[39m
+[31m       +     doctorId: String[39m
+[31m           }[39m
+[31m         }[39m
+[31m       })[39m
+
+[31mArgument `doctorId` is missing.[39m
+[2025-11-07 16:47:27] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientValidationError: [39m
+[31mInvalid `prisma.connection.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\ConnectionRepository.ts:34:48[39m
+
+[31m  31   doctorId: string,[39m
+[31m  32   repId: string[39m
+[31m  33 ): Promise<IConnection | null> {[39m
+[31m→ 34   const connection = await prisma.connection.findUnique({[39m
+[31m         where: {[39m
+[31m           doctorId_repId: {[39m
+[31m             repId: "68b83b627dccd8670c027b50",[39m
+[31m       +     doctorId: String[39m
+[31m           }[39m
+[31m         }[39m
+[31m       })[39m
+
+[31mArgument `doctorId` is missing.[39m
+[2025-11-07 19:08:56] [31merror[39m: [31m🔥 Unhandled Error:Unauthorized access[39m
+[2025-11-07 19:08:56] [31merror[39m: [31m🔥 Unhandled Error:Unauthorized access[39m
+[2025-11-07 19:09:01] [31merror[39m: [31m🔥 Unhandled Error:Unauthorized access[39m
+[2025-11-07 19:09:01] [31merror[39m: [31m🔥 Unhandled Error:Unauthorized access[39m
+[2025-11-07 19:09:47] [31merror[39m: [31m🔥 Unhandled Error:Error: Unauthorized access[39m
+[2025-11-07 19:09:47] [31merror[39m: [31m🔥 Unhandled Error:Error: Unauthorized access[39m
+[2025-11-07 19:10:50] [31merror[39m: [31m🔥 Unhandled Error:Unauthorized access[39m
+[2025-11-07 19:10:50] [31merror[39m: [31m🔥 Unhandled Error:Unauthorized access[39m
+[2025-11-07 19:13:00] [31merror[39m: [31m🔥 Unhandled Error:Unauthorized access[39m
+[2025-11-07 19:13:00] [31merror[39m: [31m🔥 Unhandled Error:Unauthorized access[39m
+[2025-11-07 19:13:53] [31merror[39m: [31m🔥 Unhandled Error:Unauthorized access[39m
+[2025-11-07 19:13:53] [31merror[39m: [31m🔥 Unhandled Error:Unauthorized access[39m
+[2025-11-07 19:14:07] [31merror[39m: [31m🔥 Unhandled Error:Unauthorized access[39m
+[2025-11-07 19:14:07] [31merror[39m: [31m🔥 Unhandled Error:Unauthorized access[39m
+[2025-11-07 19:16:44] [31merror[39m: [31m🔥 Unhandled Error:Unauthorized access[39m
+[2025-11-07 19:16:44] [31merror[39m: [31m🔥 Unhandled Error:Unauthorized access[39m

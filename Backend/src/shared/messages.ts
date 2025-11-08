@@ -1,5 +1,6 @@
 export const ErrorMessages = {
   USER_NOT_FOUND: "User not found",
+  USER_NOT_VERIFIED:"Please Verify to continue operations",
   ACCOUNT_EXIST: "User already exists",
   INVALID_CREDENTIALS: "Invalid email or password",
   UNAUTHORIZED: "Unauthorized access",

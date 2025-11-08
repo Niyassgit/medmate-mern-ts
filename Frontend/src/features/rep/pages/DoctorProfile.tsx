@@ -6,66 +6,30 @@ import { DoctorCertificates } from "../components/DoctorCertificates";
 import { DoctorDetailsOnRepDTO } from "../dto/DoctorDetailsDTO";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
-
-
-const mockDoctor: DoctorDetailsOnRepDTO = {
-  id: "1",
-  createdAt: new Date(),
-  name: "Dr. Sarah Johnson",
-  phone: "+1 (555) 123-4567",
-  hasOwnClinic: true,
-  hospital: "City General Hospital",
-  registrationId: "MED-2024-12345",
-  opHours: "Mon-Fri: 9:00 AM - 5:00 PM",
-  about: "Board-certified cardiologist with over 15 years of experience in treating cardiovascular diseases. Specialized in interventional cardiology and preventive care. Committed to providing personalized patient care and staying current with the latest medical advances.",
-  connectionStatus: null, 
-  departmentName: "Cardiology",
-  territoryName: "Downtown Medical District",
-  educations: [
-    {
-      id: "1",
-      degree: "Doctor of Medicine (MD)",
-      institution: "Harvard Medical School",
-      year: 2005,
-    },
-    {
-      id: "2",
-      degree: "Bachelor of Science in Biology",
-      institution: "Stanford University",
-      year: 2001,
-    },
-  ],
-  certificates: [
-    {
-      id: "1",
-      name: "Board Certification in Cardiology",
-      issuedBy: "American Board of Internal Medicine",
-      issuedDate: "2008-06-15",
-    },
-    {
-      id: "2",
-      name: "Advanced Cardiac Life Support (ACLS)",
-      issuedBy: "American Heart Association",
-      issuedDate: "2023-03-20",
-    },
-    {
-      id: "3",
-      name: "Interventional Cardiology Fellowship",
-      issuedBy: "Mayo Clinic",
-      issuedDate: "2007-07-01",
-    },
-  ],
-};
+import { useNavigate, useParams } from "react-router-dom";
+import useFetchItem from "@/hooks/useFetchItem";
+import { useCallback } from "react";
+import { doctorDetails } from "../api";
+import { SpinnerButton } from "@/components/shared/SpinnerButton";
 
 const DoctorProfile = () => {
   const navigate = useNavigate();
+  const { doctorId } = useParams<{ doctorId: string }>();
 
-  // In a real application, you would fetch the doctor data here
-  // const { id } = useParams();
-  // const { data: doctor } = useQuery(...);
-  
-  const doctor = mockDoctor;
+  const fetchDoctor = useCallback(async () => {
+    if (!doctorId) throw new Error("No rep Id found");
+
+    const res = await doctorDetails(doctorId);
+    return res.data as DoctorDetailsOnRepDTO;
+  }, [doctorId]);
+  const { data:doctor, error, loading } =
+    useFetchItem<DoctorDetailsOnRepDTO>(fetchDoctor);
+
+  if (loading) return <SpinnerButton />;
+  if (error || !doctor)
+    return (
+      <p className="text-center text-red-500 py-10">Failed to load data</p>
+    );
 
   return (
     <div className="min-h-screen bg-background">
@@ -80,7 +44,7 @@ const DoctorProfile = () => {
         </Button>
 
         <DoctorProfileHeader doctor={doctor} />
-        
+
         <ConnectionStatus
           connectionStatus={doctor.connectionStatus}
           doctorName={doctor.name}
