@@ -111,7 +111,7 @@ export class ProductPostMapper {
         image:p.rep.user?.profileImage,
       },
       _count: {
-        likes: p._count.Likes,
+        likes: p._count.likes,
         interests: p._count.interests,
       },
     }));

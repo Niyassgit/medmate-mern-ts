@@ -11,4 +11,5 @@ export const DoctorEndpoints={
   POST_DETAILS:(postId:string)=>`/doctor/feed/post-details/${postId}`,
   REP_DETAILS:(repId:string)=>`/doctor/rep/details/${repId}`,
   LIKE_TOGGLE:(postId:string)=>`/doctor/feed/${postId}/like/toggle`,
+  INTEREST_TOGGLE:(postId:string)=>`/doctor/feed/${postId}/interest/toggle`,
 }

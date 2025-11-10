@@ -1,14 +1,18 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import FeedCard from "@/features/doctor/components/FeedCard";
 import { useSelector } from "react-redux";
-import { getAllFeed, handleLikeToggle } from "../api";
+import { getAllFeed, handleInterestToggle, handleLikeToggle } from "../api";
 import toast from "react-hot-toast";
 import useFetchItem from "@/hooks/useFetchItem";
 import { FeedPostDTO } from "../dto/FeedPostDTO";
 import { SpinnerButton } from "@/components/shared/SpinnerButton";
+import { getSocket } from "@/lib/socket";
 
 const Feed = () => {
-  const id = useSelector((state: any) => state.auth.user?.id);
+  const auth = useSelector((s: any) => s.auth.user);
+  const id = auth?.id as string | undefined;
+  const token = useMemo(() => localStorage.getItem("accessToken"), []);
+
   const [localFeed, setLocalFeed] = useState<FeedPostDTO[]>([]);
 
   const fetchPosts = useCallback(async () => {
@@ -22,35 +26,201 @@ const Feed = () => {
     }
   }, [id]);
 
-  const { data: feedData = [], loading, error } =
-    useFetchItem<FeedPostDTO[]>(fetchPosts);
+  const {
+    data: feedData = [],
+    loading,
+    error,
+  } = useFetchItem<FeedPostDTO[]>(fetchPosts);
 
   useEffect(() => {
-    if (feedData && feedData.length > 0) {
-      setLocalFeed(feedData);
-    }
+    setLocalFeed(feedData ?? []);
   }, [feedData]);
+
+  // Socket event listeners setup (once per socket connection)
+  useEffect(() => {
+    if (!token || !id) return;
+    const socket = getSocket(token);
+
+    // Setup event listeners
+    const onLikeToggled = (payload: {
+      productId: string;
+      counts?: { likes: number };
+      liked?: boolean;
+      doctorId: string;
+    }) => {
+      console.log("❤️ like:toggled received:", payload);
+      setLocalFeed((prev) =>
+        prev.map((p) => {
+          if (p.id === payload.productId) {
+            const updatedPost = {
+              ...p,
+              likes: payload.counts?.likes ?? p.likes,
+            };
+            // Only update liked state if we have the liked field and it's different
+            // The API response will handle the user's own state
+            if (payload.liked !== undefined) {
+              // For now, just update the count - the API response handles user state
+            }
+            return updatedPost;
+          }
+          return p;
+        })
+      );
+    };
+
+    const onInterestToggled = (payload: {
+      productId: string;
+      doctorId: string;
+      interested: boolean;
+      counts?: { interests: number };
+    }) => {
+      console.log("💬 interest:toggled received:", payload);
+      setLocalFeed((prev) =>
+        prev.map((p) => {
+          if (p.id === payload.productId) {
+            return {
+              ...p,
+              interests: payload.counts?.interests ?? p.interests,
+              // Only update interested state if we have it - API response handles user state
+            };
+          }
+          return p;
+        })
+      );
+    };
+
+    // Register listeners
+    socket.on("like:toggled", onLikeToggled);
+    socket.on("interest:toggled", onInterestToggled);
+
+    // Cleanup listeners on unmount
+    return () => {
+      console.log("❌ Cleaning up socket listeners");
+      socket.off("like:toggled", onLikeToggled);
+      socket.off("interest:toggled", onInterestToggled);
+    };
+  }, [token, id]);
+
+  // Join/leave product rooms when feed changes
+  useEffect(() => {
+    if (!token || localFeed.length === 0) return;
+    const socket = getSocket(token);
+
+    const joinRooms = () => {
+      localFeed.forEach((post) => {
+        socket.emit("room:join:product", { productId: post.id });
+        console.log(`📦 Joining product room: ${post.id}`);
+      });
+    };
+
+    // Wait for socket connection before joining rooms
+    if (socket.connected) {
+      joinRooms();
+    } else {
+      socket.once("connect", () => {
+        console.log("✅ Socket connected, joining rooms...");
+        joinRooms();
+      });
+      // Also try to join after a short delay in case connect event already fired
+      const timeout = setTimeout(() => {
+        if (socket.connected) {
+          joinRooms();
+        }
+      }, 1000);
+      
+      return () => {
+        clearTimeout(timeout);
+      };
+    }
+
+    // Note: We don't leave rooms on cleanup to keep receiving updates
+    // Rooms will be cleaned up when socket disconnects
+  }, [token, localFeed]);
 
   const handleLike = async (postId: string) => {
     try {
+      setLocalFeed((prev) =>
+        prev.map((p) =>
+          p.id === postId
+            ? {
+                ...p,
+                likes: p.liked ? p.likes - 1 : p.likes + 1,
+                liked: !p.liked,
+              }
+            : p
+        )
+      );
+
       const res = await handleLikeToggle(postId);
       toast.success(res.data.message);
 
       setLocalFeed((prev) =>
-        prev.map((item) =>
-          item.id === postId
-            ? {
-                ...item,
-                liked: res.data.liked,
-                likes: res.data.totalLikes, 
-              }
-            : item
+        prev.map((p) =>
+          p.id === postId
+            ? { ...p, likes: res.data.totalLikes, liked: res.data.liked }
+            : p
         )
       );
     } catch (error: any) {
       toast.error(error.message || "Failed to toggle like");
+      setLocalFeed((prev) =>
+        prev.map((p) =>
+          p.id === postId
+            ? {
+                ...p,
+                likes: p.liked ? p.likes + 1 : p.likes - 1,
+                liked: !p.liked,
+              }
+            : p
+        )
+      );
     }
   };
+
+  const handleInterest = async (postId: string) => {
+    try {
+      setLocalFeed((prev) =>
+        prev.map((p) =>
+          p.id === postId
+            ? {
+                ...p,
+                interests: p.interested ? p.interests - 1 : p.interests + 1,
+                interested: !p.interested,
+              }
+            : p
+        )
+      );
+
+      const res = await handleInterestToggle(postId);
+      toast.success(res.data.message);
+
+      setLocalFeed((prev) =>
+        prev.map((p) =>
+          p.id === postId
+            ? {
+                ...p,
+                interests: res.data.totalInterests ?? p.interests,
+                interested: res.data.interested,
+              }
+            : p
+        )
+      );
+    } catch (error: any) {
+      toast.error(error.message || "Failed to toggle interest");
+      setLocalFeed((prev) =>
+        prev.map((p) =>
+          p.id === postId
+            ? {
+                ...p,
+                interests: p.interested ? p.interests + 1 : p.interests - 1,
+                interested: !p.interested,
+              }
+            : p
+        )
+      );
+    }
+  };
+
   if (loading) return <SpinnerButton />;
 
   if (error)
@@ -60,7 +230,7 @@ const Feed = () => {
       </div>
     );
 
-   return (
+  return (
     <div className="p-6 space-y-6">
       {!localFeed.length ? (
         <p className="text-center text-muted-foreground">
@@ -71,8 +241,10 @@ const Feed = () => {
           <FeedCard
             key={post.id}
             post={post}
+            hasLiked={post.liked}
+            hasInterested={post.interested}
             onLike={() => handleLike(post.id)}
-            onInterest={() => toast("Coming soon!")}
+            onInterest={() => handleInterest(post.id)}
           />
         ))
       )}

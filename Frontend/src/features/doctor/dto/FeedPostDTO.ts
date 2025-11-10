@@ -1,7 +1,7 @@
 import { RepInfo } from "./RepInfoForPostDTO";
 
-export interface FeedPostDTO{
-    id: string;
+export interface FeedPostDTO {
+  id: string;
   title: string;
   image: string;
   likes: number;
@@ -9,4 +9,7 @@ export interface FeedPostDTO{
   useCases: string[];
   rep: RepInfo;
   createdAt: string;
+
+  liked?: boolean;      
+  interested?: boolean;   
 }

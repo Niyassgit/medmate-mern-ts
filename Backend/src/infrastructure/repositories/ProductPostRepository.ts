@@ -51,7 +51,7 @@ export class ProductPostRepository
         _count:{
           select:{
             interests:true,
-            Likes:true,
+            likes:true,
           }
         }
       },
@@ -85,7 +85,7 @@ export class ProductPostRepository
         _count: {
           select: {
             interests: true,
-            Likes: true,
+            likes: true,
           },
         },
       },
@@ -134,7 +134,7 @@ export class ProductPostRepository
         _count:{
           select:{
             interests:true,
-            Likes:true,
+            likes:true,
           }
         }
       }

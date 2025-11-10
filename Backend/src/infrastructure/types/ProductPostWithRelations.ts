@@ -7,7 +7,7 @@ export type ProductPostWithRelations=Prisma.ProductPostGetPayload<{
                 select:{profileImage:true}
             }}
         };
-        _count:{select:{Likes:true;interests:true}};
+        _count:{select:{likes:true;interests:true}};
         
     }
 }>;

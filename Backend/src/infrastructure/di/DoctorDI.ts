@@ -23,8 +23,8 @@ import { GetRepDetailsOnDoctorUseCase } from "../../application/doctor/use-cases
 import { ToggleLikeOnPostUseCase } from "../../application/Like/use-cases/ToggleLikeOnPostUseCase";
 import { LikeRepository } from "../repositories/LikeRepository";
 import { SocketEngagementEventPublisher } from "../realtime/publishers/SocketEngagementEventPublisher";
-
-
+import { InterestRepository } from "../repositories/InterestRepostory";
+import { ToggleInterestOnPostUseCase } from "../../application/interest/use-cases/ToggleInterestOnPostUseCase";
 
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
@@ -37,7 +37,8 @@ const connectionRepository = new ConnectionRepository();
 const departmentRepository = new DepartmentRepository();
 const productPostRepository = new ProductPostRepository();
 const likeRepository = new LikeRepository();
-const eventPublisher=new SocketEngagementEventPublisher()
+const interestRepository = new InterestRepository();
+const eventPublisher = new SocketEngagementEventPublisher();
 const createDoctorUseCase = new CreateDoctorUseCase(
   doctorRepository,
   bycryptServices,
@@ -104,6 +105,12 @@ const toggleLikeOnPostUseCase = new ToggleLikeOnPostUseCase(
   likeRepository,
   eventPublisher
 );
+const toggleInterestOnPostUseCase = new ToggleInterestOnPostUseCase(
+  doctorRepository,
+  interestRepository,
+  eventPublisher
+
+);
 export const doctorController = new DoctorController(
   createDoctorUseCase,
   getDoctorprofileById,
@@ -116,5 +123,6 @@ export const doctorController = new DoctorController(
   getFeedUseCase,
   postDetailsUseCase,
   getRepDetailsOnDoctorUseCase,
-  toggleLikeOnPostUseCase
+  toggleLikeOnPostUseCase,
+  toggleInterestOnPostUseCase
 );

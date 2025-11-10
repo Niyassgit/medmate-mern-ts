@@ -1,7 +1,8 @@
 export const ErrorMessages = {
   USER_NOT_FOUND: "User not found",
-  USER_NOT_VERIFIED:"Please Verify to continue operations",
+  USER_NOT_VERIFIED: "Please Verify to continue operations",
   ACCOUNT_EXIST: "User already exists",
+  INVALID_REQUEST: "Request is invalid!",
   INVALID_CREDENTIALS: "Invalid email or password",
   UNAUTHORIZED: "Unauthorized access",
   FORBIDDEN: "Forbidden",
@@ -36,10 +37,13 @@ export const ErrorMessages = {
   CONNECTION_REQUEST: "Connection request failed",
   NO_PENDING_REQ: "No pending request found",
   ALREADY_CONNECTED: "You are already connected",
-  OPERATION_FAILE:"Operation failed",
-  ICOMPLET_PROFILE:"Complete profile to continue",
-  TOGGLE_LIKE_ERROR:"Failed to update like,please try again",
-  LIKE_COUNT_ERROR:"Failed to fetch the count of the likes",
+  OPERATION_FAILE: "Operation failed",
+  ICOMPLET_PROFILE: "Complete profile to continue",
+  TOGGLE_LIKE_ERROR: "Failed to update like,please try again",
+  LIKE_COUNT_ERROR: "Failed to fetch the count of the likes",
+  TOGGLE_INTEREST_ERROR: "Failed to update interest,please try again",
+  INTEREST_COUNT_ERROR: "Failed to fetch the count of the interest",
+  UNAUTHERIZED_SOCKET: "Unauthorized socket attempted connection",
 } as const;
 
 export const SuccessMessages = {
@@ -62,10 +66,12 @@ export const SuccessMessages = {
   CONNECTION_REQUEST: "Connection requested sented successfully",
   CANCEL_CONNECTION_REQ: "Connection request Cancelled",
   CONNECTED: "Connection accepted",
-  POST_ARCHIVE_SUCCESS:"Post archived successfully",
-  POST_DELETE_SUCCESS:"Post deleted successfully",
-  LIKE_SUCCESS:"Post liked succesfully",
-  UNLIKE_SUCCESS:"Post unliked successfully",
+  POST_ARCHIVE_SUCCESS: "Post archived successfully",
+  POST_DELETE_SUCCESS: "Post deleted successfully",
+  LIKE_SUCCESS: "Post liked succesfully",
+  UNLIKE_SUCCESS: "Post unliked successfully",
+  INTEREST_SUCCESS: "Interest showed succesfully",
+  UNINTERESTED_SUCCESS: "Interest removed",
 } as const;
 
 export const NotificationMessages = {

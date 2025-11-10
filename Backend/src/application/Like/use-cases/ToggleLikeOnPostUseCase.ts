@@ -15,13 +15,11 @@ export class ToggleLikeOnPostUseCase implements IToggleLikeOnPostUseCase {
   async execute(postId: string, userId?: string): Promise<LikedResponseDTO> {
     if(!userId) throw new UnautharizedError(ErrorMessages.UNAUTHORIZED);
     const {doctorId} = await this._doctorRepository.getDoctorIdByUserId(userId);
-    if (!doctorId) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
-    console.log("doctor id after finding:",doctorId)
+    if (!doctorId) throw new NotFoundError(ErrorMessages.INVALID_REQUEST);
     const result = await this._likeRepository.toggleLike(postId,doctorId);
-    console.log("result after repo:",result)
     if (!result) throw new BadRequestError(ErrorMessages.TOGGLE_LIKE_ERROR);
     const totalLikes = await this._likeRepository.getLikeCount(postId);
-    if (!totalLikes === undefined) throw new BadRequestError(ErrorMessages.LIKE_COUNT_ERROR);
+    if (totalLikes === undefined) throw new BadRequestError(ErrorMessages.LIKE_COUNT_ERROR);
     await this._eventPublisher.publishLikeToggled({
         productId:postId,
         doctorId,

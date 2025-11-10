@@ -26,7 +26,7 @@ export class FeedMapper {
           useCases: feed.useCases,
           likes: feed._count.likes ?? 0,
           createdAt: feed.createdAt,
-          interests: feed._count.isInterested ?? 0,
+          interests: feed._count.interests ?? 0,
           rep:{
             id:feed.rep.id,
             company:feed.rep.company,

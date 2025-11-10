@@ -80,7 +80,7 @@ export class ProductPostMapper {
           productImage: signedUrl,
           title: p.title,
           likes:p._count.likes ?? 0,
-          interests:p._count.isInterested ?? 0,
+          interests:p._count.interests ?? 0,
         };
       })
     );

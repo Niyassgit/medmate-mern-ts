@@ -9,6 +9,6 @@ export interface IProductPostForFeed extends IProductPost{
     }
     _count:{
         likes?:number;
-        isInterested?:number;
+        interests?:number;
     }
 }

@@ -26,6 +26,8 @@ app.use(
     credentials: true,
   })
 );
+const server = http.createServer(app);
+initSocket(server);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -44,10 +46,7 @@ const startServer = async () => {
 
     app.use(ErrorHandler);
 
-    const server = http.createServer(app);
-    const io = initSocket(server);
-
-    app.listen(env.port, () => {
+    server.listen(env.port, () => {
       logger.info(` server running on port ${env.port}`);
     });
   } catch (err) {

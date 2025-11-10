@@ -53,3 +53,7 @@ export const handleLikeToggle=async(postId:string)=>{
     const res=await api.post(DoctorEndpoints.LIKE_TOGGLE(postId));
     return res.data;
 }
+export const handleInterestToggle=async(postId:string)=>{
+    const res=await api.post(DoctorEndpoints.INTEREST_TOGGLE(postId));
+      return res.data;
+}

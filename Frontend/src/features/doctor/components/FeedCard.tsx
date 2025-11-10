@@ -22,7 +22,7 @@ const FeedCard = ({
 }: FeedCardProps) => {
   const navigate = useNavigate();
   const { rep, title, image, likes, interests, useCases, createdAt } = post;
-
+  
   const initials = rep?.name
     ? rep.name
         .split(" ")
@@ -40,7 +40,7 @@ const FeedCard = ({
       className="max-w-xl mx-auto overflow-hidden transition-all hover:shadow-lg bg-card border border-border rounded-2xl cursor-pointer"
       onClick={handleCardClick}
     >
-      {/* User Header */}
+
       <div className="flex items-center gap-3 p-4">
         <Avatar className="h-10 w-10">
           <AvatarImage src={rep?.ProfileImage} alt={rep?.name} />
@@ -101,19 +101,23 @@ const FeedCard = ({
 
         <div className="flex items-center justify-between pt-3 text-sm text-muted-foreground border-t border-border">
           <div className="flex items-center gap-1">
-            <Heart className="h-4 w-4" />
+            <Heart
+              className={`h-4 w-4 ${
+                hasLiked ? "text-red-500 fill-red-500" : "text-muted-foreground"
+              }`}
+            />
             <span>{likes} Likes</span>
           </div>
+
           <div className="flex items-center gap-1">
             <Share2 className="h-4 w-4" />
             <span>{interests} Interests</span>
           </div>
         </div>
 
-        {/* Buttons — stop event from propagating */}
         <div
           className="flex gap-3 pt-3"
-          onClick={(e) => e.stopPropagation()} // prevents navigation when clicking buttons
+          onClick={(e) => e.stopPropagation()}
         >
           <Button
             variant={hasLiked ? "default" : "outline"}
@@ -121,7 +125,13 @@ const FeedCard = ({
             className="flex-1 gap-2"
             onClick={() => onLike?.(post.id)}
           >
-            <Heart className="h-4 w-4" />
+            <Heart
+              className={`h-4 w-4 transition-transform duration-150 ${
+                hasLiked
+                  ? "text-red-500 fill-red-500 scale-110"
+                  : "text-muted-foreground"
+              }`}
+            />
             {hasLiked ? "Liked" : "Like"}
           </Button>
 

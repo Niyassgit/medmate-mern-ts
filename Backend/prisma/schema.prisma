@@ -209,7 +209,7 @@ model ProductPost {
   repId       String     @db.ObjectId
   title       String
   description String
-  isArchived  Boolean @default(false)
+  isArchived  Boolean    @default(false)
   imageUrl    String[]
   brand       String
   territoryId String?    @db.ObjectId
@@ -220,8 +220,8 @@ model ProductPost {
   updatedAt   DateTime   @updatedAt
   rep         MedicalRep @relation(fields: [repId], references: [id])
   territory   Territory? @relation(fields: [territoryId], references: [id])
+  likes       Like[]
   interests   Interest[]
-  Likes        Like[]
 }
 
 model Like {
@@ -233,22 +233,22 @@ model Like {
   doctor  Doctor      @relation(fields: [doctorId], references: [id])
   product ProductPost @relation(fields: [productId], references: [id])
 
-  @@unique([doctorId,productId])
+  @@unique([doctorId, productId])
   @@index([productId])
 }
 
 model Interest {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   doctorId  String   @db.ObjectId
-  repId     String   @db.ObjectId
   productId String   @db.ObjectId
   createdAt DateTime @default(now())
 
-  doctor  Doctor      @relation(fields: [doctorId], references: [id])
-  rep     MedicalRep  @relation(fields: [repId], references: [id])
-  product ProductPost @relation(fields: [productId], references: [id])
-  @@unique([doctorId,productId])
-  @@index([repId])
+  doctor       Doctor      @relation(fields: [doctorId], references: [id])
+  product      ProductPost @relation(fields: [productId], references: [id])
+  medicalRep   MedicalRep? @relation(fields: [medicalRepId], references: [id])
+  medicalRepId String?     @db.ObjectId
+
+  @@unique([doctorId, productId])
   @@index([productId])
 }
 
