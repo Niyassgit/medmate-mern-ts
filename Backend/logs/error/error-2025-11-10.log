@@ -173,3 +173,5 @@
 
 [31mUnknown field `Likes` for select statement on model `ProductPostCountOutputType`. Available options are marked with ?.[39m
 [2025-11-10 16:28:58] [31merror[39m: [31mFailed to start server:server is not defined[39m
+[2025-11-10 20:53:13] [31merror[39m: [31m🔥 Unhandled Error:this._likeRepository.getProductIdsByDoctor is not a function[39m
+[2025-11-10 20:53:14] [31merror[39m: [31m🔥 Unhandled Error:this._likeRepository.getProductIdsByDoctor is not a function[39m

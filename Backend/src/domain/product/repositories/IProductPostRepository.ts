@@ -9,7 +9,7 @@ export interface IProductPostRepository{
     findPostById(postId:string):Promise<IProductPost | null>;
     getProducts(userId:string):Promise<IProductPostForFeed[] | null>;
     getPostDetails(postId: string): Promise<IProductPost | null>;
-    getPostsByIds(repIds:string[]):Promise<IProductPostForFeed[]>;
+    getPostsByIds(repIds:string[],excludedIds:string[]):Promise<IProductPostForFeed[]>;
     archivePost(postId:string):Promise<boolean>;
     DeletePostUseCase(postId:string):Promise<boolean>;
     findRepByPostId(postId:string):Promise<IMedicalRepWithUser | null>;

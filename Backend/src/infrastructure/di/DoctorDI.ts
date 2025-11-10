@@ -86,6 +86,8 @@ const getFeedUseCase = new GetFeedUseCase(
   doctorRepository,
   connectionRepository,
   productPostRepository,
+  likeRepository,
+  interestRepository,
   storageService
 );
 const postDetailsUseCase = new PostDetailsUseCase(

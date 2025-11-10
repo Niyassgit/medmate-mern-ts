@@ -30,4 +30,11 @@ export class LikeRepository
       });
       return count;
   }
+  async getProductIdsByDoctor(doctorId: string): Promise<string[]> {
+    const likes=await prisma.like.findMany({
+      where:{doctorId},
+      select:{productId:true},
+    });
+    return likes.map(l=>l.productId);
+  }
   }

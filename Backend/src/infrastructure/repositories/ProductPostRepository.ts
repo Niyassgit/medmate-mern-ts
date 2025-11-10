@@ -64,12 +64,13 @@ export class ProductPostRepository
     const product = await this.findById(postId);
     return product ? product : null;
   }
-  async getPostsByIds(repIds: string[]): Promise<IProductPostForFeed[]> {
-    const posts = await prisma.productPost.findMany({
+  async getPostsByIds(repIds: string[], excludedIds: string[]): Promise<IProductPostForFeed[]> {
+     const posts = await prisma.productPost.findMany({
       where: {
         repId: {
           in: repIds,
         },
+        id:{notIn:excludedIds},
       },
       include: {
         rep: {

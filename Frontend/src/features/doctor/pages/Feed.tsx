@@ -36,19 +36,16 @@ const Feed = () => {
     setLocalFeed(feedData ?? []);
   }, [feedData]);
 
-  // Socket event listeners setup (once per socket connection)
   useEffect(() => {
     if (!token || !id) return;
     const socket = getSocket(token);
 
-    // Setup event listeners
     const onLikeToggled = (payload: {
       productId: string;
       counts?: { likes: number };
       liked?: boolean;
       doctorId: string;
     }) => {
-      console.log("❤️ like:toggled received:", payload);
       setLocalFeed((prev) =>
         prev.map((p) => {
           if (p.id === payload.productId) {
@@ -56,8 +53,7 @@ const Feed = () => {
               ...p,
               likes: payload.counts?.likes ?? p.likes,
             };
-            // Only update liked state if we have the liked field and it's different
-            // The API response will handle the user's own state
+
             if (payload.liked !== undefined) {
               // For now, just update the count - the API response handles user state
             }
@@ -74,7 +70,6 @@ const Feed = () => {
       interested: boolean;
       counts?: { interests: number };
     }) => {
-      console.log("💬 interest:toggled received:", payload);
       setLocalFeed((prev) =>
         prev.map((p) => {
           if (p.id === payload.productId) {
@@ -89,19 +84,16 @@ const Feed = () => {
       );
     };
 
-    // Register listeners
     socket.on("like:toggled", onLikeToggled);
     socket.on("interest:toggled", onInterestToggled);
 
-    // Cleanup listeners on unmount
+
     return () => {
-      console.log("❌ Cleaning up socket listeners");
       socket.off("like:toggled", onLikeToggled);
       socket.off("interest:toggled", onInterestToggled);
     };
   }, [token, id]);
 
-  // Join/leave product rooms when feed changes
   useEffect(() => {
     if (!token || localFeed.length === 0) return;
     const socket = getSocket(token);
@@ -109,19 +101,15 @@ const Feed = () => {
     const joinRooms = () => {
       localFeed.forEach((post) => {
         socket.emit("room:join:product", { productId: post.id });
-        console.log(`📦 Joining product room: ${post.id}`);
       });
     };
 
-    // Wait for socket connection before joining rooms
     if (socket.connected) {
       joinRooms();
     } else {
       socket.once("connect", () => {
-        console.log("✅ Socket connected, joining rooms...");
         joinRooms();
       });
-      // Also try to join after a short delay in case connect event already fired
       const timeout = setTimeout(() => {
         if (socket.connected) {
           joinRooms();
@@ -133,8 +121,6 @@ const Feed = () => {
       };
     }
 
-    // Note: We don't leave rooms on cleanup to keep receiving updates
-    // Rooms will be cleaned up when socket disconnects
   }, [token, localFeed]);
 
   const handleLike = async (postId: string) => {

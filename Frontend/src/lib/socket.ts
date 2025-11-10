@@ -11,28 +11,7 @@ export const getSocket = (token: string) => {
       reconnectionDelay: 1000,
       reconnectionAttempts: 5,
     });
-
-    socket.on("connect", () => {
-      console.log("✅ Socket connected:", socket?.id);
-    });
-
-    socket.on("disconnect", (reason) => {
-      console.log("❌ Socket disconnected:", reason);
-    });
-
-    socket.on("connect_error", (err) => {
-      console.error("⚠️ Socket connection error:", err.message);
-    });
-
-    socket.on("reconnect", (attemptNumber) => {
-      console.log(`🔄 Socket reconnected after ${attemptNumber} attempts`);
-    });
-
-    socket.on("reconnect_error", (error) => {
-      console.error("⚠️ Socket reconnection error:", error);
-    });
   } else if (socket.disconnected) {
-    // If socket exists but is disconnected, update the auth token and reconnect
     socket.auth = { token };
     socket.connect();
   }

@@ -34,4 +34,11 @@ export class InterestRepository
         });
         return count;
     }
+    async getProductIdsByDoctorId(doctorId: string): Promise<string[]> {
+        const interests=await prisma.interest.findMany({
+            where:{doctorId},
+            select:{doctorId:true},
+        });
+        return interests.map(i=>i.doctorId);
+    }
   }
