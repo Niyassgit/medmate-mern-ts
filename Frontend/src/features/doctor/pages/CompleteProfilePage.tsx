@@ -60,14 +60,17 @@ export default function CompleteProfilePage() {
     defaultValues: {
       name: "",
       phone: "",
-      profileImage: null,
       hospital: "",
       registrationId: "",
       licenseImageUrl: null,
       about: "",
-      opHours: "",
       departmentId: "",
       territoryId: "",
+      opStartTime: "",
+      opEndTime: "",
+      dob: "",
+      hasOwnClinic: false,
+      experienceYears: null,
       educations: [{ degree: "", institute: "", year: null }],
       certificates: [{ name: "", issuedBy: "", year: null }],
     },
@@ -84,23 +87,27 @@ export default function CompleteProfilePage() {
         const selectedTerritory = territories.find(
           (t) => t.name === data.territoryName
         )?.id;
+
         if (data) {
           form.reset({
             name: data.name ?? "",
             phone: data.phone ?? "",
-            profileImage: data.profileImage ?? null,
             hospital: data.hospital ?? "",
             registrationId: data.registrationId ?? "",
             about: data.about ?? "",
-            opHours: data.opHours ?? "",
+            opStartTime: data.opStartTime ?? "",
+            opEndTime: data.opEndTime ?? "",
+            dob: data.dob ?? "",
+            hasOwnClinic: data.hasOwnClinic ?? false,
+            experienceYears: data.experienceYears ?? null,
             departmentId: selectedDepartment ?? "",
             territoryId: selectedTerritory ?? "",
             educations:
-              data.educations.length > 0
+              data.educations?.length > 0
                 ? data.educations
                 : [{ degree: "", institute: "", year: null }],
             certificates:
-              data.certificates.length > 0
+              data.certificates?.length > 0
                 ? data.certificates
                 : [{ name: "", issuedBy: "", year: null }],
           });
@@ -152,7 +159,6 @@ export default function CompleteProfilePage() {
               </FormItem>
             )}
           />
-
           {/* Phone */}
           <FormField
             control={form.control}
@@ -165,7 +171,22 @@ export default function CompleteProfilePage() {
               </FormItem>
             )}
           />
-
+          <FormField
+            control={form.control}
+            name="dob"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Date of Birth</FormLabel>
+                <Input
+                  type="date"
+                  {...field}
+                  value={field.value ?? ""}
+                  onChange={(e) => field.onChange(e.target.value)}
+                />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           {/* Hospital */}
           <FormField
             control={form.control}
@@ -178,7 +199,6 @@ export default function CompleteProfilePage() {
               </FormItem>
             )}
           />
-
           {/* Registration ID */}
           <FormField
             control={form.control}
@@ -191,6 +211,7 @@ export default function CompleteProfilePage() {
               </FormItem>
             )}
           />
+          {/* Department */}
           <FormField
             control={form.control}
             name="departmentId"
@@ -200,22 +221,7 @@ export default function CompleteProfilePage() {
                 <select
                   {...field}
                   value={field.value ?? ""}
-                  className="
-            w-full 
-            border 
-            rounded-lg 
-            px-3 
-            py-2 
-            appearance-none 
-            bg-gray-50 
-            hover:bg-gray-100 
-            focus:bg-gray-100 
-            focus:ring-2 
-            focus:ring-gray-400 
-            focus:border-gray-500 
-            transition-all 
-            duration-150
-          "
+                  className="w-full border rounded-lg px-3 py-2 bg-gray-50 hover:bg-gray-100 focus:ring-2 focus:ring-gray-400 focus:border-gray-500 transition-all duration-150"
                 >
                   <option value="">Select Department</option>
                   {departments.map((dept) => (
@@ -228,31 +234,17 @@ export default function CompleteProfilePage() {
               </FormItem>
             )}
           />
+          {/* Territory */}
           <FormField
             control={form.control}
             name="territoryId"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Department</FormLabel>
+                <FormLabel>Territory</FormLabel>
                 <select
                   {...field}
                   value={field.value ?? ""}
-                  className="
-            w-full 
-            border 
-            rounded-lg 
-            px-3 
-            py-2 
-            appearance-none 
-            bg-gray-50 
-            hover:bg-gray-100 
-            focus:bg-gray-100 
-            focus:ring-2 
-            focus:ring-gray-400 
-            focus:border-gray-500 
-            transition-all 
-            duration-150
-          "
+                  className="w-full border rounded-lg px-3 py-2 bg-gray-50 hover:bg-gray-100 focus:ring-2 focus:ring-gray-400 focus:border-gray-500 transition-all duration-150"
                 >
                   <option value="">Select Territory</option>
                   {territories.map((terr) => (
@@ -265,41 +257,50 @@ export default function CompleteProfilePage() {
               </FormItem>
             )}
           />
+          {/* OP Time Range */}
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="opStartTime"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>OP Start Time</FormLabel>
+                  <Input type="time" {...field} />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          {/* About */}
+            <FormField
+              control={form.control}
+              name="opEndTime"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>OP End Time</FormLabel>
+                  <Input type="time" {...field} />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          {/* About */}{" "}
           <FormField
             control={form.control}
             name="about"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>About</FormLabel>
+                {" "}
+                <FormLabel>About</FormLabel>{" "}
                 <Textarea
                   {...field}
                   value={field.value ?? ""}
                   placeholder="Write about yourself"
-                />
-                <FormMessage />
+                />{" "}
+                <FormMessage />{" "}
               </FormItem>
             )}
           />
-
-          {/* OP Hours */}
-          <FormField
-            control={form.control}
-            name="opHours"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>OP Hours</FormLabel>
-                <Input
-                  {...field}
-                  value={field.value ?? ""}
-                  placeholder="e.g. 9am - 5pm"
-                />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
+          {/* Education & Certificates */}
           <DynamicList
             name="educations"
             control={form.control}
@@ -314,7 +315,6 @@ export default function CompleteProfilePage() {
               },
             ]}
           />
-
           <DynamicList
             name="certificates"
             control={form.control}
@@ -329,8 +329,7 @@ export default function CompleteProfilePage() {
               },
             ]}
           />
-
-          {/* Submit */}
+          {/* Buttons */}
           <div className="flex justify-end gap-2 mt-4">
             <Button
               type="button"

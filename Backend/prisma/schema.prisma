@@ -73,7 +73,10 @@ model Doctor {
   territoryId     String?  @db.ObjectId
   hospital        String
   licenseImageUrl String?
-  opHours         String?
+  opStartTime     String?
+  opEndTime       String?
+  opSession       String?
+  dob             DateTime?
   registrationId  String
   about           String?
   createdAt       DateTime @default(now())

@@ -20,7 +20,8 @@ export class GetNetworksUseCase implements IGetNetworksUseCase {
   ) {}
   async execute(
     userId: string,
-    search?: string
+    search?: string,
+    filters?: { opTime?: string; minAge?: number; maxAge?: number }
   ): Promise<DoctorNetworkCardDTO[] | null> {
     const user = await this._userRepository.findById(userId);
     if (!user) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
@@ -40,6 +41,23 @@ export class GetNetworksUseCase implements IGetNetworksUseCase {
           doc.name.toLowerCase().includes(searchLower) ||
           doc.departmentName?.toLowerCase().includes(searchLower)
         );
+      });
+    }
+      if (filters?.opTime && filters.opTime !== "any") {
+      const opTimeLower = filters.opTime.toLowerCase();
+      doctors = doctors.filter(
+        (doc) =>
+          doc.opSession &&
+          doc.opSession.toLowerCase().includes(opTimeLower)
+      );
+    }
+       if (filters?.minAge !== undefined && filters?.maxAge !== undefined) {
+      const currentYear = new Date().getFullYear();
+      doctors = doctors.filter((doc) => {
+        if (!doc.dob) return false; 
+        const age =
+          currentYear - new Date(doc.dob).getFullYear();
+        return age >= filters.minAge! && age <= filters.maxAge!;
       });
     }
 

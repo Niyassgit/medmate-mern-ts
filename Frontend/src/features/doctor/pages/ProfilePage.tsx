@@ -12,7 +12,6 @@ import { getProfileRep } from "@/features/rep/api";
 import { DetailItem } from "../components/DetailItem";
 import { SpinnerButton } from "@/components/shared/SpinnerButton";
 
-
 const ProfilePage = () => {
   const navigate = useNavigate();
   const [doctor, setDoctor] = useState<DoctorDetails | null>(null);
@@ -109,7 +108,6 @@ const ProfilePage = () => {
   return (
     <div className="min-h-screen bg-gray-100 py-10 px-4">
       <div className="max-w-4xl mx-auto space-y-6">
-      
         {/* Profile Header Card */}
         <div className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center relative">
           {/* Profile Image with Completion Ring */}
@@ -256,6 +254,12 @@ const ProfilePage = () => {
                 label="Registration"
                 value={doctor.registrationId}
               />
+              <DetailItem
+                icon="🎂"
+                label="Date of Birth"
+                value={doctor.dob || "Not provided"}
+              />
+
               <DetailItem
                 icon="🏥"
                 label="Department"

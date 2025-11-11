@@ -17,8 +17,10 @@ export interface IDoctor {
   hospital: string;
   registrationId: string;
   licenseImageUrl: string | null;
-  opHours?: string | null;
-
+   opStartTime?:string | null;
+  opEndTime?:string | null;
+  opSession?:string | null;
+  dob?:Date | null;
   about?: string | null;
 
   educations?: IEducation[];

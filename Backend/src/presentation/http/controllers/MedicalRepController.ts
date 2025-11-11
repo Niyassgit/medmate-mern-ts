@@ -133,7 +133,7 @@ export class MedicalRepController {
       .json({ success: true, message: response });
   };
   deletePost = async (req: Request, res: Response) => {
-    const { postId } = req.params;  
+    const { postId } = req.params;
     const userId = GetOptionalUserId(req.user);
     const response = await this._deletePostUseCase.execute(postId, userId);
     return res
@@ -142,8 +142,17 @@ export class MedicalRepController {
   };
   networks = async (req: Request, res: Response) => {
     const { userId } = req.params;
-    const {search} =req.query;
-    const resposne = await this._getNetworksUseCase.execute(userId,search as string);
+    const { search, opTime, minAge, maxAge } = req.query;
+      const filters = {
+      opTime: opTime ? String(opTime) : undefined,
+      minAge: minAge ? Number(minAge) : undefined,
+      maxAge: maxAge ? Number(maxAge) : undefined,
+    };
+    const resposne = await this._getNetworksUseCase.execute(
+      userId,
+      search as string,
+      filters
+    );
     res.status(HttpStatusCode.OK).json({ success: true, data: resposne });
   };
   connectionRequest = async (req: Request, res: Response) => {
@@ -177,7 +186,7 @@ export class MedicalRepController {
   };
   doctorDetails = async (req: Request, res: Response) => {
     const { doctorId } = req.params;
-    const userId =GetOptionalUserId(req.user);
+    const userId = GetOptionalUserId(req.user);
     const response = await this._getDoctorDetailsOnRepSideUseCase.execute(
       doctorId,
       userId
@@ -187,4 +196,3 @@ export class MedicalRepController {
       .json({ success: true, data: response });
   };
 }
- 

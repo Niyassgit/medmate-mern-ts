@@ -9,7 +9,8 @@ import { IStorageService } from "../../../domain/common/services/IStorageService
 export class DoctorMapper {
   static toDoctorEntity(
     dto: RegisterDoctorDTO,
-    loginId: string
+    loginId: string,
+    opSession:string | null,
   ): Omit<IDoctor, "id" | "createdAt" | "updatedAt"> {
     return {
       name: dto.name,
@@ -19,7 +20,9 @@ export class DoctorMapper {
       hospital: dto.hospital,
       registrationId: dto.registrationId,
       licenseImageUrl: dto.licenseImageUrl,
-      opHours: dto.opHours,
+      opStartTime:dto.opStartTime ?? null,
+      opEndTime:dto.opEndTime ?? null,
+      opSession:opSession,
       hasOwnClinic: dto.hasOwnClinic,
       loginId,
     };
@@ -27,7 +30,8 @@ export class DoctorMapper {
 
     static toCompleteProfile(
     dto:CompleteDoctorProfileDTO,
-    loginId: string
+    loginId: string,
+    opSession:string | null,
   ): Omit<IDoctor, "id" | "createdAt" | "updatedAt"> {
     return {
       name: dto.name,
@@ -37,8 +41,11 @@ export class DoctorMapper {
       hospital: dto.hospital,
       registrationId: dto.registrationId,
       licenseImageUrl: dto.licenseImageUrl,
-      opHours: dto.opHours,
+      opStartTime:dto.opStartTime,
+      opEndTime:dto.opEndTime,
+      opSession:opSession ?? null,
       hasOwnClinic: dto.hasOwnClinic,
+      dob:dto.dob?new Date(dto.dob) : null,
       about: dto.about,      
       educations: dto.educations ?? [],   
       certificates: dto.certificates ?? [], 

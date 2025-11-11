@@ -34,7 +34,7 @@ export const CompleteDoctorProfileSchema = z.object({
     .nullable()
     .optional(),
 
-  territoryId:z.string().min(1, "Territory is required"),
+  territoryId: z.string().min(1, "Territory is required"),
 
   hospital: z
     .string()
@@ -54,10 +54,13 @@ export const CompleteDoctorProfileSchema = z.object({
 
   licenseImageUrl: z.string().url().nullable().optional(),
 
-  opHours: z
+  opStartTime: z.string().nonempty("Select start time"),
+  opEndTime: z.string().nonempty("Select end time"),
+
+  dob: z
     .string()
-    .min(1, "Operating hours cannot be empty")
-    .nullable()
+    .nonempty("Date of birth is required")
+    .refine((val) => !isNaN(Date.parse(val)), "Invalid date format")
     .optional(),
 
   about: z

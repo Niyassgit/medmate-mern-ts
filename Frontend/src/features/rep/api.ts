@@ -45,8 +45,14 @@ export const updatePost = async (id: string, formData: FormData) => {
     headers: { "Content-type": "multipart/form-data" },
   });
 };
-export const networks = async (id: string,search?:string) => {
-  const params=search ?{search}:{};
+export const networks = async (id: string,search?:string,  filters?: { opTime?: string; ageRange?: number[] }) => {
+  const params: Record<string, string> = {};
+   if (search) params.search = search;
+  if (filters?.opTime && filters.opTime !== "any") params.opTime = filters.opTime;
+    if (filters?.ageRange && filters.ageRange.length === 2) {
+    params.minAge = String(filters.ageRange[0]);
+    params.maxAge = String(filters.ageRange[1]);
+  }
   const res = await api.get(RepEndpoints.NETWORKS(id),{params});
   return res.data.data;
 };

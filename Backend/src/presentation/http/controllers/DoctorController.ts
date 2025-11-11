@@ -66,6 +66,7 @@ export class DoctorController {
     const { userId } = req.params;
     const data = req.body as CompleteDoctorProfileDTO;
     const response = await this._compeletProfileUseCase.execute(userId, data);
+
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, message: response });
