@@ -142,7 +142,8 @@ export class MedicalRepController {
   };
   networks = async (req: Request, res: Response) => {
     const { userId } = req.params;
-    const resposne = await this._getNetworksUseCase.execute(userId);
+    const {search} =req.query;
+    const resposne = await this._getNetworksUseCase.execute(userId,search as string);
     res.status(HttpStatusCode.OK).json({ success: true, data: resposne });
   };
   connectionRequest = async (req: Request, res: Response) => {

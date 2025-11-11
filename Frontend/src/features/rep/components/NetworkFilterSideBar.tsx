@@ -19,14 +19,14 @@ const NetworkFilterSideBar = () => {
       </div>
 
       <div className="space-y-6">
-        <div className="flex gap-2">
+        {/* <div className="flex gap-2">
           <Button size="sm" variant="default">
             Doctor
           </Button>
           <Button size="sm" variant="outline" className="bg-purple text-purple-foreground hover:bg-purple/90">
             Rep
           </Button>
-        </div>
+        </div> */}
 
         <div className="space-y-2">
           <label className="text-sm font-medium text-foreground">OP Time</label>

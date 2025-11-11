@@ -1,6 +1,16 @@
 import { DoctorCardProps } from "../dto/DoctorCardProps";
 import { Button } from "@/components/ui/button";
-import { MapPin, Clock, Building2, UserPlus, UserCheck, RefreshCcw, Share2, X } from "lucide-react";
+import {
+  MapPin,
+  Clock,
+  Building2,
+  UserPlus,
+  UserCheck,
+  RefreshCcw,
+  Share2,
+  X,
+  User,
+} from "lucide-react";
 import { connectionToggle, acceptConnection } from "../api";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -18,7 +28,9 @@ const NetworkDoctorCard = ({
 }: DoctorCardProps) => {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<string | null>(connectionStatus);
-  const [initiator, setInitiator] = useState<string | null>(connectionInitiator);
+  const [initiator, setInitiator] = useState<string | null>(
+    connectionInitiator
+  );
   const [isRemoving, setIsRemoving] = useState(false);
 
   const handleConnect = async () => {
@@ -60,7 +72,7 @@ const NetworkDoctorCard = ({
     try {
       const res = await acceptConnection(id);
       toast.success(res.message || "Connection accepted");
-      
+
       setTimeout(() => {
         setIsRemoving(true);
       }, 500);
@@ -120,13 +132,19 @@ const NetworkDoctorCard = ({
   }
 
   return (
-    <div 
+    <div
       className={`bg-card rounded-lg border overflow-hidden hover:shadow-lg transition-all duration-500 ease-out ${
         status === "ACCEPTED" && loading === false ? "animate-fadeOut" : ""
       }`}
     >
-      <div className="relative">
-        <img src={image} alt={name} className="w-full h-48 object-cover" />
+      <div className="relative w-full h-48 bg-muted flex items-center justify-center overflow-hidden">
+        {image ? (
+          <img src={image} alt={name} className="w-full h-full object-cover" />
+        ) : (
+          <div className="flex items-center justify-center w-full h-full bg-primary/5 text-primary">
+            <User className="w-12 h-12" /> 
+          </div>
+        )}
       </div>
 
       <div className="p-4 space-y-3">

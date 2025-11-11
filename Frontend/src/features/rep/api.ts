@@ -45,9 +45,10 @@ export const updatePost = async (id: string, formData: FormData) => {
     headers: { "Content-type": "multipart/form-data" },
   });
 };
-export const networks = async (id: string) => {
-  const resp = await api.get(RepEndpoints.NETWORKS(id));
-  return resp.data.data;
+export const networks = async (id: string,search?:string) => {
+  const params=search ?{search}:{};
+  const res = await api.get(RepEndpoints.NETWORKS(id),{params});
+  return res.data.data;
 };
 export const connectionToggle = async (id: string) => {
   return await api.post(RepEndpoints.CONNECTION_TOGGLE(id));

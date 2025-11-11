@@ -18,17 +18,31 @@ export class GetNetworksUseCase implements IGetNetworksUseCase {
     private _storageService: IStorageService,
     private _connectionRepository: IConnectionRepository
   ) {}
-  async execute(userId: string): Promise<DoctorNetworkCardDTO[] | null> {
+  async execute(
+    userId: string,
+    search?: string
+  ): Promise<DoctorNetworkCardDTO[] | null> {
     const user = await this._userRepository.findById(userId);
     if (!user) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
     const rep = await this._medicalRepRepository.getMedicalRepByUserId(userId);
     if (!rep) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
     const { territories, departmentId } = rep;
-    const doctors = await this._doctorRepository.findByTerritoryAndDepartment(
+    let doctors = await this._doctorRepository.findByTerritoryAndDepartment(
       departmentId,
       territories
     );
     if (!doctors) return null;
+    if (search) {
+      const searchLower = search.toLowerCase();
+
+      doctors = doctors.filter((doc) => {
+        return (
+          doc.name.toLowerCase().includes(searchLower) ||
+          doc.departmentName?.toLowerCase().includes(searchLower)
+        );
+      });
+    }
+
     const connections = await this._connectionRepository.findConnectionsForRep(
       rep.id
     );
@@ -51,12 +65,14 @@ export class GetNetworksUseCase implements IGetNetworksUseCase {
         connection.status === ConnectionStatus.PENDING &&
         connection.initiator === ConnectionInitiator.DOCTOR
       ) {
-       result.push( await NetworkMapper.toResponse(
-          doc,
-          this._storageService,
-          connection.status,
-          connection.initiator
-        ));
+        result.push(
+          await NetworkMapper.toResponse(
+            doc,
+            this._storageService,
+            connection.status,
+            connection.initiator
+          )
+        );
       }
     }
     return result.length > 0 ? result : null;

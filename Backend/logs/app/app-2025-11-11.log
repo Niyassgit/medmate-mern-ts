@@ -1,0 +1,37 @@
+[2025-11-11 09:24:53] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-11 10:17:50] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-11 10:21:37] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-11 10:21:53] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-11 10:22:37] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-11 10:23:35] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-11 10:23:52] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-11 10:23:58] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-11 10:24:00] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-11 10:24:42] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-11 10:24:47] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-11 10:24:52] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-11 10:25:08] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-11 10:25:17] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-11 10:25:24] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-11 10:25:28] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-11 12:48:09] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-11 12:48:52] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-11 12:49:09] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-11 12:50:33] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-11 12:50:51] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `this.model.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\UserRepository.ts:31:35[39m
+
+[31m  28 }[39m
+[31m  29 [39m
+[31m  30 async findById(userId: string) {[39m
+[31m→ 31 const entity = await this.model.findUnique([39m
+[31mError in connector: Error creating a database connection. (Kind: An error occurred during DNS resolution: proto error: io error: A socket operation was attempted to an unreachable network. (os error 10051), labels: {})[39m
+[2025-11-11 12:51:35] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-11 12:52:33] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-11 12:53:06] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-11 12:54:36] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-11 12:55:26] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-11 12:55:32] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-11 12:58:59] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-11 12:59:09] [32minfo[39m: [32m server running on port 5000[39m
