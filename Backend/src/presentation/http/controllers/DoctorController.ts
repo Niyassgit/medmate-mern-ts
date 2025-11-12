@@ -73,7 +73,8 @@ export class DoctorController {
   };
   networks = async (req: Request, res: Response) => {
     const { userId } = req.params;
-    const response = await this._networkUseCase.execute(userId);
+    const {search}=req.query;
+    const response = await this._networkUseCase.execute(userId,search as string);
     res.status(HttpStatusCode.OK).json({ success: true, data: response });
   };
   connectionRequest = async (req: Request, res: Response) => {

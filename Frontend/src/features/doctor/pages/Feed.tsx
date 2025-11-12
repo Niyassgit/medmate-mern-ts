@@ -7,13 +7,17 @@ import useFetchItem from "@/hooks/useFetchItem";
 import { FeedPostDTO } from "../dto/FeedPostDTO";
 import { SpinnerButton } from "@/components/shared/SpinnerButton";
 import { getSocket } from "@/lib/socket";
-
+import noResult from "@/assets/noResult.png";
+import { Button } from "@/components/ui/button";
+import { MoveRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 const Feed = () => {
   const auth = useSelector((s: any) => s.auth.user);
   const id = auth?.id as string | undefined;
   const token = useMemo(() => localStorage.getItem("accessToken"), []);
 
   const [localFeed, setLocalFeed] = useState<FeedPostDTO[]>([]);
+  const navigate = useNavigate();
 
   const fetchPosts = useCallback(async () => {
     if (!id) return [];
@@ -87,7 +91,6 @@ const Feed = () => {
     socket.on("like:toggled", onLikeToggled);
     socket.on("interest:toggled", onInterestToggled);
 
-
     return () => {
       socket.off("like:toggled", onLikeToggled);
       socket.off("interest:toggled", onInterestToggled);
@@ -115,12 +118,11 @@ const Feed = () => {
           joinRooms();
         }
       }, 1000);
-      
+
       return () => {
         clearTimeout(timeout);
       };
     }
-
   }, [token, localFeed]);
 
   const handleLike = async (postId: string) => {
@@ -219,11 +221,32 @@ const Feed = () => {
   return (
     <div className="p-6 space-y-6">
       {!localFeed.length ? (
-        <p className="text-center text-muted-foreground">
-          No feed posts available
-        </p>
+        <div className="flex flex-col justify-center items-center py-16 text-center space-y-4">
+          <img
+            src={noResult}
+            alt="No feed result"
+            className="w-60 h-60 object-contain opacity-90"
+          />
+          <h2 className="text-lg font-semibold text-foreground">
+            Oops! No feed found
+          </h2>
+          <p className="text-muted-foreground max-w-md text-sm">
+            Don’t worry — connect with more reps and explore new opportunities
+            in your network!
+          </p>
+          <Button
+            className="bg-pink-500 hover:bg-pink-600"
+            onClick={() => navigate(`/doctor/network`)}
+          >
+            <div className="flex items-center gap-x-2 group">
+              <p>Explore</p>
+              <MoveRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </div>
+          </Button>
+        </div>
       ) : (
-        localFeed.map((post) => (
+      <div className="max-w-4xl w-full mx-auto space-y-6">
+        {localFeed.map((post) => (
           <FeedCard
             key={post.id}
             post={post}
@@ -232,9 +255,10 @@ const Feed = () => {
             onLike={() => handleLike(post.id)}
             onInterest={() => handleInterest(post.id)}
           />
-        ))
-      )}
-    </div>
+        ))}
+      </div>
+    )}
+  </div>
   );
 };
 

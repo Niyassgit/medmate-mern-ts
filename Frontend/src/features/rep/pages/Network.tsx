@@ -21,21 +21,17 @@ import noDataImg from "@/assets/hand-drawn-no-data-illustration.png";
 const Network = () => {
   const id = useSelector((state: any) => state.auth.user?.id);
 
-  // --- Search ---
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebouncedValue(search, 400);
 
-  // --- Sidebar filter states (temporary) ---
   const [opTime, setOpTime] = useState("any");
   const [ageRange, setAgeRange] = useState<number[]>([25, 70]);
 
-  // --- Applied filters (used for fetching) ---
   const [appliedFilters, setAppliedFilters] = useState({
     opTime: "any",
     ageRange: [25, 70],
   });
 
-  // --- Fetch doctors (based on applied filters only) ---
   const fetchDoctors = useCallback(() => {
     if (!id) return Promise.resolve(null);
     return networks(id, debouncedSearch, appliedFilters);
@@ -44,13 +40,11 @@ const Network = () => {
   const { data: doctors, loading, error} =
     useFetchItem<DoctorCardDTO[]>(fetchDoctors);
 
-  // --- Apply filters manually ---
   const applyFilters = () => {
     setAppliedFilters({ opTime, ageRange });
 
   };
 
-  // --- Reset filters ---
   const resetFilters = () => {
     setOpTime("any");
     setAgeRange([25, 70]);
@@ -58,7 +52,6 @@ const Network = () => {
     setAppliedFilters({ opTime: "any", ageRange: [25, 70] });
   };
 
-  // --- Render ---
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">

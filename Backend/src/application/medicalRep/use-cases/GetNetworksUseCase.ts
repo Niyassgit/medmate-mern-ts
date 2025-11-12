@@ -4,11 +4,12 @@ import { IStorageService } from "../../../domain/common/services/IStorageService
 import { IConnectionRepository } from "../../../domain/connection/repositories/IConnectionRepository";
 import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRepository";
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
-import { ConnectionInitiator, ConnectionStatus } from "../../../shared/Enums";
 import { ErrorMessages } from "../../../shared/Messages";
 import { DoctorNetworkCardDTO } from "../dto/DocrtorNetworkCardDTO";
 import { IGetNetworksUseCase } from "../interfaces/IGetNetWorksUseCase";
 import { NetworkMapper } from "../mapper/NetworkMapper";
+import { DoctorFilterService } from "../services/DoctorFilterService";
+import { NetworkEvaluator } from "../services/NetworkEvaluator";
 
 export class GetNetworksUseCase implements IGetNetworksUseCase {
   constructor(
@@ -33,66 +34,25 @@ export class GetNetworksUseCase implements IGetNetworksUseCase {
       territories
     );
     if (!doctors) return null;
-    if (search) {
-      const searchLower = search.toLowerCase();
-
-      doctors = doctors.filter((doc) => {
-        return (
-          doc.name.toLowerCase().includes(searchLower) ||
-          doc.departmentName?.toLowerCase().includes(searchLower)
-        );
-      });
-    }
-      if (filters?.opTime && filters.opTime !== "any") {
-      const opTimeLower = filters.opTime.toLowerCase();
-      doctors = doctors.filter(
-        (doc) =>
-          doc.opSession &&
-          doc.opSession.toLowerCase().includes(opTimeLower)
-      );
-    }
-       if (filters?.minAge !== undefined && filters?.maxAge !== undefined) {
-      const currentYear = new Date().getFullYear();
-      doctors = doctors.filter((doc) => {
-        if (!doc.dob) return false; 
-        const age =
-          currentYear - new Date(doc.dob).getFullYear();
-        return age >= filters.minAge! && age <= filters.maxAge!;
-      });
-    }
-
+    const filteredDoctor = DoctorFilterService.apply(doctors, search, filters);
     const connections = await this._connectionRepository.findConnectionsForRep(
       rep.id
     );
-    const result = [];
-    for (const doc of doctors) {
-      const connection = connections.find((conn) => conn.doctorId === doc.id);
-      if (!connection) {
-        result.push(
-          await NetworkMapper.toResponse(doc, this._storageService, null, null)
-        );
-        continue;
-      }
-      if (connection.status === ConnectionStatus.ACCEPTED) continue;
-      if (
-        connection.status === ConnectionStatus.PENDING &&
-        connection.initiator === ConnectionInitiator.REP
-      )
-        continue;
-      if (
-        connection.status === ConnectionStatus.PENDING &&
-        connection.initiator === ConnectionInitiator.DOCTOR
-      ) {
-        result.push(
-          await NetworkMapper.toResponse(
-            doc,
-            this._storageService,
-            connection.status,
-            connection.initiator
+    const evaluatedDoctors = NetworkEvaluator.evaluate(
+      filteredDoctor,
+      connections
+    );
+    return evaluatedDoctors.length
+      ? await Promise.all(
+          evaluatedDoctors.map((doc) =>
+            NetworkMapper.toResponse(
+              doc,
+              this._storageService,
+              doc.connectionStatus,
+              doc.connectionInitiator
+            )
           )
-        );
-      }
-    }
-    return result.length > 0 ? result : null;
+        )
+      : null;
   }
 }
