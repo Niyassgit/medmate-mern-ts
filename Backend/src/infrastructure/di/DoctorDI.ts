@@ -25,6 +25,8 @@ import { LikeRepository } from "../repositories/LikeRepository";
 import { SocketEngagementEventPublisher } from "../realtime/publishers/SocketEngagementEventPublisher";
 import { InterestRepository } from "../repositories/InterestRepostory";
 import { ToggleInterestOnPostUseCase } from "../../application/interest/use-cases/ToggleInterestOnPostUseCase";
+import { DoctorMutualConnectionsUseCase } from "../../application/doctor/use-cases/DoctorMutualConnectionsUseCase";
+import { DoctorPendingConnectionsUseCase } from "../../application/doctor/interfaces/DoctorPendingConectionsUseCase";
 
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
@@ -111,7 +113,18 @@ const toggleInterestOnPostUseCase = new ToggleInterestOnPostUseCase(
   doctorRepository,
   interestRepository,
   eventPublisher
+);
 
+const mutualConnectionsUseCase = new DoctorMutualConnectionsUseCase(
+  doctorRepository,
+  connectionRepository,
+  storageService
+);
+
+const pendingConnectionsUseCase = new DoctorPendingConnectionsUseCase(
+  doctorRepository,
+  connectionRepository,
+  storageService
 );
 export const doctorController = new DoctorController(
   createDoctorUseCase,
@@ -126,5 +139,7 @@ export const doctorController = new DoctorController(
   postDetailsUseCase,
   getRepDetailsOnDoctorUseCase,
   toggleLikeOnPostUseCase,
-  toggleInterestOnPostUseCase
+  toggleInterestOnPostUseCase,
+  mutualConnectionsUseCase,
+  pendingConnectionsUseCase
 );

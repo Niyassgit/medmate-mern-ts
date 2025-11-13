@@ -20,6 +20,8 @@ import { IArchivePostUseCase } from "../../../application/productPost/interfaces
 import { IDeletePostUseCase } from "../../../application/productPost/interfaces/IDeletePostUseCase";
 import { IGetDoctorDetailsOnRepSideUseCase } from "../../../application/medicalRep/interfaces/IGetDoctorDetailsOnRepSideUseCase";
 import { GetOptionalUserId } from "../utils/GetOptionalUserId";
+import { IRepMutualConnectionsUseCase } from "../../../application/medicalRep/interfaces/IRepMutualConnectionsUseCase";
+import { IRepPendingConnectionsUseCase } from "../../../application/medicalRep/interfaces/IRepPendingConnectionsUseCase";
 
 export class MedicalRepController {
   constructor(
@@ -37,7 +39,9 @@ export class MedicalRepController {
     private _getRepAnalticsUseCase: IGetRepAnalyticsUseCase,
     private _archivePostUseCase: IArchivePostUseCase,
     private _deletePostUseCase: IDeletePostUseCase,
-    private _getDoctorDetailsOnRepSideUseCase: IGetDoctorDetailsOnRepSideUseCase
+    private _getDoctorDetailsOnRepSideUseCase: IGetDoctorDetailsOnRepSideUseCase,
+    private _mutualConnectionsUseCase: IRepMutualConnectionsUseCase,
+    private _pendingConnectionsUseCase: IRepPendingConnectionsUseCase
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -51,6 +55,7 @@ export class MedicalRepController {
     const response = await this._createMedicalRepUseCase.execute(data);
     res.status(HttpStatusCode.OK).json({ success: true, ...response });
   };
+
   getRepProfileById = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const response = await this._getUserProfile.execute(userId);
@@ -58,6 +63,7 @@ export class MedicalRepController {
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
   };
+
   updateProfileImage = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const fileKey = req.file ? req.file.key : null;
@@ -69,6 +75,7 @@ export class MedicalRepController {
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
   };
+
   completeProfile = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const file = req.file || null;
@@ -82,6 +89,7 @@ export class MedicalRepController {
       .status(HttpStatusCode.OK)
       .json({ success: true, message: response });
   };
+
   createPost = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const dto = req.body as ProductPostDTO;
@@ -97,6 +105,7 @@ export class MedicalRepController {
       .status(HttpStatusCode.CREATED)
       .json({ success: true, message: response });
   };
+
   posts = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const response = await this._getProductsListUseCase.execute(userId);
@@ -104,6 +113,7 @@ export class MedicalRepController {
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
   };
+
   postDetails = async (req: Request, res: Response) => {
     const { postId } = req.params;
     const response = await this._getPostDetailsUseCase.execute(postId);
@@ -124,6 +134,7 @@ export class MedicalRepController {
       .status(HttpStatusCode.OK)
       .json({ success: true, message: response });
   };
+
   archivePost = async (req: Request, res: Response) => {
     const { postId } = req.params;
     const userId = GetOptionalUserId(req.user);
@@ -132,6 +143,7 @@ export class MedicalRepController {
       .status(HttpStatusCode.OK)
       .json({ success: true, message: response });
   };
+
   deletePost = async (req: Request, res: Response) => {
     const { postId } = req.params;
     const userId = GetOptionalUserId(req.user);
@@ -140,10 +152,11 @@ export class MedicalRepController {
       .status(HttpStatusCode.NO_CONTENT)
       .json({ success: true, message: response });
   };
+
   networks = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const { search, opTime, minAge, maxAge } = req.query;
-      const filters = {
+    const filters = {
       opTime: opTime ? String(opTime) : undefined,
       minAge: minAge ? Number(minAge) : undefined,
       maxAge: maxAge ? Number(maxAge) : undefined,
@@ -155,6 +168,7 @@ export class MedicalRepController {
     );
     res.status(HttpStatusCode.OK).json({ success: true, data: resposne });
   };
+
   connectionRequest = async (req: Request, res: Response) => {
     const { doctorId } = req.params;
     const userId = GetOptionalUserId(req.user);
@@ -166,6 +180,7 @@ export class MedicalRepController {
       .status(HttpStatusCode.OK)
       .json({ success: true, message: response });
   };
+
   acceptingConnectionRequest = async (req: Request, res: Response) => {
     const { doctorId } = req.params;
     const userId = req.user?.userId as string;
@@ -177,6 +192,7 @@ export class MedicalRepController {
       .status(HttpStatusCode.OK)
       .json({ success: true, message: response });
   };
+
   analytics = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const response = await this._getRepAnalticsUseCase.execute(userId);
@@ -184,6 +200,7 @@ export class MedicalRepController {
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
   };
+
   doctorDetails = async (req: Request, res: Response) => {
     const { doctorId } = req.params;
     const userId = GetOptionalUserId(req.user);
@@ -191,6 +208,22 @@ export class MedicalRepController {
       doctorId,
       userId
     );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  mutualConnections = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const response = await this._mutualConnectionsUseCase.execute(userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  pendingConnections = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const response = await this._pendingConnectionsUseCase.execute(userId);
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });

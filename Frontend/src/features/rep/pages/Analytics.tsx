@@ -3,16 +3,19 @@ import StatsCard from "@/components/shared/StatusCard";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { AnalyticsDTO } from "../dto/AnalyticsDTO";
-import { networkAnalytics } from "../api";
+import { networkAnalytics, RepMutualConnections, RepPendingConnections } from "../api";
 import toast from "react-hot-toast";
 import ConnectionTable from "@/components/shared/ConnectionTable";
+import ConnectionsModal from "@/components/shared/ConnectionsModal";
 
 const Analytics = () => {
   const id = useSelector((state: any) => state.auth.user?.id);
   const [analytics, setAnalytics] = useState<AnalyticsDTO | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-
+  const [modalTitle,setModalTitle]=useState("");
+  const [fetcher,setFetcher]=useState<any>(()=>null);
+  const [isOpen,setIsOpen]=useState(false);
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
@@ -28,6 +31,12 @@ const Analytics = () => {
     };
     fetchAnalytics();
   }, [id]);
+
+  const openModal=(title:string,fetchFn:any)=>{
+     setModalTitle(title);
+     setFetcher(fetchFn);
+     setIsOpen(true);
+  }
 
   if (loading)
     return (
@@ -52,13 +61,14 @@ const Analytics = () => {
           Network Overview
         </h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 ">
           <StatsCard
             title="Mutual Connections"
             value={analytics?.mutualConnectionsCount?.toString() ?? "0"}
             description="Doctors you are connected with."
             icon={CheckCircle}
             iconColor="bg-cyan-100 text-primary"
+            onClick={()=>openModal("Mutual Connections",()=>RepMutualConnections(id))}
           />
           <StatsCard
             title="Pending Requests"
@@ -66,8 +76,18 @@ const Analytics = () => {
             description="Connection requests awaiting approval."
             icon={Clock}
             iconColor="bg-blue-100 text-primary"
+            onClick={()=>openModal("Pending Cnnections",()=>RepPendingConnections(id))}
           />
         </div>
+        {isOpen && fetcher &&(
+          <ConnectionsModal 
+            isOpen={isOpen}
+            onClose={()=>setIsOpen(false)}
+            title={modalTitle}
+            fetcher={()=>fetcher}
+            viewerRole="rep"
+          />
+        )}
 
         {/* Search Field + Table */}
         <div className="mb-8">

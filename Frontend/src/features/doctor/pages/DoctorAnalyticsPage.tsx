@@ -1,24 +1,35 @@
 import { useEffect, useState, useMemo } from "react";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import { Users,Clock, UserPlus, Search } from "lucide-react";
+import { Users, Clock, UserPlus, Search } from "lucide-react";
 
 import StatsCard from "@/components/shared/StatusCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 
-import { doctorAnltyics } from "../api";
+import { doctorAnltyics, pendingConnections } from "../api";
 import { DoctorAnalyticsDTO } from "../dto/DoctorAnalyticsDTO";
 import { RepListOnDoctorAnalyticsDTO } from "../dto/RepListOnDocAnlyticsDTO";
 import ConnectionTable from "@/components/shared/ConnectionTable";
 import { SpinnerButton } from "@/components/shared/SpinnerButton";
+import { mutualConnections} from "../api";
+import ConnectionsModal from "@/components/shared/ConnectionsModal";
 
 const DoctorAnalyticsPage = () => {
   const id = useSelector((state: any) => state.auth.user?.id);
   const [analytics, setAnalytics] = useState<DoctorAnalyticsDTO | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const [fetcher, setFetcher] = useState<any>(() => null);
+  const [modalTitle, setModalTitle] = useState("");
+
+  const openModal = (title: string, fetchFn: any) => {
+    setModalTitle(title);
+    setFetcher(() => fetchFn);
+    setIsOpen(true);
+  };
 
   useEffect(() => {
     const fetchAnalytics = async () => {
@@ -51,14 +62,12 @@ const DoctorAnalyticsPage = () => {
   }, [analytics, searchTerm]);
 
   if (loading) {
-    return (
-     <SpinnerButton />
-    );
+    return <SpinnerButton />;
   }
 
   return (
     <div className="min-h-screen bg-background">
-      <main className="container mx-auto px-6 py-8">  
+      <main className="container mx-auto px-6 py-8">
         {/* Page Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">
@@ -85,6 +94,7 @@ const DoctorAnalyticsPage = () => {
               value={String(analytics?.mutualConnectionsCount ?? 0)}
               description="Total connected representatives"
               iconColor="bg-blue-100 text-blue-600"
+              onClick={() => openModal("Mutual Connections", ()=>mutualConnections(id))}
             />
             <StatsCard
               icon={Clock}
@@ -92,7 +102,20 @@ const DoctorAnalyticsPage = () => {
               value={String(analytics?.pendingRequestCount ?? 0)}
               description="Awaiting approval"
               iconColor="bg-yellow-100 text-yellow-600"
+              onClick={() =>
+                openModal("Pending Connections",()=> pendingConnections(id))
+              }
             />
+            {isOpen && fetcher &&(
+              <ConnectionsModal 
+               isOpen={isOpen}
+               onClose={()=>setIsOpen(false)}
+               title={modalTitle}
+               fetcher={fetcher}
+              viewerRole="doctor"
+               
+              />
+            )}
 
             <div className="flex items-center justify-center">
               <Button className="w-full bg-secondary hover:bg-secondary/90">

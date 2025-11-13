@@ -26,6 +26,8 @@ import { TerritoryRepository } from "../repositories/TerritoryRepository";
 import { ArchivePostUseCase } from "../../application/productPost/use-case/ArchivePostUseCase";
 import { DeletePostUseCase } from "../../application/productPost/use-case/DeletePostUseCase";
 import { GetDoctorDetailsOnRepSideUseCase } from "../../application/medicalRep/use-cases/GetDoctorDetailsOnRepSideUseCase";
+import { RepMutualConnectionsUseCase } from "../../application/medicalRep/use-cases/RepMutualConnectionsUseCase";
+import { RepPendingConnectionsUseCase } from "../../application/medicalRep/use-cases/RepPendingConnectionsUseCase";
 
 const medicalRepRepository = new MedicalRepRepository();
 const doctorRepository = new DoctorRepository();
@@ -122,6 +124,18 @@ const doctorDetailsOnRepSideUseCase = new GetDoctorDetailsOnRepSideUseCase(
   storageService,
   connectionRepository
 );
+
+const mutualConnectionsUseCase = new RepMutualConnectionsUseCase(
+  medicalRepRepository,
+  connectionRepository,
+  storageService
+);
+
+const pendingConnectionsUseCase = new RepPendingConnectionsUseCase(
+  medicalRepRepository,
+  connectionRepository,
+  storageService
+);
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
   getRepProfileByIdUseCase,
@@ -138,4 +152,6 @@ export const medicalRepController = new MedicalRepController(
   archivePostUseCase,
   deletePostUseCase,
   doctorDetailsOnRepSideUseCase,
+  mutualConnectionsUseCase,
+  pendingConnectionsUseCase
 );

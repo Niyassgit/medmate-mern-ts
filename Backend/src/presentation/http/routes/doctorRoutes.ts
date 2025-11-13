@@ -55,5 +55,13 @@ export class DoctorRoutes {
       "/feed/:postId/interest/toggle",
       doctorController.toggleInterest
     );
+    this.router.get(
+      "/analytics/mutual-connections/:userId",
+      doctorController.mutualConnections
+    );
+    this.router.get(
+      "/analytics/pending-connections/:userId",
+      doctorController.pendingConnections
+    );
   }
 }

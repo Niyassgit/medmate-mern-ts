@@ -87,5 +87,13 @@ export class MedicalRepRoutes {
       "/doctor/details/:doctorId",
       medicalRepController.doctorDetails
     );
+    this.router.get(
+      "/analytics/mutual-connections/:userId",
+      medicalRepController.mutualConnections
+    );
+    this.router.get(
+      "/analytics/pending-connections/:userId",
+      medicalRepController.pendingConnections
+    );
   }
 }

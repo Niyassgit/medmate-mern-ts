@@ -16,6 +16,8 @@ import { IGetRepDetailsOnDoctorUseCase } from "../../../application/doctor/inter
 import { GetOptionalUserId } from "../utils/GetOptionalUserId";
 import { IToggleLikeOnPostUseCase } from "../../../application/Like/interfaces/IToggleLikeOnPostUseCase";
 import { IToggleInterestOnPostUseCase } from "../../../application/interest/interfaces/IToggleInterestOnPostUseCase";
+import { IDoctorMutualConnectionsUseCase } from "../../../application/doctor/interfaces/IDoctorMutualConnectionsUseCase";
+import { IDoctorPendingConnectionsUseCase } from "../../../application/doctor/interfaces/IDoctorPendingConnectionsUseCase";
 
 export class DoctorController {
   constructor(
@@ -31,7 +33,9 @@ export class DoctorController {
     private _postDetailsUseCase: IPostDetailsUseCase,
     private _getRepDetailsOnDoctorUseCase: IGetRepDetailsOnDoctorUseCase,
     private _toggleLikeOnPostUseCase: IToggleLikeOnPostUseCase,
-    private _toggleInterestOnPostUseCase: IToggleInterestOnPostUseCase
+    private _toggleInterestOnPostUseCase: IToggleInterestOnPostUseCase,
+    private _mutualConnectionListUseCase: IDoctorMutualConnectionsUseCase,
+    private _pendingConnectionListUseCase: IDoctorPendingConnectionsUseCase
   ) {}
 
   createDoctor = async (req: Request, res: Response) => {
@@ -46,6 +50,7 @@ export class DoctorController {
     const response = await this._createDoctorUseCase.execute(data);
     res.status(HttpStatusCode.CREATED).json({ success: true, ...response });
   };
+
   getDoctorprofileById = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const response = await this._getDoctorProfileByIdUseCase.execute(userId);
@@ -53,6 +58,7 @@ export class DoctorController {
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
   };
+
   updateProfileImage = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const fileKey = req.file ? req.file.key : null;
@@ -62,6 +68,7 @@ export class DoctorController {
     );
     res.status(HttpStatusCode.OK).json({ success: true, data: response });
   };
+
   completeProfile = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const data = req.body as CompleteDoctorProfileDTO;
@@ -71,12 +78,17 @@ export class DoctorController {
       .status(HttpStatusCode.OK)
       .json({ success: true, message: response });
   };
+
   networks = async (req: Request, res: Response) => {
     const { userId } = req.params;
-    const {search}=req.query;
-    const response = await this._networkUseCase.execute(userId,search as string);
+    const { search } = req.query;
+    const response = await this._networkUseCase.execute(
+      userId,
+      search as string
+    );
     res.status(HttpStatusCode.OK).json({ success: true, data: response });
   };
+
   connectionRequest = async (req: Request, res: Response) => {
     const { repId } = req.params;
     const userId = GetOptionalUserId(req.user);
@@ -91,6 +103,7 @@ export class DoctorController {
     );
     res.status(HttpStatusCode.OK).json({ success: true, message: response });
   };
+
   acceptConnection = async (req: Request, res: Response) => {
     const { repId } = req.params;
     const userId = GetOptionalUserId(req.user);
@@ -105,6 +118,7 @@ export class DoctorController {
     );
     res.status(HttpStatusCode.OK).json({ success: true, message: response });
   };
+
   analytics = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const response = await this._analyticsUseCase.execute(userId);
@@ -112,6 +126,7 @@ export class DoctorController {
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
   };
+
   getFeed = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const response = await this._getFeedUseCase.execute(userId);
@@ -119,6 +134,7 @@ export class DoctorController {
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
   };
+
   postDetails = async (req: Request, res: Response) => {
     const { postId } = req.params;
     const userId = GetOptionalUserId(req.user);
@@ -127,6 +143,7 @@ export class DoctorController {
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
   };
+
   RepDetails = async (req: Request, res: Response) => {
     const { repId } = req.params;
     const userId = GetOptionalUserId(req.user);
@@ -150,6 +167,7 @@ export class DoctorController {
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
   };
+
   toggleInterest = async (req: Request, res: Response) => {
     const { postId } = req.params;
     const userId = GetOptionalUserId(req.user);
@@ -157,6 +175,23 @@ export class DoctorController {
       postId,
       userId
     );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  mutualConnections = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const response = await this._mutualConnectionListUseCase.execute(userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  pendingConnections = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    console.log("userId:",userId)
+    const response = await this._pendingConnectionListUseCase.execute(userId);
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });

@@ -58,3 +58,11 @@ export const handleInterestToggle=async(postId:string)=>{
     const res=await api.post(DoctorEndpoints.INTEREST_TOGGLE(postId));
       return res.data;
 }
+export const mutualConnections=async(userId:string)=>{
+    const res=await api.get(DoctorEndpoints.MUTUAL_CONNECTIONS(userId));
+    return res.data.data;
+}
+export const pendingConnections=async(userId:string)=>{
+    const res=await api.get(DoctorEndpoints.PENDING_REQUESTS(userId));
+    return res.data.data;
+}

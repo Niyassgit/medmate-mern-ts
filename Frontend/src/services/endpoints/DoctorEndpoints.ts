@@ -12,4 +12,6 @@ export const DoctorEndpoints={
   REP_DETAILS:(repId:string)=>`/doctor/rep/details/${repId}`,
   LIKE_TOGGLE:(postId:string)=>`/doctor/feed/${postId}/like/toggle`,
   INTEREST_TOGGLE:(postId:string)=>`/doctor/feed/${postId}/interest/toggle`,
+  MUTUAL_CONNECTIONS:(userId:string)=>`/doctor/analytics/mutual-connections/${userId}`,
+  PENDING_REQUESTS:(userId:string)=>`/doctor/analytics/pending-connections/${userId}`,
 }

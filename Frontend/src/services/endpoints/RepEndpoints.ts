@@ -18,4 +18,6 @@ export const RepEndpoints = {
   ARCHIVE_POST:(postId:string)=>`/rep/post/archive/${postId}`,
   DELETE_POST:(postId:string)=>`/rep/post/delete/${postId}`,
   DOCTOR_PROFILE:(doctorId:string)=>`/rep/doctor/details/${doctorId}`,
+  MUTUAL_CONNECTIONS:(userId:string)=>`/rep/analytics/mutual-connections/${userId}`,
+  PENDING_CONNECITONS:(userId:string)=>`/rep/analytics/pending-connections/${userId}`,
 };

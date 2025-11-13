@@ -96,3 +96,13 @@
 [2025-11-12 14:46:00] [32minfo[39m: [32m server running on port 5000[39m
 [2025-11-12 14:46:19] [32minfo[39m: [32m server running on port 5000[39m
 [2025-11-12 14:46:30] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-12 14:53:35] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-12 15:16:18] [33mwarn[39m: [33mAppError: Invalid email or password[39m
+[2025-11-12 15:25:16] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-12 15:25:25] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-12 15:25:47] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-12 16:09:33] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-12 16:23:49] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-12 16:24:48] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-12 16:25:27] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-12 16:46:45] [32minfo[39m: [32m server running on port 5000[39m

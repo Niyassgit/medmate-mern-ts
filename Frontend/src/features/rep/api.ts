@@ -79,3 +79,11 @@ export const doctorDetails=async(doctorId:string)=>{
   const res=await api.get(RepEndpoints.DOCTOR_PROFILE(doctorId));
   return res.data;
 }
+export const RepMutualConnections=async(userId:string)=>{
+  const {data}=await api.get(RepEndpoints.MUTUAL_CONNECTIONS(userId));
+  return data.data; 
+}
+export const RepPendingConnections=async(userId:string)=>{
+  const {data}=await api.get(RepEndpoints.PENDING_CONNECITONS(userId));
+  return data.data;
+}
