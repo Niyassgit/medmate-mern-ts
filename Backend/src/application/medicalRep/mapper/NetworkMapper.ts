@@ -25,7 +25,7 @@ export class NetworkMapper {
           : null,
       speciality: doc.departmentName ?? null,
       territory: doc.territoryName ?? null,
-      schedule: doc.opHours ?? null,
+      schedule: doc.opSession ?? null,
       connectionStatus,
       connectionInitiator,
     };

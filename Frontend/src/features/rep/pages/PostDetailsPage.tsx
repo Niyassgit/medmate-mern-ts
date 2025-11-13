@@ -13,17 +13,21 @@ import {
   Edit,
   ChevronLeft,
   ChevronRight,
+  Trash2,
 } from "lucide-react";
 import { PostDetailsDTO } from "../dto/PostDetailsDTO";
-import { postDetails } from "../api";
+import { postDetails, deleteProductPost } from "../api";
 import useFetchItem from "@/hooks/useFetchItem";
 import toast from "react-hot-toast";
+import ConfirmDialog from "@/components/shared/ConfirmDialog";
 
 const PostDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const fetchPostDetails = useCallback(() => {
     if (!id) return Promise.resolve([]);
@@ -50,7 +54,20 @@ const PostDetailsPage = () => {
     }
     return chunks;
   };
-
+  const handleDeletePost = async () => {
+    if (!id) return;
+    setDeleteLoading(true);
+    try {
+      await deleteProductPost(id);
+      toast.success("Post deleted successfully!");
+      setConfirmOpen(false);
+      setTimeout(() => navigate(-1), 800);
+    } catch (error) {
+      toast.error("Failed to delete post!");
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -91,11 +108,11 @@ const PostDetailsPage = () => {
     );
   };
 
-  const handleErrorImage = async (idx:number) => {
+  const handleErrorImage = async (idx: number) => {
     try {
       const res = await postDetails(id!);
       if (res.success && res.data?.data?.imageUrl) {
-          setImageUrls(res.data.data.imageUrl);
+        setImageUrls(res.data.data.imageUrl);
       }
     } catch (error) {
       toast.error(
@@ -119,14 +136,26 @@ const PostDetailsPage = () => {
               Back
             </Button>
 
-            <Button
-              variant="outline"
-              onClick={() => navigate(`/rep/post-edit/${post.id}`)}
-              className="gap-2 hover:bg-primary hover:text-primary-foreground"
-            >
-              <Edit className="h-4 w-4" />
-              Edit post
-            </Button>
+            <div className="flex items-center gap-3">
+              <Button
+                variant="outline"
+                onClick={() => navigate(`/rep/post-edit/${post.id}`)}
+                className="gap-2 hover:bg-primary hover:text-primary-foreground"
+              >
+                <Edit className="h-4 w-4" />
+                Edit Post
+              </Button>
+
+              <Button
+                variant="destructive"
+                onClick={() => setConfirmOpen(true)}
+                disabled={deleteLoading}
+                className="gap-2 bg-red-600 text-white hover:bg-red-700"
+              >
+                <Trash2 className="h-4 w-4" />
+                {deleteLoading ? "Deleting..." : "Delete"}
+              </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -188,7 +217,7 @@ const PostDetailsPage = () => {
                         src={url}
                         alt={`${post.title} ${idx + 1}`}
                         className="h-full w-full object-cover"
-                        onError={()=>handleErrorImage(idx)}
+                        onError={() => handleErrorImage(idx)}
                       />
                     </button>
                   ))}
@@ -330,6 +359,15 @@ const PostDetailsPage = () => {
           </div>
         </div>
       </main>
+      <ConfirmDialog
+        open={confirmOpen}
+        title="Delete Post"
+        message="Are you sure you want to permanently delete this post? This action cannot be undone."
+        onConfirm={handleDeletePost}
+        onCancel={() => setConfirmOpen(false)}
+        confirmButtonClassName="bg-red-600 text-white hover:bg-red-700"
+        cancelButtonClassName="border border-gray-300"
+      />
     </div>
   );
 };

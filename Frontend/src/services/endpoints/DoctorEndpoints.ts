@@ -7,4 +7,9 @@ export const DoctorEndpoints={
   CONNECTION_TOGGLE:(repId:string)=>`/doctor/connect/${repId}`,
   ACCEPT_REQUEST:(repId:string)=>`/doctor/connections/accept/${repId}`,
   NETWORK_ANALYTICS:(userId:string)=>`/doctor/analytics/${userId}`,
+  REP_FEED:(userId:string)=>`/doctor/feed/${userId}`,
+  POST_DETAILS:(postId:string)=>`/doctor/feed/post-details/${postId}`,
+  REP_DETAILS:(repId:string)=>`/doctor/rep/details/${repId}`,
+  LIKE_TOGGLE:(postId:string)=>`/doctor/feed/${postId}/like/toggle`,
+  INTEREST_TOGGLE:(postId:string)=>`/doctor/feed/${postId}/interest/toggle`,
 }

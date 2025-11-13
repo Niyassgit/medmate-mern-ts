@@ -1,0 +1,43 @@
+[2025-10-31 09:59:28] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 10:11:43] [31merror[39m: [31mFailed to start server:TypeError: Authenticate.AuthorizeRole is not a function[39m
+[2025-10-31 10:11:48] [31merror[39m: [31mFailed to start server:TypeError: Authenticate.AuthorizeRole is not a function[39m
+[2025-10-31 10:12:33] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 10:20:38] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 12:14:08] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 12:16:07] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 12:16:10] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 12:16:45] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 12:16:57] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 12:18:27] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 12:18:36] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 12:18:45] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 12:20:15] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 12:20:19] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 12:20:20] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 12:20:48] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 12:21:03] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 12:21:48] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 12:22:02] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 12:22:14] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 12:22:32] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 12:22:39] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 12:22:42] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 12:22:50] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 12:22:55] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 12:23:03] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 12:23:11] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 12:23:36] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 12:23:56] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 12:24:17] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 12:26:53] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 12:27:32] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 12:54:34] [31merror[39m: [31mFailed to start server:TypeError: argument handler is required[39m
+[2025-10-31 12:54:39] [31merror[39m: [31mFailed to start server:TypeError: argument handler is required[39m
+[2025-10-31 12:54:41] [31merror[39m: [31mFailed to start server:TypeError: Missing parameter name at 14: https://git.new/pathToRegexpError[39m
+[2025-10-31 12:54:47] [31merror[39m: [31mFailed to start server:TypeError: argument handler is required[39m
+[2025-10-31 12:54:53] [31merror[39m: [31mFailed to start server:ReferenceError: A is not defined[39m
+[2025-10-31 12:55:01] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 17:52:19] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 17:54:42] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 17:57:32] [32minfo[39m: [32m server running on port 5000[39m
+[2025-10-31 17:58:40] [32minfo[39m: [32m server running on port 5000[39m

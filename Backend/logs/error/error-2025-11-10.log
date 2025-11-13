@@ -1,0 +1,177 @@
+[2025-11-10 11:12:49] [31merror[39m: [31mFailed to start server:argument handler must be a function[39m
+[2025-11-10 11:13:35] [31merror[39m: [31mFailed to start server:argument handler must be a function[39m
+[2025-11-10 15:47:48] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.productPost.findMany()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\ProductPostRepository.ts:68:44[39m
+
+[31m  65   return product ? product : null;[39m
+[31m  66 }[39m
+[31m  67 async getPostsByIds(repIds: string[]): Promise<IProductPostForFeed[]> {[39m
+[31m→ 68   const posts = await prisma.productPost.findMany({[39m
+[31m         where: {[39m
+[31m           repId: {[39m
+[31m             in: [[39m
+[31m               "68c56b05393d66bf18fb81a2"[39m
+[31m             ][39m
+[31m           }[39m
+[31m         },[39m
+[31m         include: {[39m
+[31m           rep: {[39m
+[31m             select: {[39m
+[31m               id: true,[39m
+[31m               name: true,[39m
+[31m               companyName: true,[39m
+[31m               user: {[39m
+[31m                 select: {[39m
+[31m                   profileImage: true[39m
+[31m                 }[39m
+[31m               }[39m
+[31m             }[39m
+[31m           },[39m
+[31m           _count: {[39m
+[31m             select: {[39m
+[31m               interests: true,[39m
+[31m               Likes: true,[39m
+[31m               ~~~~~[39m
+[31m       ?       likes?: true[39m
+[31m             }[39m
+[31m           }[39m
+[31m         },[39m
+[31m         orderBy: {[39m
+[31m           createdAt: "desc"[39m
+[31m         }[39m
+[31m       })[39m
+
+[31mUnknown field `Likes` for select statement on model `ProductPostCountOutputType`. Available options are marked with ?.[39m
+[2025-11-10 15:47:48] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.productPost.findMany()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\ProductPostRepository.ts:68:44[39m
+
+[31m  65   return product ? product : null;[39m
+[31m  66 }[39m
+[31m  67 async getPostsByIds(repIds: string[]): Promise<IProductPostForFeed[]> {[39m
+[31m→ 68   const posts = await prisma.productPost.findMany({[39m
+[31m         where: {[39m
+[31m           repId: {[39m
+[31m             in: [[39m
+[31m               "68c56b05393d66bf18fb81a2"[39m
+[31m             ][39m
+[31m           }[39m
+[31m         },[39m
+[31m         include: {[39m
+[31m           rep: {[39m
+[31m             select: {[39m
+[31m               id: true,[39m
+[31m               name: true,[39m
+[31m               companyName: true,[39m
+[31m               user: {[39m
+[31m                 select: {[39m
+[31m                   profileImage: true[39m
+[31m                 }[39m
+[31m               }[39m
+[31m             }[39m
+[31m           },[39m
+[31m           _count: {[39m
+[31m             select: {[39m
+[31m               interests: true,[39m
+[31m               Likes: true,[39m
+[31m               ~~~~~[39m
+[31m       ?       likes?: true[39m
+[31m             }[39m
+[31m           }[39m
+[31m         },[39m
+[31m         orderBy: {[39m
+[31m           createdAt: "desc"[39m
+[31m         }[39m
+[31m       })[39m
+
+[31mUnknown field `Likes` for select statement on model `ProductPostCountOutputType`. Available options are marked with ?.[39m
+[2025-11-10 15:48:17] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.productPost.findMany()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\ProductPostRepository.ts:68:44[39m
+
+[31m  65   return product ? product : null;[39m
+[31m  66 }[39m
+[31m  67 async getPostsByIds(repIds: string[]): Promise<IProductPostForFeed[]> {[39m
+[31m→ 68   const posts = await prisma.productPost.findMany({[39m
+[31m         where: {[39m
+[31m           repId: {[39m
+[31m             in: [[39m
+[31m               "68c56b05393d66bf18fb81a2"[39m
+[31m             ][39m
+[31m           }[39m
+[31m         },[39m
+[31m         include: {[39m
+[31m           rep: {[39m
+[31m             select: {[39m
+[31m               id: true,[39m
+[31m               name: true,[39m
+[31m               companyName: true,[39m
+[31m               user: {[39m
+[31m                 select: {[39m
+[31m                   profileImage: true[39m
+[31m                 }[39m
+[31m               }[39m
+[31m             }[39m
+[31m           },[39m
+[31m           _count: {[39m
+[31m             select: {[39m
+[31m               interests: true,[39m
+[31m               Likes: true,[39m
+[31m               ~~~~~[39m
+[31m       ?       likes?: true[39m
+[31m             }[39m
+[31m           }[39m
+[31m         },[39m
+[31m         orderBy: {[39m
+[31m           createdAt: "desc"[39m
+[31m         }[39m
+[31m       })[39m
+
+[31mUnknown field `Likes` for select statement on model `ProductPostCountOutputType`. Available options are marked with ?.[39m
+[2025-11-10 15:48:17] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.productPost.findMany()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\ProductPostRepository.ts:68:44[39m
+
+[31m  65   return product ? product : null;[39m
+[31m  66 }[39m
+[31m  67 async getPostsByIds(repIds: string[]): Promise<IProductPostForFeed[]> {[39m
+[31m→ 68   const posts = await prisma.productPost.findMany({[39m
+[31m         where: {[39m
+[31m           repId: {[39m
+[31m             in: [[39m
+[31m               "68c56b05393d66bf18fb81a2"[39m
+[31m             ][39m
+[31m           }[39m
+[31m         },[39m
+[31m         include: {[39m
+[31m           rep: {[39m
+[31m             select: {[39m
+[31m               id: true,[39m
+[31m               name: true,[39m
+[31m               companyName: true,[39m
+[31m               user: {[39m
+[31m                 select: {[39m
+[31m                   profileImage: true[39m
+[31m                 }[39m
+[31m               }[39m
+[31m             }[39m
+[31m           },[39m
+[31m           _count: {[39m
+[31m             select: {[39m
+[31m               interests: true,[39m
+[31m               Likes: true,[39m
+[31m               ~~~~~[39m
+[31m       ?       likes?: true[39m
+[31m             }[39m
+[31m           }[39m
+[31m         },[39m
+[31m         orderBy: {[39m
+[31m           createdAt: "desc"[39m
+[31m         }[39m
+[31m       })[39m
+
+[31mUnknown field `Likes` for select statement on model `ProductPostCountOutputType`. Available options are marked with ?.[39m
+[2025-11-10 16:28:58] [31merror[39m: [31mFailed to start server:server is not defined[39m
+[2025-11-10 20:53:13] [31merror[39m: [31m🔥 Unhandled Error:this._likeRepository.getProductIdsByDoctor is not a function[39m
+[2025-11-10 20:53:14] [31merror[39m: [31m🔥 Unhandled Error:this._likeRepository.getProductIdsByDoctor is not a function[39m

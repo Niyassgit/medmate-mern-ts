@@ -10,6 +10,7 @@ import LogoutButton from "@/components/shared/LogoutButton";
 import { useNavigate } from "react-router-dom";
 import { getProfileRep } from "@/features/rep/api";
 import { DetailItem } from "../components/DetailItem";
+import { SpinnerButton } from "@/components/shared/SpinnerButton";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -53,7 +54,10 @@ const ProfilePage = () => {
     try {
       const response = await updateProfileImage(id, selectedFile);
       if (response.success) {
-       setDoctor({ ...doctor, profileImage: response.data?.signedUrl || doctor.profileImage });
+        setDoctor({
+          ...doctor,
+          profileImage: response.data?.signedUrl || doctor.profileImage,
+        });
 
         toast.success(response.message || "Image changed");
       } else {
@@ -67,7 +71,7 @@ const ProfilePage = () => {
     }
   };
 
-  if (loading) return <p className="text-center py-6">Loading profile...</p>;
+  if (loading) return <SpinnerButton />;
   if (error) return <p className="text-center text-red-600">{error}</p>;
   if (!doctor) return <p className="text-center">No doctor details found</p>;
 
@@ -250,6 +254,12 @@ const ProfilePage = () => {
                 label="Registration"
                 value={doctor.registrationId}
               />
+              <DetailItem
+                icon="🎂"
+                label="Date of Birth"
+                value={doctor.dob || "Not provided"}
+              />
+
               <DetailItem
                 icon="🏥"
                 label="Department"

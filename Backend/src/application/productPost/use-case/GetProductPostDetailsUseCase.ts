@@ -16,10 +16,7 @@ export class GetProductPostDetailsUseCase
   async execute(postId: string): Promise<PostDetailsDTO> {
     const post = await this._productPostRepository.getPostDetails(postId);
     if (!post) throw new NotFoundError(ErrorMessages.RETRY_LATER);
-    const postDto = ProductPostMapper.toDomain(post);
-    postDto.imageUrl = await Promise.all(
-      postDto.imageUrl.map((key) => this._storageService.generateSignedUrl(key))
-    );
+    const postDto = ProductPostMapper.toDomain(post,this._storageService);
     return postDto;
   }
 }

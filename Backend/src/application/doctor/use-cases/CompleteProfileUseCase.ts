@@ -5,6 +5,7 @@ import {NotFoundError } from "../../errors";
 import { CompleteDoctorProfileDTO } from "../dto/CompleteProfileDTO";
 import { ICompleteProfileUseCase} from "../interfaces/ICompleteProfileUseCase";
 import { DoctorMapper } from "../mapper/DoctorMapper";
+import { getOpSession } from "../utils/OpSessionUtil";
 
 
 export class CompleteProfileUseCase implements ICompleteProfileUseCase{
@@ -17,7 +18,8 @@ export class CompleteProfileUseCase implements ICompleteProfileUseCase{
         const user=await this._userRepository.findById(userId);
         if(!user) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
         const existingUser=await this._doctorRepository.getDoctorByUserId(userId);
-        const doctorEntity=DoctorMapper.toCompleteProfile(data,userId);
+        const opSession=getOpSession(data.opStartTime,data.opEndTime);
+        const doctorEntity=DoctorMapper.toCompleteProfile(data,userId,opSession);
         if(!existingUser){
             await this._doctorRepository.createDoctor(doctorEntity);
             return SuccessMessages.PROFILE_UPDATED;

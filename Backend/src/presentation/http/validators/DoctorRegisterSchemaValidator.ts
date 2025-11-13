@@ -9,7 +9,8 @@ export const DoctorRegisterSchema = z.object({
   territoryId: z.string().min(1, "Territory is required"),
   hospital: z.string().min(1, "Invalid hospital id"),
   registrationId: z.string().min(1, "Please insert valid registeration id"),
-  opHours: z.string().min(3, "Please insert valid op hour"),
+  opStartTime: z.string().nonempty("Select start time"),
+  opEndTime: z.string().nonempty("Select end time"),
   licenseImageUrl: z
     .object({
       fieldname: z.string(),

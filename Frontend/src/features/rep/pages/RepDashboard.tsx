@@ -58,6 +58,11 @@ const RepDashboard = () => {
       toast.error("Failed to refresh signed URLs");
     }
   };
+  const handleArchived =(postId:string)=>{
+    setTimeout(() => {
+    setPosts((prev)=>prev.filter((post)=>post.id !== postId));
+    },700);
+  }
   if (postError || profileError) return <p>{postError || profileError}</p>;
   if (postLoading || profileLoading) return <p>Loading...</p>;
 
@@ -103,6 +108,7 @@ const RepDashboard = () => {
                     likes={119}
                     category="Cardiac"
                     onImageError={refreshSingnedUrls}
+                    onArchived={handleArchived}
                   />
                 ))
               ) : (
@@ -126,7 +132,7 @@ const RepDashboard = () => {
           </div>
 
           {/* Sidebar */}
-          <aside className="lg:sticky lg:top-8 lg:self-start">
+          <aside className="hidden lg:sticky lg:top-8 lg:self-start lg:block">
             <ProfileCard rep={rep} />
           </aside>
         </div>

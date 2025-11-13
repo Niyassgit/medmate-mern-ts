@@ -1,9 +1,20 @@
 import { DoctorCardProps } from "../dto/DoctorCardProps";
 import { Button } from "@/components/ui/button";
-import { MapPin, Clock, Building2, UserPlus, UserCheck, RefreshCcw, Share2, X } from "lucide-react";
+import {
+  MapPin,
+  Clock,
+  Building2,
+  UserPlus,
+  UserCheck,
+  RefreshCcw,
+  Share2,
+  X,
+  User,
+} from "lucide-react";
 import { connectionToggle, acceptConnection } from "../api";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const NetworkDoctorCard = ({
   id,
@@ -20,6 +31,7 @@ const NetworkDoctorCard = ({
   const [status, setStatus] = useState<string | null>(connectionStatus);
   const [initiator, setInitiator] = useState<string | null>(connectionInitiator);
   const [isRemoving, setIsRemoving] = useState(false);
+  const navigate = useNavigate();
 
   const handleConnect = async () => {
     let newStatus: string | null = status;
@@ -35,8 +47,8 @@ const NetworkDoctorCard = ({
 
     setStatus(newStatus);
     setInitiator(newInitiator);
-
     setLoading(true);
+
     try {
       const res = await connectionToggle(id);
       toast.success(res.data.message || "Action successful");
@@ -55,15 +67,12 @@ const NetworkDoctorCard = ({
 
     setStatus("ACCEPTED");
     setInitiator(null);
-
     setLoading(true);
+
     try {
       const res = await acceptConnection(id);
       toast.success(res.message || "Connection accepted");
-      
-      setTimeout(() => {
-        setIsRemoving(true);
-      }, 500);
+      setTimeout(() => setIsRemoving(true), 500);
     } catch (error: any) {
       setStatus(previousStatus);
       setInitiator(previousInitiator);
@@ -79,8 +88,8 @@ const NetworkDoctorCard = ({
 
     setStatus(null);
     setInitiator(null);
-
     setLoading(true);
+
     try {
       const res = await connectionToggle(id);
       toast.success(res.data.message || "Request cancelled");
@@ -91,6 +100,11 @@ const NetworkDoctorCard = ({
     } finally {
       setLoading(false);
     }
+  };
+
+
+  const handleCardClick = () => {
+    navigate(`/rep/doctor/details/${id}`);
   };
 
   let buttonLabel = "Connect";
@@ -115,20 +129,30 @@ const NetworkDoctorCard = ({
     ButtonIcon = UserCheck;
   }
 
-  if (isRemoving) {
-    return null;
-  }
+  if (isRemoving) return null;
 
   return (
-    <div 
-      className={`bg-card rounded-lg border overflow-hidden hover:shadow-lg transition-all duration-500 ease-out ${
-        status === "ACCEPTED" && loading === false ? "animate-fadeOut" : ""
+    <div
+      className={`bg-card rounded-lg border overflow-hidden hover:shadow-lg transition-all duration-500 ease-out cursor-pointer ${
+        status === "ACCEPTED" && !loading ? "animate-fadeOut" : ""
       }`}
+      onClick={handleCardClick}
     >
-      <div className="relative">
-        <img src={image} alt={name} className="w-full h-48 object-cover" />
+      <div className="relative w-full h-48 bg-muted flex items-center justify-center overflow-hidden">
+        {image ? (
+          <img
+            src={image}
+            alt={name}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="flex items-center justify-center w-full h-full bg-primary/5 text-primary">
+            <User className="w-12 h-12" />
+          </div>
+        )}
       </div>
 
+      {/* Content */}
       <div className="p-4 space-y-3">
         <div>
           <div className="flex items-center gap-2 flex-wrap mb-1">
@@ -152,7 +176,11 @@ const NetworkDoctorCard = ({
           </div>
         </div>
 
-        <div className="flex gap-2 pt-4 border-t border-border">
+        {/* Buttons */}
+        <div
+          className="flex gap-2 pt-4 border-t border-border"
+          onClick={(e) => e.stopPropagation()} 
+        >
           <Button
             onClick={onClickHandler}
             className={`flex-1 gap-2 ${buttonClass}`}

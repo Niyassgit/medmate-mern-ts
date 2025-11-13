@@ -15,7 +15,8 @@ export interface DoctorDetails {
   opHours: string | null;
   about: string;
   licenseImageUrl:string | null;
-
+  dob:string | null;
+  
   educations?: Education[];
   certificates?: Certificate[];
   profileImage: string;

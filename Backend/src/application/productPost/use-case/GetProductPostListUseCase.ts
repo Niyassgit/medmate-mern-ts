@@ -13,7 +13,8 @@ export class GetProductPostListUseCase implements IGetProductPostListUseCase {
     private _userRepository: IUserRepository,
     private _productPostRepository: IProductPostRepository,
     private _medicalRepRepository: IMedicalRepRepository,
-    private _presentationService:IProductPostPresentationService
+    private _presentationService:IProductPostPresentationService,
+    
   ) {}
 
   async execute(userId: string): Promise<ProductListDTO[] | null> {

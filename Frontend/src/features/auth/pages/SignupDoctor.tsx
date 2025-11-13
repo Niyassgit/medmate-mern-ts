@@ -38,7 +38,6 @@ const SignupDoctor = () => {
   >([]);
 
   useEffect(() => {
-
     async function fetchDropdownData() {
       try {
         const deptData = await getDepartments();
@@ -66,7 +65,8 @@ const SignupDoctor = () => {
       hospital: "",
       registrationId: "",
       licenseImageUrl: null,
-      opHours: "",
+      opStartTime: "",
+      opEndTime: "",
       hasOwnClinic: false,
     },
   });
@@ -101,7 +101,11 @@ const SignupDoctor = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        noValidate
+        className="space-y-4"
+      >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
             control={form.control}
@@ -289,19 +293,6 @@ const SignupDoctor = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          {/* <FormField
-                        control={form.control}
-                        name="territoryId"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormControl>
-                                    <Input placeholder="Territory" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    /> */}
-
           <FormField
             control={form.control}
             name="registrationId"
@@ -353,19 +344,57 @@ const SignupDoctor = () => {
             )}
           />
         </div>
+        <form onSubmit={form.handleSubmit(onSubmit)} noValidate>
+          <div className="grid grid-cols-2 gap-4">
+            {/* OP Start Time */}
+            <FormField
+              control={form.control}
+              name="opStartTime"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm font-semibold text-gray-600">
+                    OP Start Time
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="time"
+                      {...field}
+                      step="60"
+                      onChange={(e) => field.onChange(e.target.value || "")}
+                      className="!border-gray-300 !rounded-xl !px-3 !py-2 !text-gray-700 !focus:ring-2 !focus:ring-blue-500 !focus:border-blue-500 !shadow-sm cursor-pointer"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-xs text-red-500 mt-1" />
+                </FormItem>
+              )}
+            />
+
+            {/* OP End Time */}
+            <FormField
+              control={form.control}
+              name="opEndTime"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm font-semibold text-gray-600">
+                    OP End Time
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="time"
+                      {...field}
+                      step="60"
+                      onChange={(e) => field.onChange(e.target.value || "")}
+                      className="!border-gray-300 !rounded-xl !px-3 !py-2 !text-gray-700 !focus:ring-2 !focus:ring-blue-500 !focus:border-blue-500 !shadow-sm cursor-pointer"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-xs text-red-500 mt-1" />
+                </FormItem>
+              )}
+            />
+          </div>
+        </form>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="opHours"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input placeholder="Choose your op time" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
           <FormField
             control={form.control}
             name="hospital"

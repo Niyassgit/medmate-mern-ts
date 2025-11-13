@@ -32,23 +32,20 @@ export class MedicalRepRoutes {
       ValidateSchema(registerMedicalRepSchema),
       medicalRepController.createMedicalRep
     );
-    this.router.get(
-      "/profile/:userId",
+
+    this.router.use(
       Authenticate,
       AuthorizeRole([Role.MEDICAL_REP]),
-      medicalRepController.getRepProfileById
+      validateUser
     );
+    this.router.get("/profile/:userId", medicalRepController.getRepProfileById);
     this.router.post(
       "/profile-image/:userId",
-      Authenticate,
-      AuthorizeRole([Role.MEDICAL_REP]),
       uploadS3.single("profileImage"),
       medicalRepController.updateProfileImage
     );
     this.router.post(
       "/profile/complete/:userId",
-      Authenticate,
-      AuthorizeRole([Role.MEDICAL_REP]),
       upload.single("companyLogoUrl"),
       parseArrayFields,
       ValidateSchema(MedicalRepProfileUpdateSchema),
@@ -56,59 +53,39 @@ export class MedicalRepRoutes {
     );
     this.router.post(
       "/add-post/:userId",
-      Authenticate,
-      AuthorizeRole([Role.MEDICAL_REP]),
       uploadS3.array("images", 5),
       parsePostField,
       ValidateSchema(productPostValidateSchema),
       medicalRepController.createPost
     );
-    this.router.get(
-      "/posts/:userId",
-      Authenticate,
-      AuthorizeRole([Role.MEDICAL_REP]),
-      medicalRepController.posts
-    );
-    this.router.get(
-      "/post-details/:postId",
-      Authenticate,
-      AuthorizeRole([Role.MEDICAL_REP]),
-      validateUser,
-      medicalRepController.postDetails
-    );
+    this.router.get("/posts/:userId", medicalRepController.posts);
+    this.router.get("/post-details/:postId", medicalRepController.postDetails);
     this.router.post(
       "/post-edit/:postId",
-      Authenticate,
-      AuthorizeRole([Role.MEDICAL_REP]),
       validateUser,
       uploadS3.array("images", 5),
       parsePostField,
       ValidateSchema(productPostValidateSchema),
       medicalRepController.editPost
     );
-    this.router.get(
-      "/networks/:userId",
-      Authenticate,
-      AuthorizeRole([Role.MEDICAL_REP]),
-      medicalRepController.networks
+    this.router.patch(
+      "/post/archive/:postId",
+      medicalRepController.archivePost
     );
+    this.router.delete("/post/delete/:postId", medicalRepController.deletePost);
+    this.router.get("/networks/:userId", medicalRepController.networks);
     this.router.post(
       "/connect/:doctorId",
-      Authenticate,
-      AuthorizeRole([Role.MEDICAL_REP]),
       medicalRepController.connectionRequest
     );
     this.router.post(
       "/connection/accept/:doctorId",
-      Authenticate,
-      AuthorizeRole([Role.MEDICAL_REP]),
       medicalRepController.acceptingConnectionRequest
     );
+    this.router.get("/analytics/:userId", medicalRepController.analytics);
     this.router.get(
-      "/analytics/:userId",
-      Authenticate,
-      AuthorizeRole([Role.MEDICAL_REP]),
-      medicalRepController.analytics
+      "/doctor/details/:doctorId",
+      medicalRepController.doctorDetails
     );
   }
 }

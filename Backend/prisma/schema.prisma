@@ -73,7 +73,10 @@ model Doctor {
   territoryId     String?  @db.ObjectId
   hospital        String
   licenseImageUrl String?
-  opHours         String?
+  opStartTime     String?
+  opEndTime       String?
+  opSession       String?
+  dob             DateTime?
   registrationId  String
   about           String?
   createdAt       DateTime @default(now())
@@ -96,6 +99,7 @@ model Doctor {
 
   user    User?   @relation(fields: [loginId], references: [id])
   loginId String? @unique @db.ObjectId
+  Like    Like[]
 }
 
 model MedicalRep {
@@ -208,6 +212,7 @@ model ProductPost {
   repId       String     @db.ObjectId
   title       String
   description String
+  isArchived  Boolean    @default(false)
   imageUrl    String[]
   brand       String
   territoryId String?    @db.ObjectId
@@ -218,19 +223,36 @@ model ProductPost {
   updatedAt   DateTime   @updatedAt
   rep         MedicalRep @relation(fields: [repId], references: [id])
   territory   Territory? @relation(fields: [territoryId], references: [id])
+  likes       Like[]
   interests   Interest[]
+}
+
+model Like {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  doctorId  String   @db.ObjectId
+  productId String   @db.ObjectId
+  createdAt DateTime @default(now())
+
+  doctor  Doctor      @relation(fields: [doctorId], references: [id])
+  product ProductPost @relation(fields: [productId], references: [id])
+
+  @@unique([doctorId, productId])
+  @@index([productId])
 }
 
 model Interest {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   doctorId  String   @db.ObjectId
-  repId     String   @db.ObjectId
   productId String   @db.ObjectId
   createdAt DateTime @default(now())
 
-  doctor  Doctor      @relation(fields: [doctorId], references: [id])
-  rep     MedicalRep  @relation(fields: [repId], references: [id])
-  product ProductPost @relation(fields: [productId], references: [id])
+  doctor       Doctor      @relation(fields: [doctorId], references: [id])
+  product      ProductPost @relation(fields: [productId], references: [id])
+  medicalRep   MedicalRep? @relation(fields: [medicalRepId], references: [id])
+  medicalRepId String?     @db.ObjectId
+
+  @@unique([doctorId, productId])
+  @@index([productId])
 }
 
 enum ConnectionStatus {
@@ -246,20 +268,19 @@ enum ConnectionInitiator {
 }
 
 model Connection {
-  id          String             @id @default(auto()) @map("_id") @db.ObjectId
-  doctorId    String             @db.ObjectId
-  repId       String             @db.ObjectId
-  status      ConnectionStatus   @default(PENDING)
-  initiator   ConnectionInitiator
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
+  id        String              @id @default(auto()) @map("_id") @db.ObjectId
+  doctorId  String              @db.ObjectId
+  repId     String              @db.ObjectId
+  status    ConnectionStatus    @default(PENDING)
+  initiator ConnectionInitiator
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
 
   doctor Doctor     @relation(fields: [doctorId], references: [id])
   rep    MedicalRep @relation(fields: [repId], references: [id])
 
   @@unique([doctorId, repId], name: "doctorId_repId")
 }
-
 
 model DoctorConnection {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId

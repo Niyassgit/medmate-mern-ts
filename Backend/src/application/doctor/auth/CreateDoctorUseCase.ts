@@ -13,6 +13,7 @@ import { DoctorMapper } from "../mapper/DoctorMapper";
 import { UserMapper } from "../../common/mapper/UserMapper";
 import { ICreateDoctorUseCase } from "../interfaces/ICreateDoctorUseCase";
 import { ErrorMessages, NotificationMessages } from "../../../shared/Messages";
+import { getOpSession } from "../utils/OpSessionUtil";
 
 export class CreateDoctorUseCase implements ICreateDoctorUseCase {
   constructor(
@@ -38,8 +39,8 @@ export class CreateDoctorUseCase implements ICreateDoctorUseCase {
       Role.DOCTOR
     );
     const user = await this._userRepository.createUser(userEntity);
-
-    const doctorEntity = DoctorMapper.toDoctorEntity(data, user.id);
+    const opSession=getOpSession(data.opStartTime,data.opEndTime);
+    const doctorEntity = DoctorMapper.toDoctorEntity(data, user.id,opSession);
     await this._doctorRepository.createDoctor(doctorEntity);
 
     const { otp, record } = await this._otpService.generateOtp(

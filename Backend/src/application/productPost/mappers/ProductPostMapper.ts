@@ -2,6 +2,9 @@ import { IProductPost } from "../../../domain/product/entity/IProductPost";
 import { ProductPostDTO } from "../dto/ProductPostDTO";
 import { ProductListDTO } from "../dto/ProductListDTO";
 import { PostDetailsDTO } from "../dto/PostDetailsDTO";
+import { RelatedProductDTO } from "../../doctor/dto/RelatedProductDTO";
+import { IStorageService } from "../../../domain/common/services/IStorageService";
+import { IProductPostForFeed } from "../../../domain/product/entity/IProductPostForFeed";
 
 export class ProductPostMapper {
   static toProductPostEntity(
@@ -31,20 +34,55 @@ export class ProductPostMapper {
       description: product.description,
     }));
   }
-  
-  static toDomain(persistance:IProductPost):PostDetailsDTO{
-    return{
-      id:persistance.id,
-      brand:persistance.brand,
-      description:persistance.description,
-      imageUrl:persistance.imageUrl,
-      ingredients:persistance.ingredients,
-      repId:persistance.repId,
-      termsOfUse:persistance.termsOfUse,
-      title:persistance.title,
-      useCases:persistance.useCases,
-      territoryId:persistance.territoryId ?? "",
-      createdAt:persistance.createdAt,
+
+  static async toDomain(
+    entity: IProductPost,
+    storageService: IStorageService
+  ): Promise<PostDetailsDTO> {
+    let singedUrls: string[] =[];
+    if (entity && entity.imageUrl.length > 0) {
+      singedUrls = await Promise.all(
+         entity.imageUrl.map((img) =>storageService.generateSignedUrl(img)
+      )
+      );
+     
     }
+
+    return {
+      id: entity.id,
+      brand: entity.brand,
+      description: entity.description,
+      imageUrl:singedUrls,
+      ingredients: entity.ingredients,
+      repId: entity.repId,
+      termsOfUse: entity.termsOfUse,
+      title: entity.title,
+      useCases: entity.useCases,
+      territoryId: entity.territoryId ?? "",
+      createdAt: entity.createdAt,
+    };
+  }
+  static async toRelatedProductsDomain(
+    post: IProductPostForFeed[],
+    storageService: IStorageService
+  ): Promise<RelatedProductDTO[]> {
+    return Promise.all(
+
+      post.map(async (p) => {
+        let signedUrl: string | null = null;
+        if (p.imageUrl.length > 0) {
+          signedUrl = await storageService.generateSignedUrl(p.imageUrl[0]);
+        }
+        return {
+          id: p.id,
+          brand: p.brand,
+          createdAt: p.createdAt,
+          productImage: signedUrl,
+          title: p.title,
+          likes:p._count.likes ?? 0,
+          interests:p._count.interests ?? 0,
+        };
+      })
+    );
   }
 }

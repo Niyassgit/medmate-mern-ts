@@ -4,7 +4,10 @@ import { CompleteDoctorProfileDTO } from "../dto/CompleteProfileDTO";
 import { IDoctor } from "../../../domain/doctor/entities/IDoctor";
 
 export class DoctorDetailsMapper {
-  static toDoctorDetails(doctor: IDoctorWithUser , profileImageUrl:string | null): DoctorDetailsDTO {
+  static toDoctorDetails(
+    doctor: IDoctorWithUser,
+    profileImageUrl: string | null
+  ): DoctorDetailsDTO {
     return {
       id: doctor.id,
       name: doctor.name,
@@ -19,9 +22,10 @@ export class DoctorDetailsMapper {
       territoryName: doctor.territoryName ?? null,
       hospital: doctor.hospital ?? "",
       registrationId: doctor.registrationId ?? "",
-      opHours: doctor.opHours ?? null,
+      opHours: doctor.opSession ?? null,
+      dob: doctor.dob ? new Date(doctor.dob).toISOString().split("T")[0] : "",
       about: doctor.about ?? null,
-      licenseImageUrl:doctor.licenseImageUrl ?? null,
+      licenseImageUrl: doctor.licenseImageUrl ?? null,
       educations: doctor.educations ?? [],
       certificates: doctor.certificates ?? [],
     };
@@ -39,10 +43,13 @@ export class DoctorDetailsMapper {
       hospital: doctor.hospital ?? "",
       registrationId: doctor.registrationId ?? "",
       licenseImageUrl: doctor.licenseImageUrl ?? null,
-      opHours: doctor.opHours ?? null,
+      opStartTime: doctor.opStartTime ?? "",
+      opEndTime: doctor.opEndTime ?? "",
+      opHour: doctor.opSession ?? null,
       about: doctor.about ?? null,
       educations: doctor.educations ?? [],
       certificates: doctor.certificates ?? [],
+      dob: doctor.dob ? doctor.dob.toISOString().split("T")[0] : null,
     };
   }
 }

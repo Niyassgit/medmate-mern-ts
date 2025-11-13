@@ -1,9 +1,10 @@
+import http from "http";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
 import morgan from "morgan";
-import {env} from "./infrastructure/config/env"
+import { env } from "./infrastructure/config/env";
 import { fileURLToPath } from "url";
 import { connectDB } from "./infrastructure/config/db";
 import { LoginRoute } from "./presentation/http/routes/AuthRoute";
@@ -12,7 +13,8 @@ import { DoctorRoutes } from "./presentation/http/routes/DoctorRoutes";
 import { SuperAdminRoutes } from "./presentation/http/routes/SuperAdminRoutes";
 import { ErrorHandler } from "./presentation/http/middlewares/ErrorHandler";
 import { CommonRoutes } from "./presentation/http/routes/CommonRoutes";
-
+import { initSocket } from "./infrastructure/realtime/SocketGateway";
+import logger from "./infrastructure/logger/Logger";
 
 const app = express();
 app.use(express.json());
@@ -20,10 +22,12 @@ app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(
   cors({
-    origin:env.origin,
+    origin: env.origin,
     credentials: true,
   })
 );
+const server = http.createServer(app);
+initSocket(server);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -38,19 +42,21 @@ const startServer = async () => {
     app.use("/api/rep", new MedicalRepRoutes().router);
     app.use("/api/admin", new SuperAdminRoutes().router);
     app.use("/api/auth", new LoginRoute().router);
-    app.use("/api/common",new CommonRoutes().router );
+    app.use("/api/common", new CommonRoutes().router);
 
     app.use(ErrorHandler);
-    app.listen(env.port, () => {
-      console.log(` server running on port ${env.port}`);
+
+    server.listen(env.port, () => {
+      logger.info(` server running on port ${env.port}`);
     });
   } catch (err) {
-    console.error("Failed to start server:", err);
+    const error = err as Error;
+    logger.error(`Failed to start server:${error.message}`);
     process.exit(1);
   }
 };
 
 startServer().catch((err) => {
-  console.error("Failed to start app:", err);
+  logger.error(`Failed to start app:${err}`);
   process.exit(1);
 });

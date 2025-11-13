@@ -27,7 +27,7 @@ export class ConnectionMappers {
     enitity: IMedicalRepListOnDoc
   ): RepListOnDoctorDTO {
     return {
-      id: enitity.name,
+      id: enitity.id,
       name: enitity.name,
       company: enitity.company,
       phone: enitity.phone ?? null,

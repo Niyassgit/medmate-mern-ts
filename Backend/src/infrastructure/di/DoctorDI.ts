@@ -16,6 +16,15 @@ import { ConnectionRepository } from "../repositories/ConnectionRepository";
 import { AcceptConnectionRequestUseCase } from "../../application/doctor/use-cases/AcceptConnectionRequestUseCase";
 import { DoctorAnalyticsUseCase } from "../../application/doctor/use-cases/DoctorAnalyticsUseCase";
 import { DepartmentRepository } from "../repositories/DepatmentRepository";
+import { GetFeedUseCase } from "../../application/doctor/use-cases/GetFeedUseCase";
+import { ProductPostRepository } from "../repositories/ProductPostRepository";
+import { PostDetailsUseCase } from "../../application/doctor/use-cases/PostDetailsUseCase";
+import { GetRepDetailsOnDoctorUseCase } from "../../application/doctor/use-cases/GetRepDetailsOnDoctorUseCase";
+import { ToggleLikeOnPostUseCase } from "../../application/Like/use-cases/ToggleLikeOnPostUseCase";
+import { LikeRepository } from "../repositories/LikeRepository";
+import { SocketEngagementEventPublisher } from "../realtime/publishers/SocketEngagementEventPublisher";
+import { InterestRepository } from "../repositories/InterestRepostory";
+import { ToggleInterestOnPostUseCase } from "../../application/interest/use-cases/ToggleInterestOnPostUseCase";
 
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
@@ -26,7 +35,10 @@ const notificationService = new NotificationService();
 const storageService = new s3StorageService();
 const connectionRepository = new ConnectionRepository();
 const departmentRepository = new DepartmentRepository();
-
+const productPostRepository = new ProductPostRepository();
+const likeRepository = new LikeRepository();
+const interestRepository = new InterestRepository();
+const eventPublisher = new SocketEngagementEventPublisher();
 const createDoctorUseCase = new CreateDoctorUseCase(
   doctorRepository,
   bycryptServices,
@@ -70,6 +82,37 @@ const analyticsUsecase = new DoctorAnalyticsUseCase(
   departmentRepository,
   storageService
 );
+const getFeedUseCase = new GetFeedUseCase(
+  doctorRepository,
+  connectionRepository,
+  productPostRepository,
+  likeRepository,
+  interestRepository,
+  storageService
+);
+const postDetailsUseCase = new PostDetailsUseCase(
+  doctorRepository,
+  productPostRepository,
+  connectionRepository,
+  storageService
+);
+const getRepDetailsOnDoctorUseCase = new GetRepDetailsOnDoctorUseCase(
+  userRepository,
+  medicalRepRepository,
+  productPostRepository,
+  storageService
+);
+const toggleLikeOnPostUseCase = new ToggleLikeOnPostUseCase(
+  doctorRepository,
+  likeRepository,
+  eventPublisher
+);
+const toggleInterestOnPostUseCase = new ToggleInterestOnPostUseCase(
+  doctorRepository,
+  interestRepository,
+  eventPublisher
+
+);
 export const doctorController = new DoctorController(
   createDoctorUseCase,
   getDoctorprofileById,
@@ -78,5 +121,10 @@ export const doctorController = new DoctorController(
   networkUseCase,
   connectionRequestUseCase,
   acceptConnectionRequestUseCase,
-  analyticsUsecase
+  analyticsUsecase,
+  getFeedUseCase,
+  postDetailsUseCase,
+  getRepDetailsOnDoctorUseCase,
+  toggleLikeOnPostUseCase,
+  toggleInterestOnPostUseCase
 );

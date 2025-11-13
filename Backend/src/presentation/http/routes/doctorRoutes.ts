@@ -8,6 +8,10 @@ import { AuthorizeRole } from "../middlewares/AuthorizeRole";
 import { Role } from "../../../shared/Enums";
 import { DoctorProfileUpdateSchema } from "../validators/DoctorProfileUpdateSchema";
 import { uploadS3 } from "../../../infrastructure/storage/multer/MulterS3BucketConfig";
+import { makeValidateUserMiddleware } from "../middlewares/ValidateUserMiddleware";
+import { UserValidate } from "../../../infrastructure/di/UserValidateDI";
+
+const validateUser = makeValidateUserMiddleware(UserValidate);
 
 export class DoctorRoutes {
   public router: Router;
@@ -24,49 +28,32 @@ export class DoctorRoutes {
       ValidateSchema(DoctorRegisterSchema),
       doctorController.createDoctor
     );
-    this.router.get(
-      "/profile/:userId",
-      Authenticate,
-      AuthorizeRole([Role.DOCTOR]),
-      doctorController.getDoctorprofileById
-    );
+    this.router.use(Authenticate, AuthorizeRole([Role.DOCTOR]), validateUser);
+    this.router.get("/profile/:userId", doctorController.getDoctorprofileById);
     this.router.post(
       "/profile-image/:userId",
-      Authenticate,
-      AuthorizeRole([Role.DOCTOR]),
       uploadS3.single("profileImage"),
       doctorController.updateProfileImage
     );
     this.router.post(
       "/profile/complete/:userId",
-      Authenticate,
-      AuthorizeRole([Role.DOCTOR]),
       ValidateSchema(DoctorProfileUpdateSchema),
       doctorController.completeProfile
     );
-    this.router.get(
-      "/networks/:userId",
-      Authenticate,
-      AuthorizeRole([Role.DOCTOR]),
-      doctorController.networks
-    );
-    this.router.post(
-      "/connect/:repId",
-      Authenticate,
-      AuthorizeRole([Role.DOCTOR]),
-      doctorController.connectionRequest
-    );
+    this.router.get("/networks/:userId", doctorController.networks);
+    this.router.post("/connect/:repId", doctorController.connectionRequest);
     this.router.post(
       "/connections/accept/:repId",
-      Authenticate,
-      AuthorizeRole([Role.DOCTOR]),
       doctorController.acceptConnection
     );
-    this.router.get(
-      "/analytics/:userId",
-      Authenticate,
-      AuthorizeRole([Role.DOCTOR]),
-      doctorController.analytics
+    this.router.get("/analytics/:userId", doctorController.analytics);
+    this.router.get("/feed/:userId", doctorController.getFeed);
+    this.router.get("/feed/post-details/:postId", doctorController.postDetails);
+    this.router.get("/rep/details/:repId", doctorController.RepDetails);
+    this.router.post("/feed/:postId/like/toggle", doctorController.toggleLike);
+    this.router.post(
+      "/feed/:postId/interest/toggle",
+      doctorController.toggleInterest
     );
   }
 }

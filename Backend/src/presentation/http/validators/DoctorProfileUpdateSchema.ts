@@ -27,6 +27,11 @@ export const DoctorProfileUpdateSchema = z.object({
     .optional(),
 
   hasOwnClinic: z.boolean().nullable().optional(),
+  dob: z
+    .string()
+    .nonempty("Date of birth is required")
+    .refine((val) => !isNaN(Date.parse(val)), "Invalid date format")
+    .optional(),
 
   doctorClass: z
     .string()
@@ -34,7 +39,7 @@ export const DoctorProfileUpdateSchema = z.object({
     .nullable()
     .optional(),
 
-  territoryId:z.string().min(1, "Department is required"),
+  territoryId: z.string().min(1, "Department is required"),
 
   hospital: z
     .string()
@@ -54,11 +59,8 @@ export const DoctorProfileUpdateSchema = z.object({
 
   licenseImageUrl: z.string().url().nullable().optional(),
 
-  opHours: z
-    .string()
-    .min(1, "Operating hours cannot be empty")
-    .nullable()
-    .optional(),
+  opStartTime: z.string().nonempty("Select start time"),
+  opEndTime: z.string().nonempty("Select end time"),
 
   about: z
     .string()

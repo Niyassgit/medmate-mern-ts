@@ -1,0 +1,222 @@
+[2025-11-06 11:56:00] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 12:07:40] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 12:14:00] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 12:14:54] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 12:15:21] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 12:15:31] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 12:15:37] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 12:16:00] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 12:16:05] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 12:36:54] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 12:37:05] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 12:46:59] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientInitializationError: [39m
+[31mInvalid `this.model.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\UserRepository.ts:31:35[39m
+
+[31m  28 }[39m
+[31m  29 [39m
+[31m  30 async findById(userId: string) {[39m
+[31m→ 31 const entity = await this.model.findUnique([39m
+[31mError in connector: Error creating a database connection. (Kind: An error occurred during DNS resolution: proto error: io error: A socket operation was attempted to an unreachable network. (os error 10051), labels: {})[39m
+[2025-11-06 12:46:59] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientInitializationError: [39m
+[31mInvalid `this.model.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\UserRepository.ts:31:35[39m
+
+[31m  28 }[39m
+[31m  29 [39m
+[31m  30 async findById(userId: string) {[39m
+[31m→ 31 const entity = await this.model.findUnique([39m
+[31mError in connector: Error creating a database connection. (Kind: An error occurred during DNS resolution: proto error: io error: A socket operation was attempted to an unreachable network. (os error 10051), labels: {})[39m
+[2025-11-06 12:46:59] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientInitializationError: [39m
+[31mInvalid `this.model.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\UserRepository.ts:31:35[39m
+
+[31m  28 }[39m
+[31m  29 [39m
+[31m  30 async findById(userId: string) {[39m
+[31m→ 31 const entity = await this.model.findUnique([39m
+[31mError in connector: Error creating a database connection. (Kind: An error occurred during DNS resolution: proto error: io error: A socket operation was attempted to an unreachable network. (os error 10051), labels: {})[39m
+[2025-11-06 12:46:59] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientInitializationError: [39m
+[31mInvalid `this.model.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\UserRepository.ts:31:35[39m
+
+[31m  28 }[39m
+[31m  29 [39m
+[31m  30 async findById(userId: string) {[39m
+[31m→ 31 const entity = await this.model.findUnique([39m
+[31mError in connector: Error creating a database connection. (Kind: An error occurred during DNS resolution: proto error: io error: A socket operation was attempted to an unreachable network. (os error 10051), labels: {})[39m
+[2025-11-06 14:29:41] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 14:44:58] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientKnownRequestError: [39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return {repId:rep? rep.id :null};[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: invalid character 'H' was found at index 0 in the provided hex string: "Haridarsan C S".[39m
+[2025-11-06 14:44:58] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientKnownRequestError: [39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return {repId:rep? rep.id :null};[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: invalid character 'H' was found at index 0 in the provided hex string: "Haridarsan C S".[39m
+[2025-11-06 15:52:04] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientKnownRequestError: [39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return {repId:rep? rep.id :null};[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: invalid character 'H' was found at index 0 in the provided hex string: "Haridarsan C S".[39m
+[2025-11-06 15:52:05] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientKnownRequestError: [39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return {repId:rep? rep.id :null};[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: invalid character 'H' was found at index 0 in the provided hex string: "Haridarsan C S".[39m
+[2025-11-06 16:00:22] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientKnownRequestError: [39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return {repId:rep? rep.id :null};[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: invalid character 'H' was found at index 0 in the provided hex string: "Haridarsan C S".[39m
+[2025-11-06 16:00:23] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientKnownRequestError: [39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return {repId:rep? rep.id :null};[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: invalid character 'H' was found at index 0 in the provided hex string: "Haridarsan C S".[39m
+[2025-11-06 16:01:31] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientKnownRequestError: [39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return {repId:rep? rep.id :null};[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: invalid character 'H' was found at index 0 in the provided hex string: "Haridarsan C S".[39m
+[2025-11-06 16:01:31] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientKnownRequestError: [39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return {repId:rep? rep.id :null};[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: invalid character 'H' was found at index 0 in the provided hex string: "Haridarsan C S".[39m
+[2025-11-06 16:03:23] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientKnownRequestError: [39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return {repId:rep? rep.id :null};[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: invalid character 'H' was found at index 0 in the provided hex string: "Haridarsan C S".[39m
+[2025-11-06 16:03:24] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientKnownRequestError: [39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return {repId:rep? rep.id :null};[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: invalid character 'H' was found at index 0 in the provided hex string: "Haridarsan C S".[39m
+[2025-11-06 16:03:54] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientKnownRequestError: [39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return {repId:rep? rep.id :null};[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: invalid character 'H' was found at index 0 in the provided hex string: "Haridarsan C S".[39m
+[2025-11-06 16:03:54] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientKnownRequestError: [39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return {repId:rep? rep.id :null};[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: invalid character 'H' was found at index 0 in the provided hex string: "Haridarsan C S".[39m
+[2025-11-06 16:11:58] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 16:14:06] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 16:18:16] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 16:18:32] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 16:19:45] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 16:22:33] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 16:31:40] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientKnownRequestError: [39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return {repId:rep? rep.id :null};[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: ":68e5084ec35d6d14084fe591", length 25.[39m
+[2025-11-06 16:31:40] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientKnownRequestError: [39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return {repId:rep? rep.id :null};[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: ":68e5084ec35d6d14084fe591", length 25.[39m
+[2025-11-06 16:31:52] [31merror[39m: [31m🔥 Unhandled Error:PrismaClientKnownRequestError: [39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return {repId:rep? rep.id :null};[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: ":68e5084ec35d6d14084fe591", length 25.[39m
+[2025-11-06 17:41:30] [33mwarn[39m: [33mAppError: Invalid email or password[39m
+[2025-11-06 18:32:38] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 18:32:42] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 18:33:01] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 18:33:57] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 18:34:04] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 18:35:06] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 18:35:56] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 18:36:19] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 18:37:28] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 18:39:14] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 18:40:41] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 18:41:54] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 18:42:02] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 18:42:14] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 18:42:16] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 19:07:52] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 19:14:34] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 19:14:42] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 19:16:48] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 19:18:37] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 19:20:21] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 19:20:28] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 19:20:49] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 19:21:03] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 19:21:08] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 19:21:15] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 19:21:19] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 19:22:05] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 19:22:23] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 19:22:52] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 19:23:14] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-06 19:23:18] [32minfo[39m: [32m server running on port 5000[39m

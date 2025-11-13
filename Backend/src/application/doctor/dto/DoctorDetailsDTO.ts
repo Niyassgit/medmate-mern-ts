@@ -19,6 +19,7 @@ export interface DoctorDetailsDTO {
   opHours?: string | null;
   about?: string | null;
   licenseImageUrl?: string | null;
+  dob?:string | null;
 
   educations?: EducationDTO[];
   certificates?: CertificateDTO[];

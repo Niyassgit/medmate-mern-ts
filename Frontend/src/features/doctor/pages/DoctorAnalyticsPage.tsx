@@ -12,6 +12,7 @@ import { doctorAnltyics } from "../api";
 import { DoctorAnalyticsDTO } from "../dto/DoctorAnalyticsDTO";
 import { RepListOnDoctorAnalyticsDTO } from "../dto/RepListOnDocAnlyticsDTO";
 import ConnectionTable from "@/components/shared/ConnectionTable";
+import { SpinnerButton } from "@/components/shared/SpinnerButton";
 
 const DoctorAnalyticsPage = () => {
   const id = useSelector((state: any) => state.auth.user?.id);
@@ -51,15 +52,13 @@ const DoctorAnalyticsPage = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <p className="text-muted-foreground">Loading analytics...</p>
-      </div>
+     <SpinnerButton />
     );
   }
 
   return (
     <div className="min-h-screen bg-background">
-      <main className="container mx-auto px-6 py-8">
+      <main className="container mx-auto px-6 py-8">  
         {/* Page Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">

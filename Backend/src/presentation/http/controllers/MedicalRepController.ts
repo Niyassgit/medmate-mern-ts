@@ -16,6 +16,10 @@ import { IGetNetworksUseCase } from "../../../application/medicalRep/interfaces/
 import { IMakeConnectionRequestUseCase } from "../../../application/medicalRep/interfaces/IMakeConnectionRequestUseCase";
 import { IAcceptConnectionRequestUseCase } from "../../../application/medicalRep/interfaces/IAcceptConnectionRequestUseCase";
 import { IGetRepAnalyticsUseCase } from "../../../application/medicalRep/interfaces/IGetRepAnalyticsUseCase";
+import { IArchivePostUseCase } from "../../../application/productPost/interfaces/IArchivePostUseCase";
+import { IDeletePostUseCase } from "../../../application/productPost/interfaces/IDeletePostUseCase";
+import { IGetDoctorDetailsOnRepSideUseCase } from "../../../application/medicalRep/interfaces/IGetDoctorDetailsOnRepSideUseCase";
+import { GetOptionalUserId } from "../utils/GetOptionalUserId";
 
 export class MedicalRepController {
   constructor(
@@ -30,7 +34,10 @@ export class MedicalRepController {
     private _getNetworksUseCase: IGetNetworksUseCase,
     private _makeConnectionRequestUsecase: IMakeConnectionRequestUseCase,
     private _acceptConnectionRequestUseCase: IAcceptConnectionRequestUseCase,
-    private _getRepAnalticsUseCase:IGetRepAnalyticsUseCase,
+    private _getRepAnalticsUseCase: IGetRepAnalyticsUseCase,
+    private _archivePostUseCase: IArchivePostUseCase,
+    private _deletePostUseCase: IDeletePostUseCase,
+    private _getDoctorDetailsOnRepSideUseCase: IGetDoctorDetailsOnRepSideUseCase
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -117,15 +124,40 @@ export class MedicalRepController {
       .status(HttpStatusCode.OK)
       .json({ success: true, message: response });
   };
-
+  archivePost = async (req: Request, res: Response) => {
+    const { postId } = req.params;
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._archivePostUseCase.execute(postId, userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, message: response });
+  };
+  deletePost = async (req: Request, res: Response) => {
+    const { postId } = req.params;
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._deletePostUseCase.execute(postId, userId);
+    return res
+      .status(HttpStatusCode.NO_CONTENT)
+      .json({ success: true, message: response });
+  };
   networks = async (req: Request, res: Response) => {
     const { userId } = req.params;
-    const resposne = await this._getNetworksUseCase.execute(userId);
+    const { search, opTime, minAge, maxAge } = req.query;
+      const filters = {
+      opTime: opTime ? String(opTime) : undefined,
+      minAge: minAge ? Number(minAge) : undefined,
+      maxAge: maxAge ? Number(maxAge) : undefined,
+    };
+    const resposne = await this._getNetworksUseCase.execute(
+      userId,
+      search as string,
+      filters
+    );
     res.status(HttpStatusCode.OK).json({ success: true, data: resposne });
   };
   connectionRequest = async (req: Request, res: Response) => {
     const { doctorId } = req.params;
-    const userId = req.user?.userId;
+    const userId = GetOptionalUserId(req.user);
     const response = await this._makeConnectionRequestUsecase.execute(
       doctorId,
       userId
@@ -136,7 +168,7 @@ export class MedicalRepController {
   };
   acceptingConnectionRequest = async (req: Request, res: Response) => {
     const { doctorId } = req.params;
-    const userId = req.user?.userId;
+    const userId = req.user?.userId as string;
     const response = await this._acceptConnectionRequestUseCase.execute(
       doctorId,
       userId
@@ -145,9 +177,22 @@ export class MedicalRepController {
       .status(HttpStatusCode.OK)
       .json({ success: true, message: response });
   };
-  analytics=async(req:Request,res:Response)=>{
-    const {userId}=req.params;
-    const response=await this._getRepAnalticsUseCase.execute(userId);
-    return res.status(HttpStatusCode.OK).json({success:true,data:response});
-  }
+  analytics = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const response = await this._getRepAnalticsUseCase.execute(userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+  doctorDetails = async (req: Request, res: Response) => {
+    const { doctorId } = req.params;
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._getDoctorDetailsOnRepSideUseCase.execute(
+      doctorId,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
 }

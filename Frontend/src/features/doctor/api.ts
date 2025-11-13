@@ -21,8 +21,9 @@ export const completeProfile=async(id:string,values:CompleteDoctorProfileDTO)=>{
         headers: { "Content-Type": "application/json" },
     });
 }
-export const getNetworks=async(id:string)=>{
-    const resp=await api.get(DoctorEndpoints.NETWORKS(id));
+export const getNetworks=async(id:string,search?:string)=>{
+    const params=search ?{search}:{};
+    const resp=await api.get(DoctorEndpoints.NETWORKS(id),{params});
     return resp.data.data;
 }
 export const connectionToggle=async (id:string)=>{
@@ -36,4 +37,24 @@ export const acceptRequest=async(id:string)=>{
 export const doctorAnltyics=async(id:string)=>{
     const res=await api.get(DoctorEndpoints.NETWORK_ANALYTICS(id));
     return res.data;
+}
+export const getAllFeed=async(id:string)=>{
+    const res=await api.get(DoctorEndpoints.REP_FEED(id));
+    return res.data;
+}
+export const getPostDetails=async(postId:string)=>{
+    const res=await api.get(DoctorEndpoints.POST_DETAILS(postId));
+    return res.data;
+}
+export const repProfileDetails=async(repId:string)=>{
+    const res=await api.get(DoctorEndpoints.REP_DETAILS(repId));
+    return res.data;
+}
+export const handleLikeToggle=async(postId:string)=>{
+    const res=await api.post(DoctorEndpoints.LIKE_TOGGLE(postId));
+    return res.data;
+}
+export const handleInterestToggle=async(postId:string)=>{
+    const res=await api.post(DoctorEndpoints.INTEREST_TOGGLE(postId));
+      return res.data;
 }

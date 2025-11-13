@@ -1,7 +1,6 @@
 import { IDoctor } from "../../domain/doctor/entities/IDoctor";
 import { IDoctorListItem } from "../../domain/doctor/entities/IDoctorListItem";
-import { Doctor, User, Education, Certificate } from "@prisma/client";
-import { Prisma } from "@prisma/client";
+import { Doctor, User, Education, Certificate, Prisma } from "@prisma/client";
 import { IDoctorListOnRep } from "../../domain/doctor/entities/IDoctorListOnRep";
 
 export class DoctorMapper {
@@ -17,6 +16,7 @@ export class DoctorMapper {
       id: doctor.id,
       name: doctor.name,
       phone: doctor.phone,
+      dob:doctor.dob,
       departmentId: doctor.departmentId ?? null,
       experienceYears: doctor.experienceYears ?? null,
       hasOwnClinic: doctor.hasOwnClinic ?? null,
@@ -26,10 +26,13 @@ export class DoctorMapper {
       registrationId: doctor.registrationId,
       hospital: doctor.hospital,
       licenseImageUrl: doctor.licenseImageUrl,
-      opHours: doctor.opHours ?? null,
+      opStartTime: doctor.opStartTime ?? null,
+      opEndTime: doctor.opEndTime ?? null,
+      opSession: doctor.opSession ?? null,
+
       about: doctor.about ?? null,
-      departmentName:doctor.department?.name,
-      territoryName:doctor.territory?.name,
+      departmentName: doctor.department?.name ?? null,
+      territoryName: doctor.territory?.name ?? null,
       createdAt: doctor.createdAt,
       updatedAt: doctor.updatedAt,
 
@@ -48,6 +51,7 @@ export class DoctorMapper {
       })),
     };
   }
+
 
   static toListItem(doctor: Doctor & { user?: User | null }): IDoctorListItem {
     return {
@@ -74,14 +78,16 @@ export class DoctorMapper {
       registrationId: domain.registrationId,
       hospital: domain.hospital,
       licenseImageUrl: domain.licenseImageUrl,
-      opHours: domain.opHours ?? null,
       about: domain.about ?? null,
-      user: domain.loginId ? { connect: { id: domain.loginId } } : undefined,
 
+      opStartTime: domain.opStartTime ?? null,
+      opEndTime: domain.opEndTime ?? null,
+      opSession: domain.opSession ?? null,
+
+      user: domain.loginId ? { connect: { id: domain.loginId } } : undefined,
       department: domain.departmentId
         ? { connect: { id: domain.departmentId } }
         : undefined,
-
       territory: domain.territoryId
         ? { connect: { id: domain.territoryId } }
         : undefined,
@@ -108,7 +114,7 @@ export class DoctorMapper {
   ): Prisma.DoctorUpdateInput {
     const data: Prisma.DoctorUpdateInput = {};
 
-    // simple fields
+
     if (domain.name !== undefined) data.name = domain.name;
     if (domain.phone !== undefined) data.phone = domain.phone;
     if (domain.hospital !== undefined) data.hospital = domain.hospital;
@@ -116,7 +122,6 @@ export class DoctorMapper {
       data.registrationId = domain.registrationId;
     if (domain.licenseImageUrl !== undefined)
       data.licenseImageUrl = domain.licenseImageUrl;
-    if (domain.opHours !== undefined) data.opHours = domain.opHours;
     if (domain.about !== undefined) data.about = domain.about;
     if (domain.experienceYears !== undefined)
       data.experienceYears = domain.experienceYears;
@@ -124,7 +129,10 @@ export class DoctorMapper {
       data.hasOwnClinic = domain.hasOwnClinic;
     if (domain.doctorClass !== undefined) data.doctorClass = domain.doctorClass;
 
-    // relations
+    if (domain.opStartTime !== undefined) data.opStartTime = domain.opStartTime;
+    if (domain.opEndTime !== undefined) data.opEndTime = domain.opEndTime;
+    if (domain.opSession !== undefined) data.opSession = domain.opSession;
+    if(domain.dob !==undefined) data.dob=domain.dob;
     if (domain.departmentId !== undefined) {
       data.department = domain.departmentId
         ? { connect: { id: domain.departmentId } }
@@ -136,7 +144,7 @@ export class DoctorMapper {
         : { disconnect: true };
     }
 
-    // nested relations
+
     if (domain.educations) {
       data.educations = {
         deleteMany: {},
@@ -161,14 +169,17 @@ export class DoctorMapper {
 
     return data;
   }
-  static toListOnRep(persistance:Doctor& { user: User | null }):IDoctorListOnRep{
+
+  static toListOnRep(
+    persistance: Doctor & { user: User | null }
+  ): IDoctorListOnRep {
     return {
-      id:persistance.id,
-      name:persistance.name,
-      hospital:persistance.hospital,
-      departmentId:persistance.departmentId,
-      territoryId:persistance.territoryId,
-      image:persistance.user?.profileImage ?? null,
-    }
+      id: persistance.id,
+      name: persistance.name,
+      hospital: persistance.hospital,
+      departmentId: persistance.departmentId,
+      territoryId: persistance.territoryId,
+      image: persistance.user?.profileImage ?? null,
+    };
   }
 }

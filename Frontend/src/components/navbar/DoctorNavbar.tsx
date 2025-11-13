@@ -7,7 +7,7 @@ const DoctorNavbar = () => {
   return (
     <nav className="flex items-center justify-between px-6 h-16 py-3 bg-[#E8618C] shadow-md">
       {/* Logo */}
-       <div className="flex items-center">
+      <div className="flex items-center">
         <img
           src="/logo.png"
           alt="MedMate Logo"
@@ -31,7 +31,7 @@ const DoctorNavbar = () => {
           )}
         </NavLink>
 
-        <NavLink to="/doctor/connections">
+        <NavLink to="/doctor/analytics">
           {({ isActive }) => (
             <Button
               variant="ghost"
@@ -53,19 +53,6 @@ const DoctorNavbar = () => {
               }`}
             >
               Search Network
-            </Button>
-          )}
-        </NavLink>
-
-         <NavLink to="/doctor/analytics">
-          {({ isActive }) => (
-            <Button
-              variant="ghost"
-              className={`hover:bg-transparent hover:text-gray-300 ${
-                isActive ? "text-blue-600 font-semibold" : "text-white"
-              }`}
-            >
-            Analytics
             </Button>
           )}
         </NavLink>

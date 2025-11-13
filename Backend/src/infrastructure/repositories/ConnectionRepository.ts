@@ -137,4 +137,11 @@ export class ConnectionRepository
       MedicalRepMapper.toListOnDoctor(conn.rep)
     );
   }
+  async doctorMutualConnectionRepIds(doctorId: string): Promise<string[]> {
+      const repIds= await prisma.connection.findMany({
+        where:{doctorId},
+        select:{repId:true},
+      });
+      return repIds.map(r=>r.repId);
+  }
 }
