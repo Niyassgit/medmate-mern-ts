@@ -29,6 +29,7 @@ import { GetDoctorDetailsOnRepSideUseCase } from "../../application/medicalRep/u
 import { RepMutualConnectionsUseCase } from "../../application/medicalRep/use-cases/RepMutualConnectionsUseCase";
 import { RepPendingConnectionsUseCase } from "../../application/medicalRep/use-cases/RepPendingConnectionsUseCase";
 import { NotificationRepository } from "../repositories/NotificationRepository";
+import { GetRepNotificationsUseCase } from "../../application/notification/use-cases/GetRepNotificationsUseCase";
 
 const medicalRepRepository = new MedicalRepRepository();
 const doctorRepository = new DoctorRepository();
@@ -44,7 +45,7 @@ const productPostPresentationService = new ProductPostPresentationService(
 const connectionRepository = new ConnectionRepository();
 const departmentRepository = new DepartmentRepository();
 const territoryRepository = new TerritoryRepository();
-const notificationRepository=new NotificationRepository();
+const notificationRepository = new NotificationRepository();
 const createMedicalRepUseCase = new CreateMedicalRepUseCase(
   medicalRepRepository,
   bcryptServices,
@@ -139,6 +140,12 @@ const pendingConnectionsUseCase = new RepPendingConnectionsUseCase(
   connectionRepository,
   storageService
 );
+
+const getAllNotificationsUseCase = new GetRepNotificationsUseCase(
+  userRepository,
+  notificationRepository,
+  storageService
+);
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
   getRepProfileByIdUseCase,
@@ -156,5 +163,6 @@ export const medicalRepController = new MedicalRepController(
   deletePostUseCase,
   doctorDetailsOnRepSideUseCase,
   mutualConnectionsUseCase,
-  pendingConnectionsUseCase
+  pendingConnectionsUseCase,
+  getAllNotificationsUseCase
 );

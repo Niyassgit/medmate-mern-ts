@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import {
   NotificationItem,
   NotificationType,
-} from "../components/NotificationItem";
+} from "../../../components/shared/NotificationItem";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useFetchItem from "@/hooks/useFetchItem";
 import { useSelector } from "react-redux";
@@ -16,6 +16,7 @@ interface Notification {
   content: string;
   isRead: boolean;
   createdAt: Date;
+  roleId:string;
   user: {
     id: string;
     name: string;
@@ -46,13 +47,11 @@ const Notifications = () => {
   } = useFetchItem(fetchNotifications);
 
   useEffect(() => {
-    console.log("useEffect triggered, notificationsRes:", notificationsRes);
     if (notificationsRes && Array.isArray(notificationsRes)) {
       const normalizedNotifications: Notification[] = notificationsRes.map((n: any) => ({
         ...n,
         createdAt: new Date(n.createdAt),
       }));
-      console.log("Setting localNotifications to:", normalizedNotifications);
       setLocalNotifications(normalizedNotifications);
     }
   }, [notificationsRes]);
@@ -127,8 +126,10 @@ const Notifications = () => {
                 userName={notification.user.name}
                 avatarUrl={notification.user.profileImage}
                 content={notification.content}
+                roleId={notification.roleId}
                 timestamp={notification.createdAt.toLocaleString()}
                 isRead={notification.isRead}
+                viewerRole="DOCTOR"
                 onClick={() => markAsRead(notification.id)}
               />
             ))

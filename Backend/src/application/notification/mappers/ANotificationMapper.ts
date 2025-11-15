@@ -19,6 +19,7 @@ export class ANotificationMapper {
         isRead:entity.isRead,
         type:entity.type,
         createdAt:entity.createdAt,
+        roleId:entity.RoleId,
         user:{
             id:entity.user.id,
             name:entity.user.name,

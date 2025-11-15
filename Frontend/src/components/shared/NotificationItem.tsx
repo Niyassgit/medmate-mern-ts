@@ -1,6 +1,7 @@
 import { CheckCircle2, Bell, MessageSquare, Heart, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useNavigate } from "react-router-dom";
 
 export type NotificationType =
   | "CONNECTION_REQUEST"
@@ -15,6 +16,8 @@ interface NotificationItemProps {
   content: string;
   timestamp: string;
   isRead: boolean;
+  roleId: string;
+  viewerRole: "DOCTOR" | "MEDICAL_REP";
   onClick?: () => void;
 }
 
@@ -57,15 +60,26 @@ export const NotificationItem = ({
   content,
   timestamp,
   isRead,
+  roleId,
+  viewerRole,
   onClick,
 }: NotificationItemProps) => {
-  const getInitials = (name: string) => {
-    return name
+  const navigate = useNavigate();
+ 
+  const getInitials = (name: string) =>
+    name
       .split(" ")
       .map((n) => n[0])
       .join("")
       .toUpperCase()
       .slice(0, 2);
+
+  const handleOpenProfile = () => {
+    if (viewerRole === "DOCTOR") {
+      navigate(`/doctor/rep/details/${roleId}`);
+    } else {
+      navigate(`/rep/doctor/details/${roleId}`);
+    }
   };
 
   return (
@@ -83,7 +97,13 @@ export const NotificationItem = ({
         "hover:brightness-95"
       )}
     >
-      <Avatar className="flex-shrink-0 h-12 w-12">
+      <Avatar
+        className="flex-shrink-0 h-12 w-12 cursor-pointer"
+        onClick={(e) => {
+          e.stopPropagation();
+          handleOpenProfile();
+        }}
+      >
         <AvatarImage src={avatarUrl} alt={userName} />
         <AvatarFallback className="bg-primary/10 text-primary">
           {getInitials(userName)}
@@ -93,9 +113,17 @@ export const NotificationItem = ({
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-center gap-2">
-            <h3 className="font-semibold text-card-foreground text-sm">
+            {/* Name -> go to profile */}
+            <h3
+              className="font-semibold text-card-foreground text-sm cursor-pointer hover:underline"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleOpenProfile();
+              }}
+            >
               {userName}
             </h3>
+
             <div className={cn("flex-shrink-0", getIconBgClass(type))}>
               {getNotificationIcon(type)}
             </div>

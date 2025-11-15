@@ -1,11 +1,151 @@
-import React from 'react'
+import { useCallback, useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  NotificationItem,
+  NotificationType,
+} from "@/components/shared/NotificationItem";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import useFetchItem from "@/hooks/useFetchItem";
+import { useSelector } from "react-redux";
+import { getRepnotifications } from "../api";
+import { SpinnerButton } from "@/components/shared/SpinnerButton";
 
-const Notifications = () => {
-  return (
-    <div>
-      <span>Hey this is Notification page</span>
-    </div>
-  )
+interface Notification {
+  id: string;
+  type: NotificationType;
+  content: string;
+  isRead: boolean;
+  createdAt: Date;
+  roleId: string;
+  user: {
+    id: string;
+    name: string;
+    profileImage?: string;
+  };
 }
 
-export default Notifications
+const Notifications = () => {
+  const [filter, setFilter] = useState<
+    "all" | "unread" | "updates" | "approvals"
+  >("all");
+  const [localNotifications, setLocalNotifications] = useState<Notification[]>(
+    []
+  );
+
+  const id = useSelector((state: any) => state.auth.user?.id);
+
+  const fetchNotifications = useCallback(async () => {
+    if (!id) return;
+    const res = await getRepnotifications(id);
+    return res.data;
+  }, [id]);
+
+  const {
+    data: notificationsRes,
+    error,
+    loading,
+  } = useFetchItem(fetchNotifications);
+
+  useEffect(() => {
+    if (notificationsRes && Array.isArray(notificationsRes)) {
+      const normalizedNotifications: Notification[] = notificationsRes.map(
+        (n: any) => ({
+          ...n,
+          createdAt: new Date(n.createdAt),
+        })
+      );
+      setLocalNotifications(normalizedNotifications);
+    }
+  }, [notificationsRes]);
+
+  const filteredNotifications = localNotifications.filter((notification) => {
+    if (filter === "unread") return !notification.isRead;
+    if (filter === "updates") return notification.type === "INTEREST";
+    if (filter === "approvals")
+      return notification.type === "CONNECTION_ACCEPTED";
+    return true;
+  });
+
+  const markAllAsRead = () => {
+    setLocalNotifications((prev) =>
+      prev.map((notification) => ({ ...notification, isRead: true }))
+    );
+  };
+
+  const markAsRead = (id: string) => {
+    setLocalNotifications((prev) =>
+      prev.map((notification) =>
+        notification.id === id
+          ? { ...notification, isRead: true }
+          : notification
+      )
+    );
+  };
+
+  if (loading) return <SpinnerButton />;
+  if (error)
+    return (
+      <div className="flex justify-center items-center min-h-screen text-red-500">
+        Something went wrong
+      </div>
+    );
+
+  return (
+    <div className="min-h-screen bg-background">
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-3xl font-bold text-foreground">Notifications</h1>
+          <Button
+            variant="ghost"
+            onClick={markAllAsRead}
+            className="text-primary hover:text-primary/90"
+          >
+            Mark All as Read
+          </Button>
+        </div>
+
+        {/* Category Tabs */}
+        <Tabs
+          value={filter}
+          onValueChange={(v) => setFilter(v as typeof filter)}
+          className="mb-6"
+        >
+          <TabsList className="bg-card border border-border">
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="unread">Unread</TabsTrigger>
+            <TabsTrigger value="updates">Updates</TabsTrigger>
+            <TabsTrigger value="approvals">Approvals</TabsTrigger>
+          </TabsList>
+        </Tabs>
+
+        {/* Notification list */}
+        <div className="space-y-3">
+          {filteredNotifications.length > 0 ? (
+            filteredNotifications.map((notification) => (
+              <NotificationItem
+                key={notification.id}
+                type={notification.type}
+                userName={notification.user.name}
+                avatarUrl={notification.user.profileImage}
+                content={notification.content}
+                roleId={notification.roleId}
+                timestamp={notification.createdAt.toLocaleString()}
+                isRead={notification.isRead}
+                viewerRole="MEDICAL_REP"
+                onClick={() => markAsRead(notification.id)}
+              />
+            ))
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">
+                No notifications to display
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Notifications;

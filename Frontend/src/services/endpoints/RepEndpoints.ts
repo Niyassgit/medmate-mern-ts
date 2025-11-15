@@ -20,4 +20,5 @@ export const RepEndpoints = {
   DOCTOR_PROFILE:(doctorId:string)=>`/rep/doctor/details/${doctorId}`,
   MUTUAL_CONNECTIONS:(userId:string)=>`/rep/analytics/mutual-connections/${userId}`,
   PENDING_CONNECITONS:(userId:string)=>`/rep/analytics/pending-connections/${userId}`,
+  NOTIFICATIONS:(userId:string)=>`/rep/notifications/${userId}`,
 };

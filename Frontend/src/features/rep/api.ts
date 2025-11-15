@@ -87,3 +87,7 @@ export const RepPendingConnections=async(userId:string)=>{
   const {data}=await api.get(RepEndpoints.PENDING_CONNECITONS(userId));
   return data.data;
 }
+export const getRepnotifications=async(userId:string)=>{
+  const res=await api.get(RepEndpoints.NOTIFICATIONS(userId));
+  return res.data;
+}

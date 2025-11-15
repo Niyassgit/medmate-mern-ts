@@ -37,8 +37,8 @@ export class NotificationMapper {
     sender: {
       id: string;
       profileImage: string | null;
-      doctor: { name: string } | null;
-      medicalRep: { name: string } | null;
+      doctor: { name: string ,id:string} | null;
+      medicalRep: { name: string ,id:string} | null;
     };
   }
   ): INotificationWithUser {
@@ -48,6 +48,7 @@ export class NotificationMapper {
         type:p.type as DomainNotificationType,
         isRead:p.isRead,
         createdAt:p.createdAt,
+        RoleId:p.sender.doctor?.id ?? p.sender.medicalRep?.id ?? "unKnown",
         user:{
             id:p.sender.id,
             profileImage:p.sender.profileImage,

@@ -95,5 +95,9 @@ export class MedicalRepRoutes {
       "/analytics/pending-connections/:userId",
       medicalRepController.pendingConnections
     );
+    this.router.get(
+      "/notifications/:userId",
+      medicalRepController.notifications
+    );
   }
 }

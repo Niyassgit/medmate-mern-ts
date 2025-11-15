@@ -6,5 +6,6 @@ export interface NotificationsResponseDTO{
     createdAt:Date;
     isRead:boolean,
     type:string;
+    roleId:string;
     user:NotificationUserDTO
 }

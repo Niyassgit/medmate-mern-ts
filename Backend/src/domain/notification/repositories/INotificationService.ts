@@ -12,5 +12,5 @@ export interface INotificationRepository {
     content: string
   ): Promise<INotification>;
   deleteConnectionNotificationById(senderId: string, receiverId: string): Promise<void>;
-  findConnectionNotifications(userId:string):Promise<INotificationWithUser[]>;
+  findAllNotifications(userId:string):Promise<INotificationWithUser[]>;
 }

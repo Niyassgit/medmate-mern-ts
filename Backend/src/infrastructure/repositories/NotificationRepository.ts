@@ -54,7 +54,7 @@ export class NotificationRepository
       },
     });
   }
-  async findConnectionNotifications(
+  async findAllNotifications(
     userId: string
   ): Promise<INotificationWithUser[]> {
     const result = await prisma.notification.findMany({
@@ -64,8 +64,8 @@ export class NotificationRepository
           select: {
             id: true,
             profileImage: true,
-            doctor: { select: { name: true } },
-            medicalRep: { select: { name: true } },
+            doctor: { select: { name: true ,id:true} },
+            medicalRep: { select: { name: true,id:true } },
           },
         },
       },

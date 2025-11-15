@@ -1,17 +1,15 @@
+import { NotFoundError } from "../../../domain/common/errors";
 import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 import { IStorageService } from "../../../domain/common/services/IStorageService";
 import { INotificationRepository } from "../../../domain/notification/repositories/INotificationService";
 import { ErrorMessages } from "../../../shared/Messages";
-import { NotFoundError } from "../../errors";
 import { NotificationsResponseDTO } from "../dto/NotificationsResponseDTO";
-import { IGetDoctorNotificationsUseCase } from "../interfaces/IGetDoctorNotificationsUseCase";
+import { IGetRepNotificationsUseCase } from "../interfaces/IGetRepNotificationsUseCase";
 import { ANotificationMapper } from "../mappers/ANotificationMapper";
 
-export class GetDoctorNotificationsUseCase
-  implements IGetDoctorNotificationsUseCase
-{
+export class GetRepNotificationsUseCase implements IGetRepNotificationsUseCase {
   constructor(
-    private _userRepository:IUserRepository,
+    private _userRepository: IUserRepository,
     private _notificationRepository: INotificationRepository,
     private _storageService: IStorageService
   ) {}
@@ -20,11 +18,10 @@ export class GetDoctorNotificationsUseCase
     if (!user) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
     const notifications =
       await this._notificationRepository.findAllNotifications(userId);
-    if (!notifications.length) return [];
-    const mapped = ANotificationMapper.toListDomain(
+    if (!notifications) return [];
+    return ANotificationMapper.toListDomain(
       notifications,
       this._storageService
     );
-    return mapped;
   }
 }

@@ -22,6 +22,7 @@ import { IGetDoctorDetailsOnRepSideUseCase } from "../../../application/medicalR
 import { GetOptionalUserId } from "../utils/GetOptionalUserId";
 import { IRepMutualConnectionsUseCase } from "../../../application/medicalRep/interfaces/IRepMutualConnectionsUseCase";
 import { IRepPendingConnectionsUseCase } from "../../../application/medicalRep/interfaces/IRepPendingConnectionsUseCase";
+import { IGetRepNotificationsUseCase } from "../../../application/notification/interfaces/IGetRepNotificationsUseCase";
 
 export class MedicalRepController {
   constructor(
@@ -41,7 +42,8 @@ export class MedicalRepController {
     private _deletePostUseCase: IDeletePostUseCase,
     private _getDoctorDetailsOnRepSideUseCase: IGetDoctorDetailsOnRepSideUseCase,
     private _mutualConnectionsUseCase: IRepMutualConnectionsUseCase,
-    private _pendingConnectionsUseCase: IRepPendingConnectionsUseCase
+    private _pendingConnectionsUseCase: IRepPendingConnectionsUseCase,
+    private _getAllNotificationsUseCase: IGetRepNotificationsUseCase
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -224,6 +226,14 @@ export class MedicalRepController {
   pendingConnections = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const response = await this._pendingConnectionsUseCase.execute(userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  notifications = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const response = await this._getAllNotificationsUseCase.execute(userId);
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });

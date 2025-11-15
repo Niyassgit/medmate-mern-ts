@@ -82,6 +82,6 @@ export const NotificationMessages = {
     `Your OTP for verifying your account is ${otp}.`,
   NEW_OTP_VERIFICATION: (otp: string) =>
     `Your New OTP is ${otp},It will expiry shortly`,
-    CONNECTION_REQ_NOTIFICATION_MESSAGE:"Sent you a connection request",
-    CONNECTION_ACCEPT_MESSAGE:"Accept your connection request"
+    CONNECTION_REQ_NOTIFICATION_MESSAGE:"Sented you a connection request",
+    CONNECTION_ACCEPT_MESSAGE:"Accepted your connection request"
 } as const;

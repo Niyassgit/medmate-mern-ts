@@ -58,3 +58,246 @@
 [31m  69 async deleteByDoctorAndRep(doctorId: string, repId: string): Promise<void> {[39m
 [31m→ 70   await prisma.connection.delete([39m
 [31mAn operation failed because it depends on one or more records that were required but not found. No record was found for a delete.[39m
+[2025-11-15 18:33:43] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return { repId: rep ? rep.id : null };[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: "undefined", length 9.[39m
+[2025-11-15 18:33:43] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return { repId: rep ? rep.id : null };[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: "undefined", length 9.[39m
+[2025-11-15 18:33:52] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return { repId: rep ? rep.id : null };[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: "undefined", length 9.[39m
+[2025-11-15 18:33:53] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return { repId: rep ? rep.id : null };[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: "undefined", length 9.[39m
+[2025-11-15 18:34:03] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return { repId: rep ? rep.id : null };[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: "undefined", length 9.[39m
+[2025-11-15 18:34:03] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return { repId: rep ? rep.id : null };[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: "undefined", length 9.[39m
+[2025-11-15 18:34:48] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return { repId: rep ? rep.id : null };[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: "undefined", length 9.[39m
+[2025-11-15 18:34:49] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return { repId: rep ? rep.id : null };[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: "undefined", length 9.[39m
+[2025-11-15 18:34:51] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return { repId: rep ? rep.id : null };[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: "undefined", length 9.[39m
+[2025-11-15 18:34:52] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return { repId: rep ? rep.id : null };[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: "undefined", length 9.[39m
+[2025-11-15 18:34:53] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return { repId: rep ? rep.id : null };[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: "undefined", length 9.[39m
+[2025-11-15 18:34:54] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return { repId: rep ? rep.id : null };[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: "undefined", length 9.[39m
+[2025-11-15 18:34:55] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return { repId: rep ? rep.id : null };[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: "undefined", length 9.[39m
+[2025-11-15 18:34:56] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return { repId: rep ? rep.id : null };[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: "undefined", length 9.[39m
+[2025-11-15 18:34:57] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return { repId: rep ? rep.id : null };[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: "undefined", length 9.[39m
+[2025-11-15 18:34:58] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return { repId: rep ? rep.id : null };[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: "undefined", length 9.[39m
+[2025-11-15 18:34:59] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return { repId: rep ? rep.id : null };[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: "undefined", length 9.[39m
+[2025-11-15 18:35:00] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return { repId: rep ? rep.id : null };[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: "undefined", length 9.[39m
+[2025-11-15 18:35:01] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return { repId: rep ? rep.id : null };[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: "undefined", length 9.[39m
+[2025-11-15 18:35:02] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return { repId: rep ? rep.id : null };[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: "undefined", length 9.[39m
+[2025-11-15 18:35:03] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return { repId: rep ? rep.id : null };[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: "undefined", length 9.[39m
+[2025-11-15 18:35:04] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return { repId: rep ? rep.id : null };[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: "undefined", length 9.[39m
+[2025-11-15 18:35:05] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return { repId: rep ? rep.id : null };[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: "undefined", length 9.[39m
+[2025-11-15 18:35:06] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return { repId: rep ? rep.id : null };[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: "undefined", length 9.[39m
+[2025-11-15 18:35:07] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return { repId: rep ? rep.id : null };[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: "undefined", length 9.[39m
+[2025-11-15 18:37:26] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return { repId: rep ? rep.id : null };[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: "undefined", length 9.[39m
+[2025-11-15 18:37:26] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.medicalRep.findUnique()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\MedicalRepRepository.ts:56:42[39m
+
+[31m  53   return { repId: rep ? rep.id : null };[39m
+[31m  54 }[39m
+[31m  55 async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {[39m
+[31m→ 56   const user = await prisma.medicalRep.findUnique([39m
+[31mInconsistent column data: Malformed ObjectID: provided hex string representation must be exactly 12 bytes, instead got: "undefined", length 9.[39m
