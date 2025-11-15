@@ -27,6 +27,8 @@ import { InterestRepository } from "../repositories/InterestRepostory";
 import { ToggleInterestOnPostUseCase } from "../../application/interest/use-cases/ToggleInterestOnPostUseCase";
 import { DoctorMutualConnectionsUseCase } from "../../application/doctor/use-cases/DoctorMutualConnectionsUseCase";
 import { DoctorPendingConnectionsUseCase } from "../../application/doctor/interfaces/DoctorPendingConectionsUseCase";
+import { NotificationRepository } from "../repositories/NotificationRepository";
+import { GetDoctorNotificationsUseCase } from "../../application/notification/use-cases/GetDoctorNotificationsUseCase";
 
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
@@ -41,6 +43,7 @@ const productPostRepository = new ProductPostRepository();
 const likeRepository = new LikeRepository();
 const interestRepository = new InterestRepository();
 const eventPublisher = new SocketEngagementEventPublisher();
+const notificationRepository = new NotificationRepository();
 const createDoctorUseCase = new CreateDoctorUseCase(
   doctorRepository,
   bycryptServices,
@@ -71,12 +74,14 @@ const networkUseCase = new NetworksUseCase(
 const connectionRequestUseCase = new ConnectionRequestUseCase(
   doctorRepository,
   medicalRepRepository,
-  connectionRepository
+  connectionRepository,
+  notificationRepository
 );
 const acceptConnectionRequestUseCase = new AcceptConnectionRequestUseCase(
   medicalRepRepository,
   doctorRepository,
-  connectionRepository
+  connectionRepository,
+  notificationRepository
 );
 const analyticsUsecase = new DoctorAnalyticsUseCase(
   doctorRepository,
@@ -126,6 +131,11 @@ const pendingConnectionsUseCase = new DoctorPendingConnectionsUseCase(
   connectionRepository,
   storageService
 );
+const getDoctorNotificationsUseCase = new GetDoctorNotificationsUseCase(
+  userRepository,
+  notificationRepository,
+  storageService
+);
 export const doctorController = new DoctorController(
   createDoctorUseCase,
   getDoctorprofileById,
@@ -141,5 +151,6 @@ export const doctorController = new DoctorController(
   toggleLikeOnPostUseCase,
   toggleInterestOnPostUseCase,
   mutualConnectionsUseCase,
-  pendingConnectionsUseCase
+  pendingConnectionsUseCase,
+  getDoctorNotificationsUseCase
 );

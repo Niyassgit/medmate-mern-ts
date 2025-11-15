@@ -18,8 +18,8 @@ export class DoctorRepository
     const mappedData = DoctorMapper.toPersistance(data);
     return await this.create(mappedData);
   }
-   constructor() {
-    super(prisma.doctor,(doctor)=>DoctorMapper.toDomain(doctor));
+  constructor() {
+    super(prisma.doctor, (doctor) => DoctorMapper.toDomain(doctor));
   }
 
   async getDoctorById(id: string): Promise<IDoctorWithUser | null> {
@@ -77,20 +77,22 @@ export class DoctorRepository
       total,
     };
   }
- 
+
   async existById(id: string): Promise<boolean> {
-    const user=await prisma.doctor.findFirst({
-      where:{id},
-      select:{id:true},
+    const user = await prisma.doctor.findFirst({
+      where: { id },
+      select: { id: true },
     });
     return !!user;
   }
-  async getDoctorIdByUserId(userId: string): Promise<{ doctorId: string | null; }> {
-    const doctor=await prisma.doctor.findFirst({
-      where:{loginId:userId},
-      select:{id:true},
+  async getDoctorIdByUserId(
+    userId: string
+  ): Promise<{ doctorId: string | null }> {
+    const doctor = await prisma.doctor.findFirst({
+      where: { loginId: userId },
+      select: { id: true },
     });
-    return {doctorId:doctor?doctor.id:null};
+    return { doctorId: doctor ? doctor.id : null };
   }
   async getDoctorByUserId(id: string): Promise<IDoctorWithUser | null> {
     const user = await prisma.doctor.findFirst({
@@ -99,8 +101,8 @@ export class DoctorRepository
         user: true,
         educations: true,
         certificates: true,
-        territory:true,
-        department:true,
+        territory: true,
+        department: true,
       },
     });
 
@@ -127,19 +129,33 @@ export class DoctorRepository
 
     return DoctorWithUserMapper.toDomain(updateDoctor);
   }
-  async findByTerritoryAndDepartment(departmentId: string, territories: string[]): Promise<IDoctorWithUser[]> {
-    const doctors= await prisma.doctor.findMany({
-      where:{
+  async findByTerritoryAndDepartment(
+    departmentId: string,
+    territories: string[]
+  ): Promise<IDoctorWithUser[]> {
+    const doctors = await prisma.doctor.findMany({
+      where: {
         departmentId,
-        territoryId:{in:territories}
+        territoryId: { in: territories },
       },
-      include:{
-        user:true,
-        department:true,
-        territory:true,
-        educations:true,
-      }
+      include: {
+        user: true,
+        department: true,
+        territory: true,
+        educations: true,
+      },
     });
-    return doctors.map((doc)=>DoctorWithUserMapper.toDomain(doc));
+    return doctors.map((doc) => DoctorWithUserMapper.toDomain(doc));
+  }
+  async getUserIdByDoctorId(
+    doctorId: string
+  ): Promise<{ doctorUserId: string | null }> {
+    const user = await prisma.doctor.findFirst({
+      where: { id: doctorId },
+      select: { loginId: true },
+    });
+    return {
+      doctorUserId: user ? user.loginId : null,
+    };
   }
 }

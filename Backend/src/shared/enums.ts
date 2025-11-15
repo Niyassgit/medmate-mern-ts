@@ -19,3 +19,9 @@ export enum ConnectionInitiator {
   DOCTOR = "DOCTOR",
   REP = "REP",
 }
+export enum NotificationType {
+    CONNECTION_REQUEST="CONNECTION_REQUEST",
+    CONNECTION_ACCEPTED="CONNECTION_ACCEPTED",
+    LIKE="LIKE",
+    INTEREST="INTEREST"
+}

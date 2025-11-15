@@ -1,0 +1,60 @@
+[2025-11-15 12:28:38] [31merror[39m: [31m🔥 Unhandled Error:this._medicalRepRepository.getUserIdByRepId is not a function[39m
+[2025-11-15 12:29:42] [31merror[39m: [31m🔥 Unhandled Error:this._medicalRepRepository.getUserIdByRepId is not a function[39m
+[2025-11-15 12:46:44] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-15 12:46:49] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-15 12:46:56] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-15 12:46:56] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-15 12:47:00] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-15 12:47:02] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-15 12:47:04] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-15 12:47:06] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-15 12:47:07] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-15 12:47:07] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-15 12:47:08] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-15 12:47:09] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-15 12:47:10] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-15 12:47:45] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-15 12:47:45] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-15 12:48:42] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-15 12:48:42] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-15 12:49:38] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-15 12:49:38] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-15 12:50:34] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-15 12:50:34] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-15 12:52:01] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-15 12:52:01] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-15 13:03:03] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-15 13:03:03] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-15 13:08:13] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-15 13:08:13] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-15 13:10:15] [31merror[39m: [31m🔥 Unhandled Error:User not found[39m
+[2025-11-15 13:10:16] [31merror[39m: [31m🔥 Unhandled Error:User not found[39m
+[2025-11-15 13:13:45] [31merror[39m: [31m🔥 Unhandled Error:User not found[39m
+[2025-11-15 13:13:45] [31merror[39m: [31m🔥 Unhandled Error:User not found[39m
+[2025-11-15 13:27:51] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.connection.delete()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\ConnectionRepository.ts:70:29[39m
+
+[31m  67 }[39m
+[31m  68 [39m
+[31m  69 async deleteByDoctorAndRep(doctorId: string, repId: string): Promise<void> {[39m
+[31m→ 70   await prisma.connection.delete([39m
+[31mAn operation failed because it depends on one or more records that were required but not found. No record was found for a delete.[39m
+[2025-11-15 13:28:48] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.connection.delete()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\ConnectionRepository.ts:70:29[39m
+
+[31m  67 }[39m
+[31m  68 [39m
+[31m  69 async deleteByDoctorAndRep(doctorId: string, repId: string): Promise<void> {[39m
+[31m→ 70   await prisma.connection.delete([39m
+[31mAn operation failed because it depends on one or more records that were required but not found. No record was found for a delete.[39m
+[2025-11-15 13:29:12] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `prisma.connection.delete()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\repositories\ConnectionRepository.ts:70:29[39m
+
+[31m  67 }[39m
+[31m  68 [39m
+[31m  69 async deleteByDoctorAndRep(doctorId: string, repId: string): Promise<void> {[39m
+[31m→ 70   await prisma.connection.delete([39m
+[31mAn operation failed because it depends on one or more records that were required but not found. No record was found for a delete.[39m

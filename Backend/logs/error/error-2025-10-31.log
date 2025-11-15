@@ -1,7 +1,0 @@
-[2025-10-31 10:11:43] [31merror[39m: [31mFailed to start server:TypeError: Authenticate.AuthorizeRole is not a function[39m
-[2025-10-31 10:11:48] [31merror[39m: [31mFailed to start server:TypeError: Authenticate.AuthorizeRole is not a function[39m
-[2025-10-31 12:54:34] [31merror[39m: [31mFailed to start server:TypeError: argument handler is required[39m
-[2025-10-31 12:54:39] [31merror[39m: [31mFailed to start server:TypeError: argument handler is required[39m
-[2025-10-31 12:54:41] [31merror[39m: [31mFailed to start server:TypeError: Missing parameter name at 14: https://git.new/pathToRegexpError[39m
-[2025-10-31 12:54:47] [31merror[39m: [31mFailed to start server:TypeError: argument handler is required[39m
-[2025-10-31 12:54:53] [31merror[39m: [31mFailed to start server:ReferenceError: A is not defined[39m

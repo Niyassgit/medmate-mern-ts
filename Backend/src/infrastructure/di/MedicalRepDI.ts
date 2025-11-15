@@ -28,6 +28,7 @@ import { DeletePostUseCase } from "../../application/productPost/use-case/Delete
 import { GetDoctorDetailsOnRepSideUseCase } from "../../application/medicalRep/use-cases/GetDoctorDetailsOnRepSideUseCase";
 import { RepMutualConnectionsUseCase } from "../../application/medicalRep/use-cases/RepMutualConnectionsUseCase";
 import { RepPendingConnectionsUseCase } from "../../application/medicalRep/use-cases/RepPendingConnectionsUseCase";
+import { NotificationRepository } from "../repositories/NotificationRepository";
 
 const medicalRepRepository = new MedicalRepRepository();
 const doctorRepository = new DoctorRepository();
@@ -43,7 +44,7 @@ const productPostPresentationService = new ProductPostPresentationService(
 const connectionRepository = new ConnectionRepository();
 const departmentRepository = new DepartmentRepository();
 const territoryRepository = new TerritoryRepository();
-
+const notificationRepository=new NotificationRepository();
 const createMedicalRepUseCase = new CreateMedicalRepUseCase(
   medicalRepRepository,
   bcryptServices,
@@ -96,12 +97,14 @@ const getNetworksUseCase = new GetNetworksUseCase(
 const makeConnectionRequestUseCase = new MakeConnectionRequestUseCase(
   medicalRepRepository,
   doctorRepository,
-  connectionRepository
+  connectionRepository,
+  notificationRepository
 );
 const acceptConnectionRequestUseCase = new AcceptingConnectionRequest(
   medicalRepRepository,
   doctorRepository,
-  connectionRepository
+  connectionRepository,
+  notificationRepository
 );
 const getRepAnalyticsUseCase = new GetRepAnalyticsUseCase(
   medicalRepRepository,

@@ -14,4 +14,5 @@ export const DoctorEndpoints={
   INTEREST_TOGGLE:(postId:string)=>`/doctor/feed/${postId}/interest/toggle`,
   MUTUAL_CONNECTIONS:(userId:string)=>`/doctor/analytics/mutual-connections/${userId}`,
   PENDING_REQUESTS:(userId:string)=>`/doctor/analytics/pending-connections/${userId}`,
+  NOTIFICATIONS:(userId:string)=>`/doctor/notifications/${userId}`,
 }

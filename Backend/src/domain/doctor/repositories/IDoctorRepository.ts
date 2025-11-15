@@ -21,4 +21,5 @@ export interface IDoctorRepository {
     departmentId: string | null,
     territories: string[] | null
   ): Promise<IDoctorWithUser[]>;
+  getUserIdByDoctorId(doctorId: string): Promise<{ doctorUserId: string | null}>;
 }

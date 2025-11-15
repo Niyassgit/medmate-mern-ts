@@ -18,6 +18,7 @@ import { IToggleLikeOnPostUseCase } from "../../../application/Like/interfaces/I
 import { IToggleInterestOnPostUseCase } from "../../../application/interest/interfaces/IToggleInterestOnPostUseCase";
 import { IDoctorMutualConnectionsUseCase } from "../../../application/doctor/interfaces/IDoctorMutualConnectionsUseCase";
 import { IDoctorPendingConnectionsUseCase } from "../../../application/doctor/interfaces/IDoctorPendingConnectionsUseCase";
+import { IGetDoctorNotificationsUseCase } from "../../../application/notification/interfaces/IGetDoctorNotificationsUseCase";
 
 export class DoctorController {
   constructor(
@@ -35,7 +36,8 @@ export class DoctorController {
     private _toggleLikeOnPostUseCase: IToggleLikeOnPostUseCase,
     private _toggleInterestOnPostUseCase: IToggleInterestOnPostUseCase,
     private _mutualConnectionListUseCase: IDoctorMutualConnectionsUseCase,
-    private _pendingConnectionListUseCase: IDoctorPendingConnectionsUseCase
+    private _pendingConnectionListUseCase: IDoctorPendingConnectionsUseCase,
+    private _getDoctorNotificationsUseCase: IGetDoctorNotificationsUseCase
   ) {}
 
   createDoctor = async (req: Request, res: Response) => {
@@ -190,10 +192,16 @@ export class DoctorController {
 
   pendingConnections = async (req: Request, res: Response) => {
     const { userId } = req.params;
-    console.log("userId:",userId)
+    console.log("userId:", userId);
     const response = await this._pendingConnectionListUseCase.execute(userId);
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
+  };
+
+  notifications = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const response = await this._getDoctorNotificationsUseCase.execute(userId);
+    return res.json({ success: true, data: response });
   };
 }

@@ -2,8 +2,18 @@ import { NotFoundError } from "../../../domain/common/errors";
 import { IConnectionRepository } from "../../../domain/connection/repositories/IConnectionRepository";
 import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRepository";
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
-import { ConnectionInitiator, ConnectionStatus } from "../../../shared/Enums";
-import { ErrorMessages, SuccessMessages } from "../../../shared/Messages";
+import { INotificationRepository } from "../../../domain/notification/repositories/INotificationService";
+import {
+  ConnectionInitiator,
+  ConnectionStatus,
+  NotificationType,
+  Role,
+} from "../../../shared/Enums";
+import {
+  ErrorMessages,
+  NotificationMessages,
+  SuccessMessages,
+} from "../../../shared/Messages";
 import { BadRequestError } from "../../errors";
 import { IMakeConnectionRequestUseCase } from "../interfaces/IMakeConnectionRequestUseCase";
 
@@ -13,23 +23,26 @@ export class MakeConnectionRequestUseCase
   constructor(
     private _medicalRepReposritory: IMedicalRepRepository,
     private _doctorRepository: IDoctorRepository,
-    private _connectionRepository: IConnectionRepository
+    private _connectionRepository: IConnectionRepository,
+    private _notificationRepository: INotificationRepository
   ) {}
   async execute(doctorId: string, userId?: string): Promise<string> {
     if (!userId) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
-    const rep = await this._medicalRepReposritory.getRepIdByUserId(userId);
-    if (!rep || !rep.repId)
-      throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
-    const doctor = await this._doctorRepository.existById(doctorId);
-    if (!doctor) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
+    const { repId } = await this._medicalRepReposritory.getRepIdByUserId(
+      userId
+    );
+    if (!repId) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
+    const {doctorUserId} = await this._doctorRepository.getUserIdByDoctorId(doctorId);
+    if (!doctorUserId) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
     const existingConnection =
-      await this._connectionRepository.findByDoctorAndRep(doctorId, rep.repId);
+      await this._connectionRepository.findByDoctorAndRep(doctorId, repId);
 
     if (existingConnection) {
       if (existingConnection.status === ConnectionStatus.PENDING) {
-        await this._connectionRepository.deleteByDoctorAndRep(
-          doctorId,
-          rep.repId
+        await this._connectionRepository.deleteByDoctorAndRep(doctorId, repId);
+        await this._notificationRepository.deleteConnectionNotificationById(
+          userId,
+          doctorUserId
         );
         return SuccessMessages.CANCEL_CONNECTION_REQ;
       }
@@ -39,11 +52,19 @@ export class MakeConnectionRequestUseCase
     }
     const requestRes = await this._connectionRepository.createConnection(
       doctorId,
-      rep.repId,
+      repId,
       ConnectionInitiator.REP
     );
     if (!requestRes)
       throw new BadRequestError(ErrorMessages.CONNECTION_REQUEST);
+    await this._notificationRepository.createNotification(
+      userId,
+      Role.MEDICAL_REP,
+      doctorUserId,
+      Role.DOCTOR,
+      NotificationType.CONNECTION_REQUEST,
+      NotificationMessages.CONNECTION_REQ_NOTIFICATION_MESSAGE
+    );
     return SuccessMessages.CONNECTION_REQUEST;
   }
 }

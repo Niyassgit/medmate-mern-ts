@@ -38,19 +38,19 @@ export class MedicalRepRepository
   }
 
   async existById(id: string): Promise<boolean> {
-    const rep=await prisma.medicalRep.findFirst({
-      where:{id},
-      select:{id:true},
+    const rep = await prisma.medicalRep.findFirst({
+      where: { id },
+      select: { id: true },
     });
     return !!rep;
   }
-  
-  async getRepIdByUserId(userId: string): Promise<{ repId: string | null; }> {
-    const rep=await prisma.medicalRep.findFirst({
-      where:{loginId:userId},
-      select:{id:true},
+
+  async getRepIdByUserId(userId: string): Promise<{ repId: string | null }> {
+    const rep = await prisma.medicalRep.findFirst({
+      where: { loginId: userId },
+      select: { id: true },
     });
-    return {repId:rep? rep.id :null};
+    return { repId: rep ? rep.id : null };
   }
   async getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null> {
     const user = await prisma.medicalRep.findUnique({
@@ -173,9 +173,17 @@ export class MedicalRepRepository
         territories: {
           include: { territory: true },
         },
-        department:true,
+        department: true,
       },
     });
     return reps.map((rep) => MedicalRepWithUserMapper.toDomain(rep));
+  }
+
+  async getUserIdByRepId(repId: string): Promise<{ repUserId: string | null }> {
+    const user = await prisma.medicalRep.findFirst({
+      where: { id: repId },
+      select: { loginId: true },
+    });
+    return { repUserId: user ? user.loginId : null };
   }
 }

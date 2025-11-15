@@ -66,3 +66,7 @@ export const pendingConnections=async(userId:string)=>{
     const res=await api.get(DoctorEndpoints.PENDING_REQUESTS(userId));
     return res.data.data;
 }
+export const getDoctorNotifications=async (userId:string)=>{
+    const res=await api.get(DoctorEndpoints.NOTIFICATIONS(userId));
+    return res.data;
+}
