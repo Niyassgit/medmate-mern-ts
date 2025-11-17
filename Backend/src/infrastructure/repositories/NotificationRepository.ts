@@ -54,9 +54,7 @@ export class NotificationRepository
       },
     });
   }
-  async findAllNotifications(
-    userId: string
-  ): Promise<INotificationWithUser[]> {
+  async findAllNotifications(userId: string): Promise<INotificationWithUser[]> {
     const result = await prisma.notification.findMany({
       where: { receiverId: userId },
       include: {
@@ -64,13 +62,35 @@ export class NotificationRepository
           select: {
             id: true,
             profileImage: true,
-            doctor: { select: { name: true ,id:true} },
-            medicalRep: { select: { name: true,id:true } },
+            doctor: { select: { name: true, id: true } },
+            medicalRep: { select: { name: true, id: true } },
           },
         },
       },
       orderBy: { createdAt: "desc" },
     });
     return result.map(NotificationMapper.toDomainWithUser);
+  }
+
+  async updateNotificationById(
+    notificationId: string,
+    type: NotificationType
+  ): Promise<INotificationWithUser | null> {
+    const result = await prisma.notification.update({
+      where: { id: notificationId },
+      data: { type },
+      include: {
+        sender: {
+          select: {
+            id: true,
+            profileImage: true,
+            doctor: { select: { name: true, id: true } },
+            medicalRep: { select: { name: true, id: true } },
+          },
+        },
+      },
+    });
+
+    return NotificationMapper.toDomainWithUser(result);
   }
 }

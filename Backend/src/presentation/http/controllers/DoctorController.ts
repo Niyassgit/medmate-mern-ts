@@ -7,8 +7,8 @@ import { ICompleteProfileUseCase } from "../../../application/doctor/interfaces/
 import { CompleteDoctorProfileDTO } from "../../../application/doctor/dto/CompleteProfileDTO";
 import { HttpStatusCode } from "../../../shared/HttpStatusCodes";
 import { INetworkUseCase } from "../../../application/doctor/interfaces/INetworkUseCase";
-import { IConnectionRequestUseCase } from "../../../application/doctor/interfaces/IConnectionRequestUseCase";
-import { IAcceptConnectionRequestUseCase } from "../../../application/medicalRep/interfaces/IAcceptConnectionRequestUseCase";
+import { IDoctorConnectionRequestUseCase } from "../../../application/connection/interfaces/IDoctorConnectionRequestUseCase";
+import { IDoctorAcceptConnectionRequestUseCase } from "../../../application/connection/interfaces/IDoctorAcceptConnectionRequestUseCase";
 import { IDoctorAnalyticsUseCase } from "../../../application/doctor/interfaces/IDoctorAnalyticsUseCase";
 import { IGetFeedUseCase } from "../../../application/doctor/interfaces/IGetFeedUseCase";
 import { IPostDetailsUseCase } from "../../../application/doctor/interfaces/IPostDetailsUseCase";
@@ -19,6 +19,7 @@ import { IToggleInterestOnPostUseCase } from "../../../application/interest/inte
 import { IDoctorMutualConnectionsUseCase } from "../../../application/doctor/interfaces/IDoctorMutualConnectionsUseCase";
 import { IDoctorPendingConnectionsUseCase } from "../../../application/doctor/interfaces/IDoctorPendingConnectionsUseCase";
 import { IGetDoctorNotificationsUseCase } from "../../../application/notification/interfaces/IGetDoctorNotificationsUseCase";
+import { IDoctorRejectConnectionUseCase } from "../../../application/connection/interfaces/IDoctorRejectConnectionUseCase";
 
 export class DoctorController {
   constructor(
@@ -27,8 +28,8 @@ export class DoctorController {
     private _profileImageUpdateUseCase: IProfileImageUpdateUseCase,
     private _compeletProfileUseCase: ICompleteProfileUseCase,
     private _networkUseCase: INetworkUseCase,
-    private _connectionRequestUseCase: IConnectionRequestUseCase,
-    private _acceptConnectionRequestUseCase: IAcceptConnectionRequestUseCase,
+    private _connectionRequestUseCase: IDoctorConnectionRequestUseCase,
+    private _acceptConnectionRequestUseCase: IDoctorAcceptConnectionRequestUseCase,
     private _analyticsUseCase: IDoctorAnalyticsUseCase,
     private _getFeedUseCase: IGetFeedUseCase,
     private _postDetailsUseCase: IPostDetailsUseCase,
@@ -37,7 +38,8 @@ export class DoctorController {
     private _toggleInterestOnPostUseCase: IToggleInterestOnPostUseCase,
     private _mutualConnectionListUseCase: IDoctorMutualConnectionsUseCase,
     private _pendingConnectionListUseCase: IDoctorPendingConnectionsUseCase,
-    private _getDoctorNotificationsUseCase: IGetDoctorNotificationsUseCase
+    private _getDoctorNotificationsUseCase: IGetDoctorNotificationsUseCase,
+    private _rejectConnectionRequestUseCase: IDoctorRejectConnectionUseCase
   ) {}
 
   createDoctor = async (req: Request, res: Response) => {
@@ -109,11 +111,6 @@ export class DoctorController {
   acceptConnection = async (req: Request, res: Response) => {
     const { repId } = req.params;
     const userId = GetOptionalUserId(req.user);
-    if (!userId) {
-      return res
-        .status(HttpStatusCode.UNAUTHORIZED)
-        .json({ success: false, message: "Unauthorized" });
-    }
     const response = await this._acceptConnectionRequestUseCase.execute(
       repId,
       userId
@@ -204,4 +201,18 @@ export class DoctorController {
     const response = await this._getDoctorNotificationsUseCase.execute(userId);
     return res.json({ success: true, data: response });
   };
+
+  rejectConnection = async (req: Request, res: Response) => {
+    const { repId,notificationId } = req.params;
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._rejectConnectionRequestUseCase.execute(
+      repId,
+      notificationId,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, message: response });
+  };
+ 
 }

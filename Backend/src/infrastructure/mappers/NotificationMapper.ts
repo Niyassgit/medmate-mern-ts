@@ -1,6 +1,6 @@
 import { Notification, Prisma, User } from "@prisma/client";
 import { INotification } from "../../domain/notification/entities/INotification";
-import { Role as DomainRole, NotificationType } from "../../shared/Enums";
+import { Role as DomainRole} from "../../shared/Enums";
 import { NotificationType as DomainNotificationType } from "../../shared/Enums";
 import { INotificationWithUser } from "../../domain/notification/entities/INotificationWithUser";
 

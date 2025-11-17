@@ -7,8 +7,13 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useFetchItem from "@/hooks/useFetchItem";
 import { useSelector } from "react-redux";
-import { getDoctorNotifications } from "../api";
+import {
+  acceptRequest,
+  getDoctorNotifications,
+  rejectdocConnectionRequest,
+} from "../api";
 import { SpinnerButton } from "@/components/shared/SpinnerButton";
+import toast from "react-hot-toast";
 
 interface Notification {
   id: string;
@@ -16,7 +21,7 @@ interface Notification {
   content: string;
   isRead: boolean;
   createdAt: Date;
-  roleId:string;
+  roleId: string;
   user: {
     id: string;
     name: string;
@@ -48,10 +53,12 @@ const Notifications = () => {
 
   useEffect(() => {
     if (notificationsRes && Array.isArray(notificationsRes)) {
-      const normalizedNotifications: Notification[] = notificationsRes.map((n: any) => ({
-        ...n,
-        createdAt: new Date(n.createdAt),
-      }));
+      const normalizedNotifications: Notification[] = notificationsRes.map(
+        (n: any) => ({
+          ...n,
+          createdAt: new Date(n.createdAt),
+        })
+      );
       setLocalNotifications(normalizedNotifications);
     }
   }, [notificationsRes]);
@@ -80,6 +87,48 @@ const Notifications = () => {
     );
   };
 
+  const ConnectionAccept = async (roleId: string) => {
+    try {
+      const res = await acceptRequest(roleId);
+      if (res.success) {
+        toast.success(res.message || "Connection request accepted");
+
+        setLocalNotifications((prev) =>
+          prev.map((n) =>
+            n.roleId === roleId
+              ? { ...n, type: "CONNECTION_ACCEPTED" }
+              : n
+          )
+        );
+      } else {
+        toast.error(res.message || "Something has happened!");
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Internal error");
+    }
+  };
+
+  const ConnectionReject = async (notificationId: string, roleId: string) => {
+    try {
+      const res = await rejectdocConnectionRequest(notificationId, roleId);
+      if (res.success) {
+        toast.success(res.message || "Connection request rejected");
+
+        setLocalNotifications((prev) =>
+          prev.map((n) =>
+            n.id === notificationId
+              ? { ...n, type: "CONNECTION_REJECTED" }
+              : n
+          )
+        );
+      } else {
+        toast.error(res.message || "Something has happened!");
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Internal error");
+    }
+  };
+
   if (loading) return <SpinnerButton />;
   if (error)
     return (
@@ -102,7 +151,6 @@ const Notifications = () => {
           </Button>
         </div>
 
-        {/* Category Tabs */}
         <Tabs
           value={filter}
           onValueChange={(v) => setFilter(v as typeof filter)}
@@ -116,12 +164,12 @@ const Notifications = () => {
           </TabsList>
         </Tabs>
 
-        {/* Notification list */}
         <div className="space-y-3">
           {filteredNotifications.length > 0 ? (
             filteredNotifications.map((notification) => (
               <NotificationItem
                 key={notification.id}
+                id={notification.id}
                 type={notification.type}
                 userName={notification.user.name}
                 avatarUrl={notification.user.profileImage}
@@ -131,6 +179,8 @@ const Notifications = () => {
                 isRead={notification.isRead}
                 viewerRole="DOCTOR"
                 onClick={() => markAsRead(notification.id)}
+                onAccept={ConnectionAccept}
+                onReject={ConnectionReject}
               />
             ))
           ) : (

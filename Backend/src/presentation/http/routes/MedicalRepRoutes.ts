@@ -99,5 +99,9 @@ export class MedicalRepRoutes {
       "/notifications/:userId",
       medicalRepController.notifications
     );
+    this.router.post(
+      "/notifications/connection/:notificationId/reject/:doctorId",
+      medicalRepController.rejectConnection
+    );
   }
 }

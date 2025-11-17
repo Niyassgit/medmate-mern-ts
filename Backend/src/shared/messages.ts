@@ -44,6 +44,8 @@ export const ErrorMessages = {
   TOGGLE_INTEREST_ERROR: "Failed to update interest,please try again",
   INTEREST_COUNT_ERROR: "Failed to fetch the count of the interest",
   UNAUTHERIZED_SOCKET: "Unauthorized socket attempted connection",
+  CONNECTION_REJECT_FAILED:"Connection not found or already updated",
+  CONNECTION_NOT_FOUND:"Connection not found!",
 } as const;
 
 export const SuccessMessages = {
@@ -72,6 +74,7 @@ export const SuccessMessages = {
   UNLIKE_SUCCESS: "Post unliked successfully",
   INTEREST_SUCCESS: "Interest showed succesfully",
   UNINTERESTED_SUCCESS: "Interest removed",
+  CONNECTION_REJECT:"Connection request rejected"
 } as const;
 
 export const NotificationMessages = {

@@ -64,5 +64,6 @@ export class DoctorRoutes {
       doctorController.pendingConnections
     );
     this.router.get("/notifications/:userId", doctorController.notifications);
+   
   }
 }

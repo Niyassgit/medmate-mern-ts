@@ -7,5 +7,6 @@ export interface NotificationsResponseDTO{
     isRead:boolean,
     type:string;
     roleId:string;
+    isConnected:boolean;
     user:NotificationUserDTO
 }

@@ -11,9 +11,9 @@ import { CompleteProfileUseCase } from "../../application/doctor/use-cases/Compl
 import { s3StorageService } from "../services/S3StorageService";
 import { NetworksUseCase } from "../../application/doctor/use-cases/NetworksUseCase";
 import { MedicalRepRepository } from "../repositories/MedicalRepRepository";
-import { ConnectionRequestUseCase } from "../../application/doctor/use-cases/ConnectionRequestUseCase";
+import { DoctorConnectionRequestUseCase } from "../../application/connection/use-cases/DoctorConnectionRequestUseCase";
 import { ConnectionRepository } from "../repositories/ConnectionRepository";
-import { AcceptConnectionRequestUseCase } from "../../application/doctor/use-cases/AcceptConnectionRequestUseCase";
+import { DoctorAcceptConnectionRequestUseCase } from "../../application/connection/use-cases/DoctorAcceptConnectionRequestUseCase";
 import { DoctorAnalyticsUseCase } from "../../application/doctor/use-cases/DoctorAnalyticsUseCase";
 import { DepartmentRepository } from "../repositories/DepatmentRepository";
 import { GetFeedUseCase } from "../../application/doctor/use-cases/GetFeedUseCase";
@@ -29,6 +29,7 @@ import { DoctorMutualConnectionsUseCase } from "../../application/doctor/use-cas
 import { DoctorPendingConnectionsUseCase } from "../../application/doctor/interfaces/DoctorPendingConectionsUseCase";
 import { NotificationRepository } from "../repositories/NotificationRepository";
 import { GetDoctorNotificationsUseCase } from "../../application/notification/use-cases/GetDoctorNotificationsUseCase";
+import { DoctorRejectConnectionUseCase } from "../../application/connection/use-cases/DoctorRejectConnectionUseCase";
 
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
@@ -44,6 +45,7 @@ const likeRepository = new LikeRepository();
 const interestRepository = new InterestRepository();
 const eventPublisher = new SocketEngagementEventPublisher();
 const notificationRepository = new NotificationRepository();
+
 const createDoctorUseCase = new CreateDoctorUseCase(
   doctorRepository,
   bycryptServices,
@@ -71,13 +73,13 @@ const networkUseCase = new NetworksUseCase(
   storageService,
   connectionRepository
 );
-const connectionRequestUseCase = new ConnectionRequestUseCase(
+const connectionRequestUseCase = new DoctorConnectionRequestUseCase(
   doctorRepository,
   medicalRepRepository,
   connectionRepository,
   notificationRepository
 );
-const acceptConnectionRequestUseCase = new AcceptConnectionRequestUseCase(
+const acceptConnectionRequestUseCase = new DoctorAcceptConnectionRequestUseCase(
   medicalRepRepository,
   doctorRepository,
   connectionRepository,
@@ -132,9 +134,15 @@ const pendingConnectionsUseCase = new DoctorPendingConnectionsUseCase(
   storageService
 );
 const getDoctorNotificationsUseCase = new GetDoctorNotificationsUseCase(
-  userRepository,
+  doctorRepository,
   notificationRepository,
-  storageService
+  storageService,
+  connectionRepository
+);
+const rejectConnectionUseCase = new DoctorRejectConnectionUseCase(
+  doctorRepository,
+  connectionRepository,
+  notificationRepository
 );
 export const doctorController = new DoctorController(
   createDoctorUseCase,
@@ -152,5 +160,6 @@ export const doctorController = new DoctorController(
   toggleInterestOnPostUseCase,
   mutualConnectionsUseCase,
   pendingConnectionsUseCase,
-  getDoctorNotificationsUseCase
+  getDoctorNotificationsUseCase,
+  rejectConnectionUseCase
 );

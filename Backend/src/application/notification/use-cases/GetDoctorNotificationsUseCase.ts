@@ -1,5 +1,6 @@
-import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 import { IStorageService } from "../../../domain/common/services/IStorageService";
+import { IConnectionRepository } from "../../../domain/connection/repositories/IConnectionRepository";
+import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRepository";
 import { INotificationRepository } from "../../../domain/notification/repositories/INotificationService";
 import { ErrorMessages } from "../../../shared/Messages";
 import { NotFoundError } from "../../errors";
@@ -11,19 +12,22 @@ export class GetDoctorNotificationsUseCase
   implements IGetDoctorNotificationsUseCase
 {
   constructor(
-    private _userRepository:IUserRepository,
+    private _doctorRepository:IDoctorRepository,
     private _notificationRepository: INotificationRepository,
-    private _storageService: IStorageService
+    private _storageService: IStorageService,
+    private _connectionRepository:IConnectionRepository
   ) {}
   async execute(userId: string): Promise<NotificationsResponseDTO[]> {
-    const user = await this._userRepository.findById(userId);
-    if (!user) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
+    const {doctorId} = await this._doctorRepository.getDoctorIdByUserId(userId);
+    if (!doctorId) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
     const notifications =
       await this._notificationRepository.findAllNotifications(userId);
     if (!notifications.length) return [];
     const mapped = ANotificationMapper.toListDomain(
       notifications,
-      this._storageService
+      doctorId,
+      this._storageService,
+      this._connectionRepository
     );
     return mapped;
   }

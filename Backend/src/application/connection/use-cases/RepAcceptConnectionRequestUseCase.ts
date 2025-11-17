@@ -5,10 +5,10 @@ import { INotificationRepository } from "../../../domain/notification/repositori
 import { ConnectionStatus, NotificationType, Role } from "../../../shared/Enums";
 import { ErrorMessages, NotificationMessages, SuccessMessages } from "../../../shared/Messages";
 import { BadRequestError, NotFoundError } from "../../errors";
-import { IAcceptConnectionRequestUseCase } from "../interfaces/IAcceptConnectionRequestUseCase";
+import { IRepAcceptConnectionRequestUseCase } from "../interfaces/IRepAcceptConnectionRequestUseCase";
 
-export class AcceptingConnectionRequest
-  implements IAcceptConnectionRequestUseCase
+export class RepAcceptingConnectionRequest
+  implements IRepAcceptConnectionRequestUseCase
 {
   constructor(
     private _medicalRepRepository: IMedicalRepRepository,

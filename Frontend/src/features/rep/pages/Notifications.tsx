@@ -7,8 +7,9 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useFetchItem from "@/hooks/useFetchItem";
 import { useSelector } from "react-redux";
-import { getRepnotifications } from "../api";
+import { acceptConnection, getRepnotifications, rejectRepsideConnectionRequest } from "../api";
 import { SpinnerButton } from "@/components/shared/SpinnerButton";
+import toast from "react-hot-toast";
 
 interface Notification {
   id: string;
@@ -17,6 +18,7 @@ interface Notification {
   isRead: boolean;
   createdAt: Date;
   roleId: string;
+  isConnected: boolean;
   user: {
     id: string;
     name: string;
@@ -82,6 +84,32 @@ const Notifications = () => {
     );
   };
 
+  const ConnectionAccept = async (id: string) => {
+    try {
+      const res = await acceptConnection(id);
+      if (res.success) {
+        toast.success(res.message || "Connection request rejected");
+      } else {
+        toast.error(res.message || "Something has happend!");
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Internal error");
+    }
+  };
+  const ConnectionReject = async (notifactionId:string,id:string) => {
+    try {
+      const res = await rejectRepsideConnectionRequest(notifactionId,id);
+
+      if (res.success) {
+        toast.success(res.message || "Connection request rejected");
+      } else {
+        toast.error(res.message || "Something has happend!");
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Internal error");
+    }
+  };
+
   if (loading) return <SpinnerButton />;
   if (error)
     return (
@@ -124,6 +152,7 @@ const Notifications = () => {
             filteredNotifications.map((notification) => (
               <NotificationItem
                 key={notification.id}
+                id={notification.id}
                 type={notification.type}
                 userName={notification.user.name}
                 avatarUrl={notification.user.profileImage}
@@ -133,6 +162,8 @@ const Notifications = () => {
                 isRead={notification.isRead}
                 viewerRole="MEDICAL_REP"
                 onClick={() => markAsRead(notification.id)}
+                onAccept={ConnectionAccept}
+                onReject={ConnectionReject}
               />
             ))
           ) : (

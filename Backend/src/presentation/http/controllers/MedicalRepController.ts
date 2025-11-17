@@ -13,8 +13,8 @@ import { IGetProductPostDetailsUseCase } from "../../../application/productPost/
 import { processImages } from "../utils/ImageHandler";
 import { HttpStatusCode } from "../../../shared/HttpStatusCodes";
 import { IGetNetworksUseCase } from "../../../application/medicalRep/interfaces/IGetNetWorksUseCase";
-import { IMakeConnectionRequestUseCase } from "../../../application/medicalRep/interfaces/IMakeConnectionRequestUseCase";
-import { IAcceptConnectionRequestUseCase } from "../../../application/medicalRep/interfaces/IAcceptConnectionRequestUseCase";
+import { IRepMakeConnectionRequestUseCase } from "../../../application/connection/interfaces/IMakeConnectionRequestUseCase";
+import { IRepAcceptConnectionRequestUseCase } from "../../../application/connection/interfaces/IRepAcceptConnectionRequestUseCase";
 import { IGetRepAnalyticsUseCase } from "../../../application/medicalRep/interfaces/IGetRepAnalyticsUseCase";
 import { IArchivePostUseCase } from "../../../application/productPost/interfaces/IArchivePostUseCase";
 import { IDeletePostUseCase } from "../../../application/productPost/interfaces/IDeletePostUseCase";
@@ -23,6 +23,7 @@ import { GetOptionalUserId } from "../utils/GetOptionalUserId";
 import { IRepMutualConnectionsUseCase } from "../../../application/medicalRep/interfaces/IRepMutualConnectionsUseCase";
 import { IRepPendingConnectionsUseCase } from "../../../application/medicalRep/interfaces/IRepPendingConnectionsUseCase";
 import { IGetRepNotificationsUseCase } from "../../../application/notification/interfaces/IGetRepNotificationsUseCase";
+import { IRepRejectConnectionUseCase } from "../../../application/connection/interfaces/IRepRejectConnnectionUseCase";
 
 export class MedicalRepController {
   constructor(
@@ -35,15 +36,16 @@ export class MedicalRepController {
     private _getProductsListUseCase: IGetProductPostListUseCase,
     private _getPostDetailsUseCase: IGetProductPostDetailsUseCase,
     private _getNetworksUseCase: IGetNetworksUseCase,
-    private _makeConnectionRequestUsecase: IMakeConnectionRequestUseCase,
-    private _acceptConnectionRequestUseCase: IAcceptConnectionRequestUseCase,
+    private _makeConnectionRequestUsecase: IRepMakeConnectionRequestUseCase,
+    private _acceptConnectionRequestUseCase: IRepAcceptConnectionRequestUseCase,
     private _getRepAnalticsUseCase: IGetRepAnalyticsUseCase,
     private _archivePostUseCase: IArchivePostUseCase,
     private _deletePostUseCase: IDeletePostUseCase,
     private _getDoctorDetailsOnRepSideUseCase: IGetDoctorDetailsOnRepSideUseCase,
     private _mutualConnectionsUseCase: IRepMutualConnectionsUseCase,
     private _pendingConnectionsUseCase: IRepPendingConnectionsUseCase,
-    private _getAllNotificationsUseCase: IGetRepNotificationsUseCase
+    private _getAllNotificationsUseCase: IGetRepNotificationsUseCase,
+    private _rejectConnectionUseCase: IRepRejectConnectionUseCase
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -185,7 +187,12 @@ export class MedicalRepController {
 
   acceptingConnectionRequest = async (req: Request, res: Response) => {
     const { doctorId } = req.params;
-    const userId = req.user?.userId as string;
+    const userId = GetOptionalUserId(req.user);
+    if (!userId) {
+      return res
+        .status(HttpStatusCode.UNAUTHORIZED)
+        .json({ success: false, message: "Unauthorized" });
+    }
     const response = await this._acceptConnectionRequestUseCase.execute(
       doctorId,
       userId
@@ -237,5 +244,18 @@ export class MedicalRepController {
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
+  };
+
+  rejectConnection = async (req: Request, res: Response) => {
+    const { doctorId,notificationId } = req.params;
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._rejectConnectionUseCase.execute(
+      doctorId,
+      notificationId,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, message: response });
   };
 }

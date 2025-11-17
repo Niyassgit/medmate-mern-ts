@@ -15,10 +15,10 @@ import {
   SuccessMessages,
 } from "../../../shared/Messages";
 import { BadRequestError } from "../../errors";
-import { IMakeConnectionRequestUseCase } from "../interfaces/IMakeConnectionRequestUseCase";
+import { IRepMakeConnectionRequestUseCase } from "../interfaces/IMakeConnectionRequestUseCase";
 
-export class MakeConnectionRequestUseCase
-  implements IMakeConnectionRequestUseCase
+export class RepMakeConnectionRequestUseCase
+  implements IRepMakeConnectionRequestUseCase
 {
   constructor(
     private _medicalRepReposritory: IMedicalRepRepository,

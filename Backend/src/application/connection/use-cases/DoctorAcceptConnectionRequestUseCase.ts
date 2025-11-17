@@ -9,10 +9,10 @@ import {
   NotFoundError,
   UnautharizedError,
 } from "../../errors";
-import { IAcceptConnectionRequestUseCase } from "../interfaces/IAcceptConnectionRequestUseCase";
+import { IDoctorAcceptConnectionRequestUseCase } from "../interfaces/IDoctorAcceptConnectionRequestUseCase";
 
-export class AcceptConnectionRequestUseCase
-  implements IAcceptConnectionRequestUseCase
+export class DoctorAcceptConnectionRequestUseCase
+  implements IDoctorAcceptConnectionRequestUseCase
 {
   constructor(
     private _medicalRepRepositoy: IMedicalRepRepository,

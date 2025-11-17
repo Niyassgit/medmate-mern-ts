@@ -11,9 +11,9 @@ import {
 } from "../../../shared/Enums";
 import { ErrorMessages, NotificationMessages, SuccessMessages } from "../../../shared/Messages";
 import { BadRequestError, UnautharizedError } from "../../errors";
-import { IConnectionRequestUseCase } from "../interfaces/IConnectionRequestUseCase";
+import { IDoctorConnectionRequestUseCase } from "../interfaces/IDoctorConnectionRequestUseCase";
 
-export class ConnectionRequestUseCase implements IConnectionRequestUseCase {
+export class DoctorConnectionRequestUseCase implements IDoctorConnectionRequestUseCase {
   constructor(
     private _doctorRepository: IDoctorRepository,
     private _medicalRepRepository: IMedicalRepRepository,

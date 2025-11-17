@@ -17,9 +17,9 @@ import { s3StorageService } from "../services/S3StorageService";
 import { ProductPostPresentationService } from "../../application/common/services/ProductPostPresentationService";
 import { GetNetworksUseCase } from "../../application/medicalRep/use-cases/GetNetworksUseCase";
 import { DoctorRepository } from "../repositories/DoctorRepository";
-import { MakeConnectionRequestUseCase } from "../../application/medicalRep/use-cases/MakeConnectionRequestUseCase";
+import { RepMakeConnectionRequestUseCase } from "../../application/connection/use-cases/RepMakeConnectionRequestUseCase";
 import { ConnectionRepository } from "../repositories/ConnectionRepository";
-import { AcceptingConnectionRequest } from "../../application/medicalRep/use-cases/AcceptConnectionRequestUseCase";
+import { RepAcceptingConnectionRequest } from "../../application/connection/use-cases/RepAcceptConnectionRequestUseCase";
 import { GetRepAnalyticsUseCase } from "../../application/medicalRep/use-cases/GetRepAnalyticsUseCase";
 import { DepartmentRepository } from "../repositories/DepatmentRepository";
 import { TerritoryRepository } from "../repositories/TerritoryRepository";
@@ -30,6 +30,7 @@ import { RepMutualConnectionsUseCase } from "../../application/medicalRep/use-ca
 import { RepPendingConnectionsUseCase } from "../../application/medicalRep/use-cases/RepPendingConnectionsUseCase";
 import { NotificationRepository } from "../repositories/NotificationRepository";
 import { GetRepNotificationsUseCase } from "../../application/notification/use-cases/GetRepNotificationsUseCase";
+import { RepRejectConnectionUseCase } from "../../application/connection/use-cases/RepRejectConnectionUseCase";
 
 const medicalRepRepository = new MedicalRepRepository();
 const doctorRepository = new DoctorRepository();
@@ -95,13 +96,13 @@ const getNetworksUseCase = new GetNetworksUseCase(
   storageService,
   connectionRepository
 );
-const makeConnectionRequestUseCase = new MakeConnectionRequestUseCase(
+const makeConnectionRequestUseCase = new RepMakeConnectionRequestUseCase(
   medicalRepRepository,
   doctorRepository,
   connectionRepository,
   notificationRepository
 );
-const acceptConnectionRequestUseCase = new AcceptingConnectionRequest(
+const acceptConnectionRequestUseCase = new RepAcceptingConnectionRequest(
   medicalRepRepository,
   doctorRepository,
   connectionRepository,
@@ -142,9 +143,16 @@ const pendingConnectionsUseCase = new RepPendingConnectionsUseCase(
 );
 
 const getAllNotificationsUseCase = new GetRepNotificationsUseCase(
-  userRepository,
+  medicalRepRepository,
   notificationRepository,
-  storageService
+  storageService,
+  connectionRepository
+);
+
+const rejectConnectionUseCase = new RepRejectConnectionUseCase(
+  medicalRepRepository,
+  connectionRepository,
+  notificationRepository
 );
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
@@ -164,5 +172,6 @@ export const medicalRepController = new MedicalRepController(
   doctorDetailsOnRepSideUseCase,
   mutualConnectionsUseCase,
   pendingConnectionsUseCase,
-  getAllNotificationsUseCase
+  getAllNotificationsUseCase,
+  rejectConnectionUseCase
 );
