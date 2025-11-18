@@ -1,8 +1,8 @@
 import { NotFoundError } from "../../../domain/common/errors";
 import { IStorageService } from "../../../domain/common/services/IStorageService";
-import { IConnectionRepository } from "../../../domain/connection/repositories/IConnectionRepository";
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
 import { INotificationRepository } from "../../../domain/notification/repositories/INotificationService";
+import { IProductPostRepository } from "../../../domain/product/repositories/IProductPostRepository";
 import { ErrorMessages } from "../../../shared/Messages";
 import { NotificationsResponseDTO } from "../dto/NotificationsResponseDTO";
 import { IGetRepNotificationsUseCase } from "../interfaces/IGetRepNotificationsUseCase";
@@ -13,7 +13,7 @@ export class GetRepNotificationsUseCase implements IGetRepNotificationsUseCase {
     private _medicalRepRepository: IMedicalRepRepository,
     private _notificationRepository: INotificationRepository,
     private _storageService: IStorageService,
-    private _connectionRepository: IConnectionRepository
+    private _productPostRepository:IProductPostRepository
   ) {}
   async execute(userId: string): Promise<NotificationsResponseDTO[]> {
     const { repId } = await this._medicalRepRepository.getRepIdByUserId(userId);
@@ -23,9 +23,8 @@ export class GetRepNotificationsUseCase implements IGetRepNotificationsUseCase {
     if (!notifications) return [];
     return ANotificationMapper.toListDomain(
       notifications,
-      repId,
       this._storageService,
-      this._connectionRepository
+      this._productPostRepository,
     );
   }
 }

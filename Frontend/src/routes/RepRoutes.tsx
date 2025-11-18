@@ -33,7 +33,8 @@ export const RepRoutes={
         {path:"analytics",element:<Analytics/>},
         {path:"message",element:<Messages />},
         {path:"notification",element:<Notifications/>},
-        {path:"doctor/details/:doctorId",element:<DoctorProfile />}
+        {path:"doctor/details/:doctorId",element:<DoctorProfile />},
+        {path:"notifications/post-details/:id",element:<PostDetailsPage />}
 
     ]
 }

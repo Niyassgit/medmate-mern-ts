@@ -8,12 +8,13 @@ export class NotificationMapper {
   static toDomain(persistance: Notification): INotification {
     return {
       id: persistance.id,
-      senderId: persistance.senderId,
+      senderUserId: persistance.senderId,
       senderRole: persistance.senderRole as DomainRole,
-      receiverId: persistance.receiverId,
+      receiverUserId: persistance.receiverId,
       receiverRole: persistance.receiverRole as DomainRole,
       content: persistance.content,
       isRead: persistance.isRead,
+      postId:persistance.postId ?? "",
       type: persistance.type as DomainNotificationType,
       createdAt: persistance.createdAt,
     };
@@ -22,13 +23,14 @@ export class NotificationMapper {
     domain: Omit<INotification, "id" | "createdAt" | "updatedAt">
   ): Prisma.NotificationCreateInput {
     return {
-      sender: { connect: { id: domain.senderId } },
+      sender: { connect: { id: domain.senderUserId } },
       senderRole: domain.senderRole,
-      receiver: { connect: { id: domain.receiverId } },
+      receiver: { connect: { id: domain.receiverUserId } },
       receiverRole: domain.receiverRole,
       content: domain.content,
       type: domain.type,
       isRead: domain.isRead,
+      postId:domain.postId
     };
   }
 
@@ -48,6 +50,7 @@ export class NotificationMapper {
         type:p.type as DomainNotificationType,
         isRead:p.isRead,
         createdAt:p.createdAt,
+        postId:p.postId ?? "",
         RoleId:p.sender.doctor?.id ?? p.sender.medicalRep?.id ?? "unKnown",
         user:{
             id:p.sender.id,

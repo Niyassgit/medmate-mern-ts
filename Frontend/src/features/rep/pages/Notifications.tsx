@@ -22,7 +22,8 @@ interface Notification {
   isRead: boolean;
   createdAt: Date;
   roleId: string;
-  isConnected: boolean;
+  postId: string;
+  postImage: string;
   user: {
     id: string;
     name: string;
@@ -177,6 +178,8 @@ const Notifications = () => {
                 timestamp={notification.createdAt.toLocaleString()}
                 isRead={notification.isRead}
                 viewerRole="MEDICAL_REP"
+                postId={notification.postId} 
+                postImage={notification.postImage}
                 onClick={() => markAsRead(notification.id)}
                 onAccept={ConnectionAccept}
                 onReject={ConnectionReject}

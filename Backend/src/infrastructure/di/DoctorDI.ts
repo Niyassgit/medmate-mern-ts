@@ -114,13 +114,19 @@ const getRepDetailsOnDoctorUseCase = new GetRepDetailsOnDoctorUseCase(
 );
 const toggleLikeOnPostUseCase = new ToggleLikeOnPostUseCase(
   doctorRepository,
+  medicalRepRepository,
   likeRepository,
-  eventPublisher
+  eventPublisher,
+  notificationRepository,
+  productPostRepository,
 );
 const toggleInterestOnPostUseCase = new ToggleInterestOnPostUseCase(
   doctorRepository,
+  medicalRepRepository,
   interestRepository,
-  eventPublisher
+  eventPublisher,
+  notificationRepository,
+  productPostRepository
 );
 
 const mutualConnectionsUseCase = new DoctorMutualConnectionsUseCase(
@@ -138,7 +144,6 @@ const getDoctorNotificationsUseCase = new GetDoctorNotificationsUseCase(
   doctorRepository,
   notificationRepository,
   storageService,
-  connectionRepository
 );
 const rejectConnectionUseCase = new DoctorRejectConnectionUseCase(
   doctorRepository,

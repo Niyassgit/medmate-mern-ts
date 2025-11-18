@@ -26,9 +26,10 @@ interface NotificationItemProps {
   timestamp: string;
   isRead: boolean;
   roleId: string;
+  postId?: string;
   viewerRole: "DOCTOR" | "MEDICAL_REP";
   postImage?: string;
-  onAccept?: (notificationId:string,roleId: string) => void;
+  onAccept?: (notificationId: string, roleId: string) => void;
   onReject?: (notificationId: string, roleId: string) => void;
   onClick?: () => void;
 }
@@ -78,6 +79,7 @@ export const NotificationItem = ({
   isRead,
   roleId,
   viewerRole,
+  postId,
   postImage,
   onAccept,
   onReject,
@@ -100,6 +102,14 @@ export const NotificationItem = ({
       .join("")
       .toUpperCase()
       .slice(0, 2);
+
+  const handleOpenPost = () => {
+    if ((type === "LIKE" || type === "INTEREST") && postId) {
+      navigate(`/notifications/post-details/${postId}`);
+    } else {
+      onClick?.();
+    }
+  };
 
   return (
     <div
@@ -180,7 +190,7 @@ export const NotificationItem = ({
                       className="text-green-600 hover:text-green-700 cursor-pointer"
                       onClick={(e) => {
                         e.stopPropagation();
-                        onAccept?.(id,roleId);
+                        onAccept?.(id, roleId);
                       }}
                     />
                     <X

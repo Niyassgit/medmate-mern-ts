@@ -2,12 +2,13 @@ import { NotificationType, Role } from "../../../shared/Enums";
 
 export interface INotification {
   id: string;
-  senderId: string;
+  senderUserId: string;
   senderRole: Role;
-  receiverId: string;
+  receiverUserId: string;
   receiverRole: Role;
   type: NotificationType;
   content: string;
   isRead: boolean;
+  postId?:string;
   createdAt: Date;
 }

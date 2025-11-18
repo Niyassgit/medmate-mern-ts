@@ -19,29 +19,33 @@ export class NotificationRepository
   constructor() {
     super(prisma.notification, (not) => NotificationMapper.toDomain(not));
   }
+
   async createNotification(
-    senderId: string,
+    senderUserId: string,
     senderRole: Role,
-    receiverId: string,
+    receiverUserId: string,
     receiverRole: Role,
     type: NotificationType,
-    content: string
+    content: string,
+    postId?: string
   ): Promise<INotification> {
     const domainEntity: Omit<INotification, "id" | "createdAt" | "updatedAt"> =
       {
-        senderId,
+        senderUserId,
         senderRole,
-        receiverId,
+        receiverUserId,
         receiverRole,
         type,
         content,
         isRead: false,
+        postId,
       };
 
     const mappedData = NotificationMapper.toPersistance(domainEntity);
     const result = await this.create(mappedData);
     return result;
   }
+
   async deleteConnectionNotificationById(
     senderId: string,
     receiverId: string
@@ -54,6 +58,7 @@ export class NotificationRepository
       },
     });
   }
+
   async findAllNotifications(userId: string): Promise<INotificationWithUser[]> {
     const result = await prisma.notification.findMany({
       where: { receiverId: userId },
@@ -92,5 +97,15 @@ export class NotificationRepository
     });
 
     return NotificationMapper.toDomainWithUser(result);
+  }
+
+  async deleteLikeNotification(
+    senderId: string,
+    receiverId: string,
+    postId: string
+  ): Promise<void> {
+    await prisma.notification.deleteMany({
+      where: { senderId, receiverId, postId },
+    });
   }
 }

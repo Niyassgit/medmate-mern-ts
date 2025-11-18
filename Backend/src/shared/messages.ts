@@ -87,5 +87,7 @@ export const NotificationMessages = {
   NEW_OTP_VERIFICATION: (otp: string) =>
     `Your New OTP is ${otp},It will expiry shortly`,
     CONNECTION_REQ_NOTIFICATION_MESSAGE:"Sented you a connection request",
-    CONNECTION_ACCEPT_MESSAGE:"Accepted your connection request"
+    CONNECTION_ACCEPT_MESSAGE:"Accepted your connection request",
+    LIKE_MESSAGE:"Liked your post",
+    INTEREST_MESSAGE:"Showed interested on your Post",
 } as const;

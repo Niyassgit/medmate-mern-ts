@@ -147,7 +147,7 @@ const getAllNotificationsUseCase = new GetRepNotificationsUseCase(
   medicalRepRepository,
   notificationRepository,
   storageService,
-  connectionRepository
+  productPostRepository
 );
 
 const rejectConnectionUseCase = new RepRejectConnectionUseCase(

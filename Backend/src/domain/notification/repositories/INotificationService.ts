@@ -1,17 +1,29 @@
 import { NotificationType, Role } from "../../../shared/Enums";
-import { INotification} from "../entities/INotification";
+import { INotification } from "../entities/INotification";
 import { INotificationWithUser } from "../entities/INotificationWithUser";
 
 export interface INotificationRepository {
   createNotification(
-    senderId: string,
-    senderRole:Role,
-    receiverId: string,
+    senderUserId: string,
+    senderRole: Role,
+    receiverUserId: string,
     receiverRole: Role,
     type: NotificationType,
-    content: string
+    content: string,
+    postId?: string
   ): Promise<INotification>;
-  deleteConnectionNotificationById(senderId: string, receiverId: string): Promise<void>;
-  findAllNotifications(userId:string):Promise<INotificationWithUser[]>;
-  updateNotificationById(notificationId:string,type:NotificationType):Promise<INotificationWithUser | null>;
+  deleteConnectionNotificationById(
+    senderId: string,
+    receiverId: string
+  ): Promise<void>;
+  findAllNotifications(userId: string): Promise<INotificationWithUser[]>;
+  updateNotificationById(
+    notificationId: string,
+    type: NotificationType
+  ): Promise<INotificationWithUser | null>;
+  deleteLikeNotification(
+    senderId: string,
+    receiverId: string,
+    postId: string
+  ): Promise<void>;
 }

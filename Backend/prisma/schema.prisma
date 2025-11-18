@@ -346,6 +346,7 @@ model Notification {
   receiverId String  @db.ObjectId
   receiverRole Role
   type      NotificationType
+  postId    String?
   content   String
   isRead    Boolean  @default(false)
   createdAt DateTime @default(now())

@@ -8,5 +8,6 @@ export interface INotificationWithUser {
   type:NotificationType,
   createdAt: Date;
   RoleId:string;
+  postId?:string;
   user:IUserForNotification
 }

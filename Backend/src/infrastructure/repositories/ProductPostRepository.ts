@@ -42,18 +42,18 @@ export class ProductPostRepository
   async getProducts(userId: string): Promise<IProductPostForFeed[] | null> {
     const products = await prisma.productPost.findMany({
       where: { repId: userId, isArchived: false },
-       include:{
-        rep:{
-          include:{
-            user:true
-          }
+      include: {
+        rep: {
+          include: {
+            user: true,
+          },
         },
-        _count:{
-          select:{
-            interests:true,
-            likes:true,
-          }
-        }
+        _count: {
+          select: {
+            interests: true,
+            likes: true,
+          },
+        },
       },
       orderBy: { createdAt: "desc" },
     });
@@ -64,13 +64,16 @@ export class ProductPostRepository
     const product = await this.findById(postId);
     return product ? product : null;
   }
-  async getPostsByIds(repIds: string[], excludedIds: string[]): Promise<IProductPostForFeed[]> {
-     const posts = await prisma.productPost.findMany({
+  async getPostsByIds(
+    repIds: string[],
+    excludedIds: string[]
+  ): Promise<IProductPostForFeed[]> {
+    const posts = await prisma.productPost.findMany({
       where: {
         repId: {
           in: repIds,
         },
-        id:{notIn:excludedIds},
+        id: { notIn: excludedIds },
       },
       include: {
         rep: {
@@ -105,42 +108,49 @@ export class ProductPostRepository
   }
   async DeletePostUseCase(postId: string): Promise<boolean> {
     await prisma.productPost.delete({
-      where:{id:postId}
+      where: { id: postId },
     });
     return true;
   }
   async findRepByPostId(postId: string): Promise<IMedicalRepWithUser | null> {
-    const post=await prisma.productPost.findFirst({
-      where:{id:postId},
-    include:{
-      rep:{
-        include:{
-          user:true,
-        }
+    const post = await prisma.productPost.findFirst({
+      where: { id: postId },
+      include: {
+        rep: {
+          include: {
+            user: true,
+          },
+        },
       },
-    }
     });
-    if(!post?.rep) return null;
+    if (!post?.rep) return null;
     return MedicalRepWithUserMapper.toDomain(post.rep);
   }
   async findPostsByRepId(repId: string): Promise<IProductPostForFeed[] | null> {
-    const posts=await prisma.productPost.findMany({
-      where:{repId},
-      include:{
-        rep:{
-          include:{
-            user:true
-          }
+    const posts = await prisma.productPost.findMany({
+      where: { repId },
+      include: {
+        rep: {
+          include: {
+            user: true,
+          },
         },
-        _count:{
-          select:{
-            interests:true,
-            likes:true,
-          }
-        }
-      }
+        _count: {
+          select: {
+            interests: true,
+            likes: true,
+          },
+        },
+      },
     });
-    if(!posts) return null;
-    return ProductPostMapper.toFeedList(posts)
+    if (!posts) return null;
+    return ProductPostMapper.toFeedList(posts);
+  }
+  async findRepIdByPostId(postId: string): Promise<{ repId: string | null }> {
+    const result = await prisma.productPost.findFirst({
+      where: { id: postId },
+      select: { repId: true },
+    });
+    return { repId: result ? result.repId : null };
   }
 }
