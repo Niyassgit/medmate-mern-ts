@@ -86,3 +86,7 @@ export const rejectdocConnectionRequest = async (
   );
   return res.data;
 };
+export const acceptConnOnNotificationPage=async(notificationId:string,repId:string)=>{
+  const res=await api.post(DoctorEndpoints.ACCEPT_ON_NOTIFICATION(notificationId,repId));
+  return res.data;
+}

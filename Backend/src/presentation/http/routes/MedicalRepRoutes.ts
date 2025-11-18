@@ -103,5 +103,9 @@ export class MedicalRepRoutes {
       "/notifications/connection/:notificationId/reject/:doctorId",
       medicalRepController.rejectConnection
     );
+    this.router.post(
+      "/notifications/connection/:notificationId/accept/:doctorId",
+      medicalRepController.requestAccept
+    );
   }
 }

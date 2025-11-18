@@ -25,4 +25,6 @@ export const RepEndpoints = {
   NOTIFICATIONS: (userId: string) => `/rep/notifications/${userId}`,
   REJECT_CONNECTION_REQUEST: (notificationId: string, doctorId: string) =>
     `/rep/notifications/connection/${notificationId}/reject/${doctorId}`,
+  ACCEPT_REQ_ON_NOTIFICATION_PAGE: (notificationId: string, doctorId: string) =>
+    `/rep/notifications/connection/${notificationId}/accept/${doctorId}`,
 };

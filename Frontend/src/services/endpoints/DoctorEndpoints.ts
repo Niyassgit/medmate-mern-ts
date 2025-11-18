@@ -19,4 +19,6 @@ export const DoctorEndpoints = {
   NOTIFICATIONS: (userId: string) => `/doctor/notifications/${userId}`,
   REJECT_CONNECTION_REQ: (notificationId: string, repId: string) =>
     `/doctor/notifications/connection/${notificationId}/reject/${repId}`,
+  ACCEPT_ON_NOTIFICATION: (notificationId: string, repId: string) =>
+    `/doctor/notifications/connection/${notificationId}/accept/${repId}`,
 };

@@ -24,6 +24,7 @@ import { IRepMutualConnectionsUseCase } from "../../../application/medicalRep/in
 import { IRepPendingConnectionsUseCase } from "../../../application/medicalRep/interfaces/IRepPendingConnectionsUseCase";
 import { IGetRepNotificationsUseCase } from "../../../application/notification/interfaces/IGetRepNotificationsUseCase";
 import { IRepRejectConnectionUseCase } from "../../../application/connection/interfaces/IRepRejectConnnectionUseCase";
+import { IRepAcceptConnOnNotUseCase } from "../../../application/connection/interfaces/IRepAcceptConnOnNotUseCase";
 
 export class MedicalRepController {
   constructor(
@@ -45,7 +46,8 @@ export class MedicalRepController {
     private _mutualConnectionsUseCase: IRepMutualConnectionsUseCase,
     private _pendingConnectionsUseCase: IRepPendingConnectionsUseCase,
     private _getAllNotificationsUseCase: IGetRepNotificationsUseCase,
-    private _rejectConnectionUseCase: IRepRejectConnectionUseCase
+    private _rejectConnectionUseCase: IRepRejectConnectionUseCase,
+    private _acceptRequestOnNotificationPage: IRepAcceptConnOnNotUseCase
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -247,9 +249,22 @@ export class MedicalRepController {
   };
 
   rejectConnection = async (req: Request, res: Response) => {
-    const { doctorId,notificationId } = req.params;
+    const { doctorId, notificationId } = req.params;
     const userId = GetOptionalUserId(req.user);
     const response = await this._rejectConnectionUseCase.execute(
+      doctorId,
+      notificationId,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, message: response });
+  };
+
+  requestAccept = async (req: Request, res: Response) => {
+    const { doctorId, notificationId } = req.params;
+    const userId=GetOptionalUserId(req.user);
+    const response = await this._acceptRequestOnNotificationPage.execute(
       doctorId,
       notificationId,
       userId

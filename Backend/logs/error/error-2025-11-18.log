@@ -1,0 +1,9 @@
+[2025-11-18 10:41:47] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-18 10:44:07] [31merror[39m: [31m🔥 Unhandled Error:User not found[39m
+[2025-11-18 10:44:14] [31merror[39m: [31m🔥 Unhandled Error:User not found[39m
+[2025-11-18 10:45:13] [31merror[39m: [31m🔥 Unhandled Error:User not found[39m
+[2025-11-18 11:11:12] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-18 11:11:17] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-18 11:11:23] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-18 11:11:33] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-18 11:11:44] [31merror[39m: [31mFailed to start server:Missing parameter name at 50: https://git.new/pathToRegexpError[39m

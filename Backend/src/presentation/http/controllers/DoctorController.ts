@@ -20,6 +20,7 @@ import { IDoctorMutualConnectionsUseCase } from "../../../application/doctor/int
 import { IDoctorPendingConnectionsUseCase } from "../../../application/doctor/interfaces/IDoctorPendingConnectionsUseCase";
 import { IGetDoctorNotificationsUseCase } from "../../../application/notification/interfaces/IGetDoctorNotificationsUseCase";
 import { IDoctorRejectConnectionUseCase } from "../../../application/connection/interfaces/IDoctorRejectConnectionUseCase";
+import { IDoctorAcceptOnNotUseCase } from "../../../application/connection/interfaces/IDoctorAcceptOnNotUseCase";
 
 export class DoctorController {
   constructor(
@@ -39,7 +40,8 @@ export class DoctorController {
     private _mutualConnectionListUseCase: IDoctorMutualConnectionsUseCase,
     private _pendingConnectionListUseCase: IDoctorPendingConnectionsUseCase,
     private _getDoctorNotificationsUseCase: IGetDoctorNotificationsUseCase,
-    private _rejectConnectionRequestUseCase: IDoctorRejectConnectionUseCase
+    private _rejectConnectionRequestUseCase: IDoctorRejectConnectionUseCase,
+    private _acceptConnectionOnNotificationPage: IDoctorAcceptOnNotUseCase
   ) {}
 
   createDoctor = async (req: Request, res: Response) => {
@@ -203,7 +205,7 @@ export class DoctorController {
   };
 
   rejectConnection = async (req: Request, res: Response) => {
-    const { repId,notificationId } = req.params;
+    const { repId, notificationId } = req.params;
     const userId = GetOptionalUserId(req.user);
     const response = await this._rejectConnectionRequestUseCase.execute(
       repId,
@@ -214,5 +216,17 @@ export class DoctorController {
       .status(HttpStatusCode.OK)
       .json({ success: true, message: response });
   };
- 
+
+  acceptConnectionOnNot = async (req: Request, res: Response) => {
+    const { repId, notificationId } = req.params;
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._acceptConnectionOnNotificationPage.execute(
+      repId,
+      notificationId,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, message: response });
+  };
 }

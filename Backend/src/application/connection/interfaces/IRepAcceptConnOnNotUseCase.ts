@@ -1,6 +1,6 @@
-export interface IRepRejectConnectionUseCase {
+export interface IRepAcceptConnOnNotUseCase {
   execute(
-    doctoId: string,
+    doctorId: string,
     notificationId: string,
     userId?: string
   ): Promise<string>;

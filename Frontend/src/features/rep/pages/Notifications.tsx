@@ -7,7 +7,11 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useFetchItem from "@/hooks/useFetchItem";
 import { useSelector } from "react-redux";
-import { acceptConnection, getRepnotifications, rejectRepsideConnectionRequest } from "../api";
+import {
+  acceptFromNotification,
+  getRepnotifications,
+  rejectRepsideConnectionRequest,
+} from "../api";
 import { SpinnerButton } from "@/components/shared/SpinnerButton";
 import toast from "react-hot-toast";
 
@@ -84,26 +88,38 @@ const Notifications = () => {
     );
   };
 
-  const ConnectionAccept = async (id: string) => {
+  const ConnectionAccept = async (notificationId: string, roleId: string) => {
     try {
-      const res = await acceptConnection(id);
+      const res = await acceptFromNotification(notificationId, roleId);
       if (res.success) {
-        toast.success(res.message || "Connection request rejected");
+        toast.success(res.message || "Connection request accepted");
+
+        setLocalNotifications((prev) =>
+          prev.map((n) =>
+            n.roleId === roleId ? { ...n, type: "CONNECTION_ACCEPTED" } : n
+          )
+        );
       } else {
-        toast.error(res.message || "Something has happend!");
+        toast.error(res.message || "Something has happened!");
       }
     } catch (error: any) {
       toast.error(error.message || "Internal error");
     }
   };
-  const ConnectionReject = async (notifactionId:string,id:string) => {
-    try {
-      const res = await rejectRepsideConnectionRequest(notifactionId,id);
 
+  const ConnectionReject = async (notificationId: string, roleId: string) => {
+    try {
+      const res = await rejectRepsideConnectionRequest(notificationId, roleId);
       if (res.success) {
         toast.success(res.message || "Connection request rejected");
+
+        setLocalNotifications((prev) =>
+          prev.map((n) =>
+            n.id === notificationId ? { ...n, type: "CONNECTION_REJECTED" } : n
+          )
+        );
       } else {
-        toast.error(res.message || "Something has happend!");
+        toast.error(res.message || "Something has happened!");
       }
     } catch (error: any) {
       toast.error(error.message || "Internal error");

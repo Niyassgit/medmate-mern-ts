@@ -21,14 +21,14 @@ export class RepMakeConnectionRequestUseCase
   implements IRepMakeConnectionRequestUseCase
 {
   constructor(
-    private _medicalRepReposritory: IMedicalRepRepository,
+    private _medicalRepRepository: IMedicalRepRepository,
     private _doctorRepository: IDoctorRepository,
     private _connectionRepository: IConnectionRepository,
     private _notificationRepository: INotificationRepository
   ) {}
   async execute(doctorId: string, userId?: string): Promise<string> {
     if (!userId) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
-    const { repId } = await this._medicalRepReposritory.getRepIdByUserId(
+    const { repId } = await this._medicalRepRepository.getRepIdByUserId(
       userId
     );
     if (!repId) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);

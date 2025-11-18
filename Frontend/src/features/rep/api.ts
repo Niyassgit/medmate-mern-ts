@@ -105,3 +105,12 @@ export const rejectRepsideConnectionRequest = async (
   );
   return res.data;
 };
+export const acceptFromNotification = async (
+  notificationId: string,
+  doctorId: string
+) => {
+  const res = await api.post(
+    RepEndpoints.ACCEPT_REQ_ON_NOTIFICATION_PAGE(notificationId, doctorId)
+  );
+  return res.data;
+};

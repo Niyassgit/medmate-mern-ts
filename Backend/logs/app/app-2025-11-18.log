@@ -1,0 +1,28 @@
+[2025-11-18 10:39:32] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-18 10:41:14] [33mwarn[39m: [33mAppError: Invalid email or password[39m
+[2025-11-18 10:41:47] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-18 10:43:56] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-18 10:44:04] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-18 10:44:07] [31merror[39m: [31m🔥 Unhandled Error:User not found[39m
+[2025-11-18 10:44:14] [31merror[39m: [31m🔥 Unhandled Error:User not found[39m
+[2025-11-18 10:45:03] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-18 10:45:11] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-18 10:45:13] [31merror[39m: [31m🔥 Unhandled Error:User not found[39m
+[2025-11-18 10:45:23] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-18 10:45:25] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-18 10:45:41] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-18 10:45:48] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-18 10:57:32] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-18 10:58:42] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-18 11:11:12] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-18 11:11:17] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-18 11:11:23] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-18 11:11:33] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-18 11:11:44] [31merror[39m: [31mFailed to start server:Missing parameter name at 50: https://git.new/pathToRegexpError[39m
+[2025-11-18 11:15:14] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-18 11:15:16] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-18 11:15:57] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-18 11:16:10] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-18 11:16:21] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-18 11:16:28] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-18 11:16:42] [32minfo[39m: [32m server running on port 5000[39m

@@ -1,3 +1,3 @@
-export interface IDoctorConnectionRequestUseCase{
-    execute(repId:string,userId?:string):Promise<string>;
+export interface IDoctorConnectionRequestUseCase {
+  execute(repId: string, userId?: string): Promise<string>;
 }

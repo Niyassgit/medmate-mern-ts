@@ -8,6 +8,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useFetchItem from "@/hooks/useFetchItem";
 import { useSelector } from "react-redux";
 import {
+  acceptConnOnNotificationPage,
   acceptRequest,
   getDoctorNotifications,
   rejectdocConnectionRequest,
@@ -87,9 +88,9 @@ const Notifications = () => {
     );
   };
 
-  const ConnectionAccept = async (roleId: string) => {
+  const ConnectionAccept = async (notificationId:string,roleId: string) => {
     try {
-      const res = await acceptRequest(roleId);
+      const res = await acceptConnOnNotificationPage(notificationId,roleId);
       if (res.success) {
         toast.success(res.message || "Connection request accepted");
 

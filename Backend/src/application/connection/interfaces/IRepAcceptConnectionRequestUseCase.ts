@@ -1,3 +1,3 @@
-export interface IRepAcceptConnectionRequestUseCase{
-    execute(doctorId:string,userId?:string):Promise<string>;
+export interface IRepAcceptConnectionRequestUseCase {
+  execute(doctorId: string, userId?: string): Promise<string>;
 }

@@ -28,7 +28,7 @@ interface NotificationItemProps {
   roleId: string;
   viewerRole: "DOCTOR" | "MEDICAL_REP";
   postImage?: string;
-  onAccept?: (roleId: string) => void;
+  onAccept?: (notificationId:string,roleId: string) => void;
   onReject?: (notificationId: string, roleId: string) => void;
   onClick?: () => void;
 }
@@ -180,7 +180,7 @@ export const NotificationItem = ({
                       className="text-green-600 hover:text-green-700 cursor-pointer"
                       onClick={(e) => {
                         e.stopPropagation();
-                        onAccept?.(roleId);
+                        onAccept?.(id,roleId);
                       }}
                     />
                     <X

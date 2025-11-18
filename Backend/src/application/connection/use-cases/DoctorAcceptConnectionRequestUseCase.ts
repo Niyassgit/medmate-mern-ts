@@ -15,7 +15,7 @@ export class DoctorAcceptConnectionRequestUseCase
   implements IDoctorAcceptConnectionRequestUseCase
 {
   constructor(
-    private _medicalRepRepositoy: IMedicalRepRepository,
+    private _medicalRepRepository: IMedicalRepRepository,
     private _doctorRepository: IDoctorRepository,
     private _connectionRepository: IConnectionRepository,
     private _notificationRepository:INotificationRepository
@@ -25,7 +25,7 @@ export class DoctorAcceptConnectionRequestUseCase
     const {doctorId} = await this._doctorRepository.getDoctorIdByUserId(userId);
     if (!doctorId)
       throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
-    const {repUserId} = await this._medicalRepRepositoy.getUserIdByRepId(repId);
+    const {repUserId} = await this._medicalRepRepository.getUserIdByRepId(repId);
     if (!repUserId) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
     const connection = await this._connectionRepository.findByDoctorAndRep(
      doctorId,
@@ -48,5 +48,5 @@ export class DoctorAcceptConnectionRequestUseCase
      NotificationMessages.CONNECTION_ACCEPT_MESSAGE
     )
     return SuccessMessages.CONNECTED;
-  }
+  } 
 }

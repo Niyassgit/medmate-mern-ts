@@ -46,6 +46,7 @@ export const ErrorMessages = {
   UNAUTHERIZED_SOCKET: "Unauthorized socket attempted connection",
   CONNECTION_REJECT_FAILED:"Connection not found or already updated",
   CONNECTION_NOT_FOUND:"Connection not found!",
+  NO_CONNECTION_REQUEST_FOUND:"No connection found!",
 } as const;
 
 export const SuccessMessages = {

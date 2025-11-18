@@ -169,3 +169,24 @@
 [2025-11-17 20:35:02] [32minfo[39m: [32m server running on port 5000[39m
 [2025-11-17 20:35:11] [32minfo[39m: [32m server running on port 5000[39m
 [2025-11-17 20:37:41] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-17 20:39:13] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-17 20:39:20] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-17 20:39:38] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-17 20:39:52] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-17 20:40:07] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-17 21:01:47] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-17 21:01:52] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-17 21:02:05] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-17 21:02:14] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-17 21:11:49] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-17 21:13:05] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-17 21:13:07] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-17 21:13:11] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-17 21:13:24] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-17 21:13:26] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-17 21:28:08] [31merror[39m: [31m🔥 Unhandled Error:User not found[39m
+[2025-11-17 21:32:07] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-17 21:32:40] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-17 21:45:35] [31merror[39m: [31m🔥 Unhandled Error:No connection found![39m
+[2025-11-17 21:47:37] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-17 21:50:16] [32minfo[39m: [32m server running on port 5000[39m

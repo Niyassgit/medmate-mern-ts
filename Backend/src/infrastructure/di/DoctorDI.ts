@@ -13,7 +13,7 @@ import { NetworksUseCase } from "../../application/doctor/use-cases/NetworksUseC
 import { MedicalRepRepository } from "../repositories/MedicalRepRepository";
 import { DoctorConnectionRequestUseCase } from "../../application/connection/use-cases/DoctorConnectionRequestUseCase";
 import { ConnectionRepository } from "../repositories/ConnectionRepository";
-import { DoctorAcceptConnectionRequestUseCase } from "../../application/connection/use-cases/DoctorAcceptConnectionRequestUseCase";
+import { RepAcceptingConnectionRequest } from "../../application/connection/use-cases/RepAcceptConnectionRequestUseCase";
 import { DoctorAnalyticsUseCase } from "../../application/doctor/use-cases/DoctorAnalyticsUseCase";
 import { DepartmentRepository } from "../repositories/DepatmentRepository";
 import { GetFeedUseCase } from "../../application/doctor/use-cases/GetFeedUseCase";
@@ -30,6 +30,7 @@ import { DoctorPendingConnectionsUseCase } from "../../application/doctor/interf
 import { NotificationRepository } from "../repositories/NotificationRepository";
 import { GetDoctorNotificationsUseCase } from "../../application/notification/use-cases/GetDoctorNotificationsUseCase";
 import { DoctorRejectConnectionUseCase } from "../../application/connection/use-cases/DoctorRejectConnectionUseCase";
+import { DoctorAcceptOnNotUseCase } from "../../application/connection/use-cases/DoctorAcceptOnNotUseCase";
 
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
@@ -79,7 +80,7 @@ const connectionRequestUseCase = new DoctorConnectionRequestUseCase(
   connectionRepository,
   notificationRepository
 );
-const acceptConnectionRequestUseCase = new DoctorAcceptConnectionRequestUseCase(
+const acceptConnectionRequestUseCase = new RepAcceptingConnectionRequest(
   medicalRepRepository,
   doctorRepository,
   connectionRepository,
@@ -144,6 +145,13 @@ const rejectConnectionUseCase = new DoctorRejectConnectionUseCase(
   connectionRepository,
   notificationRepository
 );
+
+const acceptConnOnNotificationPage = new DoctorAcceptOnNotUseCase(
+  doctorRepository,
+  notificationRepository,
+  medicalRepRepository,
+  connectionRepository
+);
 export const doctorController = new DoctorController(
   createDoctorUseCase,
   getDoctorprofileById,
@@ -161,5 +169,6 @@ export const doctorController = new DoctorController(
   mutualConnectionsUseCase,
   pendingConnectionsUseCase,
   getDoctorNotificationsUseCase,
-  rejectConnectionUseCase
+  rejectConnectionUseCase,
+  acceptConnOnNotificationPage
 );

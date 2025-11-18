@@ -1,6 +1,6 @@
-export interface IRepRejectConnectionUseCase {
+export interface IDoctorAcceptOnNotUseCase {
   execute(
-    doctoId: string,
+    repId: string,
     notificationId: string,
     userId?: string
   ): Promise<string>;
