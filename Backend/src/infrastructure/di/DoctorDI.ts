@@ -130,7 +130,9 @@ const toggleInterestOnPostUseCase = new ToggleInterestOnPostUseCase(
   interestRepository,
   eventPublisher,
   notificationRepository,
-  productPostRepository
+  productPostRepository,
+  notificationEventPublisher,
+  storageService
 );
 
 const mutualConnectionsUseCase = new DoctorMutualConnectionsUseCase(

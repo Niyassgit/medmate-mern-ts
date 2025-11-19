@@ -10,9 +10,16 @@ import {
   SuccessMessages,
 } from "../../../shared/Messages";
 import { IEngagementEventPublisher } from "../../../domain/common/services/IEngagementEventPublisher";
-import { BadRequestError, NotFoundError, UnautharizedError } from "../../errors";
+import {
+  BadRequestError,
+  NotFoundError,
+  UnautharizedError,
+} from "../../errors";
 import { InterestResponseDTO } from "../dto/InterestResponseDTO";
 import { IToggleInterestOnPostUseCase } from "../interfaces/IToggleInterestOnPostUseCase";
+import { INotificationEventPublisher } from "../../../domain/common/services/INotificationEventPublisher";
+import { ANotificationMapper } from "../../notification/mappers/ANotificationMapper";
+import { IStorageService } from "../../../domain/common/services/IStorageService";
 
 export class ToggleInterestOnPostUseCase
   implements IToggleInterestOnPostUseCase
@@ -23,7 +30,9 @@ export class ToggleInterestOnPostUseCase
     private _interestRepository: IInterestRepository,
     private eventPublisher: IEngagementEventPublisher,
     private _notificationRepository: INotificationRepository,
-    private _productPostRepository: IProductPostRepository
+    private _productPostRepository: IProductPostRepository,
+    private _notificationEventPublisher: INotificationEventPublisher,
+    private _storageService: IStorageService
   ) {}
   async exectue(postId: string, userId?: string): Promise<InterestResponseDTO> {
     if (!userId) throw new UnautharizedError(ErrorMessages.UNAUTHORIZED);
@@ -57,21 +66,43 @@ export class ToggleInterestOnPostUseCase
     });
 
     if (result.interested) {
-      await this._notificationRepository.createNotification(
-        userId,
-        Role.DOCTOR,
-        repUserId,
-        Role.MEDICAL_REP,
-        NotificationType.INTEREST,
-        NotificationMessages.INTEREST_MESSAGE,
-        postId
+      const notification =
+        await this._notificationRepository.createNotification(
+          userId,
+          Role.DOCTOR,
+          repUserId,
+          Role.MEDICAL_REP,
+          NotificationType.INTEREST,
+          NotificationMessages.INTEREST_MESSAGE,
+          postId
+        );
+      const result = await this._notificationRepository.findNotificationById(
+        notification.id
       );
+      if (!result)
+        throw new NotFoundError(ErrorMessages.NOTIFICATION_NOT_FOUND);
+      const mappedNtfction = await ANotificationMapper.toDomain(
+        result,
+        this._storageService,
+        this._productPostRepository
+      );
+      await this._notificationEventPublisher.publishNotification({
+        ...mappedNtfction,
+        receiverUserId: repUserId,
+      });
     } else {
-      await this._notificationRepository.deleteLikeNotification(
-        userId,
-        repUserId,
-        postId
-      );
+      const deletedId =
+        await this._notificationRepository.deleteLikeNotification(
+          userId,
+          repUserId,
+          postId
+        );
+      if (deletedId) {
+        await this._notificationEventPublisher.deletePublishedNotification({
+          notificationId: deletedId,
+          receiverUserId: repUserId,
+        });
+      }
     }
     return {
       doctorId,
