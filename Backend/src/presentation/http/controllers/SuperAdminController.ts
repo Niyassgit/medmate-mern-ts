@@ -75,6 +75,7 @@ export class SuperAdminController {
       .status(HttpStatusCode.OK)
       .json({ success: true, data: reps, page, limit });
   };
+
   blockUser = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const updatedUser = await this._blockUserUseCase.execute(userId);
@@ -85,6 +86,7 @@ export class SuperAdminController {
       updatedUser,
     });
   };
+
   unBlockUser = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const updatedUser = await this._unblockUserUseCase.execute(userId);
@@ -95,16 +97,19 @@ export class SuperAdminController {
       updatedUser,
     });
   };
+
   doctorDetails = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const user = await this._getDoctorDetails.execute(userId);
     return res.status(HttpStatusCode.OK).json({ success: true, data: user });
   };
+
   repDetails = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const user = await this._getMedicalRepDetails.execute(userId);
     return res.status(HttpStatusCode.OK).json({ success: true, data: user });
   };
+
   territories = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const page = parseInt(req.query.page as string) || 1;
@@ -115,6 +120,7 @@ export class SuperAdminController {
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response,page,limit,search});
   };
+
   addTerritory = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const data = req.body as TerritorySchemaDTO;
@@ -123,6 +129,7 @@ export class SuperAdminController {
       .status(HttpStatusCode.CREATED)
       .json({ success: true, message: response });
   };
+
   editTerritory = async (req: Request, res: Response) => {
     const { territoryId } = req.params;
     const userId = req.user?.userId;
@@ -136,6 +143,7 @@ export class SuperAdminController {
       .status(HttpStatusCode.OK)
       .json({ success: true, message: response });
   };
+
   createDepartment = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const data = req.body as DepartmentSchemaDTO;
@@ -144,6 +152,7 @@ export class SuperAdminController {
       .status(HttpStatusCode.CREATED)
       .json({ succes: true, message: response });
   };
+
   departments = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const page = parseInt(req.query.page as string) || 1;
@@ -155,6 +164,7 @@ export class SuperAdminController {
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response ,page,limit});
   };
+  
   editDepartment = async (req: Request, res: Response) => {
     const { departmentId } = req.params;
     const userId = req.user?.userId;

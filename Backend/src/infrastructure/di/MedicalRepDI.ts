@@ -17,15 +17,24 @@ import { s3StorageService } from "../services/S3StorageService";
 import { ProductPostPresentationService } from "../../application/common/services/ProductPostPresentationService";
 import { GetNetworksUseCase } from "../../application/medicalRep/use-cases/GetNetworksUseCase";
 import { DoctorRepository } from "../repositories/DoctorRepository";
-import { MakeConnectionRequestUseCase } from "../../application/medicalRep/use-cases/MakeConnectionRequestUseCase";
+import { RepMakeConnectionRequestUseCase } from "../../application/connection/use-cases/RepMakeConnectionRequestUseCase";
 import { ConnectionRepository } from "../repositories/ConnectionRepository";
-import { AcceptingConnectionRequest } from "../../application/medicalRep/use-cases/AcceptConnectionRequestUseCase";
+import { DoctorAcceptConnectionRequestUseCase } from "../../application/connection/use-cases/DoctorAcceptConnectionRequestUseCase";
 import { GetRepAnalyticsUseCase } from "../../application/medicalRep/use-cases/GetRepAnalyticsUseCase";
 import { DepartmentRepository } from "../repositories/DepatmentRepository";
 import { TerritoryRepository } from "../repositories/TerritoryRepository";
 import { ArchivePostUseCase } from "../../application/productPost/use-case/ArchivePostUseCase";
 import { DeletePostUseCase } from "../../application/productPost/use-case/DeletePostUseCase";
 import { GetDoctorDetailsOnRepSideUseCase } from "../../application/medicalRep/use-cases/GetDoctorDetailsOnRepSideUseCase";
+import { RepMutualConnectionsUseCase } from "../../application/medicalRep/use-cases/RepMutualConnectionsUseCase";
+import { RepPendingConnectionsUseCase } from "../../application/medicalRep/use-cases/RepPendingConnectionsUseCase";
+import { NotificationRepository } from "../repositories/NotificationRepository";
+import { GetRepNotificationsUseCase } from "../../application/notification/use-cases/GetRepNotificationsUseCase";
+import { RepRejectConnectionUseCase } from "../../application/connection/use-cases/RepRejectConnectionUseCase";
+import { RepAcceptConnOnNotUseCase } from "../../application/connection/use-cases/RepAcceptConnOnNotUseCase";
+import { NotificationEventPublisher } from "../realtime/publishers/NotificationEventPublisher";
+import { MakeAllAsReadNotificationUseCase } from "../../application/notification/use-cases/MarkAllAsReadNotificationUseCase";
+import { MarkNotificationAsReadUseCase } from "../../application/notification/use-cases/MarkNotificationAsReadUseCase";
 
 const medicalRepRepository = new MedicalRepRepository();
 const doctorRepository = new DoctorRepository();
@@ -41,6 +50,8 @@ const productPostPresentationService = new ProductPostPresentationService(
 const connectionRepository = new ConnectionRepository();
 const departmentRepository = new DepartmentRepository();
 const territoryRepository = new TerritoryRepository();
+const notificationRepository = new NotificationRepository();
+const notificationEventPublisher = new NotificationEventPublisher();
 
 const createMedicalRepUseCase = new CreateMedicalRepUseCase(
   medicalRepRepository,
@@ -91,15 +102,19 @@ const getNetworksUseCase = new GetNetworksUseCase(
   storageService,
   connectionRepository
 );
-const makeConnectionRequestUseCase = new MakeConnectionRequestUseCase(
+const makeConnectionRequestUseCase = new RepMakeConnectionRequestUseCase(
   medicalRepRepository,
   doctorRepository,
-  connectionRepository
+  connectionRepository,
+  notificationRepository,
+  storageService,
+  notificationEventPublisher
 );
-const acceptConnectionRequestUseCase = new AcceptingConnectionRequest(
+const acceptConnectionRequestUseCase = new DoctorAcceptConnectionRequestUseCase(
   medicalRepRepository,
   doctorRepository,
-  connectionRepository
+  connectionRepository,
+  notificationRepository
 );
 const getRepAnalyticsUseCase = new GetRepAnalyticsUseCase(
   medicalRepRepository,
@@ -122,6 +137,45 @@ const doctorDetailsOnRepSideUseCase = new GetDoctorDetailsOnRepSideUseCase(
   storageService,
   connectionRepository
 );
+
+const mutualConnectionsUseCase = new RepMutualConnectionsUseCase(
+  medicalRepRepository,
+  connectionRepository,
+  storageService
+);
+
+const pendingConnectionsUseCase = new RepPendingConnectionsUseCase(
+  medicalRepRepository,
+  connectionRepository,
+  storageService
+);
+
+const getAllNotificationsUseCase = new GetRepNotificationsUseCase(
+  medicalRepRepository,
+  notificationRepository,
+  storageService,
+  productPostRepository
+);
+
+const rejectConnectionUseCase = new RepRejectConnectionUseCase(
+  medicalRepRepository,
+  connectionRepository,
+  notificationRepository
+);
+
+const acceptConnOnNotUseCase = new RepAcceptConnOnNotUseCase(
+  medicalRepRepository,
+  connectionRepository,
+  notificationRepository
+);
+
+const markAllNotificationsAsReadUseCase = new MakeAllAsReadNotificationUseCase(
+  notificationRepository
+);
+
+const markAsReadNotificationUseCase = new MarkNotificationAsReadUseCase(
+  notificationRepository
+);
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
   getRepProfileByIdUseCase,
@@ -138,4 +192,11 @@ export const medicalRepController = new MedicalRepController(
   archivePostUseCase,
   deletePostUseCase,
   doctorDetailsOnRepSideUseCase,
+  mutualConnectionsUseCase,
+  pendingConnectionsUseCase,
+  getAllNotificationsUseCase,
+  rejectConnectionUseCase,
+  acceptConnOnNotUseCase,
+  markAllNotificationsAsReadUseCase,
+  markAsReadNotificationUseCase
 );

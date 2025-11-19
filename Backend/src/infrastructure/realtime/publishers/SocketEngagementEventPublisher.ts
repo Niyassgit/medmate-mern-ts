@@ -1,5 +1,5 @@
 import { io } from "../SocketGateway";
-import { IEngagementEventPublisher } from "../../../application/common/interfaces/IEngagementEventPublisher";
+import { IEngagementEventPublisher } from "../../../domain/common/services/IEngagementEventPublisher";
 
 export class SocketEngagementEventPublisher
   implements IEngagementEventPublisher

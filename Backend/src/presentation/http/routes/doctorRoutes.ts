@@ -55,5 +55,26 @@ export class DoctorRoutes {
       "/feed/:postId/interest/toggle",
       doctorController.toggleInterest
     );
+    this.router.get(
+      "/analytics/mutual-connections/:userId",
+      doctorController.mutualConnections
+    );
+    this.router.get(
+      "/analytics/pending-connections/:userId",
+      doctorController.pendingConnections
+    );
+    this.router.get("/notifications/:userId", doctorController.notifications);
+    this.router.post(
+      "/notifications/connection/:notificationId/accept/:repId",
+      doctorController.acceptConnectionOnNot
+    );
+    this.router.patch(
+      "notifications/mark-as-read/:notificationId",
+      doctorController.markAsReadNotification
+    );
+    this.router.patch(
+      "notifications/mark-all-read/:userId",
+      doctorController.markAllAsReadNotification
+    );
   }
 }

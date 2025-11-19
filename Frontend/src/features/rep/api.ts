@@ -45,37 +45,80 @@ export const updatePost = async (id: string, formData: FormData) => {
     headers: { "Content-type": "multipart/form-data" },
   });
 };
-export const networks = async (id: string,search?:string,  filters?: { opTime?: string; ageRange?: number[] }) => {
+export const networks = async (
+  id: string,
+  search?: string,
+  filters?: { opTime?: string; ageRange?: number[] }
+) => {
   const params: Record<string, string> = {};
-   if (search) params.search = search;
-  if (filters?.opTime && filters.opTime !== "any") params.opTime = filters.opTime;
-    if (filters?.ageRange && filters.ageRange.length === 2) {
+  if (search) params.search = search;
+  if (filters?.opTime && filters.opTime !== "any")
+    params.opTime = filters.opTime;
+  if (filters?.ageRange && filters.ageRange.length === 2) {
     params.minAge = String(filters.ageRange[0]);
     params.maxAge = String(filters.ageRange[1]);
   }
-  const res = await api.get(RepEndpoints.NETWORKS(id),{params});
+  const res = await api.get(RepEndpoints.NETWORKS(id), { params });
   return res.data.data;
 };
 export const connectionToggle = async (id: string) => {
   return await api.post(RepEndpoints.CONNECTION_TOGGLE(id));
 };
-export const acceptConnection = async (id: string) => {
-  const res = await api.post(RepEndpoints.ACCEPT_REQUEST(id));
+export const acceptConnection = async (doctorId: string) => {
+  const res = await api.post(RepEndpoints.ACCEPT_REQUEST(doctorId));
   return res.data;
 };
-export const networkAnalytics=async(userId:string)=>{
-  const res=await api.get(RepEndpoints.NETWORK_ANALYTICS(userId));
+export const networkAnalytics = async (userId: string) => {
+  const res = await api.get(RepEndpoints.NETWORK_ANALYTICS(userId));
   return res.data;
-}
-export const archivePost=async(postId:string)=>{
-  const res=await api.patch(RepEndpoints.ARCHIVE_POST(postId));
+};
+export const archivePost = async (postId: string) => {
+  const res = await api.patch(RepEndpoints.ARCHIVE_POST(postId));
   return res.data;
-}
-export const deleteProductPost=async(postId:string)=>{
-   const res=await api.delete(RepEndpoints.DELETE_POST(postId));
-   return res.data;
-}
-export const doctorDetails=async(doctorId:string)=>{
-  const res=await api.get(RepEndpoints.DOCTOR_PROFILE(doctorId));
+};
+export const deleteProductPost = async (postId: string) => {
+  const res = await api.delete(RepEndpoints.DELETE_POST(postId));
   return res.data;
+};
+export const doctorDetails = async (doctorId: string) => {
+  const res = await api.get(RepEndpoints.DOCTOR_PROFILE(doctorId));
+  return res.data;
+};
+export const RepMutualConnections = async (userId: string) => {
+  const { data } = await api.get(RepEndpoints.MUTUAL_CONNECTIONS(userId));
+  return data.data;
+};
+export const RepPendingConnections = async (userId: string) => {
+  const { data } = await api.get(RepEndpoints.PENDING_CONNECITONS(userId));
+  return data.data;
+};
+export const getRepnotifications = async (userId: string) => {
+  const res = await api.get(RepEndpoints.NOTIFICATIONS(userId));
+  return res.data;
+};
+export const rejectRepsideConnectionRequest = async (
+  notificationId: string,
+  doctorId: string
+) => {
+  const res = await api.post(
+    RepEndpoints.REJECT_CONNECTION_REQUEST(notificationId, doctorId)
+  );
+  return res.data;
+};
+export const acceptFromNotification = async (
+  notificationId: string,
+  doctorId: string
+) => {
+  const res = await api.post(
+    RepEndpoints.ACCEPT_REQ_ON_NOTIFICATION_PAGE(notificationId, doctorId)
+  );
+  return res.data;
+};
+
+export const notificationMarkAsRead = async (notificationId:string) => {
+return await api.patch(RepEndpoints.MARK_AS_READ_NOTIFICATION(notificationId));
+};
+
+export const markAllNotificationsAsRead=async(userId:string)=>{
+   return await api.patch(RepEndpoints.MARK_ALL_NOT_AS_READ(userId));
 }

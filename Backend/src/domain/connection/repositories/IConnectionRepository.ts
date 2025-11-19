@@ -18,6 +18,7 @@ export interface IConnectionRepository {
     repId: string,
     status: ConnectionStatus
   ): Promise<IConnection>;
+  rejectConnectionByDoctorAndRepIds(doctorId:string,repId:string,status:ConnectionStatus):Promise<boolean>;
   deleteByDoctorAndRep(doctorId: string, repId: string): Promise<void>;
   findConnectionsForRep(repId: string): Promise<IConnection[]>;
   findConnectionsForDoctor(doctorId: string): Promise<IConnection[]>;

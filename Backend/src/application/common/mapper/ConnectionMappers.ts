@@ -3,6 +3,7 @@ import { IDepartmentRepository } from "../../../domain/department/repositories/I
 import { IDoctorListOnRep } from "../../../domain/doctor/entities/IDoctorListOnRep";
 import { IMedicalRepListOnDoc } from "../../../domain/medicalRep/entities/IMedicalRepListOnDoc";
 import { ITerritoryRepository } from "../../../domain/territory/ITerritoryRepository";
+import { ConnectionsListOnModalDTO} from "../../doctor/dto/MutualConnectionListDTO";
 import { RepListOnDoctorDTO } from "../../doctor/dto/RepListOnDoctorDTO";
 import { DoctorListOnRepDTO } from "../../medicalRep/dto/DoctorListOnRepDTO";
 
@@ -50,9 +51,7 @@ export class ConnectionMappers {
     return Promise.all(
       connections.map(async (doctor) => {
         const department = doctor.departmentId
-          ? await departmentRepo.getDepartmentName(
-              doctor.departmentId
-            )
+          ? await departmentRepo.getDepartmentName(doctor.departmentId)
           : null;
         const territory = doctor.territoryId
           ? await territoryRepo.getTerritoryName(doctor.territoryId)
@@ -69,20 +68,45 @@ export class ConnectionMappers {
       })
     );
   }
-   
-  static enrichConnectionForDoctor(connections:IMedicalRepListOnDoc[],departmentRepo:IDepartmentRepository,storageService:IStorageService){
+
+  static enrichConnectionForDoctor(
+    connections: IMedicalRepListOnDoc[],
+    departmentRepo: IDepartmentRepository,
+    storageService: IStorageService
+  ) {
     return Promise.all(
-         connections.map(async (rep) => {
+      connections.map(async (rep) => {
         const department = rep.departmentId
           ? await departmentRepo.getDepartmentName(rep.departmentId)
           : null;
-        const profileImage=rep.image ? await storageService.generateSignedUrl(rep.image):null;
+        const profileImage = rep.image
+          ? await storageService.generateSignedUrl(rep.image)
+          : null;
         return {
           ...rep,
           departmentName: department ?? "",
-          image:profileImage,
+          image: profileImage,
         };
       })
-    )
+    );
   }
+ static async toConnectionListModal(
+  connections: IMedicalRepListOnDoc[] | IDoctorListOnRep[],
+  storageService: IStorageService
+): Promise<ConnectionsListOnModalDTO[]> {
+  return Promise.all(
+    connections.map(async (user) => {
+      let signedUrl: string | null = null;
+      if (user.image) {
+        signedUrl = await storageService.generateSignedUrl(user.image);
+      }
+      return {
+        id: user.id,
+        name: user.name,
+        profileImage: signedUrl,
+      };
+    })
+  );
+}
+
 }

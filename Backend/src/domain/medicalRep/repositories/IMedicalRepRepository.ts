@@ -6,18 +6,24 @@ export interface IMedicalRepRepository {
   createMedicalRep(
     data: Omit<IMedicalRep, "id" | "createdAt" | "updatedAt">
   ): Promise<IMedicalRep>;
-  existById(id:string):Promise<boolean>;
-  getRepIdByUserId(userId:string):Promise<{repId:string|null}>;
+  existById(id: string): Promise<boolean>;
+  getRepIdByUserId(userId: string): Promise<{ repId: string | null }>;
   getMedicalRepById(id: string): Promise<IMedicalRepWithUser | null>;
   getMedicalRepByEmail(email: string): Promise<IMedicalRep | null>;
   getAllMedicalReps(
     page: number,
     limit: number,
-    search:string,
+    search: string
   ): Promise<{ reps: IRepListItem[]; total: number }>;
-  findMedicalRepIdByUserId(userId:string):Promise<string | null>;
-  getMedicalRepByUserId(id:string):Promise<IMedicalRepWithUser | null>;
-  completeProfile(userId:string,data:Partial<IMedicalRep>):Promise<IMedicalRep | null>;
-  findByTerritoryAndDepartment(territoryId:string | null,departmentId:string | null):Promise<IMedicalRepWithUser[]>;
-  
+  findMedicalRepIdByUserId(userId: string): Promise<string | null>;
+  getMedicalRepByUserId(id: string): Promise<IMedicalRepWithUser | null>;
+  completeProfile(
+    userId: string,
+    data: Partial<IMedicalRep>
+  ): Promise<IMedicalRep | null>;
+  findByTerritoryAndDepartment(
+    territoryId: string | null,
+    departmentId: string | null
+  ): Promise<IMedicalRepWithUser[]>;
+  getUserIdByRepId(repId: string): Promise<{ repUserId: string | null }>;
 }

@@ -11,9 +11,9 @@ import { CompleteProfileUseCase } from "../../application/doctor/use-cases/Compl
 import { s3StorageService } from "../services/S3StorageService";
 import { NetworksUseCase } from "../../application/doctor/use-cases/NetworksUseCase";
 import { MedicalRepRepository } from "../repositories/MedicalRepRepository";
-import { ConnectionRequestUseCase } from "../../application/doctor/use-cases/ConnectionRequestUseCase";
+import { DoctorConnectionRequestUseCase } from "../../application/connection/use-cases/DoctorConnectionRequestUseCase";
 import { ConnectionRepository } from "../repositories/ConnectionRepository";
-import { AcceptConnectionRequestUseCase } from "../../application/doctor/use-cases/AcceptConnectionRequestUseCase";
+import { RepAcceptingConnectionRequest } from "../../application/connection/use-cases/RepAcceptConnectionRequestUseCase";
 import { DoctorAnalyticsUseCase } from "../../application/doctor/use-cases/DoctorAnalyticsUseCase";
 import { DepartmentRepository } from "../repositories/DepatmentRepository";
 import { GetFeedUseCase } from "../../application/doctor/use-cases/GetFeedUseCase";
@@ -25,6 +25,15 @@ import { LikeRepository } from "../repositories/LikeRepository";
 import { SocketEngagementEventPublisher } from "../realtime/publishers/SocketEngagementEventPublisher";
 import { InterestRepository } from "../repositories/InterestRepostory";
 import { ToggleInterestOnPostUseCase } from "../../application/interest/use-cases/ToggleInterestOnPostUseCase";
+import { DoctorMutualConnectionsUseCase } from "../../application/doctor/use-cases/DoctorMutualConnectionsUseCase";
+import { DoctorPendingConnectionsUseCase } from "../../application/doctor/interfaces/DoctorPendingConectionsUseCase";
+import { NotificationRepository } from "../repositories/NotificationRepository";
+import { GetDoctorNotificationsUseCase } from "../../application/notification/use-cases/GetDoctorNotificationsUseCase";
+import { DoctorRejectConnectionUseCase } from "../../application/connection/use-cases/DoctorRejectConnectionUseCase";
+import { DoctorAcceptOnNotUseCase } from "../../application/connection/use-cases/DoctorAcceptOnNotUseCase";
+import { NotificationEventPublisher } from "../realtime/publishers/NotificationEventPublisher";
+import { MakeAllAsReadNotificationUseCase } from "../../application/notification/use-cases/MarkAllAsReadNotificationUseCase";
+import { MarkNotificationAsReadUseCase } from "../../application/notification/use-cases/MarkNotificationAsReadUseCase";
 
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
@@ -39,6 +48,9 @@ const productPostRepository = new ProductPostRepository();
 const likeRepository = new LikeRepository();
 const interestRepository = new InterestRepository();
 const eventPublisher = new SocketEngagementEventPublisher();
+const notificationRepository = new NotificationRepository();
+const notificationEventPublisher = new NotificationEventPublisher();
+
 const createDoctorUseCase = new CreateDoctorUseCase(
   doctorRepository,
   bycryptServices,
@@ -66,15 +78,19 @@ const networkUseCase = new NetworksUseCase(
   storageService,
   connectionRepository
 );
-const connectionRequestUseCase = new ConnectionRequestUseCase(
+const connectionRequestUseCase = new DoctorConnectionRequestUseCase(
   doctorRepository,
   medicalRepRepository,
-  connectionRepository
+  connectionRepository,
+  notificationRepository,
+  notificationEventPublisher,
+  storageService
 );
-const acceptConnectionRequestUseCase = new AcceptConnectionRequestUseCase(
+const acceptConnectionRequestUseCase = new RepAcceptingConnectionRequest(
   medicalRepRepository,
   doctorRepository,
-  connectionRepository
+  connectionRepository,
+  notificationRepository
 );
 const analyticsUsecase = new DoctorAnalyticsUseCase(
   doctorRepository,
@@ -104,14 +120,60 @@ const getRepDetailsOnDoctorUseCase = new GetRepDetailsOnDoctorUseCase(
 );
 const toggleLikeOnPostUseCase = new ToggleLikeOnPostUseCase(
   doctorRepository,
+  medicalRepRepository,
   likeRepository,
-  eventPublisher
+  eventPublisher,
+  notificationRepository,
+  productPostRepository,
+  notificationEventPublisher,
+  storageService
 );
 const toggleInterestOnPostUseCase = new ToggleInterestOnPostUseCase(
   doctorRepository,
+  medicalRepRepository,
   interestRepository,
-  eventPublisher
+  eventPublisher,
+  notificationRepository,
+  productPostRepository,
+  notificationEventPublisher,
+  storageService
+);
 
+const mutualConnectionsUseCase = new DoctorMutualConnectionsUseCase(
+  doctorRepository,
+  connectionRepository,
+  storageService
+);
+
+const pendingConnectionsUseCase = new DoctorPendingConnectionsUseCase(
+  doctorRepository,
+  connectionRepository,
+  storageService
+);
+const getDoctorNotificationsUseCase = new GetDoctorNotificationsUseCase(
+  doctorRepository,
+  notificationRepository,
+  storageService
+);
+const rejectConnectionUseCase = new DoctorRejectConnectionUseCase(
+  doctorRepository,
+  connectionRepository,
+  notificationRepository
+);
+
+const acceptConnOnNotificationPage = new DoctorAcceptOnNotUseCase(
+  doctorRepository,
+  notificationRepository,
+  medicalRepRepository,
+  connectionRepository
+);
+
+const markAllNotificationAsReadedUseCase = new MakeAllAsReadNotificationUseCase(
+  notificationRepository
+);
+
+const markNotificationAsReadUseCase = new MarkNotificationAsReadUseCase(
+  notificationRepository
 );
 export const doctorController = new DoctorController(
   createDoctorUseCase,
@@ -126,5 +188,12 @@ export const doctorController = new DoctorController(
   postDetailsUseCase,
   getRepDetailsOnDoctorUseCase,
   toggleLikeOnPostUseCase,
-  toggleInterestOnPostUseCase
+  toggleInterestOnPostUseCase,
+  mutualConnectionsUseCase,
+  pendingConnectionsUseCase,
+  getDoctorNotificationsUseCase,
+  rejectConnectionUseCase,
+  acceptConnOnNotificationPage,
+  markAllNotificationAsReadedUseCase,
+  markNotificationAsReadUseCase
 );

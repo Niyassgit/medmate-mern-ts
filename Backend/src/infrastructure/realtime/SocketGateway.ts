@@ -5,6 +5,7 @@ import { env } from "../config/env";
 import { UnautharizedError } from "../../application/errors";
 import { ErrorMessages } from "../../shared/Messages";
 import { AuthenticatedSocket, AuthenticatedUser } from "../types/SocketTypes";
+import { JwtPayload } from "../../domain/common/types/JwtPayload";
 import logger from "../logger/Logger";
 
 export let io: Server;
@@ -23,7 +24,11 @@ export function initSocket(server: HttpServer) {
       if (!token) {
         return next(new UnautharizedError(ErrorMessages.UNAUTHORIZED));
       }
-      const user = jwt.verify(token, env.access_token) as AuthenticatedUser;
+      const payload = jwt.verify(token, env.access_token) as JwtPayload;
+      const user: AuthenticatedUser = {
+        id: payload.userId,
+        role: payload.role as AuthenticatedUser["role"],
+      };
       socket.user = user;
       next();
     } catch (error) {
@@ -38,11 +43,12 @@ export function initSocket(server: HttpServer) {
       return;
     }
     void socket.join(`user:${user.id}`);
+
     socket.on("room:join:product", ({ productId }: { productId: string }) => {
-     void socket.join(`product:${productId}`);
+      void socket.join(`product:${productId}`);
     });
     socket.on("room:leave:product", ({ productId }: { productId: string }) => {
-     void socket.leave(`product:${productId}`);
+      void socket.leave(`product:${productId}`);
     });
   });
   return io;

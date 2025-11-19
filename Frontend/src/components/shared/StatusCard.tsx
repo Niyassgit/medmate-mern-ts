@@ -7,11 +7,26 @@ interface StatsCardProps {
   description: string;
   icon: LucideIcon;
   iconColor: string;
+  onClick?: () => void;
 }
 
-const StatsCard = ({ title, value, description, icon: Icon, iconColor }: StatsCardProps) => {
+const StatsCard = ({ title, value, description, icon: Icon, iconColor, onClick }: StatsCardProps) => {
+  const isClickable = typeof onClick === "function";
+
   return (
-    <Card className="p-6 hover:shadow-md transition-shadow">
+    <Card
+      role={isClickable ? "button" : undefined}
+      tabIndex={isClickable ? 0 : undefined}
+      onClick={onClick}
+      onKeyDown={(e) => {
+        if (!isClickable) return;
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onClick?.();
+        }
+      }}
+      className={`p-6 transition-shadow ${isClickable ? "cursor-pointer hover:shadow-md" : ""}`}
+    >
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm text-muted-foreground mb-2">{title}</p>

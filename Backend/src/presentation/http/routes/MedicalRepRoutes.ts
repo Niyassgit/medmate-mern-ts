@@ -87,5 +87,33 @@ export class MedicalRepRoutes {
       "/doctor/details/:doctorId",
       medicalRepController.doctorDetails
     );
+    this.router.get(
+      "/analytics/mutual-connections/:userId",
+      medicalRepController.mutualConnections
+    );
+    this.router.get(
+      "/analytics/pending-connections/:userId",
+      medicalRepController.pendingConnections
+    );
+    this.router.get(
+      "/notifications/:userId",
+      medicalRepController.notifications
+    );
+    this.router.post(
+      "/notifications/connection/:notificationId/reject/:doctorId",
+      medicalRepController.rejectConnection
+    );
+    this.router.post(
+      "/notifications/connection/:notificationId/accept/:doctorId",
+      medicalRepController.requestAccept
+    );
+    this.router.patch(
+      "/notifications/mark-as-read/:notificationId",
+      medicalRepController.markAsReadNotification
+    );
+    this.router.patch(
+      "/notifications/mark-all-read/:userId",
+      medicalRepController.markAllAsReadNotifications
+    );
   }
 }

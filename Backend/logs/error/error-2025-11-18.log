@@ -1,0 +1,63 @@
+[2025-11-18 10:41:47] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-18 10:44:07] [31merror[39m: [31m🔥 Unhandled Error:User not found[39m
+[2025-11-18 10:44:14] [31merror[39m: [31m🔥 Unhandled Error:User not found[39m
+[2025-11-18 10:45:13] [31merror[39m: [31m🔥 Unhandled Error:User not found[39m
+[2025-11-18 11:11:12] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-18 11:11:17] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-18 11:11:23] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-18 11:11:33] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-18 11:11:44] [31merror[39m: [31mFailed to start server:Missing parameter name at 50: https://git.new/pathToRegexpError[39m
+[2025-11-18 14:29:27] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `this.model.create()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\database\BaseRepository.ts:32:36[39m
+
+[31m  29 }[39m
+[31m  30 [39m
+[31m  31 async create(data: TCreateInput): Promise<TDomain> {[39m
+[31m→ 32 const created = await this.model.create([39m
+[31mAn operation failed because it depends on one or more records that were required but not found. No 'User' record (needed to inline the relation on 'Notification' record(s)) was found for a nested connect on one-to-many relation 'SentNotifications'.[39m
+[2025-11-18 14:30:29] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `this.model.create()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\database\BaseRepository.ts:32:36[39m
+
+[31m  29 }[39m
+[31m  30 [39m
+[31m  31 async create(data: TCreateInput): Promise<TDomain> {[39m
+[31m→ 32 const created = await this.model.create([39m
+[31mAn operation failed because it depends on one or more records that were required but not found. No 'User' record (needed to inline the relation on 'Notification' record(s)) was found for a nested connect on one-to-many relation 'SentNotifications'.[39m
+[2025-11-18 14:40:29] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `this.model.create()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\database\BaseRepository.ts:32:36[39m
+
+[31m  29 }[39m
+[31m  30 [39m
+[31m  31 async create(data: TCreateInput): Promise<TDomain> {[39m
+[31m→ 32 const created = await this.model.create([39m
+[31mAn operation failed because it depends on one or more records that were required but not found. No 'User' record (needed to inline the relation on 'Notification' record(s)) was found for a nested connect on one-to-many relation 'SentNotifications'.[39m
+[2025-11-18 14:41:01] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `this.model.create()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\database\BaseRepository.ts:32:36[39m
+
+[31m  29 }[39m
+[31m  30 [39m
+[31m  31 async create(data: TCreateInput): Promise<TDomain> {[39m
+[31m→ 32 const created = await this.model.create([39m
+[31mAn operation failed because it depends on one or more records that were required but not found. No 'User' record (needed to inline the relation on 'Notification' record(s)) was found for a nested connect on one-to-many relation 'SentNotifications'.[39m
+[2025-11-18 16:54:14] [31merror[39m: [31m🔥 Unhandled Error:[39m
+[31mInvalid `this.model.create()` invocation in[39m
+[31mC:\Users\Niyas\OneDrive\Desktop\MedMate\Backend\src\infrastructure\database\BaseRepository.ts:32:36[39m
+
+[31m  29 }[39m
+[31m  30 [39m
+[31m  31 async create(data: TCreateInput): Promise<TDomain> {[39m
+[31m→ 32 const created = await this.model.create([39m
+[31mAn operation failed because it depends on one or more records that were required but not found. No 'User' record (needed to inline the relation on 'Notification' record(s)) was found for a nested connect on one-to-many relation 'SentNotifications'.[39m
+[2025-11-18 17:25:48] [31merror[39m: [31m🔥 Unhandled Error:this._interestRepository.toggleInterest is not a function[39m
+[2025-11-18 18:00:53] [31merror[39m: [31m🔥 Unhandled Error:storageService.generateSignedUrl is not a function[39m
+[2025-11-18 18:00:53] [31merror[39m: [31m🔥 Unhandled Error:storageService.generateSignedUrl is not a function[39m
+[2025-11-18 18:01:29] [31merror[39m: [31m🔥 Unhandled Error:storageService.generateSignedUrl is not a function[39m
+[2025-11-18 18:01:29] [31merror[39m: [31m🔥 Unhandled Error:storageService.generateSignedUrl is not a function[39m
+[2025-11-18 18:03:35] [31merror[39m: [31m🔥 Unhandled Error:storageService.generateSignedUrl is not a function[39m
+[2025-11-18 18:03:35] [31merror[39m: [31m🔥 Unhandled Error:storageService.generateSignedUrl is not a function[39m
+[2025-11-18 18:08:32] [31merror[39m: [31m🔥 Unhandled Error:productPostRepository?.findPostById is not a function[39m
+[2025-11-18 18:08:32] [31merror[39m: [31m🔥 Unhandled Error:productPostRepository?.findPostById is not a function[39m

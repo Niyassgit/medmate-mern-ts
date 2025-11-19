@@ -34,3 +34,5 @@
 [31m  30 async findById(userId: string) {[39m
 [31m→ 31 const entity = await this.model.findUnique([39m
 [31mError in connector: Error creating a database connection. (Kind: An error occurred during DNS resolution: proto error: io error: A socket operation was attempted to an unreachable network. (os error 10051), labels: {})[39m
+[2025-11-12 15:25:16] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-12 15:25:25] [31merror[39m: [31mFailed to start server:argument handler is required[39m

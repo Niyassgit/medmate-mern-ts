@@ -1,0 +1,37 @@
+[2025-11-17 10:39:06] [31merror[39m: [31m🔥 Unhandled Error:this._medicalRepRepository.getRepIdByUserId is not a function[39m
+[2025-11-17 10:39:06] [31merror[39m: [31m🔥 Unhandled Error:this._medicalRepRepository.getRepIdByUserId is not a function[39m
+[2025-11-17 11:15:41] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-17 11:15:50] [31merror[39m: [31mFailed to start server:Missing parameter name at 21: https://git.new/pathToRegexpError[39m
+[2025-11-17 11:16:08] [31merror[39m: [31mFailed to start server:argument handler must be a function[39m
+[2025-11-17 12:51:18] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-17 12:51:22] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-17 12:51:32] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-17 12:52:03] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-17 12:52:05] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-17 12:52:19] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-17 17:21:03] [31merror[39m: [31m🔥 Unhandled Error:User not found[39m
+[2025-11-17 17:22:24] [31merror[39m: [31m🔥 Unhandled Error:User not found[39m
+[2025-11-17 17:23:10] [31merror[39m: [31m🔥 Unhandled Error:User not found[39m
+[2025-11-17 17:46:05] [31merror[39m: [31m🔥 Unhandled Error:User not found[39m
+[2025-11-17 18:53:16] [31merror[39m: [31m🔥 Unhandled Error:User not found[39m
+[2025-11-17 19:12:01] [31merror[39m: [31mFailed to start server:Missing parameter name at 41: https://git.new/pathToRegexpError[39m
+[2025-11-17 19:12:55] [31merror[39m: [31mFailed to start server:Missing parameter name at 41: https://git.new/pathToRegexpError[39m
+[2025-11-17 19:46:01] [31merror[39m: [31mFailed to start server:Missing parameter name at 43: https://git.new/pathToRegexpError[39m
+[2025-11-17 19:46:07] [31merror[39m: [31mFailed to start server:Missing parameter name at 50: https://git.new/pathToRegexpError[39m
+[2025-11-17 20:09:23] [31merror[39m: [31m🔥 Unhandled Error:User not found[39m
+[2025-11-17 20:19:34] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-17 20:19:37] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-17 20:19:42] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-17 20:19:50] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-17 20:20:11] [31merror[39m: [31mFailed to start server:Missing parameter name at 27: https://git.new/pathToRegexpError[39m
+[2025-11-17 20:20:18] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-17 20:20:21] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-17 20:20:33] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-17 20:20:36] [31merror[39m: [31mFailed to start server:Missing parameter name at 50: https://git.new/pathToRegexpError[39m
+[2025-11-17 20:22:57] [31merror[39m: [31m🔥 Unhandled Error:User not found[39m
+[2025-11-17 20:32:10] [31merror[39m: [31mFailed to start server:argument handler must be a function[39m
+[2025-11-17 20:39:38] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-17 20:39:52] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-17 20:40:07] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-17 21:28:08] [31merror[39m: [31m🔥 Unhandled Error:User not found[39m
+[2025-11-17 21:45:35] [31merror[39m: [31m🔥 Unhandled Error:No connection found![39m
