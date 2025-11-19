@@ -9,7 +9,7 @@ import {
   NotificationMessages,
   SuccessMessages,
 } from "../../../shared/Messages";
-import { IEngagementEventPublisher } from "../../common/interfaces/IEngagementEventPublisher";
+import { IEngagementEventPublisher } from "../../../domain/common/services/IEngagementEventPublisher";
 import { BadRequestError, NotFoundError, UnautharizedError } from "../../errors";
 import { InterestResponseDTO } from "../dto/InterestResponseDTO";
 import { IToggleInterestOnPostUseCase } from "../interfaces/IToggleInterestOnPostUseCase";

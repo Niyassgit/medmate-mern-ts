@@ -9,13 +9,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useNavigate } from "react-router-dom";
-
-export type NotificationType =
-  | "CONNECTION_REQUEST"
-  | "CONNECTION_ACCEPTED"
-  | "CONNECTION_REJECTED"
-  | "LIKE"
-  | "INTEREST";
+import { NotificationType } from "@/types/Types";
 
 interface NotificationItemProps {
   id: string;
@@ -141,6 +135,7 @@ export const NotificationItem = ({
       </Avatar>
 
       <div className="flex-1 min-w-0 flex items-start justify-between gap-4">
+        {/* LEFT CONTENT */}
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2">
             <div className="flex items-center gap-2">
@@ -167,19 +162,12 @@ export const NotificationItem = ({
             {content}
           </p>
 
-          {(type === "LIKE" || type === "INTEREST") && postImage && (
-            <img
-              src={postImage}
-              alt="Post thumbnail"
-              className="w-14 h-14 rounded-md mt-3 object-cover border border-border"
-            />
-          )}
-
           <p className="text-muted-foreground text-xs mt-2">{timestamp}</p>
         </div>
 
-        {/* 🔥 ACTION UI MOVED TO THE RIGHT */}
-        <div className="flex-shrink-0 flex items-center">
+        {/* RIGHT-SIDE ACTIONS + IMAGE */}
+        <div className="flex-shrink-0 flex flex-col items-end justify-between gap-3 ml-3">
+          {/* connection actions */}
           {(() => {
             switch (type) {
               case "CONNECTION_REQUEST":
@@ -222,6 +210,16 @@ export const NotificationItem = ({
                 return null;
             }
           })()}
+
+          {/* 🔥 POST IMAGE — NOW ON THE RIGHT SIDE */}
+          {(type === "LIKE" || type === "INTEREST") && postImage && (
+            <img
+              src={postImage}
+              alt="Post thumbnail"
+              className="w-14 h-14 rounded-md object-cover border border-border"
+              onClick={()=>navigate(`/rep/notifications/post-details/${postId}`)}
+            />
+          )}
         </div>
       </div>
     </div>

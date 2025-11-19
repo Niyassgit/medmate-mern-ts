@@ -31,6 +31,7 @@ import { NotificationRepository } from "../repositories/NotificationRepository";
 import { GetDoctorNotificationsUseCase } from "../../application/notification/use-cases/GetDoctorNotificationsUseCase";
 import { DoctorRejectConnectionUseCase } from "../../application/connection/use-cases/DoctorRejectConnectionUseCase";
 import { DoctorAcceptOnNotUseCase } from "../../application/connection/use-cases/DoctorAcceptOnNotUseCase";
+import { NotificationEventPublisher } from "../realtime/publishers/NotificationEventPublisher";
 
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
@@ -46,6 +47,7 @@ const likeRepository = new LikeRepository();
 const interestRepository = new InterestRepository();
 const eventPublisher = new SocketEngagementEventPublisher();
 const notificationRepository = new NotificationRepository();
+const notificationEventPublisher =new NotificationEventPublisher();
 
 const createDoctorUseCase = new CreateDoctorUseCase(
   doctorRepository,
@@ -119,6 +121,8 @@ const toggleLikeOnPostUseCase = new ToggleLikeOnPostUseCase(
   eventPublisher,
   notificationRepository,
   productPostRepository,
+  notificationEventPublisher,
+  storageService
 );
 const toggleInterestOnPostUseCase = new ToggleInterestOnPostUseCase(
   doctorRepository,

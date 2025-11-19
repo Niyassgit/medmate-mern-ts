@@ -103,9 +103,32 @@ export class NotificationRepository
     senderId: string,
     receiverId: string,
     postId: string
-  ): Promise<void> {
-    await prisma.notification.deleteMany({
+  ): Promise<string | null> {
+    const notification= await prisma.notification.findFirst({
       where: { senderId, receiverId, postId },
+      select:{id:true},
     });
+    if(!notification) return null;
+    await this.delete(notification.id);
+    return notification.id;
+  }
+
+  async findNotificationById(
+    id: string
+  ): Promise<INotificationWithUser | null> {
+    const result = await prisma.notification.findFirst({
+      where: { id },
+      include: {
+        sender: {
+          select: {
+            id: true,
+            profileImage: true,
+            doctor: { select: { name: true, id: true } },
+            medicalRep: { select: { name: true, id: true } },
+          },
+        },
+      },
+    });
+    return result? NotificationMapper.toDomainWithUser(result):null;
   }
 }

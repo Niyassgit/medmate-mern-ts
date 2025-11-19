@@ -1,34 +1,17 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  NotificationItem,
-  NotificationType,
-} from "../../../components/shared/NotificationItem";
+import { NotificationItem } from "../../../components/shared/NotificationItem";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useFetchItem from "@/hooks/useFetchItem";
 import { useSelector } from "react-redux";
 import {
   acceptConnOnNotificationPage,
-  acceptRequest,
   getDoctorNotifications,
   rejectdocConnectionRequest,
 } from "../api";
 import { SpinnerButton } from "@/components/shared/SpinnerButton";
 import toast from "react-hot-toast";
-
-interface Notification {
-  id: string;
-  type: NotificationType;
-  content: string;
-  isRead: boolean;
-  createdAt: Date;
-  roleId: string;
-  user: {
-    id: string;
-    name: string;
-    profileImage?: string;
-  };
-}
+import { Notification } from "@/components/Dto/Notification";
 
 const Notifications = () => {
   const [filter, setFilter] = useState<
@@ -88,17 +71,15 @@ const Notifications = () => {
     );
   };
 
-  const ConnectionAccept = async (notificationId:string,roleId: string) => {
+  const ConnectionAccept = async (notificationId: string, roleId: string) => {
     try {
-      const res = await acceptConnOnNotificationPage(notificationId,roleId);
+      const res = await acceptConnOnNotificationPage(notificationId, roleId);
       if (res.success) {
         toast.success(res.message || "Connection request accepted");
 
         setLocalNotifications((prev) =>
           prev.map((n) =>
-            n.roleId === roleId
-              ? { ...n, type: "CONNECTION_ACCEPTED" }
-              : n
+            n.roleId === roleId ? { ...n, type: "CONNECTION_ACCEPTED" } : n
           )
         );
       } else {
@@ -117,9 +98,7 @@ const Notifications = () => {
 
         setLocalNotifications((prev) =>
           prev.map((n) =>
-            n.id === notificationId
-              ? { ...n, type: "CONNECTION_REJECTED" }
-              : n
+            n.id === notificationId ? { ...n, type: "CONNECTION_REJECTED" } : n
           )
         );
       } else {

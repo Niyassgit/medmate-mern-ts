@@ -1,9 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  NotificationItem,
-  NotificationType,
-} from "@/components/shared/NotificationItem";
+import { NotificationItem } from "@/components/shared/NotificationItem";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useFetchItem from "@/hooks/useFetchItem";
 import { useSelector } from "react-redux";
@@ -14,24 +11,11 @@ import {
 } from "../api";
 import { SpinnerButton } from "@/components/shared/SpinnerButton";
 import toast from "react-hot-toast";
-
-interface Notification {
-  id: string;
-  type: NotificationType;
-  content: string;
-  isRead: boolean;
-  createdAt: Date;
-  roleId: string;
-  postId: string;
-  postImage: string;
-  user: {
-    id: string;
-    name: string;
-    profileImage?: string;
-  };
-}
+import { Notification } from "@/components/Dto/Notification";
+import { getSocket } from "@/lib/socket";
 
 const Notifications = () => {
+  const token = useMemo(() => localStorage.getItem("accessToken"), []);
   const [filter, setFilter] = useState<
     "all" | "unread" | "updates" | "approvals"
   >("all");
@@ -126,6 +110,21 @@ const Notifications = () => {
       toast.error(error.message || "Internal error");
     }
   };
+  useEffect(() => {
+    if (!token || !id) return;
+    const socket = getSocket(token);
+    socket.on("notification:new", (data) => {
+      setLocalNotifications((prev) => [data, ...prev]);
+    });
+     
+    socket.on("notification:deleted",({id})=>{
+      setLocalNotifications((prev)=>prev.filter((n)=>n.id!== id));
+    })
+    return () => {
+      socket.off("notification:new");
+      socket.off("notification:deleted");
+    };
+  }, [token,id]);
 
   if (loading) return <SpinnerButton />;
   if (error)
@@ -178,7 +177,7 @@ const Notifications = () => {
                 timestamp={notification.createdAt.toLocaleString()}
                 isRead={notification.isRead}
                 viewerRole="MEDICAL_REP"
-                postId={notification.postId} 
+                postId={notification.postId}
                 postImage={notification.postImage}
                 onClick={() => markAsRead(notification.id)}
                 onAccept={ConnectionAccept}

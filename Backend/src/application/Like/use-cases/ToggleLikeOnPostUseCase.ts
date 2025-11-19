@@ -9,7 +9,7 @@ import {
   NotificationMessages,
   SuccessMessages,
 } from "../../../shared/Messages";
-import { IEngagementEventPublisher } from "../../common/interfaces/IEngagementEventPublisher";
+import { IEngagementEventPublisher } from "../../../domain/common/services/IEngagementEventPublisher";
 import {
   BadRequestError,
   NotFoundError,
@@ -17,6 +17,9 @@ import {
 } from "../../errors";
 import { LikedResponseDTO } from "../dto/LikedResponseDTO";
 import { IToggleLikeOnPostUseCase } from "../interfaces/IToggleLikeOnPostUseCase";
+import { INotificationEventPublisher } from "../../../domain/common/services/INotificationEventPublisher";
+import { ANotificationMapper } from "../../notification/mappers/ANotificationMapper";
+import { IStorageService } from "../../../domain/common/services/IStorageService";
 
 export class ToggleLikeOnPostUseCase implements IToggleLikeOnPostUseCase {
   constructor(
@@ -25,7 +28,9 @@ export class ToggleLikeOnPostUseCase implements IToggleLikeOnPostUseCase {
     private _likeRepository: ILikeRepository,
     private _eventPublisher: IEngagementEventPublisher,
     private _notificationRepository: INotificationRepository,
-    private _productPostRepository: IProductPostRepository
+    private _productPostRepository: IProductPostRepository,
+    private _notificationEventPublisher: INotificationEventPublisher,
+    private _storageService: IStorageService
   ) {}
   async execute(postId: string, userId?: string): Promise<LikedResponseDTO> {
     if (!userId) throw new UnautharizedError(ErrorMessages.UNAUTHORIZED);
@@ -42,8 +47,10 @@ export class ToggleLikeOnPostUseCase implements IToggleLikeOnPostUseCase {
       postId
     );
     if (!repId) throw new BadRequestError(ErrorMessages.POST_NOT_FOUND);
-    const { repUserId } = await this._medicalRepRepository.getUserIdByRepId(repId);
-    if(!repUserId) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
+    const { repUserId } = await this._medicalRepRepository.getUserIdByRepId(
+      repId
+    );
+    if (!repUserId) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
     await this._eventPublisher.publishLikeToggled({
       productId: postId,
       doctorId,
@@ -51,21 +58,43 @@ export class ToggleLikeOnPostUseCase implements IToggleLikeOnPostUseCase {
       totalLikes,
     });
     if (result.liked) {
-      await this._notificationRepository.createNotification(
-        userId,
-        Role.DOCTOR,
-        repUserId,
-        Role.MEDICAL_REP,
-        NotificationType.LIKE,
-        NotificationMessages.LIKE_MESSAGE,
-        postId
+      const notification =
+        await this._notificationRepository.createNotification(
+          userId,
+          Role.DOCTOR,
+          repUserId,
+          Role.MEDICAL_REP,
+          NotificationType.LIKE,
+          NotificationMessages.LIKE_MESSAGE,
+          postId
+        );
+      const result = await this._notificationRepository.findNotificationById(
+        notification.id
       );
+      if (!result)
+        throw new NotFoundError(ErrorMessages.NOTIFICATION_NOT_FOUND);
+      const mappedNtfction = await ANotificationMapper.toDomain(
+        result,
+        this._storageService,
+        this._productPostRepository
+      );
+      await this._notificationEventPublisher.publishNotification({
+        ...mappedNtfction,
+        receiverUserId: repUserId,
+      });
     } else {
-      await this._notificationRepository.deleteLikeNotification(
-        userId,
-        repUserId,
-        postId
-      );
+      const deletedId =
+        await this._notificationRepository.deleteLikeNotification(
+          userId,
+          repUserId,
+          postId
+        );
+      if (deletedId) {
+        await this._notificationEventPublisher.deletePublishedNotification({
+          receiverUserId: repUserId,
+          notificationId: deletedId,
+        });
+      }
     }
 
     return {

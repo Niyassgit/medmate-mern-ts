@@ -44,9 +44,10 @@ export const ErrorMessages = {
   TOGGLE_INTEREST_ERROR: "Failed to update interest,please try again",
   INTEREST_COUNT_ERROR: "Failed to fetch the count of the interest",
   UNAUTHERIZED_SOCKET: "Unauthorized socket attempted connection",
-  CONNECTION_REJECT_FAILED:"Connection not found or already updated",
-  CONNECTION_NOT_FOUND:"Connection not found!",
-  NO_CONNECTION_REQUEST_FOUND:"No connection found!",
+  CONNECTION_REJECT_FAILED: "Connection not found or already updated",
+  CONNECTION_NOT_FOUND: "Connection not found!",
+  NO_CONNECTION_REQUEST_FOUND: "No connection found!",
+  NOTIFICATION_NOT_FOUND: "Notification not found",
 } as const;
 
 export const SuccessMessages = {
@@ -75,7 +76,7 @@ export const SuccessMessages = {
   UNLIKE_SUCCESS: "Post unliked successfully",
   INTEREST_SUCCESS: "Interest showed succesfully",
   UNINTERESTED_SUCCESS: "Interest removed",
-  CONNECTION_REJECT:"Connection request rejected"
+  CONNECTION_REJECT: "Connection request rejected",
 } as const;
 
 export const NotificationMessages = {
@@ -86,8 +87,8 @@ export const NotificationMessages = {
     `Your OTP for verifying your account is ${otp}.`,
   NEW_OTP_VERIFICATION: (otp: string) =>
     `Your New OTP is ${otp},It will expiry shortly`,
-    CONNECTION_REQ_NOTIFICATION_MESSAGE:"Sented you a connection request",
-    CONNECTION_ACCEPT_MESSAGE:"Accepted your connection request",
-    LIKE_MESSAGE:"Liked your post",
-    INTEREST_MESSAGE:"Showed interested on your Post",
+  CONNECTION_REQ_NOTIFICATION_MESSAGE: "Sented you a connection request",
+  CONNECTION_ACCEPT_MESSAGE: "Accepted your connection request",
+  LIKE_MESSAGE: "Liked your post",
+  INTEREST_MESSAGE: "Showed interested on your Post",
 } as const;

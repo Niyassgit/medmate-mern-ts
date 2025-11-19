@@ -11,6 +11,7 @@ import noResult from "@/assets/noResult.png";
 import { Button } from "@/components/ui/button";
 import { MoveRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+
 const Feed = () => {
   const auth = useSelector((s: any) => s.auth.user);
   const id = auth?.id as string | undefined;

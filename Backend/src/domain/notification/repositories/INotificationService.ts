@@ -17,6 +17,7 @@ export interface INotificationRepository {
     receiverId: string
   ): Promise<void>;
   findAllNotifications(userId: string): Promise<INotificationWithUser[]>;
+  findNotificationById(id:string):Promise<INotificationWithUser | null>;
   updateNotificationById(
     notificationId: string,
     type: NotificationType
@@ -25,5 +26,5 @@ export interface INotificationRepository {
     senderId: string,
     receiverId: string,
     postId: string
-  ): Promise<void>;
+  ): Promise<string | null>;
 }
