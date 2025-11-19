@@ -114,3 +114,8 @@ export const acceptFromNotification = async (
   );
   return res.data;
 };
+
+export const notificationMarkAsRead = async (notificationId:string) => {
+  const res = await api.patch(RepEndpoints.MARK_AS_READ_NOTIFICATION(notificationId));
+  return res.data;
+};

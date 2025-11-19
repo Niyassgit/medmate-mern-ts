@@ -86,7 +86,17 @@ export const rejectdocConnectionRequest = async (
   );
   return res.data;
 };
-export const acceptConnOnNotificationPage=async(notificationId:string,repId:string)=>{
-  const res=await api.post(DoctorEndpoints.ACCEPT_ON_NOTIFICATION(notificationId,repId));
+export const acceptConnOnNotificationPage = async (
+  notificationId: string,
+  repId: string
+) => {
+  const res = await api.post(
+    DoctorEndpoints.ACCEPT_ON_NOTIFICATION(notificationId, repId)
+  );
   return res.data;
-}
+};
+
+export const markNotificationAsRead = async (notificationId: string) => {
+  const res = await api.patch(DoctorEndpoints.MARK_NOT_AS_READ(notificationId));
+  return res.data;
+};

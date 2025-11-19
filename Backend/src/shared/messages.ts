@@ -48,6 +48,7 @@ export const ErrorMessages = {
   CONNECTION_NOT_FOUND: "Connection not found!",
   NO_CONNECTION_REQUEST_FOUND: "No connection found!",
   NOTIFICATION_NOT_FOUND: "Notification not found",
+  NOTIFICATION_ISREAD:"Failed to update notification read status",
 } as const;
 
 export const SuccessMessages = {

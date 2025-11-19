@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import {
   acceptFromNotification,
   getRepnotifications,
+  notificationMarkAsRead,
   rejectRepsideConnectionRequest,
 } from "../api";
 import { SpinnerButton } from "@/components/shared/SpinnerButton";
@@ -63,16 +64,6 @@ const Notifications = () => {
     );
   };
 
-  const markAsRead = (id: string) => {
-    setLocalNotifications((prev) =>
-      prev.map((notification) =>
-        notification.id === id
-          ? { ...notification, isRead: true }
-          : notification
-      )
-    );
-  };
-
   const ConnectionAccept = async (notificationId: string, roleId: string) => {
     try {
       const res = await acceptFromNotification(notificationId, roleId);
@@ -116,15 +107,27 @@ const Notifications = () => {
     socket.on("notification:new", (data) => {
       setLocalNotifications((prev) => [data, ...prev]);
     });
-     
-    socket.on("notification:deleted",({id})=>{
-      setLocalNotifications((prev)=>prev.filter((n)=>n.id!== id));
-    })
+
+    socket.on("notification:deleted", ({ id }) => {
+      setLocalNotifications((prev) => prev.filter((n) => n.id !== id));
+    });
     return () => {
       socket.off("notification:new");
       socket.off("notification:deleted");
     };
-  }, [token,id]);
+  }, [token, id]);
+
+  const markAsRead = async (id: string) => {
+    setLocalNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
+    );
+
+    try {
+      await notificationMarkAsRead(id);
+    } catch (error: any) {
+      toast.error(error.message || "Failed to update notification as read");
+    }
+  };
 
   if (loading) return <SpinnerButton />;
   if (error)
@@ -182,6 +185,7 @@ const Notifications = () => {
                 onClick={() => markAsRead(notification.id)}
                 onAccept={ConnectionAccept}
                 onReject={ConnectionReject}
+                markAsRead={markAsRead}
               />
             ))
           ) : (

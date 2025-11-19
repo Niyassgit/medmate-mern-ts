@@ -33,6 +33,8 @@ import { GetRepNotificationsUseCase } from "../../application/notification/use-c
 import { RepRejectConnectionUseCase } from "../../application/connection/use-cases/RepRejectConnectionUseCase";
 import { RepAcceptConnOnNotUseCase } from "../../application/connection/use-cases/RepAcceptConnOnNotUseCase";
 import { NotificationEventPublisher } from "../realtime/publishers/NotificationEventPublisher";
+import { MakeAllAsReadNotificationUseCase } from "../../application/notification/use-cases/MarkAllAsReadNotificationUseCase";
+import { MarkNotificationAsReadUseCase } from "../../application/notification/use-cases/MarkNotificationAsReadUseCase";
 
 const medicalRepRepository = new MedicalRepRepository();
 const doctorRepository = new DoctorRepository();
@@ -49,8 +51,7 @@ const connectionRepository = new ConnectionRepository();
 const departmentRepository = new DepartmentRepository();
 const territoryRepository = new TerritoryRepository();
 const notificationRepository = new NotificationRepository();
-const notificationEventPublisher=new NotificationEventPublisher();
-
+const notificationEventPublisher = new NotificationEventPublisher();
 
 const createMedicalRepUseCase = new CreateMedicalRepUseCase(
   medicalRepRepository,
@@ -167,6 +168,14 @@ const acceptConnOnNotUseCase = new RepAcceptConnOnNotUseCase(
   connectionRepository,
   notificationRepository
 );
+
+const markAllNotificationsAsReadUseCase = new MakeAllAsReadNotificationUseCase(
+  notificationRepository
+);
+
+const markAsReadNotificationUseCase = new MarkNotificationAsReadUseCase(
+  notificationRepository
+);
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
   getRepProfileByIdUseCase,
@@ -187,5 +196,7 @@ export const medicalRepController = new MedicalRepController(
   pendingConnectionsUseCase,
   getAllNotificationsUseCase,
   rejectConnectionUseCase,
-  acceptConnOnNotUseCase
+  acceptConnOnNotUseCase,
+  markAllNotificationsAsReadUseCase,
+  markAsReadNotificationUseCase
 );

@@ -68,5 +68,13 @@ export class DoctorRoutes {
       "/notifications/connection/:notificationId/accept/:repId",
       doctorController.acceptConnectionOnNot
     );
+    this.router.patch(
+      "notifications/mark-as-read/:notificationId",
+      doctorController.markAsReadNotification
+    );
+    this.router.patch(
+      "notifications/mark-all-read/:userId",
+      doctorController.markAllAsReadNotification
+    );
   }
 }

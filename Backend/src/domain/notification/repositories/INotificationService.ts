@@ -27,4 +27,6 @@ export interface INotificationRepository {
     receiverId: string,
     postId: string
   ): Promise<string | null>;
+  markAllNotificationAsRead(userId:string):Promise<boolean>;
+  markNotificationAsRead(notificationId:string):Promise<boolean>;
 }

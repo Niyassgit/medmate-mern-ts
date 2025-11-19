@@ -21,6 +21,8 @@ import { IDoctorPendingConnectionsUseCase } from "../../../application/doctor/in
 import { IGetDoctorNotificationsUseCase } from "../../../application/notification/interfaces/IGetDoctorNotificationsUseCase";
 import { IDoctorRejectConnectionUseCase } from "../../../application/connection/interfaces/IDoctorRejectConnectionUseCase";
 import { IDoctorAcceptOnNotUseCase } from "../../../application/connection/interfaces/IDoctorAcceptOnNotUseCase";
+import { IMakeAllAsReadNotificationUseCase } from "../../../application/notification/interfaces/IMarkAllAsReadNotificartionUseCase";
+import { IMarkNotificationAsReadUseCase } from "../../../application/notification/interfaces/IMakNotificationAsReadUseCase";
 
 export class DoctorController {
   constructor(
@@ -41,7 +43,9 @@ export class DoctorController {
     private _pendingConnectionListUseCase: IDoctorPendingConnectionsUseCase,
     private _getDoctorNotificationsUseCase: IGetDoctorNotificationsUseCase,
     private _rejectConnectionRequestUseCase: IDoctorRejectConnectionUseCase,
-    private _acceptConnectionOnNotificationPage: IDoctorAcceptOnNotUseCase
+    private _acceptConnectionOnNotificationPage: IDoctorAcceptOnNotUseCase,
+    private _notificationsMarkAsRead: IMakeAllAsReadNotificationUseCase,
+    private _markNotificationAsReadUseCase: IMarkNotificationAsReadUseCase
   ) {}
 
   createDoctor = async (req: Request, res: Response) => {
@@ -227,6 +231,26 @@ export class DoctorController {
     );
     return res
       .status(HttpStatusCode.OK)
+      .json({ success: true, message: response });
+  };
+
+  markAllAsReadNotification = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const response = await this._notificationsMarkAsRead.execute(userId);
+    return res
+      .status(HttpStatusCode.NO_CONTENT)
+      .json({ success: true, message: response });
+  };
+
+  markAsReadNotification = async (req: Request, res: Response) => {
+    const { notificationId } = req.params;
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._markNotificationAsReadUseCase.execute(
+      notificationId,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.NO_CONTENT)
       .json({ success: true, message: response });
   };
 }

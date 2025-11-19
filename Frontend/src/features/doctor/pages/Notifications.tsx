@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import {
   acceptConnOnNotificationPage,
   getDoctorNotifications,
+  markNotificationAsRead,
   rejectdocConnectionRequest,
 } from "../api";
 import { SpinnerButton } from "@/components/shared/SpinnerButton";
@@ -62,7 +63,7 @@ const Notifications = () => {
     );
   };
 
-  const markAsRead = (id: string) => {
+  const markAsRead = async (id: string) => {
     setLocalNotifications((prev) =>
       prev.map((notification) =>
         notification.id === id
@@ -70,6 +71,12 @@ const Notifications = () => {
           : notification
       )
     );
+
+    try {
+      await markNotificationAsRead(id);
+    } catch (error: any) {
+      toast.error(error.message || "Failed to update notification as read");
+    }
   };
 
   const ConnectionAccept = async (notificationId: string, roleId: string) => {
@@ -179,6 +186,7 @@ const Notifications = () => {
                 onClick={() => markAsRead(notification.id)}
                 onAccept={ConnectionAccept}
                 onReject={ConnectionReject}
+                markAsRead={markAsRead}
               />
             ))
           ) : (

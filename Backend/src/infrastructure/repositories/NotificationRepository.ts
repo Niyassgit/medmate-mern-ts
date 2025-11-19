@@ -135,4 +135,20 @@ export class NotificationRepository
     });
     return result? NotificationMapper.toDomainWithUser(result):null;
   }
+
+  async markAllNotificationAsRead(userId: string): Promise<boolean> {
+    const result=await prisma.notification.updateMany({
+      where:{receiverId:userId},
+      data:{isRead:true},
+    });
+     return result.count > 0;
+  }
+
+  async markNotificationAsRead(notificationId: string): Promise<boolean> {
+    const result=await prisma.notification.updateMany({
+      where:{id:notificationId},
+      data:{isRead:true},
+    });
+    return result.count>0;
+  }
 }

@@ -32,6 +32,8 @@ import { GetDoctorNotificationsUseCase } from "../../application/notification/us
 import { DoctorRejectConnectionUseCase } from "../../application/connection/use-cases/DoctorRejectConnectionUseCase";
 import { DoctorAcceptOnNotUseCase } from "../../application/connection/use-cases/DoctorAcceptOnNotUseCase";
 import { NotificationEventPublisher } from "../realtime/publishers/NotificationEventPublisher";
+import { MakeAllAsReadNotificationUseCase } from "../../application/notification/use-cases/MarkAllAsReadNotificationUseCase";
+import { MarkNotificationAsReadUseCase } from "../../application/notification/use-cases/MarkNotificationAsReadUseCase";
 
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
@@ -47,7 +49,7 @@ const likeRepository = new LikeRepository();
 const interestRepository = new InterestRepository();
 const eventPublisher = new SocketEngagementEventPublisher();
 const notificationRepository = new NotificationRepository();
-const notificationEventPublisher =new NotificationEventPublisher();
+const notificationEventPublisher = new NotificationEventPublisher();
 
 const createDoctorUseCase = new CreateDoctorUseCase(
   doctorRepository,
@@ -151,7 +153,7 @@ const pendingConnectionsUseCase = new DoctorPendingConnectionsUseCase(
 const getDoctorNotificationsUseCase = new GetDoctorNotificationsUseCase(
   doctorRepository,
   notificationRepository,
-  storageService,
+  storageService
 );
 const rejectConnectionUseCase = new DoctorRejectConnectionUseCase(
   doctorRepository,
@@ -164,6 +166,14 @@ const acceptConnOnNotificationPage = new DoctorAcceptOnNotUseCase(
   notificationRepository,
   medicalRepRepository,
   connectionRepository
+);
+
+const markAllNotificationAsReadedUseCase = new MakeAllAsReadNotificationUseCase(
+  notificationRepository
+);
+
+const markNotificationAsReadUseCase = new MarkNotificationAsReadUseCase(
+  notificationRepository
 );
 export const doctorController = new DoctorController(
   createDoctorUseCase,
@@ -183,5 +193,7 @@ export const doctorController = new DoctorController(
   pendingConnectionsUseCase,
   getDoctorNotificationsUseCase,
   rejectConnectionUseCase,
-  acceptConnOnNotificationPage
+  acceptConnOnNotificationPage,
+  markAllNotificationAsReadedUseCase,
+  markNotificationAsReadUseCase
 );

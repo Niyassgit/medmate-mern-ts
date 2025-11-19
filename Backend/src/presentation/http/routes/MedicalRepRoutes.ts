@@ -107,5 +107,13 @@ export class MedicalRepRoutes {
       "/notifications/connection/:notificationId/accept/:doctorId",
       medicalRepController.requestAccept
     );
+    this.router.patch(
+      "/notifications/mark-as-read/:notificationId",
+      medicalRepController.markAsReadNotification
+    );
+    this.router.patch(
+      "/notifications/mark-all-read/:notificationId",
+      medicalRepController.markAllAsReadNotifications
+    );
   }
 }

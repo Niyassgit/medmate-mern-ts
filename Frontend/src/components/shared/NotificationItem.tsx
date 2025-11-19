@@ -25,6 +25,7 @@ interface NotificationItemProps {
   postImage?: string;
   onAccept?: (notificationId: string, roleId: string) => void;
   onReject?: (notificationId: string, roleId: string) => void;
+  markAsRead?: (notificationId: string) => void;
   onClick?: () => void;
 }
 
@@ -78,10 +79,18 @@ export const NotificationItem = ({
   onAccept,
   onReject,
   onClick,
+  markAsRead,
 }: NotificationItemProps) => {
   const navigate = useNavigate();
 
+  const triggerMarkAsRead = () => {
+    if (!isRead) {
+      markAsRead?.(id);
+    }
+  };
+
   const handleOpenProfile = () => {
+    triggerMarkAsRead();
     if (viewerRole === "DOCTOR") {
       navigate(`/doctor/rep/details/${roleId}`);
     } else {
@@ -97,17 +106,12 @@ export const NotificationItem = ({
       .toUpperCase()
       .slice(0, 2);
 
-  const handleOpenPost = () => {
-    if ((type === "LIKE" || type === "INTEREST") && postId) {
-      navigate(`/notifications/post-details/${postId}`);
-    } else {
-      onClick?.();
-    }
-  };
-
   return (
     <div
-      onClick={onClick}
+      onClick={() => {
+        triggerMarkAsRead();
+        onClick?.();
+      }}
       className={cn(
         "flex items-start gap-4 p-4 rounded-lg transition-colors cursor-pointer border",
         !isRead && {
@@ -143,7 +147,7 @@ export const NotificationItem = ({
                 className="font-semibold text-card-foreground text-sm cursor-pointer hover:underline"
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleOpenProfile();
+                  handleOpenProfile(); 
                 }}
               >
                 {userName}
@@ -154,7 +158,7 @@ export const NotificationItem = ({
             </div>
 
             {!isRead && (
-              <div className="flex-shrink-0 w-2 h-2 rounded-full bg-notification-unread mt-1" />
+              <div className="w-3 h-3 rounded-full bg-amber-300 self-end" />
             )}
           </div>
 
@@ -167,57 +171,53 @@ export const NotificationItem = ({
 
         {/* RIGHT-SIDE ACTIONS + IMAGE */}
         <div className="flex-shrink-0 flex flex-col items-end justify-between gap-3 ml-3">
-          {/* connection actions */}
-          {(() => {
-            switch (type) {
-              case "CONNECTION_REQUEST":
-                return (
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2
-                      size={22}
-                      className="text-green-600 hover:text-green-700 cursor-pointer"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onAccept?.(id, roleId);
-                      }}
-                    />
-                    <X
-                      size={22}
-                      className="text-red-600 hover:text-red-700 cursor-pointer"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onReject?.(id, roleId);
-                      }}
-                    />
-                  </div>
-                );
+          {/* ACCEPT / REJECT */}
+          {type === "CONNECTION_REQUEST" && (
+            <div className="flex items-center gap-2">
+              <CheckCircle2
+                size={22}
+                className="text-green-600 hover:text-green-700 cursor-pointer"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  triggerMarkAsRead();
+                  onAccept?.(id, roleId);
+                }}
+              />
+              <X
+                size={22}
+                className="text-red-600 hover:text-red-700 cursor-pointer"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  triggerMarkAsRead();
+                  onReject?.(id, roleId);
+                }}
+              />
+            </div>
+          )}
 
-              case "CONNECTION_ACCEPTED":
-                return (
-                  <span className="inline-block px-3 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-md">
-                    Connected
-                  </span>
-                );
+          {type === "CONNECTION_ACCEPTED" && (
+            <span className="inline-block px-3 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-md">
+              Connected
+            </span>
+          )}
 
-              case "CONNECTION_REJECTED":
-                return (
-                  <span className="inline-block px-3 py-1 text-xs font-medium bg-red-100 text-red-700 rounded-md">
-                    Request Rejected
-                  </span>
-                );
+          {type === "CONNECTION_REJECTED" && (
+            <span className="inline-block px-3 py-1 text-xs font-medium bg-red-100 text-red-700 rounded-md">
+              Request Rejected
+            </span>
+          )}
 
-              default:
-                return null;
-            }
-          })()}
-
-          {/* 🔥 POST IMAGE — NOW ON THE RIGHT SIDE */}
+          {/* POST IMAGE */}
           {(type === "LIKE" || type === "INTEREST") && postImage && (
             <img
               src={postImage}
               alt="Post thumbnail"
               className="w-14 h-14 rounded-md object-cover border border-border"
-              onClick={()=>navigate(`/rep/notifications/post-details/${postId}`)}
+              onClick={(e) => {
+                e.stopPropagation();
+                triggerMarkAsRead();
+                navigate(`/rep/notifications/post-details/${postId}`);
+              }}
             />
           )}
         </div>
