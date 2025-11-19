@@ -10,4 +10,5 @@ export interface NotificationsResponseDTO{
     user:NotificationUserDTO;
     postId?:string;
     postImage?:string | null;
+    receiverUserId?:string;
 }

@@ -12,6 +12,7 @@ import {
 import { SpinnerButton } from "@/components/shared/SpinnerButton";
 import toast from "react-hot-toast";
 import { Notification } from "@/components/Dto/Notification";
+import { getSocket } from "@/lib/socket";
 
 const Notifications = () => {
   const [filter, setFilter] = useState<
@@ -20,7 +21,7 @@ const Notifications = () => {
   const [localNotifications, setLocalNotifications] = useState<Notification[]>(
     []
   );
-
+  const token = useMemo(() => localStorage.getItem("accessToken"), []);
   const id = useSelector((state: any) => state.auth.user?.id);
 
   const fetchNotifications = useCallback(async () => {
@@ -108,6 +109,23 @@ const Notifications = () => {
       toast.error(error.message || "Internal error");
     }
   };
+
+  useEffect(() => {
+    if (!token || !id) return;
+    const socket = getSocket(token);
+    socket.on("notification:new", (data) => {
+      setLocalNotifications((prev) => [data, ...prev]);
+    });
+
+    socket.on("notification:deleted", ({ id }) => {
+      setLocalNotifications((prev) => prev.filter((n) => n.id !== id));
+    });
+
+    return () => {
+      socket.off("notification:new");
+      socket.off("notification:deleted");
+    };
+  }, [token, id]);
 
   if (loading) return <SpinnerButton />;
   if (error)

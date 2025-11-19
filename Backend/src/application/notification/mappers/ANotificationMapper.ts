@@ -8,7 +8,7 @@ export class ANotificationMapper {
   static async toDomain(
     entity: INotificationWithUser,
     storageService: IStorageService,
-    productPostRepository?:IProductPostRepository,
+    productPostRepository?:IProductPostRepository, 
   ): Promise<NotificationsResponseDTO> {
     let signedUrl: string | null = null;
     if (entity.user.profileImage) {
@@ -36,7 +36,7 @@ export class ANotificationMapper {
         profileImage: signedUrl,
       },
       postId:entity.postId,
-      postImage
+      postImage,
     };
   }
   static async toListDomain(

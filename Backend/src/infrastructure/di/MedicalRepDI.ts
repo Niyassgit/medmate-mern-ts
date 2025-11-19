@@ -32,6 +32,7 @@ import { NotificationRepository } from "../repositories/NotificationRepository";
 import { GetRepNotificationsUseCase } from "../../application/notification/use-cases/GetRepNotificationsUseCase";
 import { RepRejectConnectionUseCase } from "../../application/connection/use-cases/RepRejectConnectionUseCase";
 import { RepAcceptConnOnNotUseCase } from "../../application/connection/use-cases/RepAcceptConnOnNotUseCase";
+import { NotificationEventPublisher } from "../realtime/publishers/NotificationEventPublisher";
 
 const medicalRepRepository = new MedicalRepRepository();
 const doctorRepository = new DoctorRepository();
@@ -48,6 +49,9 @@ const connectionRepository = new ConnectionRepository();
 const departmentRepository = new DepartmentRepository();
 const territoryRepository = new TerritoryRepository();
 const notificationRepository = new NotificationRepository();
+const notificationEventPublisher=new NotificationEventPublisher();
+
+
 const createMedicalRepUseCase = new CreateMedicalRepUseCase(
   medicalRepRepository,
   bcryptServices,
@@ -101,7 +105,9 @@ const makeConnectionRequestUseCase = new RepMakeConnectionRequestUseCase(
   medicalRepRepository,
   doctorRepository,
   connectionRepository,
-  notificationRepository
+  notificationRepository,
+  storageService,
+  notificationEventPublisher
 );
 const acceptConnectionRequestUseCase = new DoctorAcceptConnectionRequestUseCase(
   medicalRepRepository,

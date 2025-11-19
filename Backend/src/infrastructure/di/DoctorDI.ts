@@ -80,7 +80,9 @@ const connectionRequestUseCase = new DoctorConnectionRequestUseCase(
   doctorRepository,
   medicalRepRepository,
   connectionRepository,
-  notificationRepository
+  notificationRepository,
+  notificationEventPublisher,
+  storageService
 );
 const acceptConnectionRequestUseCase = new RepAcceptingConnectionRequest(
   medicalRepRepository,

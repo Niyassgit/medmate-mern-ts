@@ -49,14 +49,18 @@ export class NotificationRepository
   async deleteConnectionNotificationById(
     senderId: string,
     receiverId: string
-  ): Promise<void> {
-    await prisma.notification.deleteMany({
+  ): Promise<string | null> {
+    const notification=await prisma.notification.findFirst({
       where: {
         senderId,
         receiverId,
         type: NotificationType.CONNECTION_REQUEST,
       },
+      select:{id:true},
     });
+    if(!notification) return null
+    await this.delete(notification.id);
+    return notification.id;
   }
 
   async findAllNotifications(userId: string): Promise<INotificationWithUser[]> {
