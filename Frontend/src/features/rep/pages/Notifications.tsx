@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import {
   acceptFromNotification,
   getRepnotifications,
+  markAllNotificationsAsRead,
   notificationMarkAsRead,
   rejectRepsideConnectionRequest,
 } from "../api";
@@ -58,10 +59,15 @@ const Notifications = () => {
     return true;
   });
 
-  const markAllAsRead = () => {
+  const markAllAsRead = async () => {
     setLocalNotifications((prev) =>
       prev.map((notification) => ({ ...notification, isRead: true }))
     );
+    try {
+      await markAllNotificationsAsRead(id)
+    } catch (error:any) {
+       toast.error(error.message || "Internal server Error");
+    }
   };
 
   const ConnectionAccept = async (notificationId: string, roleId: string) => {
@@ -160,8 +166,6 @@ const Notifications = () => {
           <TabsList className="bg-card border border-border">
             <TabsTrigger value="all">All</TabsTrigger>
             <TabsTrigger value="unread">Unread</TabsTrigger>
-            <TabsTrigger value="updates">Updates</TabsTrigger>
-            <TabsTrigger value="approvals">Approvals</TabsTrigger>
           </TabsList>
         </Tabs>
 

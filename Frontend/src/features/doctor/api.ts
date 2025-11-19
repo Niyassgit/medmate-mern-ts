@@ -97,6 +97,10 @@ export const acceptConnOnNotificationPage = async (
 };
 
 export const markNotificationAsRead = async (notificationId: string) => {
-  const res = await api.patch(DoctorEndpoints.MARK_NOT_AS_READ(notificationId));
-  return res.data;
+  await api.patch(DoctorEndpoints.MARK_NOT_AS_READ(notificationId));
+ 
 };
+
+export const markAllNotificationsAsRead=async(userId:string)=>{
+  await api.patch(DoctorEndpoints.MARK_ALL_NOT_AS_READ(userId));
+}

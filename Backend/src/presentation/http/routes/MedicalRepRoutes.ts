@@ -112,7 +112,7 @@ export class MedicalRepRoutes {
       medicalRepController.markAsReadNotification
     );
     this.router.patch(
-      "/notifications/mark-all-read/:notificationId",
+      "/notifications/mark-all-read/:userId",
       medicalRepController.markAllAsReadNotifications
     );
   }

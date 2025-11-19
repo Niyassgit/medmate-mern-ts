@@ -23,4 +23,5 @@ export const DoctorEndpoints = {
     `/doctor/notifications/connection/${notificationId}/accept/${repId}`,
   MARK_NOT_AS_READ: (notificationId: string) =>
     `/doctor/notifications/mark-as-read/${notificationId}`,
+  MARK_ALL_NOT_AS_READ:(userId:string)=>`/doctor/notifications/mark-all-read/${userId}`,
 };

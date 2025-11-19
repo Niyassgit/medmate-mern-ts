@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import {
   acceptConnOnNotificationPage,
   getDoctorNotifications,
+  markAllNotificationsAsRead,
   markNotificationAsRead,
   rejectdocConnectionRequest,
 } from "../api";
@@ -57,10 +58,15 @@ const Notifications = () => {
     return true;
   });
 
-  const markAllAsRead = () => {
+  const markAllAsRead =async () => {
     setLocalNotifications((prev) =>
       prev.map((notification) => ({ ...notification, isRead: true }))
     );
+    try {
+      await markAllNotificationsAsRead(id)
+    } catch (error:any) {
+       toast.error(error.message || "Internal server Error");
+    }
   };
 
   const markAsRead = async (id: string) => {
