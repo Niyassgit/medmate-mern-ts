@@ -82,6 +82,15 @@ export class ToggleLikeOnPostUseCase implements IToggleLikeOnPostUseCase {
         ...mappedNtfction,
         receiverUserId: repUserId,
       });
+      const unreadCount =
+        await this._notificationRepository.getCountOfUnreadNotification(
+          repUserId
+        );
+
+      await this._notificationEventPublisher.unreadNotificationCount({
+        receiverUserId: repUserId,
+        count: unreadCount,
+      });
     } else {
       const deletedId =
         await this._notificationRepository.deleteLikeNotification(
@@ -93,6 +102,15 @@ export class ToggleLikeOnPostUseCase implements IToggleLikeOnPostUseCase {
         await this._notificationEventPublisher.deletePublishedNotification({
           receiverUserId: repUserId,
           notificationId: deletedId,
+        });
+
+        const unreadCount =
+          await this._notificationRepository.getCountOfUnreadNotification(
+            repUserId
+          );
+        await this._notificationEventPublisher.unreadNotificationCount({
+          receiverUserId: repUserId,
+          count: unreadCount,
         });
       }
     }

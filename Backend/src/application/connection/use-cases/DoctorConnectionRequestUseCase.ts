@@ -58,6 +58,14 @@ export class DoctorConnectionRequestUseCase
             receiverUserId: repUserId,
           });
         }
+        const unReadCount =
+          await this._notificationRepository.getCountOfUnreadNotification(
+            repUserId
+          );
+        await this._notificationEventPublisher.unreadNotificationCount({
+          receiverUserId: repUserId,
+          count: unReadCount,
+        });
         return SuccessMessages.CANCEL_CONNECTION_REQ;
       }
       if (existingConnection.status === ConnectionStatus.ACCEPTED) {
@@ -87,10 +95,19 @@ export class DoctorConnectionRequestUseCase
       fullNotification,
       this._storageSerive
     );
+    const unReadCount =
+      await this._notificationRepository.getCountOfUnreadNotification(
+        repUserId
+      );
+    await this._notificationEventPublisher.unreadNotificationCount({
+      receiverUserId: repUserId,
+      count: unReadCount,
+    });
     await this._notificationEventPublisher.publishNotification({
       ...mappedNotification,
       receiverUserId: repUserId,
     });
+
     return SuccessMessages.CONNECTION_REQUEST;
   }
 }

@@ -27,6 +27,7 @@ import { IRepRejectConnectionUseCase } from "../../../application/connection/int
 import { IRepAcceptConnOnNotUseCase } from "../../../application/connection/interfaces/IRepAcceptConnOnNotUseCase";
 import { IMakeAllAsReadNotificationUseCase } from "../../../application/notification/interfaces/IMarkAllAsReadNotificartionUseCase";
 import { IMarkNotificationAsReadUseCase } from "../../../application/notification/interfaces/IMakNotificationAsReadUseCase";
+import { INotificationUnreadCountUsecase } from "../../../application/notification/interfaces/INotificationUnreadCountUseCase";
 
 export class MedicalRepController {
   constructor(
@@ -51,7 +52,8 @@ export class MedicalRepController {
     private _rejectConnectionUseCase: IRepRejectConnectionUseCase,
     private _acceptRequestOnNotificationPage: IRepAcceptConnOnNotUseCase,
     private _markAllNotificationsAsRead: IMakeAllAsReadNotificationUseCase,
-    private _markAsReadNotificationUseCase: IMarkNotificationAsReadUseCase
+    private _markAsReadNotificationUseCase: IMarkNotificationAsReadUseCase,
+    private _countOfUnreadNotificationUseCase: INotificationUnreadCountUsecase
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -296,5 +298,15 @@ export class MedicalRepController {
     return res
       .status(HttpStatusCode.NO_CONTENT)
       .json({ success: true, message: response });
+  };
+
+  notificaitonUnreadCount = async (req: Request, res: Response) => {
+    const {userId}=req.params;
+    const response = await this._countOfUnreadNotificationUseCase.execute(
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
   };
 }

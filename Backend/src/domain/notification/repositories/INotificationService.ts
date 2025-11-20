@@ -29,4 +29,5 @@ export interface INotificationRepository {
   ): Promise<string | null>;
   markAllNotificationAsRead(userId:string):Promise<boolean>;
   markNotificationAsRead(notificationId:string):Promise<boolean>;
+  getCountOfUnreadNotification(userId:string):Promise<number>;
 }

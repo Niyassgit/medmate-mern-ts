@@ -50,15 +50,15 @@ export class NotificationRepository
     senderId: string,
     receiverId: string
   ): Promise<string | null> {
-    const notification=await prisma.notification.findFirst({
+    const notification = await prisma.notification.findFirst({
       where: {
         senderId,
         receiverId,
         type: NotificationType.CONNECTION_REQUEST,
       },
-      select:{id:true},
+      select: { id: true },
     });
-    if(!notification) return null
+    if (!notification) return null;
     await this.delete(notification.id);
     return notification.id;
   }
@@ -108,11 +108,11 @@ export class NotificationRepository
     receiverId: string,
     postId: string
   ): Promise<string | null> {
-    const notification= await prisma.notification.findFirst({
+    const notification = await prisma.notification.findFirst({
       where: { senderId, receiverId, postId },
-      select:{id:true},
+      select: { id: true },
     });
-    if(!notification) return null;
+    if (!notification) return null;
     await this.delete(notification.id);
     return notification.id;
   }
@@ -133,22 +133,28 @@ export class NotificationRepository
         },
       },
     });
-    return result? NotificationMapper.toDomainWithUser(result):null;
+    return result ? NotificationMapper.toDomainWithUser(result) : null;
   }
 
   async markAllNotificationAsRead(userId: string): Promise<boolean> {
-    const result=await prisma.notification.updateMany({
-      where:{receiverId:userId},
-      data:{isRead:true},
+    const result = await prisma.notification.updateMany({
+      where: { receiverId: userId },
+      data: { isRead: true },
     });
-     return result.count > 0;
+    return result.count > 0;
   }
 
   async markNotificationAsRead(notificationId: string): Promise<boolean> {
-    const result=await prisma.notification.updateMany({
-      where:{id:notificationId},
-      data:{isRead:true},
+    const result = await prisma.notification.updateMany({
+      where: { id: notificationId },
+      data: { isRead: true },
     });
-    return result.count>0;
+    return result.count > 0;
+  }
+
+  async getCountOfUnreadNotification(userId: string): Promise<number> {
+    return prisma.notification.count({
+      where: { receiverId: userId, isRead: false },
+    });
   }
 }

@@ -43,13 +43,14 @@ export function initSocket(server: HttpServer) {
       return;
     }
     void socket.join(`user:${user.id}`);
-
+      // console.log("🟢 Socket connected:", user.id);
     socket.on("room:join:product", ({ productId }: { productId: string }) => {
       void socket.join(`product:${productId}`);
     });
     socket.on("room:leave:product", ({ productId }: { productId: string }) => {
       void socket.leave(`product:${productId}`);
     });
+      // console.log("🔗 Joined room: user:" + user.id);
   });
   return io;
 }

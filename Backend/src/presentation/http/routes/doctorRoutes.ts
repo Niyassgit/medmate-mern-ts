@@ -73,8 +73,12 @@ export class DoctorRoutes {
       doctorController.markAsReadNotification
     );
     this.router.patch(
-      "notifications/mark-all-read/:userId",
+      "/notifications/mark-all-read/:userId",
       doctorController.markAllAsReadNotification
+    );
+    this.router.get(
+      "/notifications/unread-count/:userId",
+      doctorController.notificationUnreadCount
     );
   }
 }

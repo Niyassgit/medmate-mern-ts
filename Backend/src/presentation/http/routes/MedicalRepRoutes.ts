@@ -115,5 +115,9 @@ export class MedicalRepRoutes {
       "/notifications/mark-all-read/:userId",
       medicalRepController.markAllAsReadNotifications
     );
+    this.router.get(
+      "/notifications/unread-count/:userId",
+      medicalRepController.notificaitonUnreadCount
+    );
   }
 }

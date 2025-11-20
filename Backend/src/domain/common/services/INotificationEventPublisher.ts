@@ -13,9 +13,14 @@ export interface INotificationEventPublisher {
     postId?: string;
     postImage?: string | null;
   }): Promise<void>;
-  
-  deletePublishedNotification(event:{
-    receiverUserId:string,
-    notificationId:string,
-  }):Promise<void>;
+
+  deletePublishedNotification(event: {
+    receiverUserId: string;
+    notificationId: string;
+  }): Promise<void>;
+
+  unreadNotificationCount(event: {
+    receiverUserId: string;
+    count: number;
+  }): Promise<void>;
 }

@@ -122,3 +122,8 @@ return await api.patch(RepEndpoints.MARK_AS_READ_NOTIFICATION(notificationId));
 export const markAllNotificationsAsRead=async(userId:string)=>{
    return await api.patch(RepEndpoints.MARK_ALL_NOT_AS_READ(userId));
 }
+
+export const unreadNotificationCount=async(userId:string)=>{
+  const {data}=await api.get(RepEndpoints.COUNT_UNREAD_NOTIFICATION(userId));
+  return data;
+}

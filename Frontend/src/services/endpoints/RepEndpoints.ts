@@ -29,5 +29,7 @@ export const RepEndpoints = {
     `/rep/notifications/connection/${notificationId}/accept/${doctorId}`,
   MARK_AS_READ_NOTIFICATION: (notificationId: string) =>
     `/rep/notifications/mark-as-read/${notificationId}`,
-  MARK_ALL_NOT_AS_READ:(userId:string)=>`/rep/notifications/mark-all-read/${userId}`,
+  MARK_ALL_NOT_AS_READ: (userId: string) =>
+    `/rep/notifications/mark-all-read/${userId}`,
+  COUNT_UNREAD_NOTIFICATION: (userId:string) => `/rep/notifications/unread-count/${userId}`,
 };

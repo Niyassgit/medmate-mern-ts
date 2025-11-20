@@ -34,6 +34,7 @@ import { DoctorAcceptOnNotUseCase } from "../../application/connection/use-cases
 import { NotificationEventPublisher } from "../realtime/publishers/NotificationEventPublisher";
 import { MakeAllAsReadNotificationUseCase } from "../../application/notification/use-cases/MarkAllAsReadNotificationUseCase";
 import { MarkNotificationAsReadUseCase } from "../../application/notification/use-cases/MarkNotificationAsReadUseCase";
+import { NotificationUnreadCountUseCase } from "../../application/notification/use-cases/NotificationUnreadCountUseCase";
 
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
@@ -175,6 +176,10 @@ const markAllNotificationAsReadedUseCase = new MakeAllAsReadNotificationUseCase(
 const markNotificationAsReadUseCase = new MarkNotificationAsReadUseCase(
   notificationRepository
 );
+
+const getUnreadNotificationCountUseCase = new NotificationUnreadCountUseCase(
+  notificationRepository
+);
 export const doctorController = new DoctorController(
   createDoctorUseCase,
   getDoctorprofileById,
@@ -195,5 +200,6 @@ export const doctorController = new DoctorController(
   rejectConnectionUseCase,
   acceptConnOnNotificationPage,
   markAllNotificationAsReadedUseCase,
-  markNotificationAsReadUseCase
+  markNotificationAsReadUseCase,
+  getUnreadNotificationCountUseCase
 );
