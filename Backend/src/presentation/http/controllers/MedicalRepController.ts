@@ -28,6 +28,7 @@ import { IRepAcceptConnOnNotUseCase } from "../../../application/connection/inte
 import { IMakeAllAsReadNotificationUseCase } from "../../../application/notification/interfaces/IMarkAllAsReadNotificartionUseCase";
 import { IMarkNotificationAsReadUseCase } from "../../../application/notification/interfaces/IMakNotificationAsReadUseCase";
 import { INotificationUnreadCountUsecase } from "../../../application/notification/interfaces/INotificationUnreadCountUseCase";
+import { IGetConversationsUseCase } from "../../../application/conversation/interfaces/IGetUserConversationsUseCase";
 
 export class MedicalRepController {
   constructor(
@@ -53,7 +54,8 @@ export class MedicalRepController {
     private _acceptRequestOnNotificationPage: IRepAcceptConnOnNotUseCase,
     private _markAllNotificationsAsRead: IMakeAllAsReadNotificationUseCase,
     private _markAsReadNotificationUseCase: IMarkNotificationAsReadUseCase,
-    private _countOfUnreadNotificationUseCase: INotificationUnreadCountUsecase
+    private _countOfUnreadNotificationUseCase: INotificationUnreadCountUsecase,
+    private _repConversationsOnChatUseCase: IGetConversationsUseCase
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -301,10 +303,18 @@ export class MedicalRepController {
   };
 
   notificaitonUnreadCount = async (req: Request, res: Response) => {
-    const {userId}=req.params;
+    const { userId } = req.params;
     const response = await this._countOfUnreadNotificationUseCase.execute(
       userId
     );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  conversations = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._repConversationsOnChatUseCase.execute(userId);
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });

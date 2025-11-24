@@ -1,3 +1,5 @@
+import { repConversations } from "@/features/rep/api";
+
 export const RepEndpoints = {
   REGISTER: "/rep/signup",
   PROFILE: (userId: string) => `/rep/profile/${userId}`,
@@ -32,4 +34,5 @@ export const RepEndpoints = {
   MARK_ALL_NOT_AS_READ: (userId: string) =>
     `/rep/notifications/mark-all-read/${userId}`,
   COUNT_UNREAD_NOTIFICATION: (userId:string) => `/rep/notifications/unread-count/${userId}`,
+  repConversations:`/rep/chat/conversations`,
 };

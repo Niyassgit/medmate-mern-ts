@@ -1,0 +1,6 @@
+[2025-11-24 14:55:19] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'getDoctorIdByUserId')[39m
+[2025-11-24 14:56:45] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'getDoctorIdByUserId')[39m
+[2025-11-24 14:57:20] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'getDoctorIdByUserId')[39m
+[2025-11-24 15:13:57] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-24 15:14:01] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-24 15:24:34] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m

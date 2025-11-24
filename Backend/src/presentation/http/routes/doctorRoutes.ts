@@ -69,7 +69,7 @@ export class DoctorRoutes {
       doctorController.acceptConnectionOnNot
     );
     this.router.patch(
-      "notifications/mark-as-read/:notificationId",
+      "/notifications/mark-as-read/:notificationId",
       doctorController.markAsReadNotification
     );
     this.router.patch(
@@ -79,6 +79,10 @@ export class DoctorRoutes {
     this.router.get(
       "/notifications/unread-count/:userId",
       doctorController.notificationUnreadCount
+    );
+    this.router.get(
+      "/chat/conversations",
+      doctorController.getConversations
     );
   }
 }

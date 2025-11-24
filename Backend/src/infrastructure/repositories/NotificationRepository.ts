@@ -6,6 +6,7 @@ import { NotificationType, Role } from "../../shared/Enums";
 import { prisma } from "../config/db";
 import { NotificationMapper } from "../mappers/NotificationMapper";
 import { INotificationWithUser } from "../../domain/notification/entities/INotificationWithUser";
+import tr from "zod/v4/locales/tr.cjs";
 
 export class NotificationRepository
   extends BaseRepository<
@@ -156,5 +157,15 @@ export class NotificationRepository
     return prisma.notification.count({
       where: { receiverId: userId, isRead: false },
     });
+  }
+  async findNotificationOfConnectionByIds(
+    senderId: string,
+    receiverId: string
+  ): Promise<string | null> {
+    const result=await prisma.notification.findFirst({
+      where:{senderId,receiverId,type:NotificationType.CONNECTION_REQUEST},
+      select:{id:true},
+    });
+    return result?result.id:null;
   }
 }

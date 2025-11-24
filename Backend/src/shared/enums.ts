@@ -26,3 +26,11 @@ export enum NotificationType {
     LIKE="LIKE",
     INTEREST="INTEREST"
 }
+
+export enum MessageType{
+  TEXT="TEXT",
+  IMAGE="IMAGE",
+  AUDIO="AUDIO",
+  VIDEO="VIDEO",
+  FILE="FILE",
+}

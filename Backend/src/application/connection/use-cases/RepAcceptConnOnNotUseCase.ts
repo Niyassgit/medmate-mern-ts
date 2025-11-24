@@ -1,8 +1,10 @@
+import { IConversationRepository } from "../../../domain/chat/respositories/IConversationRepository";
 import { IConnectionRepository } from "../../../domain/connection/repositories/IConnectionRepository";
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
 import { INotificationRepository } from "../../../domain/notification/repositories/INotificationService";
 import { ConnectionStatus, NotificationType } from "../../../shared/Enums";
 import { ErrorMessages, SuccessMessages } from "../../../shared/Messages";
+import { ConversationMapper } from "../../conversation/mappers/ConversationMapper";
 import { BadRequestError, NotFoundError } from "../../errors";
 import { IRepAcceptConnOnNotUseCase } from "../interfaces/IRepAcceptConnOnNotUseCase";
 
@@ -10,7 +12,8 @@ export class RepAcceptConnOnNotUseCase implements IRepAcceptConnOnNotUseCase {
   constructor(
     private _medicalRepRepository: IMedicalRepRepository,
     private _connectionRepository: IConnectionRepository,
-    private _notificationRepository: INotificationRepository
+    private _notificationRepository: INotificationRepository,
+    private _conversationRepository: IConversationRepository
   ) {}
 
   async execute(
@@ -37,10 +40,13 @@ export class RepAcceptConnOnNotUseCase implements IRepAcceptConnOnNotUseCase {
       repId,
       ConnectionStatus.ACCEPTED
     );
-
     await this._notificationRepository.updateNotificationById(
       notificationId,
       NotificationType.CONNECTION_ACCEPTED
+    );
+    const mappedConversationData = ConversationMapper.toEntity(repId, doctorId);
+    await this._conversationRepository.createConversation(
+      mappedConversationData
     );
 
     return SuccessMessages.CONNECTED;

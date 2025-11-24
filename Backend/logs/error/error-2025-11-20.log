@@ -122,3 +122,6 @@
 [2025-11-20 12:16:11] [31merror[39m: [31m🔥 Unhandled Error:Failed to update notification read status[39m
 [2025-11-20 12:18:32] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
 [2025-11-20 12:18:32] [31merror[39m: [31m🔥 Unhandled Error:Cannot read properties of undefined (reading 'execute')[39m
+[2025-11-20 16:24:35] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-20 16:24:41] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-20 16:24:44] [31merror[39m: [31mFailed to start server:argument handler is required[39m

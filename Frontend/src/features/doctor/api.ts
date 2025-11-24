@@ -125,3 +125,8 @@ export const notificationUnreadCount=async(userId:string)=>{
   const{data}= await api.get(DoctorEndpoints.COUNT_UNREAD_NOTIFICATION(userId));
   return data;
 }
+
+export const doctorConversations=async()=>{
+  const {data}=await api.get(DoctorEndpoints.CONVERSATIONS);
+  return data;
+}

@@ -24,6 +24,7 @@ import { IDoctorAcceptOnNotUseCase } from "../../../application/connection/inter
 import { IMakeAllAsReadNotificationUseCase } from "../../../application/notification/interfaces/IMarkAllAsReadNotificartionUseCase";
 import { IMarkNotificationAsReadUseCase } from "../../../application/notification/interfaces/IMakNotificationAsReadUseCase";
 import { INotificationUnreadCountUsecase } from "../../../application/notification/interfaces/INotificationUnreadCountUseCase";
+import { IGetConversationsUseCase } from "../../../application/conversation/interfaces/IGetUserConversationsUseCase";
 
 export class DoctorController {
   constructor(
@@ -47,7 +48,8 @@ export class DoctorController {
     private _acceptConnectionOnNotificationPage: IDoctorAcceptOnNotUseCase,
     private _notificationsMarkAsRead: IMakeAllAsReadNotificationUseCase,
     private _markNotificationAsReadUseCase: IMarkNotificationAsReadUseCase,
-    private _getUnreadNotificationCountUseCase: INotificationUnreadCountUsecase
+    private _getUnreadNotificationCountUseCase: INotificationUnreadCountUsecase,
+    private _getUserConversationsUseCase: IGetConversationsUseCase
   ) {}
 
   createDoctor = async (req: Request, res: Response) => {
@@ -257,12 +259,18 @@ export class DoctorController {
   };
 
   notificationUnreadCount = async (req: Request, res: Response) => {
-    const {userId}=req.params;
+    const { userId } = req.params;
     const response = await this._getUnreadNotificationCountUseCase.execute(
       userId
     );
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
+  };
+
+  getConversations = async (req: Request, res: Response) => {
+    const userId=GetOptionalUserId(req.user);
+    const response = await this._getUserConversationsUseCase.execute(userId);
+    return res.status(HttpStatusCode.OK).json({ success: true, data: response });
   };
 }

@@ -1,0 +1,62 @@
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+
+interface ConversationItemProps {
+  name: string;
+  avatar: string;
+  lastMessage: string;
+  timestamp: string;
+  unread: number;
+  // online: boolean;
+  isActive?: boolean;
+}
+
+export const ConversationItem = ({
+  name,
+  avatar,
+  lastMessage,
+  timestamp,
+  unread,
+  // online,
+  isActive,
+}: ConversationItemProps) => {
+  return (
+    <div
+      className={cn(
+        "flex items-start gap-3 p-4 cursor-pointer transition-colors hover:bg-muted/50",
+        isActive && "bg-muted"
+      )}
+    >
+      <div className="relative">
+        <Avatar className="h-12 w-12">
+          <AvatarImage src={avatar} alt={name} />
+          <AvatarFallback>{name.charAt(0)}</AvatarFallback>
+        </Avatar>
+        {/* {online && (
+          <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-online border-2 border-background" />
+        )} */}
+      </div>
+      
+      <div className="flex-1 min-w-0">
+        <div className="flex items-start justify-between mb-1">
+          <h3 className="font-medium text-foreground truncate">{name}</h3>
+          <span className="text-xs text-muted-foreground whitespace-nowrap ml-2">
+            {timestamp}
+          </span>
+        </div>
+        <div className="flex items-center justify-between">
+          <p className="text-sm text-muted-foreground truncate">{lastMessage}</p>
+          {unread > 0 && (
+            <Badge
+              variant="default"
+              className="ml-2 h-5 min-w-[20px] flex items-center justify-center rounded-full bg-unread text-white text-xs"
+            >
+              {unread}
+            </Badge>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};

@@ -36,6 +36,8 @@ import { NotificationEventPublisher } from "../realtime/publishers/NotificationE
 import { MakeAllAsReadNotificationUseCase } from "../../application/notification/use-cases/MarkAllAsReadNotificationUseCase";
 import { MarkNotificationAsReadUseCase } from "../../application/notification/use-cases/MarkNotificationAsReadUseCase";
 import { NotificationUnreadCountUseCase } from "../../application/notification/use-cases/NotificationUnreadCountUseCase";
+import { ConversationRepository } from "../repositories/ConversationRepository";
+import { GetUserConversationsUseCase } from "../../application/conversation/use-case/GetUserConversationsUseCase";
 
 const medicalRepRepository = new MedicalRepRepository();
 const doctorRepository = new DoctorRepository();
@@ -53,6 +55,7 @@ const departmentRepository = new DepartmentRepository();
 const territoryRepository = new TerritoryRepository();
 const notificationRepository = new NotificationRepository();
 const notificationEventPublisher = new NotificationEventPublisher();
+const conversationRepository = new ConversationRepository();
 
 const createMedicalRepUseCase = new CreateMedicalRepUseCase(
   medicalRepRepository,
@@ -115,7 +118,8 @@ const acceptConnectionRequestUseCase = new DoctorAcceptConnectionRequestUseCase(
   medicalRepRepository,
   doctorRepository,
   connectionRepository,
-  notificationRepository
+  notificationRepository,
+  conversationRepository
 );
 const getRepAnalyticsUseCase = new GetRepAnalyticsUseCase(
   medicalRepRepository,
@@ -167,7 +171,8 @@ const rejectConnectionUseCase = new RepRejectConnectionUseCase(
 const acceptConnOnNotUseCase = new RepAcceptConnOnNotUseCase(
   medicalRepRepository,
   connectionRepository,
-  notificationRepository
+  notificationRepository,
+  conversationRepository
 );
 
 const markAllNotificationsAsReadUseCase = new MakeAllAsReadNotificationUseCase(
@@ -180,6 +185,13 @@ const markAsReadNotificationUseCase = new MarkNotificationAsReadUseCase(
 
 const unReadNotificationsUseCase = new NotificationUnreadCountUseCase(
   notificationRepository
+);
+
+const getConversationsUseCase = new GetUserConversationsUseCase(
+  conversationRepository,
+  storageService,
+  medicalRepRepository,
+  doctorRepository
 );
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
@@ -204,5 +216,6 @@ export const medicalRepController = new MedicalRepController(
   acceptConnOnNotUseCase,
   markAllNotificationsAsReadUseCase,
   markAsReadNotificationUseCase,
-  unReadNotificationsUseCase
+  unReadNotificationsUseCase,
+  getConversationsUseCase
 );

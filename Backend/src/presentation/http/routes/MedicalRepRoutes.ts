@@ -119,5 +119,6 @@ export class MedicalRepRoutes {
       "/notifications/unread-count/:userId",
       medicalRepController.notificaitonUnreadCount
     );
+    this.router.get("/chat/conversations", medicalRepController.conversations);
   }
 }
