@@ -29,6 +29,9 @@ import { IMakeAllAsReadNotificationUseCase } from "../../../application/notifica
 import { IMarkNotificationAsReadUseCase } from "../../../application/notification/interfaces/IMakNotificationAsReadUseCase";
 import { INotificationUnreadCountUsecase } from "../../../application/notification/interfaces/INotificationUnreadCountUseCase";
 import { IGetConversationsUseCase } from "../../../application/conversation/interfaces/IGetUserConversationsUseCase";
+import { IGetAllMessagesUseCase } from "../../../application/conversation/interfaces/IGetAllMessagesUseCase";
+import { CreateMessageDTO } from "../../../application/conversation/dto/CreateMessageDTO";
+import { ICreateMessageUseCase } from "../../../application/conversation/interfaces/ICreateMessageUseCase";
 
 export class MedicalRepController {
   constructor(
@@ -55,7 +58,9 @@ export class MedicalRepController {
     private _markAllNotificationsAsRead: IMakeAllAsReadNotificationUseCase,
     private _markAsReadNotificationUseCase: IMarkNotificationAsReadUseCase,
     private _countOfUnreadNotificationUseCase: INotificationUnreadCountUsecase,
-    private _repConversationsOnChatUseCase: IGetConversationsUseCase
+    private _repConversationsOnChatUseCase: IGetConversationsUseCase,
+    private _getAllMessagesUseCase: IGetAllMessagesUseCase,
+    private _createMessageuseCase: ICreateMessageUseCase
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -315,6 +320,21 @@ export class MedicalRepController {
   conversations = async (req: Request, res: Response) => {
     const userId = GetOptionalUserId(req.user);
     const response = await this._repConversationsOnChatUseCase.execute(userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  getAllMessages = async (req: Request, res: Response) => {
+    const { conversationId } = req.params;
+    const response = await this._getAllMessagesUseCase.execute(conversationId);
+    return res.status(HttpStatusCode.OK).json({ succes: true, data: response });
+  };
+
+  createMessage = async (req: Request, res: Response) => {
+    const data = req.body as CreateMessageDTO;
+    const userId=GetOptionalUserId(req.user);
+    const response = await this._createMessageuseCase.execute(data,userId);
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });

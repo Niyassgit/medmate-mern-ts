@@ -13,6 +13,7 @@ import { parsePostField } from "../middlewares/ParsePostField";
 import { UserValidate } from "../../../infrastructure/di/UserValidateDI";
 import { makeValidateUserMiddleware } from "../middlewares/ValidateUserMiddleware";
 import { uploadS3 } from "../../../infrastructure/storage/multer/MulterS3BucketConfig";
+import { SendMessageSchema } from "../validators/MessageSchema";
 
 const validateUser = makeValidateUserMiddleware(UserValidate);
 
@@ -120,5 +121,14 @@ export class MedicalRepRoutes {
       medicalRepController.notificaitonUnreadCount
     );
     this.router.get("/chat/conversations", medicalRepController.conversations);
+    this.router.get(
+      "/chat/messages/:conversationId",
+      medicalRepController.getAllMessages
+    );
+    this.router.post(
+      "/chat/message",
+      ValidateSchema(SendMessageSchema),
+      medicalRepController.createMessage
+    );
   }
 }

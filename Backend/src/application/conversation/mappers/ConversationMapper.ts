@@ -8,9 +8,9 @@ export class ConversationMapper {
     entity: IUserConversation,
     storageService: IStorageService
   ): Promise<ConversationDTO> {
-    let signedUrl:string | null=null;
-    if(entity.profileImage){
-        signedUrl=await storageService.generateSignedUrl(entity.profileImage);
+    let signedUrl: string | null = null;
+    if (entity.profileImage) {
+      signedUrl = await storageService.generateSignedUrl(entity.profileImage);
     }
     return {
       id: entity.id,
@@ -19,6 +19,8 @@ export class ConversationMapper {
       lastMessage: entity.lastMessage,
       lastMessageAt: entity.lastMessageAt,
       unread: entity.unread,
+      doctorId: entity.repId,
+      repId: entity.repId,
     };
   }
 
@@ -31,11 +33,14 @@ export class ConversationMapper {
     );
   }
 
-  static toEntity(repId:string,doctorId:string):Omit<IConversation, "id"|"createdAt">{
-    return{
-      doctorId:doctorId,
-      repId:repId,
-      lastMessageAt:new Date(),
-    }
+  static toEntity(
+    repId: string,
+    doctorId: string
+  ): Omit<IConversation, "id" | "createdAt"> {
+    return {
+      doctorId: doctorId,
+      repId: repId,
+      lastMessageAt: new Date(),
+    };
   }
 }

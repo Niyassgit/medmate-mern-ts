@@ -8,8 +8,15 @@ import { doctorConversations } from "@/features/doctor/api";
 import { repConversations } from "@/features/rep/api";
 import { Spinner } from "../ui/spinner";
 import { Conversation } from "../Dto/Conversation";
+import { Role } from "@/types/Role";
 
-export const ConversationList = ({ owner }: { owner: "DOCTOR" | "REP" }) => {
+export const ConversationList = ({
+  owner,
+  onSelect
+}: {
+  owner: Role;
+  onSelect: (conv:Conversation) => void;
+}) => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -17,7 +24,7 @@ export const ConversationList = ({ owner }: { owner: "DOCTOR" | "REP" }) => {
     const fetchConversations = async () => {
       try {
         let response;
-        if (owner === "DOCTOR") { 
+        if (owner === Role.DOCTOR) {
           response = await doctorConversations();
         } else {
           response = await repConversations();
@@ -32,7 +39,6 @@ export const ConversationList = ({ owner }: { owner: "DOCTOR" | "REP" }) => {
 
     fetchConversations();
   }, [owner]);
-
   if (loading) return <Spinner />;
 
   return (
@@ -74,6 +80,7 @@ export const ConversationList = ({ owner }: { owner: "DOCTOR" | "REP" }) => {
             lastMessage={c.lastMessage ?? "No messages yet"}
             timestamp={c.lastMessageAt}
             unread={c.unread}
+            onClick={() => onSelect(c)}
           />
         ))}
       </div>

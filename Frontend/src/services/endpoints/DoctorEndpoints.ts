@@ -26,4 +26,6 @@ export const DoctorEndpoints = {
   MARK_ALL_NOT_AS_READ:(userId:string)=>`/doctor/notifications/mark-all-read/${userId}`,
   COUNT_UNREAD_NOTIFICATION:(userId:string)=>`/doctor/notifications/unread-count/${userId}`,
   CONVERSATIONS:`/doctor/chat/conversations`,
+  GET_MESSAGES:(conversationId:string)=>`/doctor/chat/messages/${conversationId}`,
+  ADD_MESSAGE:`/doctor/chat/message`,
 };

@@ -25,6 +25,9 @@ import { IMakeAllAsReadNotificationUseCase } from "../../../application/notifica
 import { IMarkNotificationAsReadUseCase } from "../../../application/notification/interfaces/IMakNotificationAsReadUseCase";
 import { INotificationUnreadCountUsecase } from "../../../application/notification/interfaces/INotificationUnreadCountUseCase";
 import { IGetConversationsUseCase } from "../../../application/conversation/interfaces/IGetUserConversationsUseCase";
+import { IGetAllMessagesUseCase } from "../../../application/conversation/interfaces/IGetAllMessagesUseCase";
+import { CreateMessageDTO } from "../../../application/conversation/dto/CreateMessageDTO";
+import { ICreateMessageUseCase } from "../../../application/conversation/interfaces/ICreateMessageUseCase";
 
 export class DoctorController {
   constructor(
@@ -49,7 +52,9 @@ export class DoctorController {
     private _notificationsMarkAsRead: IMakeAllAsReadNotificationUseCase,
     private _markNotificationAsReadUseCase: IMarkNotificationAsReadUseCase,
     private _getUnreadNotificationCountUseCase: INotificationUnreadCountUsecase,
-    private _getUserConversationsUseCase: IGetConversationsUseCase
+    private _getUserConversationsUseCase: IGetConversationsUseCase,
+    private _getAllMessagesUseCase: IGetAllMessagesUseCase,
+    private _createMessageUseCase: ICreateMessageUseCase
   ) {}
 
   createDoctor = async (req: Request, res: Response) => {
@@ -269,8 +274,27 @@ export class DoctorController {
   };
 
   getConversations = async (req: Request, res: Response) => {
-    const userId=GetOptionalUserId(req.user);
+    const userId = GetOptionalUserId(req.user);
     const response = await this._getUserConversationsUseCase.execute(userId);
-    return res.status(HttpStatusCode.OK).json({ success: true, data: response });
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  getMessages = async (req: Request, res: Response) => {
+    const { conversationId } = req.params;
+    const response = await this._getAllMessagesUseCase.execute(conversationId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  createMessage = async (req: Request, res: Response) => {
+    const data = req.body as CreateMessageDTO;
+    const userId=GetOptionalUserId(req.user);
+    const response = await this._createMessageUseCase.execute(data,userId);
+    return res
+      .status(HttpStatusCode.CREATED)
+      .json({ success: true, data: response });
   };
 }

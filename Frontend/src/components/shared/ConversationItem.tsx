@@ -10,6 +10,7 @@ interface ConversationItemProps {
   unread: number;
   // online: boolean;
   isActive?: boolean;
+  onClick?: () => void;
 }
 
 export const ConversationItem = ({
@@ -20,9 +21,11 @@ export const ConversationItem = ({
   unread,
   // online,
   isActive,
+  onClick,
 }: ConversationItemProps) => {
   return (
     <div
+    onClick={onClick}
       className={cn(
         "flex items-start gap-3 p-4 cursor-pointer transition-colors hover:bg-muted/50",
         isActive && "bg-muted"
@@ -37,7 +40,7 @@ export const ConversationItem = ({
           <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-online border-2 border-background" />
         )} */}
       </div>
-      
+
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between mb-1">
           <h3 className="font-medium text-foreground truncate">{name}</h3>
@@ -46,7 +49,9 @@ export const ConversationItem = ({
           </span>
         </div>
         <div className="flex items-center justify-between">
-          <p className="text-sm text-muted-foreground truncate">{lastMessage}</p>
+          <p className="text-sm text-muted-foreground truncate">
+            {lastMessage}
+          </p>
           {unread > 0 && (
             <Badge
               variant="default"

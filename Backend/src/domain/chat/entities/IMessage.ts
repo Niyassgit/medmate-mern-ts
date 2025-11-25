@@ -5,7 +5,7 @@ export interface IMessage{
     conversationId:string;
     senderId:string;
     senderRole:Role,
-    content:string;
+    content:string | null;
     messageType:MessageType;
     isRead:boolean;
     createdAt:Date;

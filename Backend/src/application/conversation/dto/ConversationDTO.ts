@@ -5,4 +5,6 @@ export interface ConversationDTO{
     lastMessage?:string;
     lastMessageAt?:Date;
     unread:number;
+    repId:string;
+    doctorId:string;
 }

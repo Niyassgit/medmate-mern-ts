@@ -34,5 +34,8 @@ export const RepEndpoints = {
   MARK_ALL_NOT_AS_READ: (userId: string) =>
     `/rep/notifications/mark-all-read/${userId}`,
   COUNT_UNREAD_NOTIFICATION: (userId:string) => `/rep/notifications/unread-count/${userId}`,
-  repConversations:`/rep/chat/conversations`,
+  CONVERSATIONS:`/rep/chat/conversations`,
+  GET_MESSAGES:(conversationId:string)=>`/rep/chat/messages/${conversationId}`,
+  ADD_MESSAGE:`/rep/chat/message`,
+
 };

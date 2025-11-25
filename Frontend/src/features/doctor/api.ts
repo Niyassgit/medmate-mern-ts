@@ -1,6 +1,8 @@
 import { api } from "@/services/api";
 import { DoctorEndpoints } from "@/services/endpoints/DoctorEndpoints";
 import { CompleteDoctorProfileDTO } from "./schemas/CompleteDoctorProfileSchema";
+import { MessageType } from "@/types/MessageTypes";
+import { Role } from "@/types/Role";
 
 export const getProfileDoctor = async (id: string) => {
   const response = await api.get(DoctorEndpoints.PROFILE(id));
@@ -128,5 +130,21 @@ export const notificationUnreadCount=async(userId:string)=>{
 
 export const doctorConversations=async()=>{
   const {data}=await api.get(DoctorEndpoints.CONVERSATIONS);
+  return data;
+}
+
+export const doctorMessages=async(conversationId:string)=>{
+  const res=await api.get(DoctorEndpoints.GET_MESSAGES(conversationId));
+  return res.data.data;
+}
+
+export const createMessageForDoctor=async(body:{
+  conversationId: string;
+  content: string;
+  messageType: MessageType;
+  senderRole: Role;
+  receiverId: string;
+})=>{
+  const {data}=await api.post(DoctorEndpoints.ADD_MESSAGE,body);
   return data;
 }

@@ -45,7 +45,6 @@ export class ConversationRepository
       orderBy: { lastMessageAt: "desc" },
     });
 
-
     const unreadGroups = await prisma.message.groupBy({
       by: ["conversationId"],
       where: {
@@ -71,9 +70,11 @@ export class ConversationRepository
         id: conv.id,
         name: other.name,
         profileImage: other.user?.profileImage ?? null,
-        lastMessage: latest?.content ?? null,
+        lastMessage: latest?.content ?? "No messages yet",
         lastMessageAt: latest?.createdAt ?? conv.createdAt,
         unread: unreadMap.get(conv.id) ?? 0,
+        doctorId:conv.doctorId,
+        repId:conv.repId
       });
     }
 

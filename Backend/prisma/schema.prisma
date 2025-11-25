@@ -361,12 +361,13 @@ model Conversation {
   repId         String   @db.ObjectId
   doctorId      String   @db.ObjectId
   createdAt     DateTime @default(now())
-  lastMessageAt DateTime
+  lastMessageAt DateTime @default(now())
 
   rep      MedicalRep @relation(fields: [repId], references: [id])
   doctor   Doctor     @relation(fields: [doctorId], references: [id])
   messages Message[]
 }
+
 enum MessageType {
   TEXT
   IMAGE
@@ -376,14 +377,14 @@ enum MessageType {
 }
 
 model Message {
-  id             String   @id @default(auto()) @map("_id") @db.ObjectId
-  conversationId String   @db.ObjectId
-  senderId       String   @db.ObjectId
-  senderRole     String
-  content        String
+  id             String      @id @default(auto()) @map("_id") @db.ObjectId
+  conversationId String      @db.ObjectId
+  senderId       String      @db.ObjectId
+  senderRole     Role
+  content        String?
   messageType    MessageType
-  isRead         Boolean
-  createdAt      DateTime @default(now())
+  isRead         Boolean     @default(false)
+  createdAt      DateTime    @default(now())
 
   conversation Conversation @relation(fields: [conversationId], references: [id])
 }

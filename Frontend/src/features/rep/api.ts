@@ -1,5 +1,7 @@
 import { api } from "@/services/api";
 import { RepEndpoints } from "@/services/endpoints/RepEndpoints";
+import { MessageType } from "@/types/MessageTypes";
+import { Role } from "@/types/Role";
 
 export const getProfileRep = async (userId: string) => {
   const response = await api.get(RepEndpoints.PROFILE(userId));
@@ -133,6 +135,23 @@ export const unreadNotificationCount = async (userId: string) => {
 };
 
 export const repConversations = async () => {
-  const { data } = await api.get(RepEndpoints.repConversations);
+  const { data } = await api.get(RepEndpoints.CONVERSATIONS);
   return data;
 };
+
+export const getMessagesRep=async (conversationId:string)=>{
+  const res=await api.get(RepEndpoints.GET_MESSAGES(conversationId));
+  return res.data.data;
+}
+
+export const createMessageForRep=async(body:{
+  conversationId: string;
+  content: string;
+  messageType: MessageType;
+  senderRole: Role;
+  receiverId: string;
+})=>{
+  console.log("message body from the rep:",body);
+  const {data}=await api.post(RepEndpoints.ADD_MESSAGE,body);
+  return data;
+}

@@ -38,6 +38,9 @@ import { MarkNotificationAsReadUseCase } from "../../application/notification/us
 import { NotificationUnreadCountUseCase } from "../../application/notification/use-cases/NotificationUnreadCountUseCase";
 import { ConversationRepository } from "../repositories/ConversationRepository";
 import { GetUserConversationsUseCase } from "../../application/conversation/use-case/GetUserConversationsUseCase";
+import { GetAllMessagesUseCase } from "../../application/conversation/use-case/GetAllMessagesUseCase";
+import { MessageRepository } from "../repositories/MessageRepository";
+import { CreateMessageUseCase } from "../../application/conversation/use-case/CreateMessageUseCase";
 
 const medicalRepRepository = new MedicalRepRepository();
 const doctorRepository = new DoctorRepository();
@@ -56,6 +59,7 @@ const territoryRepository = new TerritoryRepository();
 const notificationRepository = new NotificationRepository();
 const notificationEventPublisher = new NotificationEventPublisher();
 const conversationRepository = new ConversationRepository();
+const messageRepository = new MessageRepository();
 
 const createMedicalRepUseCase = new CreateMedicalRepUseCase(
   medicalRepRepository,
@@ -193,6 +197,14 @@ const getConversationsUseCase = new GetUserConversationsUseCase(
   medicalRepRepository,
   doctorRepository
 );
+
+const getAllMessagesUseCase = new GetAllMessagesUseCase(messageRepository);
+const createMessageUseCase = new CreateMessageUseCase(
+  messageRepository,
+  doctorRepository,
+  medicalRepRepository
+);
+
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
   getRepProfileByIdUseCase,
@@ -217,5 +229,7 @@ export const medicalRepController = new MedicalRepController(
   markAllNotificationsAsReadUseCase,
   markAsReadNotificationUseCase,
   unReadNotificationsUseCase,
-  getConversationsUseCase
+  getConversationsUseCase,
+  getAllMessagesUseCase,
+  createMessageUseCase
 );
