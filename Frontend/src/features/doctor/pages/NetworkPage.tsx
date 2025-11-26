@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import Networks from "./Networks";
+import Networks from "../components/Networks";
 import { RepCardDetailsDTO } from "../dto/RepCardDetailsDTO";
 import { useSelector } from "react-redux";
 import { getNetworks } from "../api";

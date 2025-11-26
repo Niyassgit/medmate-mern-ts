@@ -1,5 +1,3 @@
-import { repConversations } from "@/features/rep/api";
-
 export const RepEndpoints = {
   REGISTER: "/rep/signup",
   PROFILE: (userId: string) => `/rep/profile/${userId}`,
