@@ -42,6 +42,7 @@ import { GetAllMessagesUseCase } from "../../application/conversation/use-case/G
 import { MessageRepository } from "../repositories/MessageRepository";
 import { CreateDoctorMessageUseCase } from "../../application/conversation/use-case/CreateDoctorMessageUseCase";
 import { ChatEventPublisher } from "../realtime/publishers/ChatEventPublisher";
+import { DoctoMessageMarkAsReadUseCase } from "../../application/conversation/use-case/DoctorMessageMarkAsReadUseCase";
 
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
@@ -60,7 +61,7 @@ const notificationRepository = new NotificationRepository();
 const notificationEventPublisher = new NotificationEventPublisher();
 const conversationRepository = new ConversationRepository();
 const messageRepository = new MessageRepository();
-const chatEventPublisher=new ChatEventPublisher();
+const chatEventPublisher = new ChatEventPublisher();
 
 const createDoctorUseCase = new CreateDoctorUseCase(
   doctorRepository,
@@ -204,9 +205,14 @@ const getAllMessagesUseCase = new GetAllMessagesUseCase(messageRepository);
 const createMessageUseCase = new CreateDoctorMessageUseCase(
   doctorRepository,
   messageRepository,
- chatEventPublisher
+  chatEventPublisher
 );
 
+const markMessageAsReadUseCase = new DoctoMessageMarkAsReadUseCase(
+  doctorRepository,
+  messageRepository,
+  conversationRepository
+);
 export const doctorController = new DoctorController(
   createDoctorUseCase,
   getDoctorprofileById,
@@ -231,5 +237,6 @@ export const doctorController = new DoctorController(
   getUnreadNotificationCountUseCase,
   getUserConversationsUseCase,
   getAllMessagesUseCase,
-  createMessageUseCase
+  createMessageUseCase,
+  markMessageAsReadUseCase
 );

@@ -23,9 +23,14 @@ export const DoctorEndpoints = {
     `/doctor/notifications/connection/${notificationId}/accept/${repId}`,
   MARK_NOT_AS_READ: (notificationId: string) =>
     `/doctor/notifications/mark-as-read/${notificationId}`,
-  MARK_ALL_NOT_AS_READ:(userId:string)=>`/doctor/notifications/mark-all-read/${userId}`,
-  COUNT_UNREAD_NOTIFICATION:(userId:string)=>`/doctor/notifications/unread-count/${userId}`,
-  CONVERSATIONS:`/doctor/chat/conversations`,
-  GET_MESSAGES:(conversationId:string)=>`/doctor/chat/messages/${conversationId}`,
-  ADD_MESSAGE:`/doctor/chat/message`,
+  MARK_ALL_NOT_AS_READ: (userId: string) =>
+    `/doctor/notifications/mark-all-read/${userId}`,
+  COUNT_UNREAD_NOTIFICATION: (userId: string) =>
+    `/doctor/notifications/unread-count/${userId}`,
+  CONVERSATIONS: `/doctor/chat/conversations`,
+  GET_MESSAGES: (conversationId: string) =>
+    `/doctor/chat/messages/${conversationId}`,
+  ADD_MESSAGE: `/doctor/chat/message`,
+  MARK_AS_READ: (conversationId: string) =>
+    `/doctor/chat/message/read/${conversationId}`,
 };

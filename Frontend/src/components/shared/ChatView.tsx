@@ -6,8 +6,8 @@ import { MessageInput } from "./MessageInput";
 import { useCallback, useEffect, useState } from "react";
 import { MessageDTO } from "../Dto/MessageDTO";
 import useFetchItem from "@/hooks/useFetchItem";
-import { getMessagesRep } from "@/features/rep/api";
-import { doctorMessages } from "@/features/doctor/api";
+import { getMessagesRep, messageMarkAsReadForRep } from "@/features/rep/api";
+import { doctorMessages, messageMarkAsReadForDoctor } from "@/features/doctor/api";
 import { SpinnerButton } from "./SpinnerButton";
 import { Conversation } from "../Dto/Conversation";
 import { Role } from "@/types/Role";
@@ -56,6 +56,12 @@ export const ChatView = ({ conversation, owner }: ChatViewProps) => {
       if (newMessage.senderRole !== owner) {
         setLocalMessages((prev) => [...prev, newMessage]);
       }
+
+      if(owner === Role.MEDICAL_REP){
+        messageMarkAsReadForRep(conversation.id);
+      }else{
+        messageMarkAsReadForDoctor(conversation.id);
+      }
     };
 
     socket.on("new_message", handleIncoming);
@@ -75,6 +81,21 @@ export const ChatView = ({ conversation, owner }: ChatViewProps) => {
       </div>
     );
 
+    useEffect(()=>{
+
+      if(!conversation || !localMessages.length) return;
+      const hasUnread=localMessages.some(
+        (msg)=>msg.senderRole !== owner && !msg.isRead
+      );
+
+      if(!hasUnread) return;
+
+      if(owner === Role.MEDICAL_REP){
+        messageMarkAsReadForRep(conversation.id);
+      }else{
+        messageMarkAsReadForDoctor(conversation.id);
+      }
+    },[conversation?.id,localMessages,owner]);
   if (!conversation) {
     return (
       <div className="flex items-center justify-center h-full text-muted-foreground flex-col gap-2">

@@ -148,3 +148,8 @@ export const createMessageForDoctor=async(body:{
   const {data}=await api.post(DoctorEndpoints.ADD_MESSAGE,body);
   return data;
 }
+
+export const messageMarkAsReadForDoctor=async(conversationId:string)=>{
+  const res=await api.patch(DoctorEndpoints.MARK_AS_READ(conversationId));
+  return res.data;
+}

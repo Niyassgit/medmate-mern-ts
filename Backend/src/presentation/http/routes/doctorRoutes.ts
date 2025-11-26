@@ -91,6 +91,9 @@ export class DoctorRoutes {
       ValidateSchema(SendMessageSchema),
       doctorController.createMessage
     );
-    // this.router.patch("/chat/message/read/:conversationId",doctorController);
+    this.router.patch(
+      "/chat/message/read/:conversationId",
+      doctorController.markMessageAsRead
+    );
   }
 }

@@ -130,5 +130,9 @@ export class MedicalRepRoutes {
       ValidateSchema(SendMessageSchema),
       medicalRepController.createMessage
     );
+    this.router.patch(
+      "/chat/message/read/:conversationId",
+      medicalRepController.markMessageAsRead
+    );
   }
 }

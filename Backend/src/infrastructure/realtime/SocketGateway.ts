@@ -56,12 +56,10 @@ export function initSocket(server: HttpServer) {
 
     socket.on("join_conversation", (conversationId: string) => {
       socket.join(`conversation:${conversationId}`);
-      console.log(`👥 User ${user.id} joined conversation: ${conversationId}`);
     });
 
     socket.on("leave_conversation", (conversationId: string) => {
       socket.leave(`conversation:${conversationId}`);
-      console.log(`🚪 User ${user.id} left conversation: ${conversationId}`);
     });
   });
 

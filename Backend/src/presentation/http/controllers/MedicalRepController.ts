@@ -32,6 +32,7 @@ import { IGetConversationsUseCase } from "../../../application/conversation/inte
 import { IGetAllMessagesUseCase } from "../../../application/conversation/interfaces/IGetAllMessagesUseCase";
 import { CreateMessageDTO } from "../../../application/conversation/dto/CreateMessageDTO";
 import { ICreateRepMessageUseCase } from "../../../application/conversation/interfaces/ICreateRepMessage";
+import { IRepMessageMarkAsReadUseCase } from "../../../application/conversation/interfaces/IRepMessageMarkAsReadUseCase";
 
 export class MedicalRepController {
   constructor(
@@ -61,6 +62,7 @@ export class MedicalRepController {
     private _repConversationsOnChatUseCase: IGetConversationsUseCase,
     private _getAllMessagesUseCase: IGetAllMessagesUseCase,
     private _createMessageuseCase: ICreateRepMessageUseCase,
+    private _repMessageMarkAsReadUseCase: IRepMessageMarkAsReadUseCase
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -333,10 +335,17 @@ export class MedicalRepController {
 
   createMessage = async (req: Request, res: Response) => {
     const data = req.body as CreateMessageDTO;
-    const userId=GetOptionalUserId(req.user);
-    const response = await this._createMessageuseCase.execute(data,userId);
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._createMessageuseCase.execute(data, userId);
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
+  };
+
+  markMessageAsRead = async (req: Request, res: Response) => {
+    const { conversationId } = req.params;
+    const userId = GetOptionalUserId(req.user);
+    await this._repMessageMarkAsReadUseCase.execute(conversationId, userId);
+    return res.sendStatus(HttpStatusCode.NO_CONTENT);
   };
 }

@@ -37,5 +37,5 @@ export const RepEndpoints = {
   CONVERSATIONS:`/rep/chat/conversations`,
   GET_MESSAGES:(conversationId:string)=>`/rep/chat/messages/${conversationId}`,
   ADD_MESSAGE:`/rep/chat/message`,
-
+  MARK_AS_READ:(conversationId:string)=>`/rep/chat/message/read/${conversationId}`,
 };

@@ -154,3 +154,8 @@ export const createMessageForRep=async(body:{
   const {data}=await api.post(RepEndpoints.ADD_MESSAGE,body);
   return data;
 }
+
+export const messageMarkAsReadForRep=async(conversationId:string)=>{
+  const res=await api.patch(RepEndpoints.MARK_AS_READ(conversationId));
+  return res.data;
+}

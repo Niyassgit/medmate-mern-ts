@@ -28,7 +28,14 @@ export class MessageRepository
   async createMessage(
     message: Omit<IMessage, "id" | "createdAt" | "isRead">
   ): Promise<IMessage> {
-    const mappedMessage=MessageMapper.toPersistance(message);
+    const mappedMessage = MessageMapper.toPersistance(message);
     return this.create(mappedMessage);
+  }
+
+  async markAsRead(conversationId: string, profileId: string): Promise<void> {
+    await prisma.message.updateMany({
+      where: { conversationId, senderId: { not: profileId }, isRead: false },
+      data: { isRead: true },
+    });
   }
 }

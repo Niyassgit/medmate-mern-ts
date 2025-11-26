@@ -73,8 +73,8 @@ export class ConversationRepository
         lastMessage: latest?.content ?? "No messages yet",
         lastMessageAt: latest?.createdAt ?? conv.createdAt,
         unread: unreadMap.get(conv.id) ?? 0,
-        doctorId:conv.doctorId,
-        repId:conv.repId
+        doctorId: conv.doctorId,
+        repId: conv.repId,
       });
     }
 
@@ -90,5 +90,11 @@ export class ConversationRepository
     });
     if (!result) return null;
     return ConversationMapper.toEntity(result);
+  }
+
+  async findConversationById(
+    conversationId: string
+  ): Promise<IConversation | null> {
+    return await this.findById(conversationId);
   }
 }

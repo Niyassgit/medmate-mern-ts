@@ -6,6 +6,7 @@ export const ErrorMessages = {
   INVALID_CREDENTIALS: "Invalid email or password",
   UNAUTHORIZED: "Unauthorized access",
   FORBIDDEN: "Forbidden",
+  USER_NOT_HAVE_PROFILE:"User dont have profile",
   SERVER_ERROR: "Internal server error",
   EMAIL_ALREADY_EXISTS: "Email already exists",
   PASSWORD_REQUIRED: "Password is required",
@@ -49,6 +50,7 @@ export const ErrorMessages = {
   NO_CONNECTION_REQUEST_FOUND: "No connection found!",
   NOTIFICATION_NOT_FOUND: "Notification not found",
   NOTIFICATION_ISREAD:"Failed to update notification read status",
+  CONVERSATION_NOT_FOUND:"Conversation not found",
 } as const;
 
 export const SuccessMessages = {
