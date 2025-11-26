@@ -1,5 +1,6 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { formatMessageTimestamp } from "@/lib/formatMessageTimestamp";
 import { cn } from "@/lib/utils";
 
 interface ConversationItemProps {
@@ -25,7 +26,7 @@ export const ConversationItem = ({
 }: ConversationItemProps) => {
   return (
     <div
-    onClick={onClick}
+      onClick={onClick}
       className={cn(
         "flex items-start gap-3 p-4 cursor-pointer transition-colors hover:bg-muted/50",
         isActive && "bg-muted"
@@ -45,7 +46,7 @@ export const ConversationItem = ({
         <div className="flex items-start justify-between mb-1">
           <h3 className="font-medium text-foreground truncate">{name}</h3>
           <span className="text-xs text-muted-foreground whitespace-nowrap ml-2">
-            {timestamp}
+           {formatMessageTimestamp(timestamp)}
           </span>
         </div>
         <div className="flex items-center justify-between">

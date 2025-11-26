@@ -31,7 +31,7 @@ import { INotificationUnreadCountUsecase } from "../../../application/notificati
 import { IGetConversationsUseCase } from "../../../application/conversation/interfaces/IGetUserConversationsUseCase";
 import { IGetAllMessagesUseCase } from "../../../application/conversation/interfaces/IGetAllMessagesUseCase";
 import { CreateMessageDTO } from "../../../application/conversation/dto/CreateMessageDTO";
-import { ICreateMessageUseCase } from "../../../application/conversation/interfaces/ICreateMessageUseCase";
+import { ICreateRepMessageUseCase } from "../../../application/conversation/interfaces/ICreateRepMessage";
 
 export class MedicalRepController {
   constructor(
@@ -60,7 +60,7 @@ export class MedicalRepController {
     private _countOfUnreadNotificationUseCase: INotificationUnreadCountUsecase,
     private _repConversationsOnChatUseCase: IGetConversationsUseCase,
     private _getAllMessagesUseCase: IGetAllMessagesUseCase,
-    private _createMessageuseCase: ICreateMessageUseCase
+    private _createMessageuseCase: ICreateRepMessageUseCase,
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {

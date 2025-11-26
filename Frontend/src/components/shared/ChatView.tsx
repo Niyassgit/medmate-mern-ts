@@ -11,24 +11,23 @@ import { doctorMessages } from "@/features/doctor/api";
 import { SpinnerButton } from "./SpinnerButton";
 import { Conversation } from "../Dto/Conversation";
 import { Role } from "@/types/Role";
+import { getSocket } from "@/lib/socket";
 
 interface ChatViewProps {
   conversation: Conversation | null;
-  owner:Role;
+  owner: Role;
 }
 
 export const ChatView = ({ conversation, owner }: ChatViewProps) => {
   const [localMessages, setLocalMessages] = useState<MessageDTO[]>([]);
+
   const fetchMessages = useCallback(() => {
     if (!conversation) return Promise.resolve<MessageDTO[]>([]);
-    if (owner === Role.MEDICAL_REP) {
-      const data = getMessagesRep(conversation.id);
-      return data;
-    } else {
-      const data = doctorMessages(conversation.id);
-      return data;
-    }
-  }, [conversation]);
+    return owner === Role.MEDICAL_REP
+      ? getMessagesRep(conversation.id)
+      : doctorMessages(conversation.id);
+  }, [conversation, owner]);
+
   const {
     data: messages,
     error,
@@ -43,6 +42,30 @@ export const ChatView = ({ conversation, owner }: ChatViewProps) => {
     setLocalMessages((prev) => [...prev, newMessage]);
   };
 
+  useEffect(() => {
+    if (!conversation) return;
+
+    const token = localStorage.getItem("accessToken");
+    if (!token) return;
+
+    const socket = getSocket(token);
+
+    socket.emit("join_conversation", conversation.id);
+
+    const handleIncoming = (newMessage: MessageDTO) => {
+      if (newMessage.senderRole !== owner) {
+        setLocalMessages((prev) => [...prev, newMessage]);
+      }
+    };
+
+    socket.on("new_message", handleIncoming);
+
+    return () => {
+      socket.off("new_message", handleIncoming);
+      socket.emit("leave_conversation", conversation.id);
+    };
+  }, [conversation?.id, owner]);
+
   if (loading) return <SpinnerButton />;
 
   if (error)
@@ -55,7 +78,7 @@ export const ChatView = ({ conversation, owner }: ChatViewProps) => {
   if (!conversation) {
     return (
       <div className="flex items-center justify-center h-full text-muted-foreground flex-col gap-2">
-        <img src="/logo.png" className="h-50 opacity-70" />
+        <img src="/logo.png" className="h-50 opacity-70" alt="Logo" />
         <p className="text-sm">Select a conversation to start messaging</p>
       </div>
     );
@@ -65,16 +88,15 @@ export const ChatView = ({ conversation, owner }: ChatViewProps) => {
     <div className="flex flex-col h-full bg-background">
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-background">
-        {/* LEFT SIDE — Avatar + Name */}
         <div className="flex items-center gap-3">
           <div className="relative">
             <Avatar className="h-10 w-10">
               <AvatarImage
-                src={conversation?.profilImage}
-                alt={conversation?.name}
+                src={conversation.profilImage}
+                alt={conversation.name}
               />
               <AvatarFallback>
-                {conversation?.name?.charAt(0).toUpperCase()}
+                {conversation.name?.charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
             <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-online border-2 border-background" />
@@ -82,13 +104,12 @@ export const ChatView = ({ conversation, owner }: ChatViewProps) => {
 
           <div>
             <h2 className="font-semibold text-foreground">
-              {conversation?.name}
+              {conversation.name}
             </h2>
             <p className="text-xs text-online">Online</p>
           </div>
         </div>
 
-        {/* RIGHT SIDE — Call & options */}
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon" className="h-9 w-9">
             <Video className="h-5 w-5" />
@@ -122,7 +143,9 @@ export const ChatView = ({ conversation, owner }: ChatViewProps) => {
         conversationId={conversation.id}
         senderRole={owner}
         receiverId={
-          owner === Role.MEDICAL_REP ? conversation.doctorId : conversation.repId
+          owner === Role.MEDICAL_REP
+            ? conversation.doctorId
+            : conversation.repId
         }
         onMessageSent={handleMessageSent}
       />

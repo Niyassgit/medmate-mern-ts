@@ -27,7 +27,7 @@ import { INotificationUnreadCountUsecase } from "../../../application/notificati
 import { IGetConversationsUseCase } from "../../../application/conversation/interfaces/IGetUserConversationsUseCase";
 import { IGetAllMessagesUseCase } from "../../../application/conversation/interfaces/IGetAllMessagesUseCase";
 import { CreateMessageDTO } from "../../../application/conversation/dto/CreateMessageDTO";
-import { ICreateMessageUseCase } from "../../../application/conversation/interfaces/ICreateMessageUseCase";
+import { ICreateDoctorMessageUseCase } from "../../../application/conversation/interfaces/ICreateDoctorMessageUseCase";
 
 export class DoctorController {
   constructor(
@@ -54,7 +54,7 @@ export class DoctorController {
     private _getUnreadNotificationCountUseCase: INotificationUnreadCountUsecase,
     private _getUserConversationsUseCase: IGetConversationsUseCase,
     private _getAllMessagesUseCase: IGetAllMessagesUseCase,
-    private _createMessageUseCase: ICreateMessageUseCase
+    private _createMessageUseCase: ICreateDoctorMessageUseCase
   ) {}
 
   createDoctor = async (req: Request, res: Response) => {

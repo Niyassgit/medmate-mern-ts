@@ -35,22 +35,35 @@ export function initSocket(server: HttpServer) {
       next(new UnautharizedError(ErrorMessages.UNAUTHORIZED));
     }
   });
-  io.on("connection", (socket) => {
+  io.on("connection", (socket: AuthenticatedSocket) => {
     const user = socket.user;
+
     if (!user) {
       logger.warn(ErrorMessages.UNAUTHERIZED_SOCKET);
       socket.disconnect(true);
       return;
     }
-    void socket.join(`user:${user.id}`);
-      // console.log("🟢 Socket connected:", user.id);
+
+    socket.join(`user:${user.id}`);
+
     socket.on("room:join:product", ({ productId }: { productId: string }) => {
-      void socket.join(`product:${productId}`);
+      socket.join(`product:${productId}`);
     });
+
     socket.on("room:leave:product", ({ productId }: { productId: string }) => {
-      void socket.leave(`product:${productId}`);
+      socket.leave(`product:${productId}`);
     });
-      // console.log("🔗 Joined room: user:" + user.id);
+
+    socket.on("join_conversation", (conversationId: string) => {
+      socket.join(`conversation:${conversationId}`);
+      console.log(`👥 User ${user.id} joined conversation: ${conversationId}`);
+    });
+
+    socket.on("leave_conversation", (conversationId: string) => {
+      socket.leave(`conversation:${conversationId}`);
+      console.log(`🚪 User ${user.id} left conversation: ${conversationId}`);
+    });
   });
+
   return io;
 }

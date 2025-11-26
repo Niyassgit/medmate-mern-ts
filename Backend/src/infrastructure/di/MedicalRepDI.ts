@@ -40,7 +40,8 @@ import { ConversationRepository } from "../repositories/ConversationRepository";
 import { GetUserConversationsUseCase } from "../../application/conversation/use-case/GetUserConversationsUseCase";
 import { GetAllMessagesUseCase } from "../../application/conversation/use-case/GetAllMessagesUseCase";
 import { MessageRepository } from "../repositories/MessageRepository";
-import { CreateMessageUseCase } from "../../application/conversation/use-case/CreateMessageUseCase";
+import { ChatEventPublisher } from "../realtime/publishers/ChatEventPublisher";
+import { CreateRepMessageUseCase } from "../../application/conversation/use-case/CreateRepMessageUseCase";
 
 const medicalRepRepository = new MedicalRepRepository();
 const doctorRepository = new DoctorRepository();
@@ -60,6 +61,7 @@ const notificationRepository = new NotificationRepository();
 const notificationEventPublisher = new NotificationEventPublisher();
 const conversationRepository = new ConversationRepository();
 const messageRepository = new MessageRepository();
+const chatEventPublisher=new ChatEventPublisher();
 
 const createMedicalRepUseCase = new CreateMedicalRepUseCase(
   medicalRepRepository,
@@ -199,10 +201,10 @@ const getConversationsUseCase = new GetUserConversationsUseCase(
 );
 
 const getAllMessagesUseCase = new GetAllMessagesUseCase(messageRepository);
-const createMessageUseCase = new CreateMessageUseCase(
-  messageRepository,
-  doctorRepository,
-  medicalRepRepository
+const createMessageUseCase = new CreateRepMessageUseCase(
+  medicalRepRepository,
+   messageRepository,
+  chatEventPublisher
 );
 
 export const medicalRepController = new MedicalRepController(

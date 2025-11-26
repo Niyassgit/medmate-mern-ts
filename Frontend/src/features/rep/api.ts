@@ -151,7 +151,6 @@ export const createMessageForRep=async(body:{
   senderRole: Role;
   receiverId: string;
 })=>{
-  console.log("message body from the rep:",body);
   const {data}=await api.post(RepEndpoints.ADD_MESSAGE,body);
   return data;
 }
