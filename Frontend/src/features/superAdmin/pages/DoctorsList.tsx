@@ -6,6 +6,7 @@ import { Doctor } from "../dto/Doctor";
 import { DoctorResponse } from "../dto/DoctorResponse";
 import { useNavigate } from "react-router-dom";
 import { AdminTable } from "../components/AdminTable";
+import ConfirmDialog from "@/components/shared/ConfirmDialog"; // ⬅️ added
 
 const DoctorsList = () => {
   const navigate = useNavigate();
@@ -19,7 +20,11 @@ const DoctorsList = () => {
   );
   const { data, loading, error, setData } =
     useFetchList<DoctorResponse>(fetchFn);
+
   const [blockLoading, setBlockLoading] = useState<string | null>(null);
+
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
 
   const doctors = data?.doctors ?? [];
   const total = data?.total ?? 0;
@@ -28,6 +33,7 @@ const DoctorsList = () => {
   const handleBlockToggle = async (doctor: Doctor) => {
     try {
       setBlockLoading(doctor.loginId);
+
       let userUpdated;
       if (doctor.isBlocked) {
         const res = await unblockUser(doctor.loginId);
@@ -52,10 +58,17 @@ const DoctorsList = () => {
           : prev
       );
     } catch (err) {
-      alert("Something went wrong while updating block status");
+      toast.error("Something went wrong while updating block status");
     } finally {
       setBlockLoading(null);
     }
+  };
+
+  const handleConfirmBlockToggle = async () => {
+    if (!selectedDoctor) return;
+    await handleBlockToggle(selectedDoctor);
+    setConfirmDialogOpen(false);
+    setSelectedDoctor(null);
   };
 
   const handleDetailPage = async (id: string) => {
@@ -65,6 +78,7 @@ const DoctorsList = () => {
       toast.error("Invalid request");
     }
   };
+
   const columns = [
     { key: "name", label: "Name" },
     { key: "email", label: "Email" },
@@ -93,23 +107,52 @@ const DoctorsList = () => {
   ];
 
   return (
-    <AdminTable
-      title="Doctors Management"
-      data={doctors}
-      columns={columns}
-      loading={loading}
-      error={error}
-      page={page}
-      totalPages={totalPage}
-      onPageChange={setPage}
-      search={search}
-      onSearchChange={setSearch}
-      onView={handleDetailPage}
-      onBlockToggle={handleBlockToggle}
-      blockLoadingId={blockLoading}
-      getId={(d) => d.id}
-      isBlocked={(d) => d.isBlocked}
-    />
+    <>
+      <AdminTable
+        title="Doctors Management"
+        data={doctors}
+        columns={columns}
+        loading={loading}
+        error={error}
+        page={page}
+        totalPages={totalPage}
+        onPageChange={setPage}
+        search={search}
+        onSearchChange={setSearch}
+        onView={handleDetailPage}
+        onBlockToggle={(doctor) => {
+          setSelectedDoctor(doctor);      
+          setConfirmDialogOpen(true);    
+        }}
+        blockLoadingId={blockLoading}
+        getId={(d) => d.id}
+        isBlocked={(d) => d.isBlocked}
+      />
+
+      <ConfirmDialog
+        open={confirmDialogOpen}
+        title={
+          selectedDoctor?.isBlocked
+            ? "Unblock Doctor"
+            : "Block Doctor"
+        }
+        message={
+          selectedDoctor?.isBlocked
+            ? `Are you sure you want to unblock Dr. ${selectedDoctor?.name}?`
+            : `Are you sure you want to block Dr. ${selectedDoctor?.name}?`
+        }
+        onConfirm={handleConfirmBlockToggle}
+        onCancel={() => {
+          setConfirmDialogOpen(false);
+          setSelectedDoctor(null);
+        }}
+        confirmButtonClassName={
+          selectedDoctor?.isBlocked
+            ? "bg-green-600 text-white hover:bg-green-700"
+            : "bg-red-600 text-white hover:bg-red-700"
+        }
+      />
+    </>
   );
 };
 
