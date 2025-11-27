@@ -3,42 +3,114 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ConversationItem } from "./ConversationItem";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { doctorConversations } from "@/features/doctor/api";
 import { repConversations } from "@/features/rep/api";
 import { Spinner } from "../ui/spinner";
 import { Conversation } from "../Dto/Conversation";
 import { Role } from "@/types/Role";
+import { getSocket } from "@/lib/socket";
+
+interface ConversationUpdate {
+  conversationId: string;
+  lastMessage: string;
+  lastMessageAt: Date;
+  senderRole?: Role;
+  unread?: number;
+}
 
 export const ConversationList = ({
   owner,
+  selectedConversationId,
   onSelect
 }: {
   owner: Role;
+  selectedConversationId?: string | null;
   onSelect: (conv:Conversation) => void;
 }) => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchConversations = async () => {
-      try {
-        let response;
-        if (owner === Role.DOCTOR) {
-          response = await doctorConversations();
-        } else {
-          response = await repConversations();
-        }
-        setConversations(response.data);
-      } catch (err) {
-        console.error("Failed to load conversations", err);
-      } finally {
-        setLoading(false);
+  const fetchConversations = useCallback(async () => {
+    try {
+      let response;
+      if (owner === Role.DOCTOR) {
+        response = await doctorConversations();
+      } else {
+        response = await repConversations();
       }
+      setConversations(response.data);
+    } catch (err) {
+      console.error("Failed to load conversations", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [owner]);
+
+  useEffect(() => {
+    fetchConversations();
+  }, [fetchConversations]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) return;
+
+    const socket = getSocket(token);
+
+    const handleConversationUpdate = (update: ConversationUpdate) => {
+      setConversations((prevConversations) => {
+        const index = prevConversations.findIndex(
+          (c) => c.id === update.conversationId
+        );
+
+        if (index === -1) {
+          fetchConversations();
+          return prevConversations;
+        }
+
+        const conversation = prevConversations[index];
+        const isMessageFromOtherUser = update.senderRole && update.senderRole !== owner;
+        const isConversationSelected = update.conversationId === selectedConversationId;
+        const isMessageFromCurrentUser = update.senderRole && update.senderRole === owner;
+        
+        let newUnread = conversation.unread;
+        
+        if (update.unread !== undefined) {
+          newUnread = update.unread;
+        } else if (isMessageFromOtherUser && !isMessageFromCurrentUser && !isConversationSelected) {
+          newUnread = conversation.unread + 1;
+        }
+
+        const updatedConversations = [...prevConversations];
+        const updatedConversation = {
+          ...conversation,
+          lastMessageAt: new Date(update.lastMessageAt).toISOString(),
+          unread: newUnread,
+        };
+
+        if (update.lastMessage) {
+          updatedConversation.lastMessage = update.lastMessage;
+        }
+
+        updatedConversations[index] = updatedConversation;
+
+        updatedConversations.sort((a, b) => {
+          const dateA = new Date(a.lastMessageAt).getTime();
+          const dateB = new Date(b.lastMessageAt).getTime();
+          return dateB - dateA;
+        });
+
+        return updatedConversations;
+      });
     };
 
-    fetchConversations();
-  }, [owner]);
+    socket.on("conversation_update", handleConversationUpdate);
+
+    return () => {
+      socket.off("conversation_update", handleConversationUpdate);
+    };
+  }, [fetchConversations, owner, selectedConversationId]);
+
   if (loading) return <Spinner />;
 
   return (

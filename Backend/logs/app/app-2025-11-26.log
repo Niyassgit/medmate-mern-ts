@@ -69,3 +69,9 @@
 [2025-11-26 20:26:05] [32minfo[39m: [32m server running on port 5000[39m
 [2025-11-26 20:29:19] [31merror[39m: [31m🔥 Unhandled Error:User not found[39m
 [2025-11-26 20:32:23] [31merror[39m: [31m🔥 Unhandled Error:User not found[39m
+[2025-11-26 20:44:17] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-26 20:46:40] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-26 20:46:42] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-26 20:46:47] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-26 20:48:24] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-11-26 23:56:01] [31merror[39m: [31mFailed to start server:argument handler is required[39m

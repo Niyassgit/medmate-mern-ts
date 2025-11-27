@@ -46,20 +46,20 @@ export const ConversationItem = ({
         <div className="flex items-start justify-between mb-1">
           <h3 className="font-medium text-foreground truncate">{name}</h3>
           <span className="text-xs text-muted-foreground whitespace-nowrap ml-2">
-           {formatMessageTimestamp(timestamp)}
+            {formatMessageTimestamp(timestamp)}
           </span>
         </div>
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground truncate">
             {lastMessage}
           </p>
-          {unread > 0 && (
-            <Badge
-              variant="default"
-              className="ml-2 h-5 min-w-[20px] flex items-center justify-center rounded-full bg-unread text-white text-xs"
-            >
+          {unread === 1 && (
+            <div className="h-3 w-3 rounded-full bg-green-600 ml-2"></div>
+          )}
+          {unread > 1 && (
+            <div className="min-w-[22px] h-5 bg-green-600 text-white rounded-full text-[11px] flex items-center justify-center ml-2">
               {unread}
-            </Badge>
+            </div>
           )}
         </div>
       </div>

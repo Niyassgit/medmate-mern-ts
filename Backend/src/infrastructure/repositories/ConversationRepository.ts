@@ -28,7 +28,6 @@ export class ConversationRepository
 
   async findUserConversations(
     profileId: string,
-    userId: string
   ): Promise<IUserConversation[]> {
     const conversations = await prisma.conversation.findMany({
       where: {
@@ -49,7 +48,7 @@ export class ConversationRepository
       by: ["conversationId"],
       where: {
         conversationId: { in: conversations.map((c) => c.id) },
-        senderId: { not: userId },
+        senderId: { not: profileId },
         isRead: false,
       },
       _count: { conversationId: true },
@@ -96,5 +95,12 @@ export class ConversationRepository
     conversationId: string
   ): Promise<IConversation | null> {
     return await this.findById(conversationId);
+  }
+
+  async updateLastMessageTime(conversationId: string): Promise<void> {
+    await prisma.conversation.update({
+      where: { id: conversationId },
+      data: { lastMessageAt: new Date() },
+    });
   }
 }

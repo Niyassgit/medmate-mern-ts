@@ -17,25 +17,21 @@ export class GetUserConversationsUseCase implements IGetConversationsUseCase {
   ) {}
   async execute(userId?: string): Promise<ConversationDTO[]> {
     if (!userId) throw new UnautharizedError(ErrorMessages.UNAUTHORIZED);
-    const {doctorId} = await this._doctorRepository.getDoctorIdByUserId(userId);
-    const {repId} = await this._medicalRepRepository.getRepIdByUserId(
+    const { doctorId } = await this._doctorRepository.getDoctorIdByUserId(
       userId
     );
+    const { repId } = await this._medicalRepRepository.getRepIdByUserId(userId);
 
     let conversations = [];
 
     if (doctorId) {
-      conversations =
-        await this._conversationRepository.findUserConversations(
-          doctorId,
-          userId
-        );
+      conversations = await this._conversationRepository.findUserConversations(
+        doctorId
+      );
     } else if (repId) {
-      conversations =
-        await this._conversationRepository.findUserConversations(
-          repId,
-          userId
-        );
+      conversations = await this._conversationRepository.findUserConversations(
+        repId
+      );
     } else {
       throw new BadRequestError(ErrorMessages.USER_NOT_FOUND);
     }
