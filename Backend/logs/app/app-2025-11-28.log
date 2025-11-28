@@ -132,3 +132,48 @@
 [2025-11-28 12:40:31] [32minfo[39m: [32m server running on port 5000[39m
 [2025-11-28 12:40:54] [33mwarn[39m: [33mAppError: Department with same name exist[39m
 [2025-11-28 12:41:14] [33mwarn[39m: [33mAppError: Department with same name exist[39m
+[2025-11-28 12:42:24] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 15:35:31] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 15:38:03] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 15:38:21] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 15:40:39] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 15:40:54] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 15:41:19] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 15:44:36] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 15:44:44] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 15:45:37] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 15:46:09] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 15:46:33] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 15:47:54] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 15:48:33] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 15:49:04] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 15:51:27] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 15:57:51] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 15:58:17] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 15:58:40] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 19:29:45] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 19:29:56] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 19:31:34] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 19:31:44] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 19:31:53] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 19:34:34] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 19:36:23] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 19:36:49] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 19:37:24] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 19:38:49] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 19:39:03] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 20:15:25] [31merror[39m: [31m🔥 Unhandled Error:entity.map is not a function[39m
+[2025-11-28 20:15:25] [31merror[39m: [31m🔥 Unhandled Error:entity.map is not a function[39m
+[2025-11-28 20:16:03] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 20:16:33] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 20:16:50] [31merror[39m: [31m🔥 Unhandled Error:entity.map is not a function[39m
+[2025-11-28 20:16:51] [31merror[39m: [31m🔥 Unhandled Error:entity.map is not a function[39m
+[2025-11-28 20:27:16] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 20:28:14] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 20:28:36] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 20:28:54] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 20:28:58] [31merror[39m: [31m🔥 Unhandled Error:entity.map is not a function[39m
+[2025-11-28 20:28:58] [31merror[39m: [31m🔥 Unhandled Error:entity.map is not a function[39m
+[2025-11-28 20:37:24] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 20:39:45] [32minfo[39m: [32m server running on port 5000[39m
+[2025-11-28 20:44:34] [32minfo[39m: [32m server running on port 5000[39m

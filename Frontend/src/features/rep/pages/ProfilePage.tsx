@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import LogoutButton from "@/components/shared/LogoutButton";
 import ConfirmDialog from "@/components/shared/ConfirmDialog";
 import { useNavigate } from "react-router-dom";
+import { SpinnerButton } from "@/components/shared/SpinnerButton";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -60,7 +61,7 @@ const ProfilePage = () => {
     }
   };
 
-  if (loading) return <p className="p-6 text-blue-600">Loading profile...</p>;
+  if (loading) return <SpinnerButton />
   if (error) return <p className="p-6 text-red-600">Error: {error}</p>;
   if (!rep) return <p className="p-6">No profile found</p>;
 

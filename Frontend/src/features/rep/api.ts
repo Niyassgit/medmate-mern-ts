@@ -94,8 +94,14 @@ export const RepPendingConnections = async (userId: string) => {
   const { data } = await api.get(RepEndpoints.PENDING_CONNECITONS(userId));
   return data.data;
 };
-export const getRepnotifications = async (userId: string) => {
-  const res = await api.get(RepEndpoints.NOTIFICATIONS(userId));
+export const getRepnotifications = async (
+  userId: string,
+  cursor?: string,
+  limit: number = 20
+) => {
+  const res = await api.get(RepEndpoints.NOTIFICATIONS(userId), {
+    params: { cursor, limit },
+  });
   return res.data;
 };
 export const rejectRepsideConnectionRequest = async (

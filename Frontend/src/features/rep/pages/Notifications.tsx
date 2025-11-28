@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { NotificationItem } from "@/components/shared/NotificationItem";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -24,30 +24,56 @@ const Notifications = () => {
   const [localNotifications, setLocalNotifications] = useState<Notification[]>(
     []
   );
+  const [cursor, setCursor] = useState<string | null>(null);
+  const [hasMore, setHasMore] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const loaderRef = useRef<HTMLDivElement | null>(null);
 
   const id = useSelector((state: any) => state.auth.user?.id);
 
-  const fetchNotifications = useCallback(async () => {
+  const fetchInitial = useCallback(async () => {
     if (!id) return;
     const res = await getRepnotifications(id);
     return res.data;
   }, [id]);
 
+  const fetchMore = useCallback(async () => {
+    if (!hasMore || loadingMore || !id) return;
+    setLoadingMore(true);
+    try {
+      const res = await getRepnotifications(id, cursor ?? undefined);
+      const { data, nextCursor, hasMore: more } = res.data;
+      const normalizedNotifications: Notification[] = data.map((n: any) => ({
+        ...n,
+        createdAt: new Date(n.createdAt),
+      }));
+      setLocalNotifications((prev) => [...prev, ...normalizedNotifications]);
+      setCursor(nextCursor);
+      setHasMore(more);
+    } catch (error: any) {
+      toast.error(error.message || "Failed to load more notifications");
+    } finally {
+      setLoadingMore(false);
+    }
+  }, [hasMore, loadingMore, id, cursor]);
+
   const {
     data: notificationsRes,
     error,
     loading,
-  } = useFetchItem(fetchNotifications);
+  } = useFetchItem(fetchInitial);
 
   useEffect(() => {
-    if (notificationsRes && Array.isArray(notificationsRes)) {
-      const normalizedNotifications: Notification[] = notificationsRes.map(
+    if (notificationsRes && notificationsRes.data && Array.isArray(notificationsRes.data)) {
+      const normalizedNotifications: Notification[] = notificationsRes.data.map(
         (n: any) => ({
           ...n,
           createdAt: new Date(n.createdAt),
         })
       );
       setLocalNotifications(normalizedNotifications);
+      setCursor(notificationsRes.nextCursor);
+      setHasMore(notificationsRes.hasMore);
     }
   }, [notificationsRes]);
 
@@ -122,6 +148,16 @@ const Notifications = () => {
       socket.off("notification:deleted");
     };
   }, [token, id]);
+
+  useEffect(() => {
+    if (!loaderRef.current) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) fetchMore();
+    });
+    observer.observe(loaderRef.current);
+    return () => observer.disconnect();
+  }, [fetchMore]);
 
   const markAsRead = async (id: string) => {
     setLocalNotifications((prev) =>
@@ -199,6 +235,13 @@ const Notifications = () => {
               </p>
             </div>
           )}
+
+          <div
+            ref={loaderRef}
+            className="h-10 flex justify-center items-center"
+          >
+            {loadingMore && <SpinnerButton />}
+          </div>
         </div>
       </div>
     </div>

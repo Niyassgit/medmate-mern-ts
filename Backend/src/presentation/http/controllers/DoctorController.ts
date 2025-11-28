@@ -206,7 +206,6 @@ export class DoctorController {
 
   pendingConnections = async (req: Request, res: Response) => {
     const { userId } = req.params;
-    console.log("userId:", userId);
     const response = await this._pendingConnectionListUseCase.execute(userId);
     return res
       .status(HttpStatusCode.OK)
@@ -215,7 +214,15 @@ export class DoctorController {
 
   notifications = async (req: Request, res: Response) => {
     const { userId } = req.params;
-    const response = await this._getDoctorNotificationsUseCase.execute(userId);
+    const cursor = req.query.cursor as string | undefined;
+    const limit = req.query.limit ? Number(req.query.limit) : undefined;
+
+    const response = await this._getDoctorNotificationsUseCase.execute(
+      userId,
+      cursor,
+      limit
+    );
+
     return res.json({ success: true, data: response });
   };
 

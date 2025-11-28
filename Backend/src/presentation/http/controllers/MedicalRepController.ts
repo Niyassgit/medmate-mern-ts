@@ -257,7 +257,9 @@ export class MedicalRepController {
 
   notifications = async (req: Request, res: Response) => {
     const { userId } = req.params;
-    const response = await this._getAllNotificationsUseCase.execute(userId);
+    const cursor = req.query.cursor as string | undefined;
+    const limit = req.query.limit ? Number(req.query.limit) : undefined;
+    const response = await this._getAllNotificationsUseCase.execute(userId, cursor, limit);
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });

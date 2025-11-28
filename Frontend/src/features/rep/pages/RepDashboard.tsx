@@ -19,6 +19,7 @@ import { useCallback, useEffect, useState } from "react";
 import { ProductListDTO } from "../dto/productListDto";
 import { MedicalRepDetailsDTO } from "../dto/MedicalRepDetailsDTO";
 import toast from "react-hot-toast";
+import { SpinnerButton } from "@/components/shared/SpinnerButton";
 
 const RepDashboard = () => {
   const id = useSelector((state: any) => state.auth.user?.id);
@@ -64,7 +65,7 @@ const RepDashboard = () => {
     },700);
   }
   if (postError || profileError) return <p>{postError || profileError}</p>;
-  if (postLoading || profileLoading) return <p>Loading...</p>;
+  if (postLoading || profileLoading) return <SpinnerButton/>
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -106,7 +107,7 @@ const RepDashboard = () => {
                     key={post.id}
                     {...post}
                     likes={119}
-                    category="Cardiac"
+                    category={rep?.departmentName ?? ""}
                     onImageError={refreshSingnedUrls}
                     onArchived={handleArchived}
                   />

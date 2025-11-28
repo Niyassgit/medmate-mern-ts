@@ -89,8 +89,14 @@ export const pendingConnections = async (userId: string) => {
   return res.data.data;
 };
 
-export const getDoctorNotifications = async (userId: string) => {
-  const res = await api.get(DoctorEndpoints.NOTIFICATIONS(userId));
+export const getDoctorNotifications = async (
+  userId: string,
+  cursor?: string,
+  limit: number = 20
+) => {
+  const res = await api.get(DoctorEndpoints.NOTIFICATIONS(userId), {
+    params: { cursor, limit },
+  });
   return res.data;
 };
 
@@ -116,40 +122,41 @@ export const acceptConnOnNotificationPage = async (
 
 export const markNotificationAsRead = async (notificationId: string) => {
   await api.patch(DoctorEndpoints.MARK_NOT_AS_READ(notificationId));
- 
 };
 
-export const markAllNotificationsAsRead=async(userId:string)=>{
+export const markAllNotificationsAsRead = async (userId: string) => {
   return await api.patch(DoctorEndpoints.MARK_ALL_NOT_AS_READ(userId));
-}
+};
 
-export const notificationUnreadCount=async(userId:string)=>{
-  const{data}= await api.get(DoctorEndpoints.COUNT_UNREAD_NOTIFICATION(userId));
+export const notificationUnreadCount = async (userId: string) => {
+  const { data } = await api.get(
+    DoctorEndpoints.COUNT_UNREAD_NOTIFICATION(userId)
+  );
   return data;
-}
+};
 
-export const doctorConversations=async()=>{
-  const {data}=await api.get(DoctorEndpoints.CONVERSATIONS);
+export const doctorConversations = async () => {
+  const { data } = await api.get(DoctorEndpoints.CONVERSATIONS);
   return data;
-}
+};
 
-export const doctorMessages=async(conversationId:string)=>{
-  const res=await api.get(DoctorEndpoints.GET_MESSAGES(conversationId));
+export const doctorMessages = async (conversationId: string) => {
+  const res = await api.get(DoctorEndpoints.GET_MESSAGES(conversationId));
   return res.data.data;
-}
+};
 
-export const createMessageForDoctor=async(body:{
+export const createMessageForDoctor = async (body: {
   conversationId: string;
   content: string;
   messageType: MessageType;
   senderRole: Role;
   receiverId: string;
-})=>{
-  const {data}=await api.post(DoctorEndpoints.ADD_MESSAGE,body);
+}) => {
+  const { data } = await api.post(DoctorEndpoints.ADD_MESSAGE, body);
   return data;
-}
+};
 
-export const messageMarkAsReadForDoctor=async(conversationId:string)=>{
-  const res=await api.patch(DoctorEndpoints.MARK_AS_READ(conversationId));
+export const messageMarkAsReadForDoctor = async (conversationId: string) => {
+  const res = await api.patch(DoctorEndpoints.MARK_AS_READ(conversationId));
   return res.data;
-}
+};

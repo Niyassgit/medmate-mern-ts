@@ -3,6 +3,7 @@ import { INotification } from "../entities/INotification";
 import { INotificationWithUser } from "../entities/INotificationWithUser";
 
 export interface INotificationRepository {
+
   createNotification(
     senderUserId: string,
     senderRole: Role,
@@ -12,23 +13,38 @@ export interface INotificationRepository {
     content: string,
     postId?: string
   ): Promise<INotification>;
+
   deleteConnectionNotificationById(
     senderId: string,
     receiverId: string
   ): Promise<string | null>;
-  findAllNotifications(userId: string): Promise<INotificationWithUser[]>;
-  findNotificationById(id:string):Promise<INotificationWithUser | null>;
+
+  findAllNotifications(
+    userId: string,
+    cursor?: string,
+    limit?: number
+  ): Promise<{
+    notifications: INotificationWithUser[];
+    nextCursor: string | null;
+  }>;
+
+  findNotificationById(id: string): Promise<INotificationWithUser | null>;
   updateNotificationById(
     notificationId: string,
     type: NotificationType
   ): Promise<INotificationWithUser | null>;
+
   deleteLikeNotification(
     senderId: string,
     receiverId: string,
     postId: string
   ): Promise<string | null>;
-  findNotificationOfConnectionByIds(senderId:string,receiverId:string):Promise<string | null>;
-  markAllNotificationAsRead(userId:string):Promise<boolean>;
-  markNotificationAsRead(notificationId:string):Promise<boolean>;
-  getCountOfUnreadNotification(userId:string):Promise<number>;
+  
+  findNotificationOfConnectionByIds(
+    senderId: string,
+    receiverId: string
+  ): Promise<string | null>;
+  markAllNotificationAsRead(userId: string): Promise<boolean>;
+  markNotificationAsRead(notificationId: string): Promise<boolean>;
+  getCountOfUnreadNotification(userId: string): Promise<number>;
 }

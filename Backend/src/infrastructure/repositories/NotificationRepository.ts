@@ -6,7 +6,6 @@ import { NotificationType, Role } from "../../shared/Enums";
 import { prisma } from "../config/db";
 import { NotificationMapper } from "../mappers/NotificationMapper";
 import { INotificationWithUser } from "../../domain/notification/entities/INotificationWithUser";
-import tr from "zod/v4/locales/tr.cjs";
 
 export class NotificationRepository
   extends BaseRepository<
@@ -64,22 +63,38 @@ export class NotificationRepository
     return notification.id;
   }
 
-  async findAllNotifications(userId: string): Promise<INotificationWithUser[]> {
-    const result = await prisma.notification.findMany({
-      where: { receiverId: userId },
-      include: {
-        sender: {
-          select: {
-            id: true,
-            profileImage: true,
-            doctor: { select: { name: true, id: true } },
-            medicalRep: { select: { name: true, id: true } },
+  async findAllNotifications(
+    userId: string,
+    cursor?: string,
+    limit?: number
+  ): Promise<{
+    notifications: INotificationWithUser[];
+    nextCursor: string | null;
+  }> {
+    const result =await prisma.notification.findMany({
+      where:{receiverId:userId},
+      take:limit,
+      skip:cursor ?1 :0,
+      cursor:cursor ?{id:cursor}:undefined,
+      include:{
+        sender:{
+          select:{
+            id:true,
+            profileImage:true,
+            doctor:{select:{name:true,id:true}},
+            medicalRep:{select:{name:true,id:true}},
           },
         },
       },
-      orderBy: { createdAt: "desc" },
+      orderBy :{createdAt:"desc"},
     });
-    return result.map(NotificationMapper.toDomainWithUser);
+    const nextCursor=result.length === limit
+    ?result[result.length-1].id : null;
+
+    return {
+      notifications:result.map(NotificationMapper.toDomainWithUser),
+      nextCursor,
+    }
   }
 
   async updateNotificationById(
@@ -162,10 +177,14 @@ export class NotificationRepository
     senderId: string,
     receiverId: string
   ): Promise<string | null> {
-    const result=await prisma.notification.findFirst({
-      where:{senderId,receiverId,type:NotificationType.CONNECTION_REQUEST},
-      select:{id:true},
+    const result = await prisma.notification.findFirst({
+      where: {
+        senderId,
+        receiverId,
+        type: NotificationType.CONNECTION_REQUEST,
+      },
+      select: { id: true },
     });
-    return result?result.id:null;
+    return result ? result.id : null;
   }
 }
