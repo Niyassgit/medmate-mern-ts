@@ -1,23 +1,38 @@
 import { IConnectionRepository } from "../../../domain/connection/repositories/IConnectionRepository";
 import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRepository";
 import { INotificationRepository } from "../../../domain/notification/repositories/INotificationService";
-import { ErrorMessages, SuccessMessages } from "../../../shared/Messages";
+import {
+  ErrorMessages,
+  NotificationMessages,
+  SuccessMessages,
+} from "../../../shared/Messages";
 import {
   BadRequestError,
   NotFoundError,
   UnautharizedError,
 } from "../../errors";
 import { IDoctorAcceptOnNotUseCase } from "../interfaces/IDoctorAcceptOnNotUseCase";
-import { ConnectionStatus, NotificationType } from "../../../shared/Enums";
+import {
+  ConnectionStatus,
+  NotificationType,
+  Role,
+} from "../../../shared/Enums";
 import { IConversationRepository } from "../../../domain/chat/respositories/IConversationRepository";
 import { ConversationMapper } from "../../conversation/mappers/ConversationMapper";
+import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
+import { ANotificationMapper } from "../../notification/mappers/ANotificationMapper";
+import { IStorageService } from "../../../domain/common/services/IStorageService";
+import { INotificationEventPublisher } from "../../../domain/common/services/INotificationEventPublisher";
 
 export class DoctorAcceptOnNotUseCase implements IDoctorAcceptOnNotUseCase {
   constructor(
     private _doctorRepository: IDoctorRepository,
     private _notificationRepository: INotificationRepository,
     private _connectionRepository: IConnectionRepository,
-    private _conversationRepository: IConversationRepository
+    private _conversationRepository: IConversationRepository,
+    private _medicalRepRepository: IMedicalRepRepository,
+    private _storageService: IStorageService,
+    private _notificationEventPublisher: INotificationEventPublisher
   ) {}
   async execute(
     repId: string,
@@ -29,6 +44,10 @@ export class DoctorAcceptOnNotUseCase implements IDoctorAcceptOnNotUseCase {
       userId
     );
     if (!doctorId) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
+    const { repUserId } = await this._medicalRepRepository.getUserIdByRepId(
+      repId
+    );
+    if (!repUserId) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
     const existingConnection =
       await this._connectionRepository.findByDoctorAndRep(doctorId, repId);
 
@@ -48,6 +67,35 @@ export class DoctorAcceptOnNotUseCase implements IDoctorAcceptOnNotUseCase {
       notificationId,
       NotificationType.CONNECTION_ACCEPTED
     );
+    const notification = await this._notificationRepository.createNotification(
+      userId,
+      Role.DOCTOR,
+      repUserId,
+      Role.MEDICAL_REP,
+      NotificationType.CONNECTION_ACCEPTED,
+      NotificationMessages.CONNECTION_ACCEPT_MESSAGE
+    );
+    const notificationWithUser =
+      await this._notificationRepository.findNotificationById(notification.id);
+    if (!notificationWithUser)
+      throw new NotFoundError(ErrorMessages.NOTIFICATION_NOT_FOUND);
+    const mappedNotification = await ANotificationMapper.toDomain(
+      notificationWithUser,
+      this._storageService
+    );
+
+    await this._notificationEventPublisher.publishNotification({
+      ...mappedNotification,
+      receiverUserId: repUserId,
+    });
+    const unreadCount =
+      await this._notificationRepository.getCountOfUnreadNotification(
+        repUserId
+      );
+    await this._notificationEventPublisher.unreadNotificationCount({
+      receiverUserId: repUserId,
+      count: unreadCount,
+    });
     const mappedConversationData = ConversationMapper.toEntity(repId, doctorId);
     await this._conversationRepository.createConversation(
       mappedConversationData

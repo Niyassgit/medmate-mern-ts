@@ -1,4 +1,6 @@
 import { IConversationRepository } from "../../../domain/chat/respositories/IConversationRepository";
+import { INotificationEventPublisher } from "../../../domain/common/services/INotificationEventPublisher";
+import { IStorageService } from "../../../domain/common/services/IStorageService";
 import { IConnectionRepository } from "../../../domain/connection/repositories/IConnectionRepository";
 import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRepository";
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
@@ -19,6 +21,7 @@ import {
   NotFoundError,
   UnautharizedError,
 } from "../../errors";
+import { ANotificationMapper } from "../../notification/mappers/ANotificationMapper";
 import { IDoctorAcceptConnectionRequestUseCase } from "../interfaces/IDoctorAcceptConnectionRequestUseCase";
 
 export class DoctorAcceptConnectionRequestUseCase
@@ -29,7 +32,9 @@ export class DoctorAcceptConnectionRequestUseCase
     private _doctorRepository: IDoctorRepository,
     private _connectionRepository: IConnectionRepository,
     private _notificationRepository: INotificationRepository,
-    private _conversationRepository: IConversationRepository
+    private _conversationRepository: IConversationRepository,
+    private _storageService: IStorageService,
+    private _notificationEventPublisher: INotificationEventPublisher
   ) {}
   async execute(repId: string, userId?: string): Promise<string> {
     if (!userId) throw new UnautharizedError(ErrorMessages.UNAUTHORIZED);
@@ -64,6 +69,35 @@ export class DoctorAcceptConnectionRequestUseCase
         NotificationType.CONNECTION_ACCEPTED
       );
     }
+    const notification = await this._notificationRepository.createNotification(
+      userId,
+      Role.DOCTOR,
+      repUserId,
+      Role.MEDICAL_REP,
+      NotificationType.CONNECTION_ACCEPTED,
+      NotificationMessages.CONNECTION_ACCEPT_MESSAGE
+    );
+    const notificationWithUser =
+      await this._notificationRepository.findNotificationById(notification.id);
+    if (!notificationWithUser)
+      throw new NotFoundError(ErrorMessages.NOTIFICATION_NOT_FOUND);
+    const mappedNotification = await ANotificationMapper.toDomain(
+      notificationWithUser,
+      this._storageService
+    );
+
+    await this._notificationEventPublisher.publishNotification({
+      ...mappedNotification,
+      receiverUserId: repUserId,
+    });
+    const unreadCount =
+      await this._notificationRepository.getCountOfUnreadNotification(
+        repUserId
+      );
+    await this._notificationEventPublisher.unreadNotificationCount({
+      receiverUserId: repUserId,
+      count: unreadCount,
+    });
     let conversation = await this._conversationRepository.findByUsers(
       repUserId,
       userId

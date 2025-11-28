@@ -103,7 +103,9 @@ const acceptConnectionRequestUseCase = new DoctorAcceptConnectionRequestUseCase(
   doctorRepository,
   connectionRepository,
   notificationRepository,
-  conversationRepository
+  conversationRepository,
+  storageService,
+  notificationEventPublisher
 );
 const analyticsUsecase = new DoctorAnalyticsUseCase(
   doctorRepository,
@@ -178,15 +180,20 @@ const acceptConnOnNotificationPage = new DoctorAcceptOnNotUseCase(
   doctorRepository,
   notificationRepository,
   connectionRepository,
-  conversationRepository
+  conversationRepository,
+  medicalRepRepository,
+  storageService,
+  notificationEventPublisher
 );
 
 const markAllNotificationAsReadedUseCase = new MakeAllAsReadNotificationUseCase(
-  notificationRepository
+  notificationRepository,
+  notificationEventPublisher
 );
 
 const markNotificationAsReadUseCase = new MarkNotificationAsReadUseCase(
-  notificationRepository
+  notificationRepository,
+  notificationEventPublisher
 );
 
 const getUnreadNotificationCountUseCase = new NotificationUnreadCountUseCase(

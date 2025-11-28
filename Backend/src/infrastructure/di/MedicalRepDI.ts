@@ -126,7 +126,9 @@ const acceptConnectionRequestUseCase = new DoctorAcceptConnectionRequestUseCase(
   doctorRepository,
   connectionRepository,
   notificationRepository,
-  conversationRepository
+  conversationRepository,
+  storageService,
+  notificationEventPublisher
 );
 const getRepAnalyticsUseCase = new GetRepAnalyticsUseCase(
   medicalRepRepository,
@@ -179,15 +181,20 @@ const acceptConnOnNotUseCase = new RepAcceptConnOnNotUseCase(
   medicalRepRepository,
   connectionRepository,
   notificationRepository,
-  conversationRepository
+  conversationRepository,
+  doctorRepository,
+  storageService,
+  notificationEventPublisher
 );
 
 const markAllNotificationsAsReadUseCase = new MakeAllAsReadNotificationUseCase(
-  notificationRepository
+  notificationRepository,
+  notificationEventPublisher
 );
 
 const markAsReadNotificationUseCase = new MarkNotificationAsReadUseCase(
-  notificationRepository
+  notificationRepository,
+  notificationEventPublisher
 );
 
 const unReadNotificationsUseCase = new NotificationUnreadCountUseCase(
