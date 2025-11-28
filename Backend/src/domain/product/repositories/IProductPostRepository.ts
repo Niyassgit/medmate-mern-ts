@@ -14,6 +14,6 @@ export interface IProductPostRepository{
     DeletePostUseCase(postId:string):Promise<boolean>;
     findRepByPostId(postId:string):Promise<IMedicalRepWithUser | null>;
     findPostsByRepId(repId:string):Promise<IProductPostForFeed[] | null>;
-    findRepIdByPostId(postId:string):Promise<{repId:string | null}>;
+    findRepIdByPostId(postId:string):Promise<{repId:string | null}>; 
     
 }

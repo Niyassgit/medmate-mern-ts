@@ -48,7 +48,7 @@ const AddTerritory = () => {
       if (territoryId) {
         res = await updateTerritory(territoryId, values);
       } else {
-        res = await addTerritory(userId, values);
+        res = await addTerritory(values);
       }
 
       if (res?.data?.success) {

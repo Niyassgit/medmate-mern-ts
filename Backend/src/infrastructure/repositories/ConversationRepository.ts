@@ -96,11 +96,4 @@ export class ConversationRepository
   ): Promise<IConversation | null> {
     return await this.findById(conversationId);
   }
-
-  async updateLastMessageTime(conversationId: string): Promise<void> {
-    await prisma.conversation.update({
-      where: { id: conversationId },
-      data: { lastMessageAt: new Date() },
-    });
-  }
 }

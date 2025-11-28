@@ -6,5 +6,5 @@ export interface IConversationRepository {
   findByUsers(repId: string, doctorId: string): Promise<IConversation | null>;
   findConversationById(conversationId: string): Promise<IConversation | null>;
   findUserConversations(profileId: string): Promise<IUserConversation[]>;
-  updateLastMessageTime(conversationId: string): Promise<void>;
+  // updateLastMessageTime(conversationId: string): Promise<void>;
 }

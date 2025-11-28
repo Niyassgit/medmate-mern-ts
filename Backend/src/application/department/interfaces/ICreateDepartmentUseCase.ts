@@ -1,5 +1,5 @@
 import { DepartmentDTO } from "../dto/DepartmentDTO";
 
 export interface ICreateDepartmentUseCase{
-    execute(userId:string,dto:DepartmentDTO):Promise<string>;
+    execute(dto:DepartmentDTO,userId?:string,):Promise<string>;
 }

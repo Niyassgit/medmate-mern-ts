@@ -10,11 +10,7 @@ const RepChatPage = () => {
   return (
     <div className="flex h-[90vh] overflow-hidden bg-background">
       <div className="w-96">
-        <ConversationList 
-          owner={Role.MEDICAL_REP} 
-          selectedConversationId={selectedConversation?.id}
-          onSelect={setSelectedConversation} 
-        />
+        <ConversationList  owner={Role.MEDICAL_REP} onSelect={setSelectedConversation} />
       </div>
       <div className="flex-1">
         <ChatView conversation={selectedConversation} owner={Role.MEDICAL_REP}/>

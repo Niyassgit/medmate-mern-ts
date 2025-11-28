@@ -12,14 +12,14 @@ import { BlockUserUseCase } from "../../application/superAdmin/useCases/BlockUse
 import { UnBlockUserUseCase } from "../../application/superAdmin/useCases/UnblockUserUseCase";
 import { GetDoctorDetailsUseCase } from "../../application/superAdmin/useCases/GetDoctorDetailsUseCase";
 import { GetMedicalRepDetailsUseCase } from "../../application/superAdmin/useCases/GetMedicalRepDetailsUseCase";
-import { CreateTerritoryUseCase } from "../../application/superAdmin/useCases/CreateTerritoryUseCase";
+import { CreateTerritoryUseCase } from "../../application/territory/use-cases/CreateTerritoryUseCase";
 import { TerritoryRepository } from "../repositories/TerritoryRepository";
 import { GetTerritoriesUseCase } from "../../application/superAdmin/useCases/GetTerritoriesUseCase";
-import { EditTerritoryUseCase } from "../../application/superAdmin/useCases/EditTerrritoryUseCase";
-import { CreateDepartmentUseCase } from "../../application/superAdmin/useCases/CreateDepartmentUseCase";
+import { EditTerritoryUseCase } from "../../application/territory/use-cases/EditTerrritoryUseCase";
+import { CreateDepartmentUseCase } from "../../application/department/use-cases/CreateDepartmentUseCase";
 import { DepartmentRepository } from "../repositories/DepatmentRepository";
 import { GetAllDepartmentsUseCase } from "../../application/superAdmin/useCases/GetAllDepartmentsUseCase";
-import { EditDepartmentUseCase } from "../../application/superAdmin/useCases/EditDepartmentUseCase";
+import { EditDepartmentUseCase } from "../../application/department/use-cases/EditDepartmentUseCase";
 import { s3StorageService } from "../services/S3StorageService";
 
 const superAdminRepositories = new SuperAdminRepository();
@@ -55,26 +55,16 @@ const getTerritoryUseCase = new GetTerritoriesUseCase(
   userRepository,
   terrritoryRepository
 );
-const createTerritoryUseCase = new CreateTerritoryUseCase(
-  userRepository,
-  terrritoryRepository
-);
-const editTerritoryUseCase = new EditTerritoryUseCase(
-  userRepository,
-  terrritoryRepository
-);
+const createTerritoryUseCase = new CreateTerritoryUseCase(terrritoryRepository);
+const editTerritoryUseCase = new EditTerritoryUseCase(terrritoryRepository);
 const createDepartmentUseCase = new CreateDepartmentUseCase(
-  userRepository,
   departmentRepository
 );
 const getAllDepartmentsUseCase = new GetAllDepartmentsUseCase(
   userRepository,
   departmentRepository
 );
-const editDepartmentUseCase = new EditDepartmentUseCase(
-  userRepository,
-  departmentRepository
-);
+const editDepartmentUseCase = new EditDepartmentUseCase(departmentRepository);
 
 export const superAdminController = new SuperAdminController(
   createSuperAdminUseCase,

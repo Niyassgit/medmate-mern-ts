@@ -3,7 +3,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { MessageBubble } from "./MessageBubble";
 import { MessageInput } from "./MessageInput";
-import { useCallback, useEffect, useState, useRef } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { MessageDTO } from "../Dto/MessageDTO";
 import useFetchItem from "@/hooks/useFetchItem";
 import { getMessagesRep, messageMarkAsReadForRep } from "@/features/rep/api";
@@ -23,7 +23,6 @@ interface ChatViewProps {
 
 export const ChatView = ({ conversation, owner }: ChatViewProps) => {
   const [localMessages, setLocalMessages] = useState<MessageDTO[]>([]);
-  const hasMarkedAsReadRef = useRef<string | null>(null);
 
   const fetchMessages = useCallback(() => {
     if (!conversation) return Promise.resolve<MessageDTO[]>([]);
@@ -40,43 +39,12 @@ export const ChatView = ({ conversation, owner }: ChatViewProps) => {
 
   useEffect(() => {
     setLocalMessages(messages || []);
-    // Reset the ref when conversation changes
-    if (conversation?.id !== hasMarkedAsReadRef.current) {
-      hasMarkedAsReadRef.current = null;
-    }
-  }, [messages, conversation?.id]);
+  }, [messages]);
 
   const handleMessageSent = (newMessage: MessageDTO) => {
     setLocalMessages((prev) => [...prev, newMessage]);
   };
 
-  // Mark messages as read when chat view is opened and messages are loaded for the first time
-  useEffect(() => {
-    if (!conversation || !localMessages.length) return;
-    
-    // Only mark as read once per conversation
-    if (hasMarkedAsReadRef.current === conversation.id) return;
-    
-    // Check if there are unread messages
-    const hasUnread = localMessages.some(
-      (msg) => msg.senderRole !== owner && !msg.isRead
-    );
-
-    if (!hasUnread) {
-      hasMarkedAsReadRef.current = conversation.id;
-      return;
-    }
-
-    // Mark messages as read once when chat view is opened
-    hasMarkedAsReadRef.current = conversation.id;
-    if (owner === Role.MEDICAL_REP) {
-      messageMarkAsReadForRep(conversation.id);
-    } else {
-      messageMarkAsReadForDoctor(conversation.id);
-    }
-  }, [conversation?.id, localMessages, owner]);
-
-  // Handle real-time incoming messages
   useEffect(() => {
     if (!conversation) return;
 
@@ -90,14 +58,12 @@ export const ChatView = ({ conversation, owner }: ChatViewProps) => {
     const handleIncoming = (newMessage: MessageDTO) => {
       if (newMessage.senderRole !== owner) {
         setLocalMessages((prev) => [...prev, newMessage]);
-        
-        // Mark as read immediately since user is viewing the chat
-        // The chat view is open, so new messages should be marked as read
-        if (owner === Role.MEDICAL_REP) {
-          messageMarkAsReadForRep(conversation.id);
-        } else {
-          messageMarkAsReadForDoctor(conversation.id);
-        }
+      }
+
+      if (owner === Role.MEDICAL_REP) {
+        messageMarkAsReadForRep(conversation.id);
+      } else {
+        messageMarkAsReadForDoctor(conversation.id);
       }
     };
 
@@ -108,6 +74,21 @@ export const ChatView = ({ conversation, owner }: ChatViewProps) => {
       socket.emit("leave_conversation", conversation.id);
     };
   }, [conversation?.id, owner]);
+
+  useEffect(() => {
+    if (!conversation || !localMessages.length) return;
+    const hasUnread = localMessages.some(
+      (msg) => msg.senderRole !== owner && !msg.isRead
+    );
+
+    if (!hasUnread) return;
+
+    if (owner === Role.MEDICAL_REP) {
+      messageMarkAsReadForRep(conversation.id);
+    } else {
+      messageMarkAsReadForDoctor(conversation.id);
+    }
+  }, [conversation?.id, localMessages, owner]);
   if (!conversation) {
     return (
       <div className="flex items-center justify-center h-full text-muted-foreground flex-col gap-2">

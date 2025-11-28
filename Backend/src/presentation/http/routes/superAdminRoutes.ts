@@ -55,17 +55,17 @@ export class SuperAdminRoutes {
       superAdminController.territories
     );
     this.router.post(
-      "/territories/add/:userId",
+     "/territories/create",
       ValidateSchema(TeritorySchema),
       superAdminController.addTerritory
-    );
+    ); 
     this.router.patch(
       "/territories/edit/:territoryId",
       ValidateSchema(TeritorySchema),
       superAdminController.editTerritory
     );
     this.router.post(
-      "/departments/add/:userId",
+      "/departments/create",
       ValidateSchema(DepartmentSchema),
       superAdminController.createDepartment
     );

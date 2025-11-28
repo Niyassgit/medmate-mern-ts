@@ -51,6 +51,8 @@ export const ErrorMessages = {
   NOTIFICATION_NOT_FOUND: "Notification not found",
   NOTIFICATION_ISREAD:"Failed to update notification read status",
   CONVERSATION_NOT_FOUND:"Conversation not found",
+  DEPARTMENT_EXIST:"Department with same name exist",
+  TERRITORY_EXIST:"Territory with same name exist"
 } as const;
 
 export const SuccessMessages = {

@@ -153,4 +153,12 @@ export class ProductPostRepository
     });
     return { repId: result ? result.repId : null };
   }
+
+  async findPostInADay(repId: string): Promise<IProductPost[]> {
+    const day=new Date();
+    const posts=await prisma.productPost.findMany({
+      where:{repId,createdAt:day},
+    });
+    return ProductPostMapper.toDomainList(posts);
+  }
 }

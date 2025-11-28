@@ -3,7 +3,7 @@ import { ITerritory } from "./entity/ITerritories";
 
 export interface ITerritoryRepository {
   findById(territoryId: string): Promise<ITerritory | null>;
-  getAllTerritories(): Promise<ITerritory[] | null>;
+  getAllTerritories(): Promise<ITerritory[]>;
   findAllTerritories(
     page: number,
     limit: number,

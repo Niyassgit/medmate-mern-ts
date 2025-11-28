@@ -31,8 +31,8 @@ export const territories=async(userId:string,page:number=1,limit:number=10,searc
     const response=await api.get(AdminEndpoints.GET_TERRITORIES(userId,page,limit,search));
     return response.data;
 }
-export const addTerritory = async (userId: string, data:TerritorySchemaDTO) => {
-  return api.post(AdminEndpoints.ADD_TERRITORY(userId), data);
+export const addTerritory = async (data:TerritorySchemaDTO) => {
+  return api.post(AdminEndpoints.ADD_TERRITORY, data);
 };
 export const updateTerritory=async (territoryId:string,data:TerritorySchemaDTO)=>{
     return api.patch(AdminEndpoints.EDIT_TERRITORY(territoryId),data);
@@ -41,8 +41,8 @@ export const departments=async(userId:string,page:number=1,limit:number=10,searc
     const response=await api.get(AdminEndpoints.GET_DEPARTMENTS(userId,page,limit,search))
     return response.data;
 }
-export const createDepartment=async(userId:string,data:DepartmentSchemaDTO)=>{
-    return api.post(AdminEndpoints.CREATE_DEPARTMENT(userId),data);
+export const createDepartment=async(data:DepartmentSchemaDTO)=>{
+    return api.post(AdminEndpoints.CREATE_DEPARTMENT,data);
 }
 export const updateDepartment=async(postId:string,data:DepartmentSchemaDTO)=>{
     return api.patch(AdminEndpoints.EDIT_DEPARTMENTS(postId),data);

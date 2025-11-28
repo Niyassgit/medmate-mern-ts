@@ -6,6 +6,7 @@ import { ICreatePostUseCase } from "../interfaces/ICreatePostUseCase";
 import { ProductPostMapper } from "../mappers/ProductPostMapper";
 import { ErrorMessages, SuccessMessages } from "../../../shared/Messages";
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
+
 export class CreatePostUseCase implements ICreatePostUseCase {
   constructor(
     private _userRepository: IUserRepository,

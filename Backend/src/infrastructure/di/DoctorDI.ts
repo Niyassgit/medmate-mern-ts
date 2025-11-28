@@ -205,17 +205,13 @@ const getAllMessagesUseCase = new GetAllMessagesUseCase(messageRepository);
 const createMessageUseCase = new CreateDoctorMessageUseCase(
   doctorRepository,
   messageRepository,
-  conversationRepository,
-  medicalRepRepository,
   chatEventPublisher
 );
 
 const markMessageAsReadUseCase = new DoctoMessageMarkAsReadUseCase(
   doctorRepository,
   messageRepository,
-  conversationRepository,
-  medicalRepRepository,
-  chatEventPublisher
+  conversationRepository
 );
 export const doctorController = new DoctorController(
   createDoctorUseCase,
