@@ -1,10 +1,10 @@
 import { IMessage } from "../../../domain/chat/entities/IMessage";
 import { ConversationUpdateDTO } from "../dto/ConversationUpdateDTO";
 import { CreateMessageDTO } from "../dto/CreateMessageDTO";
-import { MessageResponseDTO } from "../dto/MessageResponseDTO";
+import { MessageDTO } from "../dto/MessageDTO";
 
 export class MessageMapper {
-  static toDomain(entity: IMessage): MessageResponseDTO {
+  static toDomain(entity: IMessage): MessageDTO {
     return {
       id: entity.id,
       content: entity.content,
@@ -17,7 +17,7 @@ export class MessageMapper {
     };
   }
 
-  static toDomainList(entity: IMessage[]): MessageResponseDTO[] {
+  static toDomainList(entity: IMessage[]): MessageDTO[] {
     return entity.map((e) => this.toDomain(e));
   }
   static toEntity(
@@ -33,9 +33,7 @@ export class MessageMapper {
     };
   }
 
-  static conversationUpdate(
-    message: MessageResponseDTO
-  ): ConversationUpdateDTO {
+  static conversationUpdate(message: MessageDTO): ConversationUpdateDTO {
     return {
       conversationId: message.conversationId,
       lastMessage: message.content ?? "",

@@ -17,14 +17,23 @@ export class MessageRepository
   constructor() {
     super(prisma.message, (M) => MessageMapper.toDomain(M));
   }
-  async getMessages(conversationId: string): Promise<IMessage[]> {
+
+  async getMessages(
+    conversationId: string,
+    cursor?: string | null
+  ): Promise<IMessage[]> {
+    const pegeSize = 20;
     const messages = await prisma.message.findMany({
       where: { conversationId },
-      orderBy: { createdAt: "asc" },
+      orderBy: { createdAt: "desc" },
+      take: pegeSize,
+      skip: cursor ? 1 : 0,
+      cursor: cursor ? { id: cursor } : undefined,
     });
 
     return MessageMapper.toList(messages);
   }
+
   async createMessage(
     message: Omit<IMessage, "id" | "createdAt" | "isRead">
   ): Promise<IMessage> {

@@ -15,6 +15,7 @@ import { SpinnerButton } from "./SpinnerButton";
 import { Conversation } from "../Dto/Conversation";
 import { Role } from "@/types/Role";
 import { getSocket } from "@/lib/socket";
+import { ChatResponseDTO } from "../Dto/ChatResponseDTO";
 
 interface ChatViewProps {
   conversation: Conversation | null;
@@ -26,28 +27,91 @@ export const ChatView = ({ conversation, owner }: ChatViewProps) => {
   const hasMarkedAsReadRef = useRef(false);
   const isMarkingAsReadRef = useRef(false);
 
+  const [nextCursor, setNextCursor] = useState<string | null>(null);
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
   const fetchMessages = useCallback(() => {
-    if (!conversation) return Promise.resolve<MessageDTO[]>([]);
+    if (!conversation)
+      return Promise.resolve<ChatResponseDTO>({
+        messages: [],
+        nextCursor: null,
+      });
     return owner === Role.MEDICAL_REP
       ? getMessagesRep(conversation.id)
       : doctorMessages(conversation.id);
   }, [conversation, owner]);
 
   const {
-    data: messages,
+    data: messagesResponse,
     error,
     loading,
-  } = useFetchItem<MessageDTO[]>(fetchMessages);
+  } = useFetchItem<ChatResponseDTO>(fetchMessages);
 
   useEffect(() => {
-    setLocalMessages(messages || []);
-    // Reset the flag when messages are loaded
-    hasMarkedAsReadRef.current = false;
-  }, [messages]);
+    if (messagesResponse) {
+      const reversedMessages = [...messagesResponse.messages].reverse();
+      setLocalMessages(reversedMessages);
+      setNextCursor(messagesResponse.nextCursor);
+      hasMarkedAsReadRef.current = false;
+      setTimeout(() => {
+        if (scrollContainerRef.current) {
+          scrollContainerRef.current.scrollTop =
+            scrollContainerRef.current.scrollHeight;
+        }
+      }, 100);
+    }
+  }, [messagesResponse]);
 
   const handleMessageSent = (newMessage: MessageDTO) => {
     setLocalMessages((prev) => [...prev, newMessage]);
   };
+
+  const loadMoreMessages = useCallback(async () => {
+    if (!conversation || !nextCursor || isFetchingMore) return;
+
+    setIsFetchingMore(true);
+    const div = scrollContainerRef.current;
+    const previousScrollHeight = div?.scrollHeight || 0;
+
+    try {
+      const res =
+        owner === Role.MEDICAL_REP
+          ? await getMessagesRep(conversation.id, nextCursor)
+          : await doctorMessages(conversation.id, nextCursor);
+
+      const reversedMessages = [...res.messages].reverse();
+      setLocalMessages((prev) => [...reversedMessages, ...prev]);
+      setNextCursor(res.nextCursor);
+
+
+      setTimeout(() => {
+        if (div) {
+          const newScrollHeight = div.scrollHeight;
+          const scrollDifference = newScrollHeight - previousScrollHeight;
+          div.scrollTop = scrollDifference;
+        }
+      }, 0);
+    } catch (err) {
+      console.error("Failed to load more messages", err);
+    } finally {
+      setIsFetchingMore(false);
+    }
+  }, [conversation, nextCursor, isFetchingMore, owner]);
+
+  useEffect(() => {
+    const div = scrollContainerRef.current;
+    if (!div || !nextCursor) return;
+
+    const handleScroll = () => {
+      if (div.scrollTop < 40 && !isFetchingMore) {
+        loadMoreMessages();
+      }
+    };
+
+    div.addEventListener("scroll", handleScroll);
+    return () => div.removeEventListener("scroll", handleScroll);
+  }, [nextCursor, isFetchingMore, loadMoreMessages]);
 
   useEffect(() => {
     if (!conversation) return;
@@ -61,8 +125,7 @@ export const ChatView = ({ conversation, owner }: ChatViewProps) => {
     const handleIncoming = (newMessage: MessageDTO) => {
       if (newMessage.senderRole !== owner) {
         setLocalMessages((prev) => [...prev, newMessage]);
-        
-        // Mark as read when receiving new message from other person
+
         if (!isMarkingAsReadRef.current) {
           isMarkingAsReadRef.current = true;
           if (owner === Role.MEDICAL_REP) {
@@ -79,7 +142,6 @@ export const ChatView = ({ conversation, owner }: ChatViewProps) => {
     };
 
     const handleSeen = () => {
-      // When other person sees messages, mark my messages (sent by me) as read
       setLocalMessages((prev) =>
         prev.map((msg) =>
           msg.senderRole === owner ? { ...msg, isRead: true } : msg
@@ -99,25 +161,27 @@ export const ChatView = ({ conversation, owner }: ChatViewProps) => {
 
   useEffect(() => {
     if (!conversation || !localMessages.length) return;
-    
+
     const hasUnread = localMessages.some(
       (msg) => msg.senderRole !== owner && !msg.isRead
     );
 
-    // Only mark as read if there are unread messages and we haven't already done so
-    if (!hasUnread || hasMarkedAsReadRef.current || isMarkingAsReadRef.current) return;
+    if (!hasUnread || hasMarkedAsReadRef.current || isMarkingAsReadRef.current)
+      return;
 
     hasMarkedAsReadRef.current = true;
     isMarkingAsReadRef.current = true;
 
-    const markAsRead = owner === Role.MEDICAL_REP
-      ? messageMarkAsReadForRep(conversation.id)
-      : messageMarkAsReadForDoctor(conversation.id);
+    const markAsRead =
+      owner === Role.MEDICAL_REP
+        ? messageMarkAsReadForRep(conversation.id)
+        : messageMarkAsReadForDoctor(conversation.id);
 
     markAsRead.finally(() => {
       isMarkingAsReadRef.current = false;
     });
   }, [conversation?.id, localMessages, owner]);
+
   if (!conversation) {
     return (
       <div className="flex items-center justify-center h-full text-muted-foreground flex-col gap-2">
@@ -176,7 +240,17 @@ export const ChatView = ({ conversation, owner }: ChatViewProps) => {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+      <div
+        ref={scrollContainerRef}
+        className="flex-1 overflow-y-auto px-6 py-4 space-y-4  [scrollbar-width:none] 
+             [-ms-overflow-style:none] 
+             [&::-webkit-scrollbar]:hidden"
+      >
+        {isFetchingMore && (
+          <div className="flex justify-center py-2">
+            <SpinnerButton />
+          </div>
+        )}
         {localMessages.map((message) => (
           <MessageBubble
             key={message.id}

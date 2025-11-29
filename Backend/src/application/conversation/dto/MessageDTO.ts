@@ -1,6 +1,6 @@
 import { MessageType, Role } from "../../../shared/Enums";
 
-export interface MessageResponseDTO {
+export interface MessageDTO {
   id: string;
   conversationId: string;
   content: string | null;

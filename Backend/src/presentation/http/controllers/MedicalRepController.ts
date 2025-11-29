@@ -259,7 +259,11 @@ export class MedicalRepController {
     const { userId } = req.params;
     const cursor = req.query.cursor as string | undefined;
     const limit = req.query.limit ? Number(req.query.limit) : undefined;
-    const response = await this._getAllNotificationsUseCase.execute(userId, cursor, limit);
+    const response = await this._getAllNotificationsUseCase.execute(
+      userId,
+      cursor,
+      limit
+    );
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
@@ -331,7 +335,11 @@ export class MedicalRepController {
 
   getAllMessages = async (req: Request, res: Response) => {
     const { conversationId } = req.params;
-    const response = await this._getAllMessagesUseCase.execute(conversationId);
+    const { cursor } = req.query;
+    const response = await this._getAllMessagesUseCase.execute(
+      conversationId,
+      cursor as string | undefined
+    );
     return res.status(HttpStatusCode.OK).json({ succes: true, data: response });
   };
 

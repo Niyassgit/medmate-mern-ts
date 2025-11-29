@@ -1,9 +1,9 @@
-import { MessageResponseDTO } from "../../../application/conversation/dto/MessageResponseDTO";
+import { IMessage } from "../../chat/entities/IMessage";
 
 export interface IChatEventPublisher {
   publishNewMessage(
     conversationId: string,
-    message: MessageResponseDTO
+    message: IMessage
   ): Promise<void>;
   updateChatAsSeen(
     conversationId:string

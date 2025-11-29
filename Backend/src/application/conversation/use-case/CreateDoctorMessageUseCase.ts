@@ -5,7 +5,7 @@ import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRe
 import { ErrorMessages } from "../../../shared/Messages";
 import { UnautharizedError } from "../../errors";
 import { CreateMessageDTO } from "../dto/CreateMessageDTO";
-import { MessageResponseDTO } from "../dto/MessageResponseDTO";
+import { MessageDTO } from "../dto/MessageDTO";
 import { ICreateDoctorMessageUseCase } from "../interfaces/ICreateDoctorMessageUseCase";
 import { MessageMapper } from "../mappers/MessageMapper";
 
@@ -19,7 +19,7 @@ export class CreateDoctorMessageUseCase implements ICreateDoctorMessageUseCase {
   async execute(
     data: CreateMessageDTO,
     userId?: string
-  ): Promise<MessageResponseDTO> {
+  ): Promise<MessageDTO> {
     if (!userId) throw new UnautharizedError(ErrorMessages.UNAUTHORIZED);
 
     const { doctorId } = await this._doctorRepository.getDoctorIdByUserId(userId);

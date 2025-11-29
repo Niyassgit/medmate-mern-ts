@@ -145,23 +145,29 @@ export const repConversations = async () => {
   return data;
 };
 
-export const getMessagesRep=async (conversationId:string)=>{
-  const res=await api.get(RepEndpoints.GET_MESSAGES(conversationId));
+export const getMessagesRep = async (
+  conversationId: string,
+  cursor?: string | null
+) => {
+  const url = cursor
+    ? `${RepEndpoints.GET_MESSAGES(conversationId)}?cursor=${cursor}`
+    : RepEndpoints.GET_MESSAGES(conversationId);
+  const res = await api.get(url);
   return res.data.data;
-}
+};
 
-export const createMessageForRep=async(body:{
+export const createMessageForRep = async (body: {
   conversationId: string;
   content: string;
   messageType: MessageType;
   senderRole: Role;
   receiverId: string;
-})=>{
-  const {data}=await api.post(RepEndpoints.ADD_MESSAGE,body);
+}) => {
+  const { data } = await api.post(RepEndpoints.ADD_MESSAGE, body);
   return data;
-}
+};
 
-export const messageMarkAsReadForRep=async(conversationId:string)=>{
-  const res=await api.patch(RepEndpoints.MARK_AS_READ(conversationId));
+export const messageMarkAsReadForRep = async (conversationId: string) => {
+  const res = await api.patch(RepEndpoints.MARK_AS_READ(conversationId));
   return res.data;
-}
+};

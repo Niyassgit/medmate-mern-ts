@@ -292,7 +292,11 @@ export class DoctorController {
 
   getMessages = async (req: Request, res: Response) => {
     const { conversationId } = req.params;
-    const response = await this._getAllMessagesUseCase.execute(conversationId);
+    const { cursor } = req.query;
+    const response = await this._getAllMessagesUseCase.execute(
+      conversationId,
+      cursor as string | undefined
+    );
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });

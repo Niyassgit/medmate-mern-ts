@@ -140,8 +140,14 @@ export const doctorConversations = async () => {
   return data;
 };
 
-export const doctorMessages = async (conversationId: string) => {
-  const res = await api.get(DoctorEndpoints.GET_MESSAGES(conversationId));
+export const doctorMessages = async (
+  conversationId: string,
+  cursor?: string | null
+) => {
+  const url = cursor
+    ? `${DoctorEndpoints.GET_MESSAGES(conversationId)}?cursor=${cursor}`
+    : DoctorEndpoints.GET_MESSAGES(conversationId);
+  const res = await api.get(url);
   return res.data.data;
 };
 

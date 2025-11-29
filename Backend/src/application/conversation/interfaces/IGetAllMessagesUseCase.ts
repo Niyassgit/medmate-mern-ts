@@ -1,5 +1,5 @@
-import { MessageResponseDTO } from "../dto/MessageResponseDTO";
+import { ChatResponseDTO } from "../dto/ChatResponseDTO";
 
 export interface IGetAllMessagesUseCase{
-    execute(conversationId:string):Promise<MessageResponseDTO[]>;
+    execute(conversationId:string,cursor?:string):Promise<ChatResponseDTO>;
 }

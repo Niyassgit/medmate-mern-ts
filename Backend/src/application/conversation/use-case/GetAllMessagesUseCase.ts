@@ -1,5 +1,5 @@
 import { IMessageRepository } from "../../../domain/chat/respositories/IMessageRepository";
-import { MessageResponseDTO } from "../dto/MessageResponseDTO";
+import { ChatResponseDTO } from "../dto/ChatResponseDTO";
 import { IGetAllMessagesUseCase } from "../interfaces/IGetAllMessagesUseCase";
 import { MessageMapper } from "../mappers/MessageMapper";
 
@@ -7,10 +7,14 @@ export class GetAllMessagesUseCase implements IGetAllMessagesUseCase {
   constructor(
     private _messageRepository: IMessageRepository,
   ) {}
-  async execute(conversationId: string): Promise<MessageResponseDTO[]> {
+  async execute(conversationId: string,cursor?:string): Promise<ChatResponseDTO> {
     const messages = await this._messageRepository.getMessages(
-      conversationId
+      conversationId,
+      cursor
     );
-    return MessageMapper.toDomainList(messages);
+    return{
+      messages:MessageMapper.toDomainList(messages),
+      nextCursor:messages.length>0 ?messages[messages.length-1].id:null
+    } ;
   }
 }
