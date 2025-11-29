@@ -218,7 +218,8 @@ const createMessageUseCase = new CreateRepMessageUseCase(
 const messageMarkAseReadUseCase = new RepMessageMarkAsReadUseCase(
   medicalRepRepository,
   conversationRepository,
-  messageRepository
+  messageRepository,
+  chatEventPublisher
 );
 
 export const medicalRepController = new MedicalRepController(

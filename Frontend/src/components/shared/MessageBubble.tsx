@@ -1,12 +1,19 @@
 import { cn } from "@/lib/utils";
+import { Check, CheckCheck } from "lucide-react";
 
 interface MessageBubbleProps {
   text: string;
   timestamp: string;
   isSent: boolean;
+  isRead: boolean;
 }
 
-export const MessageBubble = ({ text, timestamp, isSent }: MessageBubbleProps) => {
+export const MessageBubble = ({
+  text,
+  timestamp,
+  isSent,
+  isRead,
+}: MessageBubbleProps) => {
   return (
     <div className={cn("flex", isSent ? "justify-end" : "justify-start")}>
       <div className={cn("max-w-[70%] space-y-1", isSent && "items-end")}>
@@ -20,7 +27,16 @@ export const MessageBubble = ({ text, timestamp, isSent }: MessageBubbleProps) =
         >
           {text}
         </div>
-        <span className="text-xs text-muted-foreground px-2">{timestamp}</span>
+        <div className="flex items-center gap-1 text-xs text-muted-foreground px-2">
+          <span>{timestamp}</span>
+
+          {isSent &&
+            (isRead ? (
+              <CheckCheck className="w-3 h-3 text-blue-500" /> 
+            ) : (
+              <Check className="w-3 h-3 opacity-70" /> 
+            ))}
+        </div>
       </div>
     </div>
   );

@@ -5,5 +5,7 @@ export interface IChatEventPublisher {
     conversationId: string,
     message: MessageResponseDTO
   ): Promise<void>;
-
+  updateChatAsSeen(
+    conversationId:string
+  ):Promise<void>;
 }

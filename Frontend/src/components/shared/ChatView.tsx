@@ -3,7 +3,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { MessageBubble } from "./MessageBubble";
 import { MessageInput } from "./MessageInput";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { MessageDTO } from "../Dto/MessageDTO";
 import useFetchItem from "@/hooks/useFetchItem";
 import { getMessagesRep, messageMarkAsReadForRep } from "@/features/rep/api";
@@ -23,6 +23,8 @@ interface ChatViewProps {
 
 export const ChatView = ({ conversation, owner }: ChatViewProps) => {
   const [localMessages, setLocalMessages] = useState<MessageDTO[]>([]);
+  const hasMarkedAsReadRef = useRef(false);
+  const isMarkingAsReadRef = useRef(false);
 
   const fetchMessages = useCallback(() => {
     if (!conversation) return Promise.resolve<MessageDTO[]>([]);
@@ -39,6 +41,8 @@ export const ChatView = ({ conversation, owner }: ChatViewProps) => {
 
   useEffect(() => {
     setLocalMessages(messages || []);
+    // Reset the flag when messages are loaded
+    hasMarkedAsReadRef.current = false;
   }, [messages]);
 
   const handleMessageSent = (newMessage: MessageDTO) => {
@@ -52,42 +56,67 @@ export const ChatView = ({ conversation, owner }: ChatViewProps) => {
     if (!token) return;
 
     const socket = getSocket(token);
-
     socket.emit("join_conversation", conversation.id);
 
     const handleIncoming = (newMessage: MessageDTO) => {
       if (newMessage.senderRole !== owner) {
         setLocalMessages((prev) => [...prev, newMessage]);
-      }
-
-      if (owner === Role.MEDICAL_REP) {
-        messageMarkAsReadForRep(conversation.id);
-      } else {
-        messageMarkAsReadForDoctor(conversation.id);
+        
+        // Mark as read when receiving new message from other person
+        if (!isMarkingAsReadRef.current) {
+          isMarkingAsReadRef.current = true;
+          if (owner === Role.MEDICAL_REP) {
+            messageMarkAsReadForRep(conversation.id).finally(() => {
+              isMarkingAsReadRef.current = false;
+            });
+          } else {
+            messageMarkAsReadForDoctor(conversation.id).finally(() => {
+              isMarkingAsReadRef.current = false;
+            });
+          }
+        }
       }
     };
 
+    const handleSeen = () => {
+      // When other person sees messages, mark my messages (sent by me) as read
+      setLocalMessages((prev) =>
+        prev.map((msg) =>
+          msg.senderRole === owner ? { ...msg, isRead: true } : msg
+        )
+      );
+    };
+
     socket.on("new_message", handleIncoming);
+    socket.on("message_seen", handleSeen);
 
     return () => {
       socket.off("new_message", handleIncoming);
+      socket.off("message_seen", handleSeen);
       socket.emit("leave_conversation", conversation.id);
     };
   }, [conversation?.id, owner]);
 
   useEffect(() => {
     if (!conversation || !localMessages.length) return;
+    
     const hasUnread = localMessages.some(
       (msg) => msg.senderRole !== owner && !msg.isRead
     );
 
-    if (!hasUnread) return;
+    // Only mark as read if there are unread messages and we haven't already done so
+    if (!hasUnread || hasMarkedAsReadRef.current || isMarkingAsReadRef.current) return;
 
-    if (owner === Role.MEDICAL_REP) {
-      messageMarkAsReadForRep(conversation.id);
-    } else {
-      messageMarkAsReadForDoctor(conversation.id);
-    }
+    hasMarkedAsReadRef.current = true;
+    isMarkingAsReadRef.current = true;
+
+    const markAsRead = owner === Role.MEDICAL_REP
+      ? messageMarkAsReadForRep(conversation.id)
+      : messageMarkAsReadForDoctor(conversation.id);
+
+    markAsRead.finally(() => {
+      isMarkingAsReadRef.current = false;
+    });
   }, [conversation?.id, localMessages, owner]);
   if (!conversation) {
     return (
@@ -157,6 +186,7 @@ export const ChatView = ({ conversation, owner }: ChatViewProps) => {
               minute: "2-digit",
             })}
             isSent={message.senderRole === owner}
+            isRead={message.isRead}
           />
         ))}
       </div>

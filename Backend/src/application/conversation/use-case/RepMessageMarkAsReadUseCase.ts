@@ -1,5 +1,6 @@
 import { IConversationRepository } from "../../../domain/chat/respositories/IConversationRepository";
 import { IMessageRepository } from "../../../domain/chat/respositories/IMessageRepository";
+import { IChatEventPublisher } from "../../../domain/common/services/IChatEventPublisher";
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
 import { ErrorMessages } from "../../../shared/Messages";
 import { BadRequestError, UnautharizedError } from "../../errors";
@@ -11,7 +12,8 @@ export class RepMessageMarkAsReadUseCase
   constructor(
     private _medicalRepRepository: IMedicalRepRepository,
     private _conversationRepository: IConversationRepository,
-    private _messageRepository: IMessageRepository
+    private _messageRepository: IMessageRepository,
+    private _chatEventPublisher:IChatEventPublisher
   ) {}
   async execute(conversationId: string, userId?: string): Promise<void> {
     if (!userId) throw new UnautharizedError(ErrorMessages.UNAUTHORIZED);
@@ -22,5 +24,6 @@ export class RepMessageMarkAsReadUseCase
     if (!conversation)
       throw new BadRequestError(ErrorMessages.CONVERSATION_NOT_FOUND);
     await this._messageRepository.markAsRead(conversationId, repId);
+    await this._chatEventPublisher.updateChatAsSeen(conversationId);
   }
 }

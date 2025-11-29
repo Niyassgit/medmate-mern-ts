@@ -5,6 +5,8 @@ export interface IUserConversation {
   lastMessage?: string;
   lastMessageAt?: Date;
   unread: number;
-  repId:string;
-  doctorId:string;
+  repId: string;
+  doctorId: string;
+  lastMessageIsRead: boolean;
+  senderId: string;
 }

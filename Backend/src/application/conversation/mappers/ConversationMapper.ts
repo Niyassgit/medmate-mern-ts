@@ -19,8 +19,10 @@ export class ConversationMapper {
       lastMessage: entity.lastMessage,
       lastMessageAt: entity.lastMessageAt,
       unread: entity.unread,
-      doctorId: entity.repId,
+      doctorId: entity.doctorId,
       repId: entity.repId,
+      lastMessageIsRead: entity.lastMessageIsRead,
+      senderId: entity.senderId
     };
   }
 

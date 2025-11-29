@@ -65,6 +65,11 @@ export class ConversationRepository
       const other = isDoctor ? conv.rep : conv.doctor;
       const latest = conv.messages[0];
 
+      const lastMessageSentByCurrentUser = latest?.senderId === profileId;
+      const lastMessageIsRead = lastMessageSentByCurrentUser 
+        ? (latest?.isRead ?? false)
+        : false;
+
       result.push({
         id: conv.id,
         name: other.name,
@@ -74,6 +79,8 @@ export class ConversationRepository
         unread: unreadMap.get(conv.id) ?? 0,
         doctorId: conv.doctorId,
         repId: conv.repId,
+        lastMessageIsRead: lastMessageIsRead,
+        senderId: latest?.senderId ?? ""
       });
     }
 

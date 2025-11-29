@@ -218,7 +218,8 @@ const createMessageUseCase = new CreateDoctorMessageUseCase(
 const markMessageAsReadUseCase = new DoctoMessageMarkAsReadUseCase(
   doctorRepository,
   messageRepository,
-  conversationRepository
+  conversationRepository,
+  chatEventPublisher
 );
 export const doctorController = new DoctorController(
   createDoctorUseCase,

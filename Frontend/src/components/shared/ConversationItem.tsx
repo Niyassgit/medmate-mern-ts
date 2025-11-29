@@ -2,6 +2,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { formatMessageTimestamp } from "@/lib/formatMessageTimestamp";
 import { cn } from "@/lib/utils";
+import { Check, CheckCheck } from "lucide-react";
 
 interface ConversationItemProps {
   name: string;
@@ -12,6 +13,10 @@ interface ConversationItemProps {
   // online: boolean;
   isActive?: boolean;
   onClick?: () => void;
+
+  lastMessageIsRead: boolean;
+  lastMessageSenderId: string;
+  ownerId: string;
 }
 
 export const ConversationItem = ({
@@ -23,7 +28,11 @@ export const ConversationItem = ({
   // online,
   isActive,
   onClick,
+  lastMessageIsRead,
+  lastMessageSenderId,
+  ownerId,
 }: ConversationItemProps) => {
+  const isLastMessageSentByOwner = lastMessageSenderId === ownerId;
   return (
     <div
       onClick={onClick}
@@ -37,9 +46,6 @@ export const ConversationItem = ({
           <AvatarImage src={avatar} alt={name} />
           <AvatarFallback>{name.charAt(0)}</AvatarFallback>
         </Avatar>
-        {/* {online && (
-          <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-online border-2 border-background" />
-        )} */}
       </div>
 
       <div className="flex-1 min-w-0">
@@ -49,10 +55,24 @@ export const ConversationItem = ({
             {formatMessageTimestamp(timestamp)}
           </span>
         </div>
+
         <div className="flex items-center justify-between">
-          <p className="text-sm text-muted-foreground truncate">
-            {lastMessage}
-          </p>
+          <div className="flex items-center text-sm text-muted-foreground max-w-[170px]">
+            {/* Tick */}
+            {isLastMessageSentByOwner &&
+              (lastMessageIsRead ? (
+                <CheckCheck className="w-3 h-3 text-blue-500 shrink-0 mr-1" />
+              ) : (
+                <Check className="w-3 h-3 opacity-70 shrink-0 mr-1" />
+              ))}
+
+            {/* Text that truncates */}
+            <span className="truncate block overflow-hidden whitespace-nowrap">
+              {lastMessage}
+            </span>
+          </div>
+
+          {/* Unread bubble */}
           {unread === 1 && (
             <div className="h-3 w-3 rounded-full bg-green-600 ml-2"></div>
           )}

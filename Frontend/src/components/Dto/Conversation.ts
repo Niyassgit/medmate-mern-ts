@@ -9,4 +9,5 @@ export interface Conversation {
   receiverId: string;
   repId:string;
   doctorId:string;
+  lastMessageIsRead:boolean;
 }
