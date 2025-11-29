@@ -1,16 +1,19 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { Button } from "../ui/button";
 import { Bell, Mail, Menu, X } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import UserAvatar from "../shared/UserAvatar";
-import { unreadNotificationCount } from "@/features/rep/api";
+import { unreadNotificationCount, repConversations } from "@/features/rep/api";
 import { useSelector } from "react-redux";
 import { getSocket } from "@/lib/socket";
+import { MessageDTO } from "../Dto/MessageDTO";
+import { Role } from "@/types/Role";
 
 const RepNavbar = () => {
   const userId = useSelector((state: any) => state.auth.user?.id);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [unreadChatCount, setUnreadChatCount] = useState(0);
   const token = useMemo(() => localStorage.getItem("accessToken"), []);
 
   useEffect(() => {
@@ -22,6 +25,21 @@ const RepNavbar = () => {
     fetchUnread(userId);
   }, [userId]);
 
+  const updateUnreadChatCount = useCallback(async () => {
+    try {
+      const res = await repConversations();
+      const totalUnread = res.data?.reduce((sum: number, conv: any) => sum + (conv.unread || 0), 0) || 0;
+      setUnreadChatCount(totalUnread);
+    } catch (err) {
+      console.error("Failed to fetch unread chat count", err);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!userId) return;
+    updateUnreadChatCount();
+  }, [userId, updateUnreadChatCount]);
+
   useEffect(() => {
     if (!token || !userId) return;
     const socket = getSocket(token);
@@ -32,6 +50,29 @@ const RepNavbar = () => {
       socket.off("notification:count");
     };
   }, [token, userId]);
+
+  useEffect(() => {
+    if (!token || !userId) return;
+    const socket = getSocket(token);
+
+    const handleNewMessage = (message: MessageDTO) => {
+      if (message.senderRole !== Role.MEDICAL_REP) {
+        setUnreadChatCount((prev) => prev + 1);
+      }
+    };
+
+    const handleMessageSeen = (conversationId: string) => {
+      updateUnreadChatCount();
+    };
+
+    socket.on("new_message", handleNewMessage);
+    socket.on("message_seen", handleMessageSeen);
+
+    return () => {
+      socket.off("new_message", handleNewMessage);
+      socket.off("message_seen", handleMessageSeen);
+    };
+  }, [token, userId, updateUnreadChatCount]);
 
   const navLinkClass = (isActive: boolean) =>
     `${isActive ? "text-blue-600" : "text-black"} hover:text-blue-500`;
@@ -69,9 +110,16 @@ const RepNavbar = () => {
           {/* Icons */}
           <NavLink to="/rep/message">
             {({ isActive }) => (
-              <Mail
-                className={`${navLinkClass(isActive)} h-6 w-6 cursor-pointer`}
-              />
+              <div className="relative w-fit">
+                <Mail
+                  className={`${navLinkClass(isActive)} h-6 w-6 cursor-pointer`}
+                />
+                {unreadChatCount > 0 && (
+                  <span className="absolute -top-1 -right-2 bg-red-600 text-white text-[10px] font-bold rounded-full px-1.5 py-[1px]">
+                    {unreadChatCount > 99 ? "99+" : unreadChatCount}
+                  </span>
+                )}
+              </div>
             )}
           </NavLink>
 
@@ -131,9 +179,16 @@ const RepNavbar = () => {
           <div className="flex items-center space-x-6">
             <NavLink to="/rep/message" onClick={() => setMobileOpen(false)}>
               {({ isActive }) => (
-                <Mail
-                  className={`${navLinkClass(isActive)} h-6 w-6 cursor-pointer`}
-                />
+                <div className="relative w-fit">
+                  <Mail
+                    className={`${navLinkClass(isActive)} h-6 w-6 cursor-pointer`}
+                  />
+                  {unreadChatCount > 0 && (
+                    <span className="absolute -top-1 -right-2 bg-red-600 text-white text-[10px] font-bold rounded-full px-1.5 py-[1px]">
+                      {unreadChatCount > 99 ? "99+" : unreadChatCount}
+                    </span>
+                  )}
+                </div>
               )}
             </NavLink>
 

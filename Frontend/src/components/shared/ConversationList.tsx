@@ -11,7 +11,6 @@ import { Conversation } from "../Dto/Conversation";
 import { Role } from "@/types/Role";
 import { getSocket } from "@/lib/socket";
 import { MessageDTO } from "../Dto/MessageDTO";
-import { useSelector } from "react-redux";
 
 export const ConversationList = ({
   owner,
@@ -25,7 +24,6 @@ export const ConversationList = ({
   const [selectedConversationId, setSelectedConversationId] = useState<
     string | null
   >(null);
-  const userId = useSelector((state: any) => state.auth.user?.id);
 
   const handleSelect = (conv: Conversation) => {
     setSelectedConversationId(conv.id);
@@ -81,21 +79,18 @@ export const ConversationList = ({
               message.createdAt instanceof Date
                 ? message.createdAt.toISOString()
                 : message.createdAt;
-
-            // Check if message was sent by the current user
-            // senderId is the profile ID (doctorId or repId), so we compare with conversation's doctorId/repId
-            const isSentByOwner = 
+            const isSentByOwner =
               (owner === Role.DOCTOR && message.senderId === conv.doctorId) ||
               (owner === Role.MEDICAL_REP && message.senderId === conv.repId);
-            
+
             return {
               ...conv,
               lastMessage: message.content ?? "No messages yet",
               lastMessageAt: lastMessageAt,
               senderId: message.senderId,
-              // If sent by owner, mark as unread initially (will be updated when other person sees it)
-              // If sent by other person, reset lastMessageIsRead (not applicable for their messages)
-              lastMessageIsRead: isSentByOwner ? false : (conv.lastMessageIsRead ?? false),
+              lastMessageIsRead: isSentByOwner
+                ? false
+                : conv.lastMessageIsRead ?? false,
               unread:
                 message.senderRole !== owner ? conv.unread + 1 : conv.unread,
             };
@@ -110,16 +105,15 @@ export const ConversationList = ({
       setConversations((prev) =>
         prev.map((conv) => {
           if (conv.id === conversationId) {
-            // Only mark as read if the last message was sent by the owner
-            // senderId is the profile ID of who sent the last message
-            const isLastMessageSentByOwner = 
+            const isLastMessageSentByOwner =
               (owner === Role.DOCTOR && conv.senderId === conv.doctorId) ||
               (owner === Role.MEDICAL_REP && conv.senderId === conv.repId);
-            
+
             return {
               ...conv,
-              // Only update if the last message was sent by us
-              lastMessageIsRead: isLastMessageSentByOwner ? true : (conv.lastMessageIsRead ?? false),
+              lastMessageIsRead: isLastMessageSentByOwner
+                ? true
+                : conv.lastMessageIsRead ?? false,
             };
           }
           return conv;
@@ -133,14 +127,11 @@ export const ConversationList = ({
     return () => {
       socket.off("new_message", handleNewMessage);
       socket.off("message_seen", handleMessageSeen);
-      // Leave all conversation rooms
       conversations.forEach((conv) => {
         socket.emit("leave_conversation", conv.id);
       });
     };
   }, [conversations, owner]);
-
-  console.log("conversations list:", conversations);
 
   if (loading) return <Spinner />;
   return (
