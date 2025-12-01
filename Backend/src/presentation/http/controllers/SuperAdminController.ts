@@ -1,4 +1,4 @@
-import { Request,Response } from "express";
+import { Request, Response } from "express";
 import { ICreateSuperAdminUseCase } from "../../../application/superAdmin/interfaces/ICreateSuperAdminUseCase";
 import { IGetSuperAdminByEmailUseCase } from "../../../application/superAdmin/interfaces/IGetSuperAdminByEmailUseCase";
 import { RegisterSuperAdminDTO } from "../../../application/superAdmin/dto/RegisterSuperAdminDTO";
@@ -13,13 +13,16 @@ import { SuccessMessages } from "../../../shared/Messages";
 import { IGetTerritoriesUseCase } from "../../../application/superAdmin/interfaces/IGetTerritoriesUseCase";
 import { ICreateTerritoryUseCase } from "../../../application/territory/interfaces/ICreateTerritoryUseCase";
 import { TerritorySchemaDTO } from "../validators/TerritoryValidateSchema";
-import { IEditTerritoryUseCase } from "../../../application/superAdmin/interfaces/IEditTerritoryUseCase";
+import { IEditTerritoryUseCase } from "../../../application/territory/interfaces/IEditTerritoryUseCase";
 import { DepartmentSchemaDTO } from "../validators/DepartmentShema";
 import { ICreateDepartmentUseCase } from "../../../application/department/interfaces/ICreateDepartmentUseCase";
 import { IGetAllDepartmentsUseCase } from "../../../application/superAdmin/interfaces/IGetAllDepartmentsUseCase";
 import { IEditDepartmentUseCase } from "../../../application/department/interfaces/IEditDepartmentUseCase";
 import { GetOptionalUserId } from "../utils/GetOptionalUserId";
-import { getOpSession } from "../../../application/doctor/utils/OpSessionUtil";
+import { IGetAllSubscriptionsUseCase } from "../../../application/subscription/interfaces/IGetAllSubscriptionsUseCase";
+import { ICreateSubscriptionPlanUseCase } from "../../../application/subscription/interfaces/ICreateSubscriptionPlanUseCase";
+import { subscriptionPlanSchema } from "../validators/SubscriptionPlanSchema";
+import { createSubscriptionDTO } from "../../../application/subscription/dto/createSubscriptionDTO";
 
 export class SuperAdminController {
   constructor(
@@ -36,7 +39,9 @@ export class SuperAdminController {
     private _edtiTerritoryUseCase: IEditTerritoryUseCase,
     private _createDepartmentUseCase: ICreateDepartmentUseCase,
     private _getAllDepartmentsUseCase: IGetAllDepartmentsUseCase,
-    private _editDepartmentUseCase: IEditDepartmentUseCase
+    private _editDepartmentUseCase: IEditDepartmentUseCase,
+    private _getAllSubcriptionPlanUseCase: IGetAllSubscriptionsUseCase,
+    private _createSubscriptionPlanUseCase: ICreateSubscriptionPlanUseCase
   ) {}
 
   createSuperAdmin = async (req: Request, res: Response) => {
@@ -117,16 +122,21 @@ export class SuperAdminController {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
     const search = (req.query.search as string) || "";
-    const response = await this._getTerritoriesUseCase.execute(userId,page,limit,search);
+    const response = await this._getTerritoriesUseCase.execute(
+      userId,
+      page,
+      limit,
+      search
+    );
     return res
       .status(HttpStatusCode.OK)
-      .json({ success: true, data: response,page,limit,search});
+      .json({ success: true, data: response, page, limit, search });
   };
 
   addTerritory = async (req: Request, res: Response) => {
-    const userId=GetOptionalUserId(req.user);
+    const userId = GetOptionalUserId(req.user);
     const data = req.body as TerritorySchemaDTO;
-    const response = await this._createTerritoryUseCase.execute(data,userId);
+    const response = await this._createTerritoryUseCase.execute(data, userId);
     return res
       .status(HttpStatusCode.CREATED)
       .json({ success: true, message: response });
@@ -147,9 +157,9 @@ export class SuperAdminController {
   };
 
   createDepartment = async (req: Request, res: Response) => {
-    const userId=GetOptionalUserId(req.user);
+    const userId = GetOptionalUserId(req.user);
     const data = req.body as DepartmentSchemaDTO;
-    const response = await this._createDepartmentUseCase.execute(data,userId);
+    const response = await this._createDepartmentUseCase.execute(data, userId);
     return res
       .status(HttpStatusCode.CREATED)
       .json({ succes: true, message: response });
@@ -160,15 +170,20 @@ export class SuperAdminController {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 8;
     const search = (req.query.search as string) || "";
-    const response = await this._getAllDepartmentsUseCase.execute(userId,page,limit,search);
+    const response = await this._getAllDepartmentsUseCase.execute(
+      userId,
+      page,
+      limit,
+      search
+    );
     return res
       .status(HttpStatusCode.OK)
-      .json({ success: true, data: response ,page,limit});
+      .json({ success: true, data: response, page, limit });
   };
-  
+
   editDepartment = async (req: Request, res: Response) => {
     const { departmentId } = req.params;
-    const userId =GetOptionalUserId(req.user);
+    const userId = GetOptionalUserId(req.user);
     const data = req.body as DepartmentSchemaDTO;
     const response = await this._editDepartmentUseCase.execute(
       departmentId,
@@ -179,4 +194,25 @@ export class SuperAdminController {
       .status(HttpStatusCode.OK)
       .json({ success: true, message: response });
   };
+
+  getAllSubscriptionPlan = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._getAllSubcriptionPlanUseCase.execute(userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  createSubscriptionPlan = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const dto = req.body as createSubscriptionDTO;
+    const response = await this._createSubscriptionPlanUseCase.execute(
+      dto,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
 }

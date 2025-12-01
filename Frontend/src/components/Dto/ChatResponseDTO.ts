@@ -5,3 +5,4 @@ export interface ChatResponseDTO {
   nextCursor: string | null;
 }
 
+

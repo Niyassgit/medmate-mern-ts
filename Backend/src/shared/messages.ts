@@ -52,7 +52,8 @@ export const ErrorMessages = {
   NOTIFICATION_ISREAD:"Failed to update notification read status",
   CONVERSATION_NOT_FOUND:"Conversation not found",
   DEPARTMENT_EXIST:"Department with same name exist",
-  TERRITORY_EXIST:"Territory with same name exist"
+  TERRITORY_EXIST:"Territory with same name exist",
+  SUB_CREATE_ERROR:"failed to add subscription!",
 } as const;
 
 export const SuccessMessages = {
@@ -82,6 +83,7 @@ export const SuccessMessages = {
   INTEREST_SUCCESS: "Interest showed succesfully",
   UNINTERESTED_SUCCESS: "Interest removed",
   CONNECTION_REJECT: "Connection request rejected",
+  SUB_PLAN_CREATE_SUCCESS:"Subscription plan created",
 } as const;
 
 export const NotificationMessages = {

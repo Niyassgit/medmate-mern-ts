@@ -1,0 +1,6 @@
+[2025-12-01 09:32:38] [32minfo[39m: [32m server running on port 5000[39m
+[2025-12-01 09:32:42] [31merror[39m: [31mFailed to start server:argument handler must be a function[39m
+[2025-12-01 09:32:46] [32minfo[39m: [32m server running on port 5000[39m
+[2025-12-01 09:33:12] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-12-01 10:32:28] [32minfo[39m: [32m server running on port 5000[39m
+[2025-12-01 10:37:38] [32minfo[39m: [32m server running on port 5000[39m
