@@ -4,8 +4,9 @@ export interface ISubscription {
   description: string;
   price: number;
   tenure: string;
-  features: string;
+  features: string[];
   createdAt: Date;
   updatedAt: Date;
+  isActive:boolean;
   repIds?:string[];
 }

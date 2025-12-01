@@ -1,5 +1,5 @@
-import { createSubscriptionDTO } from "../dto/createSubscriptionDTO";
+import { CreateSubscriptionDTO } from "../dto/CreateSubscriptionDTO";
 
 export interface ICreateSubscriptionPlanUseCase {
-  execute(dto:createSubscriptionDTO, userId?: string): Promise<string>;
+  execute(dto: CreateSubscriptionDTO, userId?: string): Promise<string>;
 }

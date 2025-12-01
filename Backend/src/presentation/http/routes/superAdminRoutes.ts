@@ -27,7 +27,6 @@ export class SuperAdminRoutes {
     this.router.get("/doctors", superAdminController.getAllDoctors);
     this.router.patch("/block/:userId", superAdminController.blockUser);
     this.router.patch("/unblock/:userId", superAdminController.unBlockUser);
-    this.router.get("/:id", superAdminController.getSuperAdminByEmail);
     this.router.get("/doctors/:userId", superAdminController.doctorDetails);
     this.router.get("/reps/:userId", superAdminController.repDetails);
     this.router.get("/territories/:userId", superAdminController.territories);
@@ -53,13 +52,27 @@ export class SuperAdminRoutes {
       superAdminController.editDepartment
     );
     this.router.get(
-      "/subscription",
+      "/subscriptions",
       superAdminController.getAllSubscriptionPlan
     );
     this.router.post(
-      "/subscription/create",
+      "/subscriptions/create",
       ValidateSchema(subscriptionPlanSchema),
       superAdminController.createSubscriptionPlan
     );
+    this.router.patch(
+      "/subscription/update/:subscriptionId",
+      ValidateSchema(subscriptionPlanSchema),
+      superAdminController.subscriptionUpdate
+    );
+    this.router.patch(
+      "/subscription/toggle/:subscriptionId",
+      superAdminController.subscriptionListToggle
+    );
+    this.router.delete(
+      "/subscription/delete/:subscriptionId",
+      superAdminController.deleteSubscriptionPlan
+    );
+    this.router.get("/:id", superAdminController.getSuperAdminByEmail);
   }
 }

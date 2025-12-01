@@ -1,7 +1,7 @@
 import { UnautharizedError } from "../../../domain/common/errors";
 import { ISubscriptionRepositoy } from "../../../domain/subscription/repositories/ISubscriptionRepository";
 import { ErrorMessages } from "../../../shared/Messages";
-import { SubscriptionsDTO } from "../dto/SubscriptionsDTO";
+import { SubscriptionsDTO } from "../dto/SubscriptionDTO";
 import { IGetAllSubscriptionsUseCase } from "../interfaces/IGetAllSubscriptionsUseCase";
 import { SubscriptionMapper } from "../mappers/SubscriptionMapper";
 

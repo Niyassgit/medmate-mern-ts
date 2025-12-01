@@ -10,5 +10,10 @@ export const AdminEndpoints= {
   EDIT_TERRITORY:(territoryId:string)=>`/admin/territories/edit/${territoryId}`,
   GET_DEPARTMENTS:(userId:string,page:number,limit:number,search:string)=>`/admin/departments/${userId}?page=${page}&limit=${limit}&search=${search}`,
   CREATE_DEPARTMENT:`/admin/departments/create`,
-  EDIT_DEPARTMENTS:(departmentId:string)=>`/admin/departments/edit/${departmentId}`
+  EDIT_DEPARTMENTS:(departmentId:string)=>`/admin/departments/edit/${departmentId}`,
+  SUBSCRIPTION_PLANS:`/admin/subscriptions`,
+  CREATE_SUBSCRIPTION_PLAN:`/admin/subscriptions/create`,
+  UPDATE_PLAN:(conversationId:string)=>`/admin/subscription/update/${conversationId}`,
+  LIST_TOGGLE_PLAN:(conversationId:string)=>`/admin/subscription/toggle/${conversationId}`,
+  DELETE_PLAN:(conversationId:string)=>`/admin/subscription/delete/${conversationId}`,
 }

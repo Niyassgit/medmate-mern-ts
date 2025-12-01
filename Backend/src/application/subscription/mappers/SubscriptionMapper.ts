@@ -1,9 +1,9 @@
 import { ISubscription } from "../../../domain/subscription/entities/ISubscription";
-import { createSubscriptionDTO } from "../dto/createSubscriptionDTO";
-import { SubscriptionsDTO } from "../dto/SubscriptionsDTO";
+import { CreateSubscriptionDTO } from "../dto/CreateSubscriptionDTO";
+import { SubscriptionDTO } from "../dto/SubscriptionDTO";
 
 export class SubscriptionMapper {
-  static toDomain(e: ISubscription): SubscriptionsDTO {
+  static toDomain(e: ISubscription): SubscriptionDTO {
     return {
       id: e.id,
       name: e.name,
@@ -11,16 +11,17 @@ export class SubscriptionMapper {
       description: e.description,
       features: e.features,
       price: e.price,
+      isActive:e.isActive,
       updatedAt: e.updatedAt,
       createdAt: e.createdAt,
     };
   }
 
-  static toListDomain(e: ISubscription[]): SubscriptionsDTO[] {
+  static toListDomain(e: ISubscription[]): SubscriptionDTO[] {
     return e.map((sub) => this.toDomain(sub));
   }
  
-  static toEntity(dto:createSubscriptionDTO):Omit<ISubscription,"id" | "createdAt" | "updatedAt">{
+  static toEntity(dto:CreateSubscriptionDTO):Omit<ISubscription,"id" | "createdAt" | "updatedAt" | "isActive">{
     return {
         name:dto.name,
         description:dto.description,

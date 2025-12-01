@@ -1,7 +1,7 @@
 import { Prisma, SubscriptionPlan } from "@prisma/client";
 import { ISubscription } from "../../domain/subscription/entities/ISubscription";
 
-export class subscriptionMapper {
+export class SubscriptionMapper {
   static toEntity(e: SubscriptionPlan): ISubscription {
     return {
       id: e.id,
@@ -10,6 +10,7 @@ export class subscriptionMapper {
       features: e.features,
       price: e.price,
       tenure: e.tenure,
+      isActive:e.isActive,
       updatedAt: e.updatedAt,
       createdAt: e.createdAt,
     };

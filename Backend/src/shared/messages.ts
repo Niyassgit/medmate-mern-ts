@@ -54,6 +54,8 @@ export const ErrorMessages = {
   DEPARTMENT_EXIST:"Department with same name exist",
   TERRITORY_EXIST:"Territory with same name exist",
   SUB_CREATE_ERROR:"failed to add subscription!",
+  SUB_NOT_FOUND:"Subscription not found!", 
+  SUB_UPDATE_ERROR:"Subscription updation failed",
 } as const;
 
 export const SuccessMessages = {
@@ -84,6 +86,8 @@ export const SuccessMessages = {
   UNINTERESTED_SUCCESS: "Interest removed",
   CONNECTION_REJECT: "Connection request rejected",
   SUB_PLAN_CREATE_SUCCESS:"Subscription plan created",
+  SUB_UPDATED:"Subscription status updated successfully",
+  SUB_DELETED:"Subscription plan deleted successfully",
 } as const;
 
 export const NotificationMessages = {

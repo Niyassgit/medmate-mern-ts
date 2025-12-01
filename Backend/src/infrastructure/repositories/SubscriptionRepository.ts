@@ -3,8 +3,7 @@ import { ISubscriptionRepositoy } from "../../domain/subscription/repositories/I
 import { Prisma, SubscriptionPlan } from "@prisma/client";
 import { BaseRepository } from "../database/BaseRepository";
 import { prisma } from "../database/prisma";
-import { SubscriptionMapper } from "../../application/subscription/mappers/SubscriptionMapper";
-import { subscriptionMapper } from "../mappers/SubscriptionMappers";
+import { SubscriptionMapper } from "../mappers/SubscriptionMappers";
 
 export class SubscriptionRepository
   extends BaseRepository<
@@ -16,10 +15,10 @@ export class SubscriptionRepository
   implements ISubscriptionRepositoy
 {
   constructor() {
-    super(prisma.subscriptionPlan, (sub) => SubscriptionMapper.toDomain(sub));
+    super(prisma.subscriptionPlan, (sub) => SubscriptionMapper.toEntity(sub));
   }
   async createSubscription(data: ISubscription): Promise<ISubscription> {
-    const mappedData = subscriptionMapper.toPersistance(data);
+    const mappedData = SubscriptionMapper.toPersistance(data);
     return this.create(mappedData);
   }
 
@@ -31,5 +30,31 @@ export class SubscriptionRepository
 
   async getAllSubscriptions(): Promise<ISubscription[]> {
     return await prisma.subscriptionPlan.findMany({});
+  }
+
+  async updateSubscriptionPlan(
+    subscriptionId: string,
+    data: Omit<ISubscription, "id" | "createdAt" | "updatedAt">
+  ): Promise<ISubscription> {
+    const result = await prisma.subscriptionPlan.update({
+      where: { id: subscriptionId },
+      data: data,
+    });
+    return SubscriptionMapper.toEntity(result);
+  }
+
+  async toggleListStatus(
+    subscriptionId: string,
+    isActive: boolean
+  ): Promise<ISubscription> {
+    const result = await prisma.subscriptionPlan.update({
+      where: { id: subscriptionId },
+      data: { isActive: isActive },
+    });
+    return SubscriptionMapper.toEntity(result);
+  }
+
+  async deleteSubscriptionById(subscriptionId: string): Promise<void> {
+    this.delete(subscriptionId);
   }
 }

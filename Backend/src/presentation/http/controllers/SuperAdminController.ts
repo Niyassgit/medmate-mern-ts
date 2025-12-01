@@ -21,8 +21,10 @@ import { IEditDepartmentUseCase } from "../../../application/department/interfac
 import { GetOptionalUserId } from "../utils/GetOptionalUserId";
 import { IGetAllSubscriptionsUseCase } from "../../../application/subscription/interfaces/IGetAllSubscriptionsUseCase";
 import { ICreateSubscriptionPlanUseCase } from "../../../application/subscription/interfaces/ICreateSubscriptionPlanUseCase";
-import { subscriptionPlanSchema } from "../validators/SubscriptionPlanSchema";
-import { createSubscriptionDTO } from "../../../application/subscription/dto/createSubscriptionDTO";
+import { IUpdateSubscriptionPlanUseCase } from "../../../application/subscription/interfaces/IUpdateSubscriptionPlanUseCase";
+import { CreateSubscriptionDTO } from "../../../application/subscription/dto/CreateSubscriptionDTO";
+import { IListToggleSubscriptionPlanUseCase } from "../../../application/subscription/interfaces/IListToggleSubscriptionPlanUseCase";
+import { IDeleteSubscriptionUseCase } from "../../../application/subscription/interfaces/IDeleteSubscriptionUseCase";
 
 export class SuperAdminController {
   constructor(
@@ -41,7 +43,10 @@ export class SuperAdminController {
     private _getAllDepartmentsUseCase: IGetAllDepartmentsUseCase,
     private _editDepartmentUseCase: IEditDepartmentUseCase,
     private _getAllSubcriptionPlanUseCase: IGetAllSubscriptionsUseCase,
-    private _createSubscriptionPlanUseCase: ICreateSubscriptionPlanUseCase
+    private _createSubscriptionPlanUseCase: ICreateSubscriptionPlanUseCase,
+    private _updateSubscriptionPlanUseCase: IUpdateSubscriptionPlanUseCase,
+    private _toggleSubscriptionStatusUseCase: IListToggleSubscriptionPlanUseCase,
+    private _deleteSubscriptionPlanUseCase: IDeleteSubscriptionUseCase
   ) {}
 
   createSuperAdmin = async (req: Request, res: Response) => {
@@ -205,8 +210,22 @@ export class SuperAdminController {
 
   createSubscriptionPlan = async (req: Request, res: Response) => {
     const userId = GetOptionalUserId(req.user);
-    const dto = req.body as createSubscriptionDTO;
+    const dto = req.body as CreateSubscriptionDTO;
     const response = await this._createSubscriptionPlanUseCase.execute(
+      dto,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.CREATED)
+      .json({ success: true, data: response });
+  };
+
+  subscriptionUpdate = async (req: Request, res: Response) => {
+    const { subscriptionId } = req.params;
+    const dto = req.body as CreateSubscriptionDTO;
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._updateSubscriptionPlanUseCase.execute(
+      subscriptionId,
       dto,
       userId
     );
@@ -215,4 +234,26 @@ export class SuperAdminController {
       .json({ success: true, data: response });
   };
 
+  subscriptionListToggle = async (req: Request, res: Response) => {
+    const { subscriptionId } = req.params;
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._toggleSubscriptionStatusUseCase.execute(
+      subscriptionId,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  deleteSubscriptionPlan = async (req: Request, res: Response) => {
+    const { subscriptionId } = req.params;
+    const userId = GetOptionalUserId(req.user);
+
+    await this._deleteSubscriptionPlanUseCase.execute(subscriptionId, userId);
+
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, message: "Subscription plan deleted successfully" });
+  };
 }

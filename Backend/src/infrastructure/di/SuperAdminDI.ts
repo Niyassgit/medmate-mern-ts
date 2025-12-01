@@ -1,6 +1,6 @@
 import { SuperAdminController } from "../../presentation/http/controllers/SuperAdminController";
 import { CreateSuperAdminUseCase } from "../../application/superAdmin/auth/CreateSuperAdminUseCase";
-import { GetSuperAdminByEmailUseCase } from "../../application/superAdmin/auth/GetSuperAdminByEmailUseCase";
+import { GetSuperAdminByEmailUseCase } from "../../application/superAdmin/useCases/GetSuperAdminByEmailUseCase";
 import { BcryptServices } from "../services/BcryptService";
 import { SuperAdminRepository } from "../repositories/SuperAdminRepository";
 import { UserRepository } from "../repositories/UserRepository";
@@ -21,6 +21,12 @@ import { DepartmentRepository } from "../repositories/DepatmentRepository";
 import { GetAllDepartmentsUseCase } from "../../application/superAdmin/useCases/GetAllDepartmentsUseCase";
 import { EditDepartmentUseCase } from "../../application/department/use-cases/EditDepartmentUseCase";
 import { s3StorageService } from "../services/S3StorageService";
+import { GetAllSubscriptionsUseCase } from "../../application/subscription/use-cases/GetAllSubscriptionsUseCase";
+import { SubscriptionRepository } from "../repositories/SubscriptionRepository";
+import { CreateSubscriptionPlanUseCase } from "../../application/subscription/use-cases/CreateSubscriptionPlanUseCase";
+import { UpdateSubscriptionPlanUseCase } from "../../application/subscription/use-cases/UpdateSubscriptionPlanUseCase";
+import { ListToggleSubscriptionPlanUseCase } from "../../application/subscription/use-cases/ListToggleSubscriptionPlanUseCase";
+import { DeleteSubscriptionPlanUseCase } from "../../application/subscription/use-cases/DeleteSubscriptionUseCase";
 
 const superAdminRepositories = new SuperAdminRepository();
 const userRepository = new UserRepository();
@@ -30,6 +36,7 @@ const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
 const terrritoryRepository = new TerritoryRepository();
 const departmentRepository = new DepartmentRepository();
+const subscriptionRepository = new SubscriptionRepository();
 
 const createSuperAdminUseCase = new CreateSuperAdminUseCase(
   superAdminRepositories,
@@ -65,7 +72,24 @@ const getAllDepartmentsUseCase = new GetAllDepartmentsUseCase(
   departmentRepository
 );
 const editDepartmentUseCase = new EditDepartmentUseCase(departmentRepository);
+const getAllSubscriptionPlanUseCase = new GetAllSubscriptionsUseCase(
+  subscriptionRepository
+);
+const createSubscriptionUseCase = new CreateSubscriptionPlanUseCase(
+  subscriptionRepository
+);
 
+const updateSubscriptionPlan = new UpdateSubscriptionPlanUseCase(
+  subscriptionRepository
+);
+
+const toggleSubscriptionUseCase = new ListToggleSubscriptionPlanUseCase(
+  subscriptionRepository
+);
+
+const deleteSubscriptionUseCase = new DeleteSubscriptionPlanUseCase(
+  subscriptionRepository
+);
 export const superAdminController = new SuperAdminController(
   createSuperAdminUseCase,
   getSuperAdminByEmailIdUseCase,
@@ -80,5 +104,10 @@ export const superAdminController = new SuperAdminController(
   editTerritoryUseCase,
   createDepartmentUseCase,
   getAllDepartmentsUseCase,
-  editDepartmentUseCase
+  editDepartmentUseCase,
+  getAllSubscriptionPlanUseCase,
+  createSubscriptionUseCase,
+  updateSubscriptionPlan,
+  toggleSubscriptionUseCase,
+  deleteSubscriptionUseCase
 );
