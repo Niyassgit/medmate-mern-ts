@@ -157,4 +157,24 @@ export class DoctorRepository
       doctorUserId: user ? user.loginId : null,
     };
   }
+
+  async getDoctorsForGuest(): Promise<IDoctorWithUser[]> {
+    const result = await prisma.doctor.findMany({
+      where: {
+        user: {
+          isBlocked: false,
+          isVerified: true,
+        },
+      },
+      include: {
+        user: true,
+      },
+      orderBy: {
+        dob: "asc",
+      },
+      take: 20,
+    });
+
+    return result.map((d) => DoctorWithUserMapper.toDomain(d));
+  }
 }

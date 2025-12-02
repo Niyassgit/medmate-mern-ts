@@ -4,6 +4,8 @@ import { CompleteDoctorProfileDTO } from "../dto/CompleteProfileDTO";
 import { IMedicalRepListOnDoc } from "../../../domain/medicalRep/entities/IMedicalRepListOnDoc";
 import { IDepartmentRepository } from "../../../domain/department/repositories/IDepartmentRepository";
 import { IStorageService } from "../../../domain/common/services/IStorageService";
+import { DoctorPreviewForGuestDTO } from "../dto/DoctorPreviewForGuestDTO";
+import { IDoctorWithUser } from "../../../domain/doctor/entities/IDoctorWithUser";
 
 
 export class DoctorMapper {
@@ -52,5 +54,21 @@ export class DoctorMapper {
       loginId,
     };
   } 
+
+  static async forGuest(E:IDoctorWithUser,storageService:IStorageService):Promise<DoctorPreviewForGuestDTO>{
+
+    let signedUrl:string|null=null;
+    if(E.user?.profileImage){
+      signedUrl=await storageService.generateSignedUrl(E.user.profileImage);
+    }
+    return{
+      id:E.id,
+       name:E.name,
+      about:E.about ?? "",
+      createdAt:E.createdAt,
+      hospitalName:E.hospital,
+      profileImage:signedUrl
+    }
+  }
 
 }

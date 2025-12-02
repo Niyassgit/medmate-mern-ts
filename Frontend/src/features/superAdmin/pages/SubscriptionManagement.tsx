@@ -33,13 +33,10 @@ const SubscriptionManagement = () => {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [confirmTitle, setConfirmTitle] = useState("Confirm Action");
   const [confirmMessage, setConfirmMessage] = useState("Are you sure?");
-  const [pendingAction, setPendingAction] = useState<
-    | null
-    | {
-        type: "delete" | "toggle";
-        planId: string;
-      }
-  >(null);
+  const [pendingAction, setPendingAction] = useState<null | {
+    type: "delete" | "toggle";
+    planId: string;
+  }>(null);
 
   const form = useForm<SubscriptionPlanBody>({
     resolver: zodResolver(subscriptionPlanSchema),
@@ -141,12 +138,6 @@ const SubscriptionManagement = () => {
     setValue("features", plan.features);
   };
 
-  //   const handleDelete = async (id: string) => {
-  //     await deleteSubscriptionPlan(id);
-  //     toast.success("Plan deleted");
-  //     fetchPlans();
-  //   };
-
   const performToggleListing = async (planId: string) => {
     const current = plans.find((p) => p.id === planId);
     const goingToList = current ? !current.isActive : true;
@@ -179,14 +170,16 @@ const SubscriptionManagement = () => {
       : "Are you sure you want to unlist this subscription plan? It will no longer be visible to users.";
 
     setPendingAction({ type: "toggle", planId });
-    setConfirmTitle(goingToList ? "List Subscription Plan" : "Unlist Subscription Plan");
+    setConfirmTitle(
+      goingToList ? "List Subscription Plan" : "Unlist Subscription Plan"
+    );
     setConfirmMessage(message);
     setConfirmOpen(true);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="mx-auto max-w-4xl space-y-6">
+    <div className="min-h-screen bg-gray-50">
+      <div className="mx-auto max-w-4xl space-y-6 p-6">
         <h1 className="text-2xl font-bold">Subscription Plans</h1>
 
         <Card>
@@ -346,7 +339,7 @@ const SubscriptionManagement = () => {
           setPendingAction(null);
           setConfirmOpen(false);
         }}
-        confirmButtonClassName="bg-[#E8618C] text-white hover:bg-[#f35084]"
+        confirmButtonClassName="bg-[#e6686c] text-white hover:bg-[#ae3236]"
       />
     </div>
   );

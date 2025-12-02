@@ -6,8 +6,9 @@ export class CommonRoutes {
     this.router = Router();
     this.initializeRoute();
   }
-  initializeRoute(){
-    this.router.get("/departments",commonController.departments);
-    this.router.get("/territories",commonController.territories);
+  initializeRoute() {
+    this.router.get("/departments", commonController.departments);
+    this.router.get("/territories", commonController.territories);
+    this.router.get("/doctors", commonController.doctorsList);
   }
 }

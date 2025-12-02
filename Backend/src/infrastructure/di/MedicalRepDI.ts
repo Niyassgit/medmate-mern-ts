@@ -43,6 +43,8 @@ import { MessageRepository } from "../repositories/MessageRepository";
 import { ChatEventPublisher } from "../realtime/publishers/ChatEventPublisher";
 import { CreateRepMessageUseCase } from "../../application/conversation/use-case/CreateRepMessageUseCase";
 import { RepMessageMarkAsReadUseCase } from "../../application/conversation/use-case/RepMessageMarkAsReadUseCase";
+import { GetAllSubscriptionsUseCase } from "../../application/subscription/use-cases/GetAllSubscriptionsUseCase";
+import { SubscriptionRepository } from "../repositories/SubscriptionRepository";
 
 const medicalRepRepository = new MedicalRepRepository();
 const doctorRepository = new DoctorRepository();
@@ -63,6 +65,7 @@ const notificationEventPublisher = new NotificationEventPublisher();
 const conversationRepository = new ConversationRepository();
 const messageRepository = new MessageRepository();
 const chatEventPublisher = new ChatEventPublisher();
+const subscriptionRepository = new SubscriptionRepository();
 
 const createMedicalRepUseCase = new CreateMedicalRepUseCase(
   medicalRepRepository,
@@ -222,6 +225,10 @@ const messageMarkAseReadUseCase = new RepMessageMarkAsReadUseCase(
   chatEventPublisher
 );
 
+const getAllSubscriptionsUseCase = new GetAllSubscriptionsUseCase(
+  subscriptionRepository
+);
+
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
   getRepProfileByIdUseCase,
@@ -249,5 +256,6 @@ export const medicalRepController = new MedicalRepController(
   getConversationsUseCase,
   getAllMessagesUseCase,
   createMessageUseCase,
-  messageMarkAseReadUseCase
+  messageMarkAseReadUseCase,
+  getAllSubscriptionsUseCase
 );

@@ -171,3 +171,8 @@ export const messageMarkAsReadForRep = async (conversationId: string) => {
   const res = await api.patch(RepEndpoints.MARK_AS_READ(conversationId));
   return res.data;
 };
+
+export const subcriptionPlans=async()=>{
+  const res=await api.get(RepEndpoints.SUBCSRIPTION_PLANS);
+  return res.data.data;
+}

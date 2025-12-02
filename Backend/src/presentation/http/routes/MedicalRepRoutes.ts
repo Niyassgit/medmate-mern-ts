@@ -134,5 +134,6 @@ export class MedicalRepRoutes {
       "/chat/message/read/:conversationId",
       medicalRepController.markMessageAsRead
     );
+    this.router.get("/subscriptions", medicalRepController.getAllSubscriptions);
   }
 }
