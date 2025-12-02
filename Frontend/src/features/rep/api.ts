@@ -176,3 +176,18 @@ export const subcriptionPlans=async()=>{
   const res=await api.get(RepEndpoints.SUBCSRIPTION_PLANS);
   return res.data.data;
 }
+
+export const checkoutSubscription=async(userId:string,planId:string)=>{
+  const res=await api.post(RepEndpoints.CHECKOUT_SUB,{userId,planId});
+  return res.data.data.url;
+}
+
+export const getCheckoutDetails=async(sessionId:string)=>{
+  const res=await api.get(RepEndpoints.CHECKOUT_SESSION(sessionId));
+  return res.data.data;
+}
+
+export const getSubscriptionStatus=async()=>{
+  const res=await api.get(RepEndpoints.SUBSCRIPTION_STATUS);
+  return res.data.data;
+}

@@ -56,6 +56,9 @@ export const ErrorMessages = {
   SUB_CREATE_ERROR:"failed to add subscription!",
   SUB_NOT_FOUND:"Subscription not found!", 
   SUB_UPDATE_ERROR:"Subscription updation failed",
+  SUB_ATTEMPT_FAILED:"Failed to register subscription!",
+  NO_STRIPE_SIG_FOUND:"No Stripe signature found",
+  WEB_HOOK_SIG_VER_FAILED:"Webhook signature verification failed"
 } as const;
 
 export const SuccessMessages = {

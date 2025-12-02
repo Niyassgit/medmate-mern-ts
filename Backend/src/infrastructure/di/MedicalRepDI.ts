@@ -45,6 +45,10 @@ import { CreateRepMessageUseCase } from "../../application/conversation/use-case
 import { RepMessageMarkAsReadUseCase } from "../../application/conversation/use-case/RepMessageMarkAsReadUseCase";
 import { GetAllSubscriptionsUseCase } from "../../application/subscription/use-cases/GetAllSubscriptionsUseCase";
 import { SubscriptionRepository } from "../repositories/SubscriptionRepository";
+import { CreateCheckoutSessionUseCase } from "../../application/subscription/use-cases/createCheckoutSessionUseCase";
+import { StripePaymentService } from "../services/StripePaymentService";
+import { GetCheckoutDetailsUseCase } from "../../application/subscription/use-cases/GetCheckoutDetailsUseCase";
+import { GetSubscriptionStatusUseCase } from "../../application/subscription/use-cases/GetSubscriptionStatusUseCase";
 
 const medicalRepRepository = new MedicalRepRepository();
 const doctorRepository = new DoctorRepository();
@@ -66,6 +70,7 @@ const conversationRepository = new ConversationRepository();
 const messageRepository = new MessageRepository();
 const chatEventPublisher = new ChatEventPublisher();
 const subscriptionRepository = new SubscriptionRepository();
+const stripePaymentService = new StripePaymentService();
 
 const createMedicalRepUseCase = new CreateMedicalRepUseCase(
   medicalRepRepository,
@@ -229,6 +234,20 @@ const getAllSubscriptionsUseCase = new GetAllSubscriptionsUseCase(
   subscriptionRepository
 );
 
+const createCheckoutSessionUseCase = new CreateCheckoutSessionUseCase(
+  subscriptionRepository,
+  stripePaymentService,
+  medicalRepRepository
+);
+
+const getCheckoutDetailsUseCase = new GetCheckoutDetailsUseCase(
+  stripePaymentService
+);
+
+const getSubscriptionStatusUseCase = new GetSubscriptionStatusUseCase(
+  medicalRepRepository
+);
+
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
   getRepProfileByIdUseCase,
@@ -257,5 +276,8 @@ export const medicalRepController = new MedicalRepController(
   getAllMessagesUseCase,
   createMessageUseCase,
   messageMarkAseReadUseCase,
-  getAllSubscriptionsUseCase
+  getAllSubscriptionsUseCase,
+  createCheckoutSessionUseCase,
+  getCheckoutDetailsUseCase,
+  getSubscriptionStatusUseCase
 );

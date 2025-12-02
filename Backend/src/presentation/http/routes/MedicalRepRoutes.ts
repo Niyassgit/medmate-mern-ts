@@ -135,5 +135,17 @@ export class MedicalRepRoutes {
       medicalRepController.markMessageAsRead
     );
     this.router.get("/subscriptions", medicalRepController.getAllSubscriptions);
+    this.router.post(
+      "/subscription/checkout",
+      medicalRepController.createCheckoutSession
+    );
+    this.router.get(
+      "/subscription/checkout-session/:sessionId",
+      medicalRepController.getCheckoutDetails
+    );
+    this.router.get(
+      "/subscription/status",
+      medicalRepController.getSubscriptionStatus
+    );
   }
 }

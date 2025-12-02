@@ -1,5 +1,5 @@
 import useFetchItem from "@/hooks/useFetchItem";
-import { subcriptionPlans } from "../api";
+import { checkoutSubscription, subcriptionPlans } from "../api";
 import { SubscriptionDTO } from "../dto/SubscriptionDTO";
 import { SpinnerButton } from "@/components/shared/SpinnerButton";
 import ReviewMarquee from "../components/ReviewMarquee";
@@ -7,8 +7,11 @@ import { doctorsForShow } from "@/features/shared/api/SharedApi";
 import { DoctorCardGuestDTO } from "@/features/shared/dto/DoctorCardGuestDTO";
 import FaqSection from "@/components/shared/FaqSection";
 import LayoutTextFlipDemo from "@/components/shared/LayoutTextFlipDemo";
+import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
 
 const Subscription = () => {
+  const userId=useSelector((state:any)=>state.auth.user.id)
   const {
     data: plans,
     error: plansError,
@@ -27,6 +30,16 @@ const Subscription = () => {
         <SpinnerButton />
       </div>
     );
+  }
+
+  const handlePurchase=async(planId:string)=>{
+    if(!userId) return;
+    try {
+      const url=await checkoutSubscription(userId,planId);
+      window.location.href=url;
+    } catch (error) {
+      toast.error("Something went wrong, please try again.");
+    }
   }
 
   if (plansError)
@@ -95,7 +108,7 @@ const Subscription = () => {
                     ))}
                   </ul>
                   <button
-                    // onClick={() => handlePurchase(plan.id)}
+                    onClick={() => handlePurchase(plan.id)}
                     className="w-full py-2 px-4 bg-indigo-500 hover:bg-indigo-600 active:scale-95 text-sm rounded-md transition-all"
                   >
                     Buy Now

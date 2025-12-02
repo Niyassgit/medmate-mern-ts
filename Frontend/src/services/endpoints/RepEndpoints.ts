@@ -37,4 +37,7 @@ export const RepEndpoints = {
   ADD_MESSAGE:`/rep/chat/message`,
   MARK_AS_READ:(conversationId:string)=>`/rep/chat/message/read/${conversationId}`,
   SUBCSRIPTION_PLANS:`/rep/subscriptions`,
+  CHECKOUT_SUB:`/rep/subscription/checkout`,
+  CHECKOUT_SESSION:(sessionId:string)=>`/rep/subscription/checkout-session/${sessionId}`,
+  SUBSCRIPTION_STATUS:`/rep/subscription/status`,
 };

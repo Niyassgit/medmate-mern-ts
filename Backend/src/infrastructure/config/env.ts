@@ -14,6 +14,8 @@ export const env = {
   databaseUrl: required("DATABASE_URL"),
   origin: required("ORIGIN", "*"),
   access_token:required("ACCESS_TOKEN"),
+  stripe_secret_key:required("STRIPE_SECRET_KEY"),
+  stripe_webhook_secret:required("STRIPE_WEBHOOK_SECRET"),
   maxAge: Number(process.env.MAX_AGE) || 7 * 24 * 60 * 60 * 1000,
   cloudinary: {
     name: required("CLOUDINARY_CLOUD_NAME"),

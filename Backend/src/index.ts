@@ -13,10 +13,14 @@ import { DoctorRoutes } from "./presentation/http/routes/DoctorRoutes";
 import { SuperAdminRoutes } from "./presentation/http/routes/SuperAdminRoutes";
 import { ErrorHandler } from "./presentation/http/middlewares/ErrorHandler";
 import { CommonRoutes } from "./presentation/http/routes/CommonRoutes";
+import { WebhookRoutes } from "./presentation/http/routes/WebhookRoutes";
 import { initSocket } from "./infrastructure/realtime/SocketGateway";
 import logger from "./infrastructure/logger/Logger";
 
 const app = express();
+
+app.use("/api/webhook", new WebhookRoutes().router);
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(morgan("dev"));
