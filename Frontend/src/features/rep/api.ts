@@ -191,3 +191,8 @@ export const getSubscriptionStatus=async()=>{
   const res=await api.get(RepEndpoints.SUBSCRIPTION_STATUS);
   return res.data.data;
 }
+
+export const getSubscriptionHistory=async()=>{
+  const res=await api.get(RepEndpoints.SUBSCRIPTION_HISTORY);
+  return res.data.data;
+}

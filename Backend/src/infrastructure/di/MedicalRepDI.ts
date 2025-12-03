@@ -49,6 +49,8 @@ import { CreateCheckoutSessionUseCase } from "../../application/subscription/use
 import { StripePaymentService } from "../services/StripePaymentService";
 import { GetCheckoutDetailsUseCase } from "../../application/subscription/use-cases/GetCheckoutDetailsUseCase";
 import { GetSubscriptionStatusUseCase } from "../../application/subscription/use-cases/GetSubscriptionStatusUseCase";
+import { GetSubscriptionHistoryUseCase } from "../../application/subscription/use-cases/GetSubscriptionHistoryUseCase";
+import { SubscriptionHistoryRepository } from "../repositories/SubscriptionHistoryRepository";
 
 const medicalRepRepository = new MedicalRepRepository();
 const doctorRepository = new DoctorRepository();
@@ -71,6 +73,7 @@ const messageRepository = new MessageRepository();
 const chatEventPublisher = new ChatEventPublisher();
 const subscriptionRepository = new SubscriptionRepository();
 const stripePaymentService = new StripePaymentService();
+const subscriptionHistoryRepository = new SubscriptionHistoryRepository();
 
 const createMedicalRepUseCase = new CreateMedicalRepUseCase(
   medicalRepRepository,
@@ -248,6 +251,11 @@ const getSubscriptionStatusUseCase = new GetSubscriptionStatusUseCase(
   medicalRepRepository
 );
 
+const getSubscriptionHistoryUseCase = new GetSubscriptionHistoryUseCase(
+  medicalRepRepository,
+  subscriptionHistoryRepository
+);
+
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
   getRepProfileByIdUseCase,
@@ -279,5 +287,6 @@ export const medicalRepController = new MedicalRepController(
   getAllSubscriptionsUseCase,
   createCheckoutSessionUseCase,
   getCheckoutDetailsUseCase,
-  getSubscriptionStatusUseCase
+  getSubscriptionStatusUseCase,
+  getSubscriptionHistoryUseCase
 );

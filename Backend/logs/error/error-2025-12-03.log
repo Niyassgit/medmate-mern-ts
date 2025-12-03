@@ -1,3 +1,10 @@
+<<<<<<< HEAD
 [2025-12-03 17:54:04] [31merror[39m: [31mFailed to start server:argument handler is required[39m
 [2025-12-03 17:54:08] [31merror[39m: [31mFailed to start server:argument handler is required[39m
 [2025-12-03 17:54:15] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+=======
+[2025-12-03 19:05:36] [31merror[39m: [31m🔥 Unhandled Error:User not found[39m
+[2025-12-03 19:07:43] [31merror[39m: [31m🔥 Unhandled Error:User not found[39m
+[2025-12-03 19:09:50] [31merror[39m: [31m🔥 Unhandled Error:User not found[39m
+[2025-12-03 19:11:00] [31merror[39m: [31m🔥 Unhandled Error:User not found[39m
+>>>>>>> 2926f2b (subscription history feature added on the front end for rep and subscription repo is completed)

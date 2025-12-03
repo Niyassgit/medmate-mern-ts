@@ -4,3 +4,4 @@ export interface IGetSubscriptionStatusUseCase {
   execute(userId?: string): Promise<SubscriptionStatusDTO>;
 }
 
+
