@@ -10,3 +10,6 @@ Thumbs.db
 
 # Ignore VS Code temporary files
 .vscode/chrome/        # Chrome debug cache
+
+
+Backend/logs/
