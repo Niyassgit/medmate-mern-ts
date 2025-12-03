@@ -45,7 +45,7 @@ import { CreateRepMessageUseCase } from "../../application/conversation/use-case
 import { RepMessageMarkAsReadUseCase } from "../../application/conversation/use-case/RepMessageMarkAsReadUseCase";
 import { GetAllSubscriptionsUseCase } from "../../application/subscription/use-cases/GetAllSubscriptionsUseCase";
 import { SubscriptionRepository } from "../repositories/SubscriptionRepository";
-import { CreateCheckoutSessionUseCase } from "../../application/subscription/use-cases/createCheckoutSessionUseCase";
+import { CreateCheckoutSessionUseCase } from "../../application/subscription/use-cases/CreateCheckoutSessionUseCase";
 import { StripePaymentService } from "../services/StripePaymentService";
 import { GetCheckoutDetailsUseCase } from "../../application/subscription/use-cases/GetCheckoutDetailsUseCase";
 import { GetSubscriptionStatusUseCase } from "../../application/subscription/use-cases/GetSubscriptionStatusUseCase";
