@@ -4,3 +4,4 @@ export interface IGetRecentSubscriptionsUseCase {
   execute(userId?: string, limit?: number): Promise<RecentSubscriptionDTO>;
 }
 
+

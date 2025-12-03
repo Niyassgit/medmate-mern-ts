@@ -104,3 +104,59 @@ export const deleteList = async (conversationId: string) => {
   const res = await api.delete(AdminEndpoints.DELETE_PLAN(conversationId));
   return res.data;
 };
+
+export const statsSummary = async (startDate?: string, endDate?: string) => {
+  const res = await api.get(AdminEndpoints.STATS_SUMMARY, {
+    params: {
+      startDate,
+      endDate,
+    },
+  });
+
+  return res.data.data;
+};
+
+export const userDistribution = async (
+  startDate?: string,
+  endDate?: string
+) => {
+  const res = await api.get(AdminEndpoints.STATS_USER_DIS, {
+    params: {
+      startDate,
+      endDate,
+    },
+  });
+  return res.data.data;
+};
+
+export const getUserGrowth = async (year?: string) => {
+  const res = await api.get(AdminEndpoints.STATS_USER_GROWTH, {
+    params: {
+      year,
+    },
+  });
+
+  return res.data.data;
+};
+
+export const getRevenueByTier = async (
+  startDate?: string,
+  endDate?: string
+) => {
+  const res = await api.get(AdminEndpoints.STATS_REVENUE_BY_TIER, {
+    params: {
+      startDate,
+      endDate,
+    },
+  });
+
+  return res.data.data;
+};
+
+export const getRecentSubscriptions = async (limit: number = 20) => {
+  const res = await api.get(AdminEndpoints.RECENT_SUBSCRIPTION, {
+    params: { limit }
+  });
+
+  return res.data.data;
+};

@@ -27,9 +27,13 @@ export class GetAdminDashboardSummaryUseCase
     endDate?: string
   ): Promise<StatusSummaryDTO> {
     if (!userId) throw new UnautharizedError(ErrorMessages.UNAUTHORIZED);
-
-    const parsedStartDate = startDate ? new Date(startDate) : undefined;
-    const parsedEndDate = endDate ? new Date(endDate) : undefined;
+    const now = new Date();
+    const parsedStartDate = startDate 
+      ? new Date(startDate) 
+      : new Date(now.getFullYear(), 0, 1); 
+    const parsedEndDate = endDate 
+      ? new Date(endDate) 
+      : new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
 
     const totalDoctors = await this._doctorRepository.countDoctors(
       parsedStartDate,
@@ -44,7 +48,6 @@ export class GetAdminDashboardSummaryUseCase
     const allSubscriptions =
       await this._subscriptionHistoryRepository.findAllPlans();
 
-    const now = new Date();
     const sevenDaysFromNow = new Date(now);
     sevenDaysFromNow.setDate(now.getDate() + 7);
 
@@ -52,16 +55,8 @@ export class GetAdminDashboardSummaryUseCase
       (sub) => sub.status === "paid" && new Date(sub.endDate) > now
     ).length;
 
-    let revenueStartDate: Date;
-    let revenueEndDate: Date;
-
-    if (parsedStartDate && parsedEndDate) {
-      revenueStartDate = parsedStartDate;
-      revenueEndDate = parsedEndDate;
-    } else {
-      revenueStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
-      revenueEndDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-    }
+    const revenueStartDate = parsedStartDate;
+    const revenueEndDate = parsedEndDate;
 
     const monthlyRevenue = allSubscriptions
       .filter((sub) => {

@@ -26,8 +26,8 @@ export class GetUserDistributionUseCase implements IGetUserDistributionUseCase {
       parsedEndDate = endDate ? new Date(endDate) : undefined;
     } else {
       const now = new Date();
-      parsedStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
-      parsedEndDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+      parsedStartDate = new Date(now.getFullYear(), 0, 1); 
+      parsedEndDate = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
     }
 
     const doctors = await this._doctorRepository.countDoctors(
