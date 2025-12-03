@@ -6,19 +6,27 @@ import { useNavigate } from "react-router-dom";
 import { MedicalRep } from "../dto/MedicalRep";
 import { MedicalRepResponse } from "../dto/MedicalRepResponse";
 import { AdminTable } from "../components/AdminTable";
+import ConfirmDialog from "@/components/shared/ConfirmDialog";  
 
 const RepsList = () => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const limit = 8;
   const [search, setSearch] = useState("");
+
   const fetchFn = useCallback(
     () => getAllReps(page, limit, search),
     [page, limit, search]
   );
+
   const { data, loading, error, setData } =
     useFetchList<MedicalRepResponse>(fetchFn);
+
   const [blockLoading, setBlockLoading] = useState<string | null>(null);
+
+  // ⬇️ added confirm dialog states
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [selectedRep, setSelectedRep] = useState<MedicalRep | null>(null);
 
   const reps = data?.reps ?? [];
   const total = data?.total ?? 0;
@@ -51,11 +59,18 @@ const RepsList = () => {
             }
           : prev
       );
-    } catch (error) {
+    } catch {
       toast.error("Something went wronn on updating block status");
     } finally {
       setBlockLoading(null);
     }
+  };
+
+  const handleConfirmBlockToggle = async () => {
+    if (!selectedRep) return;
+    await handleBlockToggle(selectedRep);
+    setConfirmDialogOpen(false);
+    setSelectedRep(null);
   };
 
   const handleDetailPage = (id: string) => {
@@ -109,23 +124,48 @@ const RepsList = () => {
   ];
 
   return (
-    <AdminTable<MedicalRep>
-      title="Medical Reps Management"
-      data={reps}
-      columns={columns}
-      loading={loading}
-      error={error}
-      page={page}
-      totalPages={totalPage}
-      onPageChange={setPage}
-      search={search}
-      onSearchChange={setSearch}
-      onView={handleDetailPage}
-      onBlockToggle={handleBlockToggle}
-      blockLoadingId={blockLoading}
-      getId={(rep) => rep.id}
-      isBlocked={(rep) => !!rep.isBlocked}
-    />
+    <>
+      <AdminTable<MedicalRep>
+        title="Medical Reps Management"
+        data={reps}
+        columns={columns}
+        loading={loading}
+        error={error}
+        page={page}
+        totalPages={totalPage}
+        onPageChange={setPage}
+        search={search}
+        onSearchChange={setSearch}
+        onView={handleDetailPage}
+        onBlockToggle={(rep) => {
+          setSelectedRep(rep);
+          setConfirmDialogOpen(true);
+        }}
+        blockLoadingId={blockLoading}
+        getId={(rep) => rep.id}
+        isBlocked={(rep) => !!rep.isBlocked}
+      />
+
+      <ConfirmDialog
+        open={confirmDialogOpen}
+        title={selectedRep?.isBlocked ? "Unblock Medical Rep" : "Block Medical Rep"}
+        message={
+          selectedRep?.isBlocked
+            ? `Are you sure you want to unblock ${selectedRep?.name}?`
+            : `Are you sure you want to block ${selectedRep?.name}?`
+        }
+        onConfirm={handleConfirmBlockToggle}
+        onCancel={() => {
+          setConfirmDialogOpen(false);
+          setSelectedRep(null);
+        }}
+        confirmButtonClassName={
+          selectedRep?.isBlocked
+            ? "bg-green-600 text-white hover:bg-green-700"
+            : "bg-red-600 text-white hover:bg-red-700"
+        }
+      />
+    </>
   );
 };
 

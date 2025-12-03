@@ -21,6 +21,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { TagInput } from "./TagInput";
 import { useNavigate } from "react-router-dom";
+import { compressImage } from "@/lib/compressImage";
 
 interface ProductFormProps {
   heading?: string;
@@ -28,7 +29,7 @@ interface ProductFormProps {
     useCases?: string[];
     ingredients?: string[];
   };
-  onSubmit: (values: ProductPostFormValues, images: File[] ) => void;
+  onSubmit: (values: ProductPostFormValues, images: File[]) => void;
 }
 
 const PostForm = ({ defaultValues, onSubmit, heading }: ProductFormProps) => {
@@ -37,15 +38,17 @@ const PostForm = ({ defaultValues, onSubmit, heading }: ProductFormProps) => {
     defaultValues?.existingImages || []
   );
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
- const [previewUrls, setPreviewUrls] = useState<string[]>([
-  ...(defaultValues?.existingImages || [])
-]);
+  const [previewUrls, setPreviewUrls] = useState<string[]>([
+    ...(defaultValues?.existingImages || []),
+  ]);
+
   const [useCases, setUseCases] = useState<string[]>(
     defaultValues?.useCases || []
   );
   const [ingredients, setIngredients] = useState<string[]>(
     defaultValues?.ingredients || []
   );
+  const [compressing, setCompressing] = useState(false);
 
   const form = useForm<ProductPostFormValues>({
     resolver: zodResolver(productPostSchema),
@@ -58,45 +61,72 @@ const PostForm = ({ defaultValues, onSubmit, heading }: ProductFormProps) => {
     },
   });
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (files) {
-      const newFiles = Array.from(files);
-      setUploadedImages((prev) => [...prev, ...newFiles]);
-      setPreviewUrls((prev) => [
-        ...prev,
-        ...newFiles.map((file) => URL.createObjectURL(file)),
-      ]);
-    }
-  };
+    if (!files) return;
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    const files = Array.from(e.dataTransfer.files);
-    setUploadedImages((prev) => [...prev, ...files]);
+    setCompressing(true);
+
+    const compressedFiles = await Promise.all(
+      Array.from(files).map(async (file) => {
+        const compressed =
+          file.size > 600 * 1024 ? await compressImage(file) : file;
+        return compressed;
+      })
+    );
+
+    setUploadedImages((prev) => [...prev, ...compressedFiles]);
     setPreviewUrls((prev) => [
       ...prev,
-      ...files.map((file) => URL.createObjectURL(file)),
+      ...compressedFiles.map((file) => URL.createObjectURL(file)),
     ]);
+
+    setCompressing(false);
+  };
+  const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const files = Array.from(e.dataTransfer.files);
+    setCompressing(true);
+
+    const compressedFiles = await Promise.all(
+      files.map(async (file) => {
+        const compressed =
+          file.size > 600 * 1024 ? await compressImage(file) : file;
+        return compressed;
+      })
+    );
+
+    setUploadedImages((prev) => [...prev, ...compressedFiles]);
+    setPreviewUrls((prev) => [
+      ...prev,
+      ...compressedFiles.map((file) => URL.createObjectURL(file)),
+    ]);
+
+    setCompressing(false);
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) =>
     e.preventDefault();
 
   const removeImage = (index: number) => {
-    const url = previewUrls[index];
-    if (existingImages.includes(url)) {
-      setExistingImages((prev) => prev.filter((img) => img !== url));
+    const imageUrl = previewUrls[index];
+
+    if (existingImages.includes(imageUrl)) {
+      setExistingImages((prev) => prev.filter((img) => img !== imageUrl));
     } else {
       setUploadedImages((prev) =>
-        prev.filter((file) => URL.createObjectURL(file) !== url)
+        prev.filter((file) => URL.createObjectURL(file) !== imageUrl)
       );
     }
     setPreviewUrls((prev) => prev.filter((_, i) => i !== index));
+    setCompressing(false);
   };
 
   const handleSubmit = (values: ProductPostFormValues) => {
-    onSubmit({ ...values, useCases, ingredients ,existingImages},uploadedImages);
+    onSubmit(
+      { ...values, useCases, ingredients, existingImages },
+      uploadedImages
+    );
   };
 
   return (
@@ -203,9 +233,6 @@ const PostForm = ({ defaultValues, onSubmit, heading }: ProductFormProps) => {
                       browse
                     </label>
                   </p>
-                  <p className="text-xs text-muted-foreground">
-                    PNG, JPG, GIF files are allowed
-                  </p>
                   <input
                     id="fileUpload"
                     type="file"
@@ -215,6 +242,7 @@ const PostForm = ({ defaultValues, onSubmit, heading }: ProductFormProps) => {
                     onChange={handleImageUpload}
                   />
                 </div>
+
                 {previewUrls.length > 0 && (
                   <div className="flex flex-wrap gap-4 mt-4">
                     {previewUrls.map((url, index) => (
@@ -238,6 +266,14 @@ const PostForm = ({ defaultValues, onSubmit, heading }: ProductFormProps) => {
                     ))}
                   </div>
                 )}
+                {compressing && (
+                  <div className="flex justify-center py-4">
+                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
+                    <span className="ml-2 text-sm text-muted-foreground">
+                      Compressing images...
+                    </span>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
@@ -255,9 +291,6 @@ const PostForm = ({ defaultValues, onSubmit, heading }: ProductFormProps) => {
                       onChange={setUseCases}
                       placeholder="Type a use case and press Enter"
                     />
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      Add multiple use cases by typing and pressing Enter
-                    </p>
                   </div>
                   <div>
                     <Label>Ingredients</Label>
@@ -266,9 +299,6 @@ const PostForm = ({ defaultValues, onSubmit, heading }: ProductFormProps) => {
                       onChange={setIngredients}
                       placeholder="Type an ingredient and press Enter"
                     />
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      Add multiple ingredients by typing and pressing Enter
-                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -300,8 +330,8 @@ const PostForm = ({ defaultValues, onSubmit, heading }: ProductFormProps) => {
               </CardContent>
             </Card>
 
-            {/* Submit Button */}
-            <div className="flex justify-center pt-4 gap-2">
+            {/* Submit */}
+            <div className="flex justify-center pt-4 gap-2 mb-10">
               <Button onClick={() => navigate(-1)} size="lg" variant="outline">
                 Cancel
               </Button>

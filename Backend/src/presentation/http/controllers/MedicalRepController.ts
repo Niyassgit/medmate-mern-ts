@@ -27,6 +27,17 @@ import { IRepRejectConnectionUseCase } from "../../../application/connection/int
 import { IRepAcceptConnOnNotUseCase } from "../../../application/connection/interfaces/IRepAcceptConnOnNotUseCase";
 import { IMakeAllAsReadNotificationUseCase } from "../../../application/notification/interfaces/IMarkAllAsReadNotificartionUseCase";
 import { IMarkNotificationAsReadUseCase } from "../../../application/notification/interfaces/IMakNotificationAsReadUseCase";
+import { INotificationUnreadCountUsecase } from "../../../application/notification/interfaces/INotificationUnreadCountUseCase";
+import { IGetConversationsUseCase } from "../../../application/conversation/interfaces/IGetUserConversationsUseCase";
+import { IGetAllMessagesUseCase } from "../../../application/conversation/interfaces/IGetAllMessagesUseCase";
+import { CreateMessageDTO } from "../../../application/conversation/dto/CreateMessageDTO";
+import { ICreateRepMessageUseCase } from "../../../application/conversation/interfaces/ICreateRepMessage";
+import { IRepMessageMarkAsReadUseCase } from "../../../application/conversation/interfaces/IRepMessageMarkAsReadUseCase";
+import { IGetAllSubscriptionsUseCase } from "../../../application/subscription/interfaces/IGetAllSubscriptionsUseCase";
+import { IStripePaymentService } from "../../../domain/common/services/IStripePaymentService";
+import { ICreateCheckoutSessionUseCase } from "../../../application/subscription/interfaces/ICreateCheckoutSessionUseCase";
+import { IGetCheckoutDetailsUseCase } from "../../../application/subscription/interfaces/IGetCheckoutDetailsUseCase";
+import { IGetSubscriptionStatusUseCase } from "../../../application/subscription/interfaces/IGetSubscriptionStatusUseCase";
 
 export class MedicalRepController {
   constructor(
@@ -51,7 +62,16 @@ export class MedicalRepController {
     private _rejectConnectionUseCase: IRepRejectConnectionUseCase,
     private _acceptRequestOnNotificationPage: IRepAcceptConnOnNotUseCase,
     private _markAllNotificationsAsRead: IMakeAllAsReadNotificationUseCase,
-    private _markAsReadNotificationUseCase: IMarkNotificationAsReadUseCase
+    private _markAsReadNotificationUseCase: IMarkNotificationAsReadUseCase,
+    private _countOfUnreadNotificationUseCase: INotificationUnreadCountUsecase,
+    private _repConversationsOnChatUseCase: IGetConversationsUseCase,
+    private _getAllMessagesUseCase: IGetAllMessagesUseCase,
+    private _createMessageuseCase: ICreateRepMessageUseCase,
+    private _repMessageMarkAsReadUseCase: IRepMessageMarkAsReadUseCase,
+    private _getAllSubscriptionsUseCase: IGetAllSubscriptionsUseCase,
+    private _createCheckoutSessionUseCase: ICreateCheckoutSessionUseCase,
+    private _getCheckoutDetailsUseCase: IGetCheckoutDetailsUseCase,
+    private _getSubscriptionStatusUseCase: IGetSubscriptionStatusUseCase
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -246,7 +266,13 @@ export class MedicalRepController {
 
   notifications = async (req: Request, res: Response) => {
     const { userId } = req.params;
-    const response = await this._getAllNotificationsUseCase.execute(userId);
+    const cursor = req.query.cursor as string | undefined;
+    const limit = req.query.limit ? Number(req.query.limit) : undefined;
+    const response = await this._getAllNotificationsUseCase.execute(
+      userId,
+      cursor,
+      limit
+    );
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
@@ -296,5 +322,83 @@ export class MedicalRepController {
     return res
       .status(HttpStatusCode.NO_CONTENT)
       .json({ success: true, message: response });
+  };
+
+  notificaitonUnreadCount = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const response = await this._countOfUnreadNotificationUseCase.execute(
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  conversations = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._repConversationsOnChatUseCase.execute(userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  getAllMessages = async (req: Request, res: Response) => {
+    const { conversationId } = req.params;
+    const { cursor } = req.query;
+    const response = await this._getAllMessagesUseCase.execute(
+      conversationId,
+      cursor as string | undefined
+    );
+    return res.status(HttpStatusCode.OK).json({ succes: true, data: response });
+  };
+
+  createMessage = async (req: Request, res: Response) => {
+    const data = req.body as CreateMessageDTO;
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._createMessageuseCase.execute(data, userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  markMessageAsRead = async (req: Request, res: Response) => {
+    const { conversationId } = req.params;
+    const userId = GetOptionalUserId(req.user);
+    await this._repMessageMarkAsReadUseCase.execute(conversationId, userId);
+    return res.sendStatus(HttpStatusCode.NO_CONTENT);
+  };
+
+  getAllSubscriptions = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._getAllSubscriptionsUseCase.execute(userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  createCheckoutSession = async (req: Request, res: Response) => {
+    const { userId, planId } = req.body;
+    const response = await this._createCheckoutSessionUseCase.execute(
+      userId,
+      planId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+  getCheckoutDetails = async (req: Request, res: Response) => {
+    const { sessionId } = req.params;
+    const response = await this._getCheckoutDetailsUseCase.execute(sessionId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  getSubscriptionStatus = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._getSubscriptionStatusUseCase.execute(userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
   };
 }

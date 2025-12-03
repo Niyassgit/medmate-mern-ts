@@ -29,8 +29,6 @@ const DoctorDetailsPage: React.FC = () => {
         .catch(() => setError("Failed to fetch doctor"));
     }
   }, [id]);
-
-  console.log("doctor detials form the backend:", doctor);
   if (loading)
     return <p className="p-6 text-gray-500">Loading doctor details....</p>;
   if (error) return <p className="p-6 text-red-500">{error}</p>;

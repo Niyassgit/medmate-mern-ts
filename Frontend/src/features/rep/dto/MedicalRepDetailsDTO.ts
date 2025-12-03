@@ -15,5 +15,6 @@ export interface MedicalRepDetailsDTO {
   about: string | null;
   educations?: EducationDTO[];
   certificates?: CertificateDTO[];
-  loginId:string;
+  loginId: string;
+  departmentName: string | null;
 }

@@ -45,8 +45,8 @@ model User {
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
 
-  senderNotifications Notification[] @relation("SentNotifications")
-  receiverNotifications Notification[]@relation("ReceivedNotifications")
+  senderNotifications   Notification[] @relation("SentNotifications")
+  receiverNotifications Notification[] @relation("ReceivedNotifications")
 
   superAdmin       SuperAdmin?
   doctor           Doctor?
@@ -66,14 +66,14 @@ enum AuthProvider {
 }
 
 model Doctor {
-  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
   name            String
   phone           String
-  departmentId    String?  @db.ObjectId
+  departmentId    String?   @db.ObjectId
   experienceYears Int?
   hasOwnClinic    Boolean?
   doctorClass     String?
-  territoryId     String?  @db.ObjectId
+  territoryId     String?   @db.ObjectId
   hospital        String
   licenseImageUrl String?
   opStartTime     String?
@@ -82,8 +82,8 @@ model Doctor {
   dob             DateTime?
   registrationId  String
   about           String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   department           Department?        @relation(fields: [departmentId], references: [id])
   territory            Territory?         @relation(fields: [territoryId], references: [id])
@@ -178,7 +178,8 @@ model SubscriptionPlan {
   description String
   price       Float
   tenure      String
-  features    String
+  isActive    Boolean @default(true)
+  features    String[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -331,6 +332,7 @@ model RepReferral {
   referredDoctor Doctor     @relation("ReferredDoctorInRepReferral", fields: [referredDoctorId], references: [id])
   referredRep    MedicalRep @relation("ReferredRep", fields: [referredRepId], references: [id])
 }
+
 enum NotificationType {
   CONNECTION_REQUEST
   CONNECTION_ACCEPTED
@@ -340,19 +342,19 @@ enum NotificationType {
 }
 
 model Notification {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  senderId String    @db.ObjectId
-  senderRole Role
-  receiverId String  @db.ObjectId
+  id           String           @id @default(auto()) @map("_id") @db.ObjectId
+  senderId     String           @db.ObjectId
+  senderRole   Role
+  receiverId   String           @db.ObjectId
   receiverRole Role
-  type      NotificationType
-  postId    String?
-  content   String
-  isRead    Boolean  @default(false)
-  createdAt DateTime @default(now())
+  type         NotificationType
+  postId       String?
+  content      String
+  isRead       Boolean          @default(false)
+  createdAt    DateTime         @default(now())
 
-  sender User @relation("SentNotifications",fields:[senderId],references: [id])
-  receiver User @relation("ReceivedNotifications",fields: [receiverId],references: [id])
+  sender   User @relation("SentNotifications", fields: [senderId], references: [id])
+  receiver User @relation("ReceivedNotifications", fields: [receiverId], references: [id])
 }
 
 model Conversation {
@@ -360,22 +362,30 @@ model Conversation {
   repId         String   @db.ObjectId
   doctorId      String   @db.ObjectId
   createdAt     DateTime @default(now())
-  lastMessageAt DateTime
+  lastMessageAt DateTime @default(now())
 
   rep      MedicalRep @relation(fields: [repId], references: [id])
   doctor   Doctor     @relation(fields: [doctorId], references: [id])
   messages Message[]
 }
 
+enum MessageType {
+  TEXT
+  IMAGE
+  AUDIO
+  VIDEO
+  FILE
+}
+
 model Message {
-  id             String   @id @default(auto()) @map("_id") @db.ObjectId
-  conversationId String   @db.ObjectId
-  senderId       String   @db.ObjectId
-  senderRole     String
-  content        String
-  messageType    String
-  isRead         Boolean
-  createdAt      DateTime @default(now())
+  id             String      @id @default(auto()) @map("_id") @db.ObjectId
+  conversationId String      @db.ObjectId
+  senderId       String      @db.ObjectId
+  senderRole     Role
+  content        String?
+  messageType    MessageType
+  isRead         Boolean     @default(false)
+  createdAt      DateTime    @default(now())
 
   conversation Conversation @relation(fields: [conversationId], references: [id])
 }

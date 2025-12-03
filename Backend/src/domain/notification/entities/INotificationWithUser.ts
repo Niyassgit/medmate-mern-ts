@@ -7,7 +7,7 @@ export interface INotificationWithUser {
   isRead: boolean;
   type:NotificationType,
   createdAt: Date;
-  RoleId:string;
+  roleId:string;
   postId?:string;
   user:IUserForNotification
 }

@@ -29,5 +29,15 @@ export const RepEndpoints = {
     `/rep/notifications/connection/${notificationId}/accept/${doctorId}`,
   MARK_AS_READ_NOTIFICATION: (notificationId: string) =>
     `/rep/notifications/mark-as-read/${notificationId}`,
-  MARK_ALL_NOT_AS_READ:(userId:string)=>`/rep/notifications/mark-all-read/${userId}`,
+  MARK_ALL_NOT_AS_READ: (userId: string) =>
+    `/rep/notifications/mark-all-read/${userId}`,
+  COUNT_UNREAD_NOTIFICATION: (userId:string) => `/rep/notifications/unread-count/${userId}`,
+  CONVERSATIONS:`/rep/chat/conversations`,
+  GET_MESSAGES:(conversationId:string)=>`/rep/chat/messages/${conversationId}`,
+  ADD_MESSAGE:`/rep/chat/message`,
+  MARK_AS_READ:(conversationId:string)=>`/rep/chat/message/read/${conversationId}`,
+  SUBCSRIPTION_PLANS:`/rep/subscriptions`,
+  CHECKOUT_SUB:`/rep/subscription/checkout`,
+  CHECKOUT_SESSION:(sessionId:string)=>`/rep/subscription/checkout-session/${sessionId}`,
+  SUBSCRIPTION_STATUS:`/rep/subscription/status`,
 };

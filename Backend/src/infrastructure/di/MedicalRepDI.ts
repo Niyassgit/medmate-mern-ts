@@ -35,6 +35,20 @@ import { RepAcceptConnOnNotUseCase } from "../../application/connection/use-case
 import { NotificationEventPublisher } from "../realtime/publishers/NotificationEventPublisher";
 import { MakeAllAsReadNotificationUseCase } from "../../application/notification/use-cases/MarkAllAsReadNotificationUseCase";
 import { MarkNotificationAsReadUseCase } from "../../application/notification/use-cases/MarkNotificationAsReadUseCase";
+import { NotificationUnreadCountUseCase } from "../../application/notification/use-cases/NotificationUnreadCountUseCase";
+import { ConversationRepository } from "../repositories/ConversationRepository";
+import { GetUserConversationsUseCase } from "../../application/conversation/use-case/GetUserConversationsUseCase";
+import { GetAllMessagesUseCase } from "../../application/conversation/use-case/GetAllMessagesUseCase";
+import { MessageRepository } from "../repositories/MessageRepository";
+import { ChatEventPublisher } from "../realtime/publishers/ChatEventPublisher";
+import { CreateRepMessageUseCase } from "../../application/conversation/use-case/CreateRepMessageUseCase";
+import { RepMessageMarkAsReadUseCase } from "../../application/conversation/use-case/RepMessageMarkAsReadUseCase";
+import { GetAllSubscriptionsUseCase } from "../../application/subscription/use-cases/GetAllSubscriptionsUseCase";
+import { SubscriptionRepository } from "../repositories/SubscriptionRepository";
+import { CreateCheckoutSessionUseCase } from "../../application/subscription/use-cases/createCheckoutSessionUseCase";
+import { StripePaymentService } from "../services/StripePaymentService";
+import { GetCheckoutDetailsUseCase } from "../../application/subscription/use-cases/GetCheckoutDetailsUseCase";
+import { GetSubscriptionStatusUseCase } from "../../application/subscription/use-cases/GetSubscriptionStatusUseCase";
 
 const medicalRepRepository = new MedicalRepRepository();
 const doctorRepository = new DoctorRepository();
@@ -52,6 +66,11 @@ const departmentRepository = new DepartmentRepository();
 const territoryRepository = new TerritoryRepository();
 const notificationRepository = new NotificationRepository();
 const notificationEventPublisher = new NotificationEventPublisher();
+const conversationRepository = new ConversationRepository();
+const messageRepository = new MessageRepository();
+const chatEventPublisher = new ChatEventPublisher();
+const subscriptionRepository = new SubscriptionRepository();
+const stripePaymentService = new StripePaymentService();
 
 const createMedicalRepUseCase = new CreateMedicalRepUseCase(
   medicalRepRepository,
@@ -114,7 +133,10 @@ const acceptConnectionRequestUseCase = new DoctorAcceptConnectionRequestUseCase(
   medicalRepRepository,
   doctorRepository,
   connectionRepository,
-  notificationRepository
+  notificationRepository,
+  conversationRepository,
+  storageService,
+  notificationEventPublisher
 );
 const getRepAnalyticsUseCase = new GetRepAnalyticsUseCase(
   medicalRepRepository,
@@ -166,16 +188,66 @@ const rejectConnectionUseCase = new RepRejectConnectionUseCase(
 const acceptConnOnNotUseCase = new RepAcceptConnOnNotUseCase(
   medicalRepRepository,
   connectionRepository,
-  notificationRepository
+  notificationRepository,
+  conversationRepository,
+  doctorRepository,
+  storageService,
+  notificationEventPublisher
 );
 
 const markAllNotificationsAsReadUseCase = new MakeAllAsReadNotificationUseCase(
-  notificationRepository
+  notificationRepository,
+  notificationEventPublisher
 );
 
 const markAsReadNotificationUseCase = new MarkNotificationAsReadUseCase(
+  notificationRepository,
+  notificationEventPublisher
+);
+
+const unReadNotificationsUseCase = new NotificationUnreadCountUseCase(
   notificationRepository
 );
+
+const getConversationsUseCase = new GetUserConversationsUseCase(
+  conversationRepository,
+  storageService,
+  medicalRepRepository,
+  doctorRepository
+);
+
+const getAllMessagesUseCase = new GetAllMessagesUseCase(messageRepository);
+const createMessageUseCase = new CreateRepMessageUseCase(
+  medicalRepRepository,
+  messageRepository,
+  chatEventPublisher
+);
+
+const messageMarkAseReadUseCase = new RepMessageMarkAsReadUseCase(
+  medicalRepRepository,
+  conversationRepository,
+  messageRepository,
+  chatEventPublisher
+);
+
+const getAllSubscriptionsUseCase = new GetAllSubscriptionsUseCase(
+  subscriptionRepository
+);
+
+const createCheckoutSessionUseCase = new CreateCheckoutSessionUseCase(
+  subscriptionRepository,
+  stripePaymentService,
+  medicalRepRepository
+);
+
+const getCheckoutDetailsUseCase = new GetCheckoutDetailsUseCase(
+  stripePaymentService
+);
+
+const getSubscriptionStatusUseCase = new GetSubscriptionStatusUseCase(
+  medicalRepRepository
+);
+
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
   getRepProfileByIdUseCase,
@@ -198,5 +270,14 @@ export const medicalRepController = new MedicalRepController(
   rejectConnectionUseCase,
   acceptConnOnNotUseCase,
   markAllNotificationsAsReadUseCase,
-  markAsReadNotificationUseCase
+  markAsReadNotificationUseCase,
+  unReadNotificationsUseCase,
+  getConversationsUseCase,
+  getAllMessagesUseCase,
+  createMessageUseCase,
+  messageMarkAseReadUseCase,
+  getAllSubscriptionsUseCase,
+  createCheckoutSessionUseCase,
+  getCheckoutDetailsUseCase,
+  getSubscriptionStatusUseCase
 );

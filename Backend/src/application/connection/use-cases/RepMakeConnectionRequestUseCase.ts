@@ -55,6 +55,15 @@ export class RepMakeConnectionRequestUseCase
             notificationId: deletedNotificationId,
             receiverUserId: doctorUserId,
           });
+
+          const unreadCount =
+            await this._notificationRepository.getCountOfUnreadNotification(
+              doctorUserId
+            );
+          await this._notificationEventPublisher.unreadNotificationCount({
+            receiverUserId: doctorUserId,
+            count: unreadCount,
+          });
         }
         return SuccessMessages.CANCEL_CONNECTION_REQ;
       }
@@ -85,6 +94,14 @@ export class RepMakeConnectionRequestUseCase
       fullNotification,
       this._storageService
     );
+    const unreadCount =
+      await this._notificationRepository.getCountOfUnreadNotification(
+        doctorUserId
+      );
+    await this._notificationEventPublisher.unreadNotificationCount({
+      receiverUserId: doctorUserId,
+      count: unreadCount,
+    });
     await this._notificationEventPublisher.publishNotification({
       ...mappedNotification,
       receiverUserId: doctorUserId,

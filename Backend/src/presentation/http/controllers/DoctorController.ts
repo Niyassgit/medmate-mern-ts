@@ -23,6 +23,12 @@ import { IDoctorRejectConnectionUseCase } from "../../../application/connection/
 import { IDoctorAcceptOnNotUseCase } from "../../../application/connection/interfaces/IDoctorAcceptOnNotUseCase";
 import { IMakeAllAsReadNotificationUseCase } from "../../../application/notification/interfaces/IMarkAllAsReadNotificartionUseCase";
 import { IMarkNotificationAsReadUseCase } from "../../../application/notification/interfaces/IMakNotificationAsReadUseCase";
+import { INotificationUnreadCountUsecase } from "../../../application/notification/interfaces/INotificationUnreadCountUseCase";
+import { IGetConversationsUseCase } from "../../../application/conversation/interfaces/IGetUserConversationsUseCase";
+import { IGetAllMessagesUseCase } from "../../../application/conversation/interfaces/IGetAllMessagesUseCase";
+import { CreateMessageDTO } from "../../../application/conversation/dto/CreateMessageDTO";
+import { ICreateDoctorMessageUseCase } from "../../../application/conversation/interfaces/ICreateDoctorMessageUseCase";
+import { IDoctorMessageMarkAsReadUseCase } from "../../../application/conversation/interfaces/IDoctorMessageMarkAsReadUseCase";
 
 export class DoctorController {
   constructor(
@@ -45,7 +51,12 @@ export class DoctorController {
     private _rejectConnectionRequestUseCase: IDoctorRejectConnectionUseCase,
     private _acceptConnectionOnNotificationPage: IDoctorAcceptOnNotUseCase,
     private _notificationsMarkAsRead: IMakeAllAsReadNotificationUseCase,
-    private _markNotificationAsReadUseCase: IMarkNotificationAsReadUseCase
+    private _markNotificationAsReadUseCase: IMarkNotificationAsReadUseCase,
+    private _getUnreadNotificationCountUseCase: INotificationUnreadCountUsecase,
+    private _getUserConversationsUseCase: IGetConversationsUseCase,
+    private _getAllMessagesUseCase: IGetAllMessagesUseCase,
+    private _createMessageUseCase: ICreateDoctorMessageUseCase,
+    private _DoctorMessageMarkAsRead: IDoctorMessageMarkAsReadUseCase
   ) {}
 
   createDoctor = async (req: Request, res: Response) => {
@@ -195,7 +206,6 @@ export class DoctorController {
 
   pendingConnections = async (req: Request, res: Response) => {
     const { userId } = req.params;
-    console.log("userId:", userId);
     const response = await this._pendingConnectionListUseCase.execute(userId);
     return res
       .status(HttpStatusCode.OK)
@@ -204,7 +214,15 @@ export class DoctorController {
 
   notifications = async (req: Request, res: Response) => {
     const { userId } = req.params;
-    const response = await this._getDoctorNotificationsUseCase.execute(userId);
+    const cursor = req.query.cursor as string | undefined;
+    const limit = req.query.limit ? Number(req.query.limit) : undefined;
+
+    const response = await this._getDoctorNotificationsUseCase.execute(
+      userId,
+      cursor,
+      limit
+    );
+
     return res.json({ success: true, data: response });
   };
 
@@ -252,5 +270,51 @@ export class DoctorController {
     return res
       .status(HttpStatusCode.NO_CONTENT)
       .json({ success: true, message: response });
+  };
+
+  notificationUnreadCount = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const response = await this._getUnreadNotificationCountUseCase.execute(
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  getConversations = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._getUserConversationsUseCase.execute(userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  getMessages = async (req: Request, res: Response) => {
+    const { conversationId } = req.params;
+    const { cursor } = req.query;
+    const response = await this._getAllMessagesUseCase.execute(
+      conversationId,
+      cursor as string | undefined
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  createMessage = async (req: Request, res: Response) => {
+    const data = req.body as CreateMessageDTO;
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._createMessageUseCase.execute(data, userId);
+    return res
+      .status(HttpStatusCode.CREATED)
+      .json({ success: true, data: response });
+  };
+
+  markMessageAsRead = async (req: Request, res: Response) => {
+    const { conversationId } = req.params;
+    const userId = GetOptionalUserId(req.user);
+    await this._DoctorMessageMarkAsRead.execute(conversationId, userId);
+    return res.sendStatus(HttpStatusCode.NO_CONTENT);
   };
 }

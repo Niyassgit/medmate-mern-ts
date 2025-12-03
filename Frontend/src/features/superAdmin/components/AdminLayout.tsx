@@ -6,7 +6,8 @@ import {
   Handshake,
   MapPin,
   FilePen,
-  Building2,
+  Building2, 
+  BanknoteArrowDown,
 } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import AdminNavbar from "@/components/navbar/AdminNavbar";
@@ -14,7 +15,8 @@ import AdminNavbar from "@/components/navbar/AdminNavbar";
 const AdminLayout = () => {
   return (
     <div className="flex min-h-screen">
-      <aside className="flex flex-col justify-between w-64 bg-[#e6686c] text-white">
+      {/* Sticky left sidebar */}
+      <aside className="sticky top-0 h-screen flex flex-col justify-between w-64 bg-[#e6686c] text-white">
         <div className="p-2 flex items-center ">
           <img
             src="/logo.png"
@@ -78,45 +80,58 @@ const AdminLayout = () => {
               <NavLink
                 to={"territories"}
                 className={({ isActive }) => `
-    flex items-center gap-2 px-3 py-2 rounded-md ${
-      isActive
-        ? "bg-gray-200 text-black font-semibold"
-        : "text-white hover:bg-[#a81519]"
-    }`}
+               flex items-center gap-2 px-3 py-2 rounded-md ${
+                 isActive
+                    ? "bg-gray-200 text-black font-semibold"
+                     : "text-white hover:bg-[#a81519]"
+                 }`}
               >
                 <MapPin className="w-5 h-5" />
                 <span>Territory Management</span>
               </NavLink>
             </li>
-            
-                 <li>
+
+            <li>
               <NavLink
                 to={"departments"}
                 className={({ isActive }) => `
-    flex items-center gap-2 px-3 py-2 rounded-md ${
-      isActive
-        ? "bg-gray-200 text-black font-semibold"
-        : "text-white hover:bg-[#a81519]"
-    }`}
+               flex items-center gap-2 px-3 py-2 rounded-md ${
+                isActive
+                 ? "bg-gray-200 text-black font-semibold"
+                : "text-white hover:bg-[#a81519]"
+              }`}
               >
                 <Building2 className="w-5 h-5" />
                 <span>Department </span>
               </NavLink>
             </li>
-            
 
             <li>
               <NavLink
                 to={"content-moderation"}
                 className={({ isActive }) => `
-    flex items-center gap-2 px-3 py-2 rounded-md ${
-      isActive
-        ? "bg-gray-200 text-black font-semibold"
-        : "text-white hover:bg-[#a81519]"
-    }`}
+              flex items-center gap-2 px-3 py-2 rounded-md ${
+               isActive
+               ? "bg-gray-200 text-black font-semibold"
+           : "text-white hover:bg-[#a81519]"
+              }`}
               >
                 <FilePen className="w-5 h-5" />
                 <span>Content Moderation</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to={"subscription-management"}
+                className={({ isActive }) => `
+              flex items-center gap-2 px-3 py-2 rounded-md ${
+               isActive
+                  ? "bg-gray-200 text-black font-semibold"
+               : "text-white hover:bg-[#a81519]"
+               }`}
+              >
+                <BanknoteArrowDown className="w-5 h-5" />
+                <span>Subscription Management</span>
               </NavLink>
             </li>
           </ul>
@@ -137,7 +152,8 @@ const AdminLayout = () => {
         </div>
       </aside>
 
-      <main className="flex-1 p-6 bg-gray-100">
+      {/* Scrollable content area */}
+      <main className="flex-1 p-6 bg-gray-100 overflow-y-auto">
         <AdminNavbar />
         <Outlet />
       </main>

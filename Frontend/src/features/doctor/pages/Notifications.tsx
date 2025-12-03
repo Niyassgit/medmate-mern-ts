@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { NotificationItem } from "../../../components/shared/NotificationItem";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -25,28 +25,50 @@ const Notifications = () => {
   );
   const token = useMemo(() => localStorage.getItem("accessToken"), []);
   const id = useSelector((state: any) => state.auth.user?.id);
+  const [cursor, setCursor] = useState<string | null>(null);
+  const [hasMore, setHasMore] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const loaderRef = useRef<HTMLDivElement | null>(null);
 
-  const fetchNotifications = useCallback(async () => {
+  const fetchInitial = useCallback(async () => {
     if (!id) return;
     const res = await getDoctorNotifications(id);
     return res.data;
   }, [id]);
 
-  const {
-    data: notificationsRes,
-    error,
-    loading,
-  } = useFetchItem(fetchNotifications);
+  const fetchMore = useCallback(async () => {
+    if (!hasMore || loadingMore || !id) return;
+    setLoadingMore(true);
+    try {
+      const res = await getDoctorNotifications(id, cursor ?? undefined);
+      const { data, nextCursor, hasMore: more } = res.data;
+      const normalizedNotifications: Notification[] = data.map((n: any) => ({
+        ...n,
+        createdAt: new Date(n.createdAt),
+      }));
+      setLocalNotifications((prev) => [...prev, ...normalizedNotifications]);
+      setCursor(nextCursor);
+      setHasMore(more);
+    } catch (error: any) {
+      toast.error(error.message || "Failed to load more notifications");
+    } finally {
+      setLoadingMore(false);
+    }
+  }, [hasMore, loadingMore, id, cursor]);
+
+  const { data: notificationsRes, error, loading } = useFetchItem(fetchInitial);
 
   useEffect(() => {
-    if (notificationsRes && Array.isArray(notificationsRes)) {
-      const normalizedNotifications: Notification[] = notificationsRes.map(
+    if (notificationsRes && notificationsRes.data && Array.isArray(notificationsRes.data)) {
+      const normalizedNotifications: Notification[] = notificationsRes.data.map(
         (n: any) => ({
           ...n,
           createdAt: new Date(n.createdAt),
         })
       );
       setLocalNotifications(normalizedNotifications);
+      setCursor(notificationsRes.nextCursor);
+      setHasMore(notificationsRes.hasMore);
     }
   }, [notificationsRes]);
 
@@ -58,14 +80,14 @@ const Notifications = () => {
     return true;
   });
 
-  const markAllAsRead =async () => {
+  const markAllAsRead = async () => {
     setLocalNotifications((prev) =>
       prev.map((notification) => ({ ...notification, isRead: true }))
     );
     try {
-      await markAllNotificationsAsRead(id)
-    } catch (error:any) {
-       toast.error(error.message || "Internal server Error");
+      await markAllNotificationsAsRead(id);
+    } catch (error: any) {
+      toast.error(error.message || "Internal server Error");
     }
   };
 
@@ -140,6 +162,16 @@ const Notifications = () => {
     };
   }, [token, id]);
 
+  useEffect(() => {
+    if (!loaderRef.current) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) fetchMore();
+    });
+    observer.observe(loaderRef.current);
+    return () => observer.disconnect();
+  }, [fetchMore]);
+
   if (loading) return <SpinnerButton />;
   if (error)
     return (
@@ -170,8 +202,6 @@ const Notifications = () => {
           <TabsList className="bg-card border border-border">
             <TabsTrigger value="all">All</TabsTrigger>
             <TabsTrigger value="unread">Unread</TabsTrigger>
-            <TabsTrigger value="updates">Updates</TabsTrigger>
-            <TabsTrigger value="approvals">Approvals</TabsTrigger>
           </TabsList>
         </Tabs>
 
@@ -202,6 +232,13 @@ const Notifications = () => {
               </p>
             </div>
           )}
+
+          <div
+            ref={loaderRef}
+            className="h-10 flex justify-center items-center"
+          >
+            {loadingMore && <SpinnerButton />}
+          </div>
         </div>
       </div>
     </div>

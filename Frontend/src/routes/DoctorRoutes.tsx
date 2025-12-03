@@ -10,6 +10,7 @@ import DoctorAnalyticsPage from "@/features/doctor/pages/DoctorAnalyticsPage";
 import PostDetails from "@/features/doctor/pages/ProductDetails";
 import { RepDetailsPage } from "@/features/doctor/pages/RepDetailsPage";
 import Notifications from "@/features/doctor/pages/Notifications";
+import ChatPage from "@/features/doctor/pages/ChatPage";
 
 export const DoctorRoutes={
     path:"/doctor",
@@ -27,6 +28,7 @@ export const DoctorRoutes={
       {path:"network",element:<NetworkPage />},
       {path:"analytics",element:<DoctorAnalyticsPage />},
       {path:"rep/details/:repId",element:<RepDetailsPage />},
-      {path:"notifications",element:<Notifications />}
+      {path:"notifications",element:<Notifications />},
+      {path:"messages",element:<ChatPage />}
     ] 
 };

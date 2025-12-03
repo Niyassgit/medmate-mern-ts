@@ -52,7 +52,7 @@ export class TerritoryRepository
      const response=await this.update(territoryId,data);
      return response;
   }
-  async getAllTerritories(): Promise<ITerritory[] | null> {
+  async getAllTerritories(): Promise<ITerritory[]> {
     return this.findAll();
   }
   async getTerritoryName(terrId: string): Promise<string |null> {

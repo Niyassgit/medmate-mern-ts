@@ -1,5 +1,5 @@
 import { IDepartment } from "../../../domain/department/enitity/IDepartment";
-import { DepartmentDTO } from "../../superAdmin/dto/DepartmentDTO";
+import { DepartmentDTO } from "../dto/DepartmentDTO";
 import { DepartmentListDTO } from "../../superAdmin/dto/DepartmentListDTO";
 import { DepartmentOptionsDTO } from "../dto/DepartmentOptionsDTO";
 

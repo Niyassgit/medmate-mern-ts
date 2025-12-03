@@ -34,6 +34,15 @@ import { DoctorAcceptOnNotUseCase } from "../../application/connection/use-cases
 import { NotificationEventPublisher } from "../realtime/publishers/NotificationEventPublisher";
 import { MakeAllAsReadNotificationUseCase } from "../../application/notification/use-cases/MarkAllAsReadNotificationUseCase";
 import { MarkNotificationAsReadUseCase } from "../../application/notification/use-cases/MarkNotificationAsReadUseCase";
+import { NotificationUnreadCountUseCase } from "../../application/notification/use-cases/NotificationUnreadCountUseCase";
+import { ConversationRepository } from "../repositories/ConversationRepository";
+import { GetUserConversationsUseCase } from "../../application/conversation/use-case/GetUserConversationsUseCase";
+import { DoctorAcceptConnectionRequestUseCase } from "../../application/connection/use-cases/DoctorAcceptConnectionRequestUseCase";
+import { GetAllMessagesUseCase } from "../../application/conversation/use-case/GetAllMessagesUseCase";
+import { MessageRepository } from "../repositories/MessageRepository";
+import { CreateDoctorMessageUseCase } from "../../application/conversation/use-case/CreateDoctorMessageUseCase";
+import { ChatEventPublisher } from "../realtime/publishers/ChatEventPublisher";
+import { DoctoMessageMarkAsReadUseCase } from "../../application/conversation/use-case/DoctorMessageMarkAsReadUseCase";
 
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
@@ -50,6 +59,9 @@ const interestRepository = new InterestRepository();
 const eventPublisher = new SocketEngagementEventPublisher();
 const notificationRepository = new NotificationRepository();
 const notificationEventPublisher = new NotificationEventPublisher();
+const conversationRepository = new ConversationRepository();
+const messageRepository = new MessageRepository();
+const chatEventPublisher = new ChatEventPublisher();
 
 const createDoctorUseCase = new CreateDoctorUseCase(
   doctorRepository,
@@ -86,11 +98,14 @@ const connectionRequestUseCase = new DoctorConnectionRequestUseCase(
   notificationEventPublisher,
   storageService
 );
-const acceptConnectionRequestUseCase = new RepAcceptingConnectionRequest(
+const acceptConnectionRequestUseCase = new DoctorAcceptConnectionRequestUseCase(
   medicalRepRepository,
   doctorRepository,
   connectionRepository,
-  notificationRepository
+  notificationRepository,
+  conversationRepository,
+  storageService,
+  notificationEventPublisher
 );
 const analyticsUsecase = new DoctorAnalyticsUseCase(
   doctorRepository,
@@ -164,16 +179,47 @@ const rejectConnectionUseCase = new DoctorRejectConnectionUseCase(
 const acceptConnOnNotificationPage = new DoctorAcceptOnNotUseCase(
   doctorRepository,
   notificationRepository,
+  connectionRepository,
+  conversationRepository,
   medicalRepRepository,
-  connectionRepository
+  storageService,
+  notificationEventPublisher
 );
 
 const markAllNotificationAsReadedUseCase = new MakeAllAsReadNotificationUseCase(
-  notificationRepository
+  notificationRepository,
+  notificationEventPublisher
 );
 
 const markNotificationAsReadUseCase = new MarkNotificationAsReadUseCase(
+  notificationRepository,
+  notificationEventPublisher
+);
+
+const getUnreadNotificationCountUseCase = new NotificationUnreadCountUseCase(
   notificationRepository
+);
+
+const getUserConversationsUseCase = new GetUserConversationsUseCase(
+  conversationRepository,
+  storageService,
+  medicalRepRepository,
+  doctorRepository
+);
+
+const getAllMessagesUseCase = new GetAllMessagesUseCase(messageRepository);
+
+const createMessageUseCase = new CreateDoctorMessageUseCase(
+  doctorRepository,
+  messageRepository,
+  chatEventPublisher
+);
+
+const markMessageAsReadUseCase = new DoctoMessageMarkAsReadUseCase(
+  doctorRepository,
+  messageRepository,
+  conversationRepository,
+  chatEventPublisher
 );
 export const doctorController = new DoctorController(
   createDoctorUseCase,
@@ -195,5 +241,10 @@ export const doctorController = new DoctorController(
   rejectConnectionUseCase,
   acceptConnOnNotificationPage,
   markAllNotificationAsReadedUseCase,
-  markNotificationAsReadUseCase
+  markNotificationAsReadUseCase,
+  getUnreadNotificationCountUseCase,
+  getUserConversationsUseCase,
+  getAllMessagesUseCase,
+  createMessageUseCase,
+  markMessageAsReadUseCase
 );

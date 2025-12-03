@@ -4,7 +4,7 @@ import { IDepartment } from "../../domain/department/enitity/IDepartment";
 import { Department, Prisma } from "@prisma/client";
 import { prisma } from "../config/db";
 import { DepartmentMapper } from "../mappers/DepartmentMapper";
-import { DepartmentDTO } from "../../application/superAdmin/dto/DepartmentDTO";
+import { DepartmentDTO } from "../../application/department/dto/DepartmentDTO";
 
 export class DepartmentRepository
   extends BaseRepository<
@@ -60,7 +60,7 @@ export class DepartmentRepository
     const response = await this.update(departmentId, entity);
     return response;
   }
-  async getAllDepartments(): Promise<IDepartment[] | null> {
+  async getAllDepartments(): Promise<IDepartment[]> {
     return await this.findAll();
   }
   async getDepartmentName(depId: string): Promise<string | null> {
@@ -70,4 +70,5 @@ export class DepartmentRepository
     });
     return department?.name ?? null
   }
+  
 }

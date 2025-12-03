@@ -10,6 +10,7 @@ import { DoctorProfileUpdateSchema } from "../validators/DoctorProfileUpdateSche
 import { uploadS3 } from "../../../infrastructure/storage/multer/MulterS3BucketConfig";
 import { makeValidateUserMiddleware } from "../middlewares/ValidateUserMiddleware";
 import { UserValidate } from "../../../infrastructure/di/UserValidateDI";
+import { SendMessageSchema } from "../validators/MessageSchema";
 
 const validateUser = makeValidateUserMiddleware(UserValidate);
 
@@ -69,12 +70,30 @@ export class DoctorRoutes {
       doctorController.acceptConnectionOnNot
     );
     this.router.patch(
-      "notifications/mark-as-read/:notificationId",
+      "/notifications/mark-as-read/:notificationId",
       doctorController.markAsReadNotification
     );
     this.router.patch(
-      "notifications/mark-all-read/:userId",
+      "/notifications/mark-all-read/:userId",
       doctorController.markAllAsReadNotification
+    );
+    this.router.get(
+      "/notifications/unread-count/:userId",
+      doctorController.notificationUnreadCount
+    );
+    this.router.get("/chat/conversations", doctorController.getConversations);
+    this.router.get(
+      "/chat/messages/:conversationId",
+      doctorController.getMessages
+    );
+    this.router.post(
+      "/chat/message",
+      ValidateSchema(SendMessageSchema),
+      doctorController.createMessage
+    );
+    this.router.patch(
+      "/chat/message/read/:conversationId",
+      doctorController.markMessageAsRead
     );
   }
 }

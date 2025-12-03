@@ -22,4 +22,5 @@ export interface IDoctorRepository {
     territories: string[] | null
   ): Promise<IDoctorWithUser[]>;
   getUserIdByDoctorId(doctorId: string): Promise<{ doctorUserId: string | null}>;
+  getDoctorsForGuest():Promise<IDoctorWithUser[]>;
 }

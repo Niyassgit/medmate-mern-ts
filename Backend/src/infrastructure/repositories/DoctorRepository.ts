@@ -12,16 +12,15 @@ export class DoctorRepository
   extends BaseRepository<IDoctor, Doctor, Prisma.DoctorCreateInput, "doctor">
   implements IDoctorRepository
 {
+  constructor() {
+    super(prisma.doctor, (doctor) => DoctorMapper.toDomain(doctor));
+  }
   async createDoctor(
     data: Omit<IDoctor, "id" | "updatedAt" | "createdAt">
   ): Promise<IDoctor> {
     const mappedData = DoctorMapper.toPersistance(data);
     return await this.create(mappedData);
   }
-  constructor() {
-    super(prisma.doctor, (doctor) => DoctorMapper.toDomain(doctor));
-  }
-
   async getDoctorById(id: string): Promise<IDoctorWithUser | null> {
     const doctor = await prisma.doctor.findFirst({
       where: { id },
@@ -157,5 +156,25 @@ export class DoctorRepository
     return {
       doctorUserId: user ? user.loginId : null,
     };
+  }
+
+  async getDoctorsForGuest(): Promise<IDoctorWithUser[]> {
+    const result = await prisma.doctor.findMany({
+      where: {
+        user: {
+          isBlocked: false,
+          isVerified: true,
+        },
+      },
+      include: {
+        user: true,
+      },
+      orderBy: {
+        dob: "asc",
+      },
+      take: 20,
+    });
+
+    return result.map((d) => DoctorWithUserMapper.toDomain(d));
   }
 }

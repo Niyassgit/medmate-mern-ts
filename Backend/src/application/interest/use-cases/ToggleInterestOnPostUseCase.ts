@@ -90,6 +90,14 @@ export class ToggleInterestOnPostUseCase
         ...mappedNtfction,
         receiverUserId: repUserId,
       });
+      const unreadCount =
+        await this._notificationRepository.getCountOfUnreadNotification(
+          repUserId
+        );
+      await this._notificationEventPublisher.unreadNotificationCount({
+        receiverUserId: repUserId,
+        count: unreadCount,
+      });
     } else {
       const deletedId =
         await this._notificationRepository.deleteLikeNotification(
@@ -101,6 +109,14 @@ export class ToggleInterestOnPostUseCase
         await this._notificationEventPublisher.deletePublishedNotification({
           notificationId: deletedId,
           receiverUserId: repUserId,
+        });
+        const unreadCount =
+          await this._notificationRepository.getCountOfUnreadNotification(
+            repUserId
+          );
+        await this._notificationEventPublisher.unreadNotificationCount({
+          receiverUserId: repUserId,
+          count: unreadCount,
         });
       }
     }

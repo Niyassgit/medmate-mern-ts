@@ -1,5 +1,7 @@
 import { api } from "@/services/api";
 import { RepEndpoints } from "@/services/endpoints/RepEndpoints";
+import { MessageType } from "@/types/MessageTypes";
+import { Role } from "@/types/Role";
 
 export const getProfileRep = async (userId: string) => {
   const response = await api.get(RepEndpoints.PROFILE(userId));
@@ -92,8 +94,14 @@ export const RepPendingConnections = async (userId: string) => {
   const { data } = await api.get(RepEndpoints.PENDING_CONNECITONS(userId));
   return data.data;
 };
-export const getRepnotifications = async (userId: string) => {
-  const res = await api.get(RepEndpoints.NOTIFICATIONS(userId));
+export const getRepnotifications = async (
+  userId: string,
+  cursor?: string,
+  limit: number = 20
+) => {
+  const res = await api.get(RepEndpoints.NOTIFICATIONS(userId), {
+    params: { cursor, limit },
+  });
   return res.data;
 };
 export const rejectRepsideConnectionRequest = async (
@@ -115,10 +123,71 @@ export const acceptFromNotification = async (
   return res.data;
 };
 
-export const notificationMarkAsRead = async (notificationId:string) => {
-return await api.patch(RepEndpoints.MARK_AS_READ_NOTIFICATION(notificationId));
+export const notificationMarkAsRead = async (notificationId: string) => {
+  return await api.patch(
+    RepEndpoints.MARK_AS_READ_NOTIFICATION(notificationId)
+  );
 };
 
-export const markAllNotificationsAsRead=async(userId:string)=>{
-   return await api.patch(RepEndpoints.MARK_ALL_NOT_AS_READ(userId));
+export const markAllNotificationsAsRead = async (userId: string) => {
+  return await api.patch(RepEndpoints.MARK_ALL_NOT_AS_READ(userId));
+};
+
+export const unreadNotificationCount = async (userId: string) => {
+  const { data } = await api.get(
+    RepEndpoints.COUNT_UNREAD_NOTIFICATION(userId)
+  );
+  return data;
+};
+
+export const repConversations = async () => {
+  const { data } = await api.get(RepEndpoints.CONVERSATIONS);
+  return data;
+};
+
+export const getMessagesRep = async (
+  conversationId: string,
+  cursor?: string | null
+) => {
+  const url = cursor
+    ? `${RepEndpoints.GET_MESSAGES(conversationId)}?cursor=${cursor}`
+    : RepEndpoints.GET_MESSAGES(conversationId);
+  const res = await api.get(url);
+  return res.data.data;
+};
+
+export const createMessageForRep = async (body: {
+  conversationId: string;
+  content: string;
+  messageType: MessageType;
+  senderRole: Role;
+  receiverId: string;
+}) => {
+  const { data } = await api.post(RepEndpoints.ADD_MESSAGE, body);
+  return data;
+};
+
+export const messageMarkAsReadForRep = async (conversationId: string) => {
+  const res = await api.patch(RepEndpoints.MARK_AS_READ(conversationId));
+  return res.data;
+};
+
+export const subcriptionPlans=async()=>{
+  const res=await api.get(RepEndpoints.SUBCSRIPTION_PLANS);
+  return res.data.data;
+}
+
+export const checkoutSubscription=async(userId:string,planId:string)=>{
+  const res=await api.post(RepEndpoints.CHECKOUT_SUB,{userId,planId});
+  return res.data.data;
+}
+
+export const getCheckoutDetails=async(sessionId:string)=>{
+  const res=await api.get(RepEndpoints.CHECKOUT_SESSION(sessionId));
+  return res.data.data;
+}
+
+export const getSubscriptionStatus=async()=>{
+  const res=await api.get(RepEndpoints.SUBSCRIPTION_STATUS);
+  return res.data.data;
 }

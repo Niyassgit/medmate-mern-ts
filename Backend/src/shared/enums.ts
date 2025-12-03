@@ -26,3 +26,17 @@ export enum NotificationType {
     LIKE="LIKE",
     INTEREST="INTEREST"
 }
+
+export enum MessageType{
+  TEXT="TEXT",
+  IMAGE="IMAGE",
+  AUDIO="AUDIO",
+  VIDEO="VIDEO",
+  FILE="FILE",
+}
+
+export enum StripePaymentStatus{
+  PAID="PAID",
+  UNPAID="UNPAID",
+  NO_PAYMENT_REQUIRED="NO_PAYMENT_REQUIRED",  
+}

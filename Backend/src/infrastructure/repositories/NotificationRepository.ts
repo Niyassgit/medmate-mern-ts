@@ -50,35 +50,51 @@ export class NotificationRepository
     senderId: string,
     receiverId: string
   ): Promise<string | null> {
-    const notification=await prisma.notification.findFirst({
+    const notification = await prisma.notification.findFirst({
       where: {
         senderId,
         receiverId,
         type: NotificationType.CONNECTION_REQUEST,
       },
-      select:{id:true},
+      select: { id: true },
     });
-    if(!notification) return null
+    if (!notification) return null;
     await this.delete(notification.id);
     return notification.id;
   }
 
-  async findAllNotifications(userId: string): Promise<INotificationWithUser[]> {
-    const result = await prisma.notification.findMany({
-      where: { receiverId: userId },
-      include: {
-        sender: {
-          select: {
-            id: true,
-            profileImage: true,
-            doctor: { select: { name: true, id: true } },
-            medicalRep: { select: { name: true, id: true } },
+  async findAllNotifications(
+    userId: string,
+    cursor?: string,
+    limit?: number
+  ): Promise<{
+    notifications: INotificationWithUser[];
+    nextCursor: string | null;
+  }> {
+    const result =await prisma.notification.findMany({
+      where:{receiverId:userId},
+      take:limit,
+      skip:cursor ?1 :0,
+      cursor:cursor ?{id:cursor}:undefined,
+      include:{
+        sender:{
+          select:{
+            id:true,
+            profileImage:true,
+            doctor:{select:{name:true,id:true}},
+            medicalRep:{select:{name:true,id:true}},
           },
         },
       },
-      orderBy: { createdAt: "desc" },
+      orderBy :{createdAt:"desc"},
     });
-    return result.map(NotificationMapper.toDomainWithUser);
+    const nextCursor=result.length === limit
+    ?result[result.length-1].id : null;
+
+    return {
+      notifications:result.map(NotificationMapper.toDomainWithUser),
+      nextCursor,
+    }
   }
 
   async updateNotificationById(
@@ -108,11 +124,11 @@ export class NotificationRepository
     receiverId: string,
     postId: string
   ): Promise<string | null> {
-    const notification= await prisma.notification.findFirst({
+    const notification = await prisma.notification.findFirst({
       where: { senderId, receiverId, postId },
-      select:{id:true},
+      select: { id: true },
     });
-    if(!notification) return null;
+    if (!notification) return null;
     await this.delete(notification.id);
     return notification.id;
   }
@@ -133,22 +149,42 @@ export class NotificationRepository
         },
       },
     });
-    return result? NotificationMapper.toDomainWithUser(result):null;
+    return result ? NotificationMapper.toDomainWithUser(result) : null;
   }
 
   async markAllNotificationAsRead(userId: string): Promise<boolean> {
-    const result=await prisma.notification.updateMany({
-      where:{receiverId:userId},
-      data:{isRead:true},
+    const result = await prisma.notification.updateMany({
+      where: { receiverId: userId },
+      data: { isRead: true },
     });
-     return result.count > 0;
+    return result.count > 0;
   }
 
   async markNotificationAsRead(notificationId: string): Promise<boolean> {
-    const result=await prisma.notification.updateMany({
-      where:{id:notificationId},
-      data:{isRead:true},
+    const result = await prisma.notification.updateMany({
+      where: { id: notificationId },
+      data: { isRead: true },
     });
-    return result.count>0;
+    return result.count > 0;
+  }
+
+  async getCountOfUnreadNotification(userId: string): Promise<number> {
+    return prisma.notification.count({
+      where: { receiverId: userId, isRead: false },
+    });
+  }
+  async findNotificationOfConnectionByIds(
+    senderId: string,
+    receiverId: string
+  ): Promise<string | null> {
+    const result = await prisma.notification.findFirst({
+      where: {
+        senderId,
+        receiverId,
+        type: NotificationType.CONNECTION_REQUEST,
+      },
+      select: { id: true },
+    });
+    return result ? result.id : null;
   }
 }

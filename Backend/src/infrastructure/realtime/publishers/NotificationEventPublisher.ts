@@ -38,4 +38,12 @@ export class NotificationEventPublisher implements INotificationEventPublisher {
       id: event.notificationId,
     });
   }
+
+  async unreadNotificationCount(event: {
+    receiverUserId: string;
+    count: number;
+  }): Promise<void> {
+    const room = `user:${event.receiverUserId}`;
+    io.to(room).emit("notification:count", event.count);
+  }
 }

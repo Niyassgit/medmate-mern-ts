@@ -13,6 +13,7 @@ import { parsePostField } from "../middlewares/ParsePostField";
 import { UserValidate } from "../../../infrastructure/di/UserValidateDI";
 import { makeValidateUserMiddleware } from "../middlewares/ValidateUserMiddleware";
 import { uploadS3 } from "../../../infrastructure/storage/multer/MulterS3BucketConfig";
+import { SendMessageSchema } from "../validators/MessageSchema";
 
 const validateUser = makeValidateUserMiddleware(UserValidate);
 
@@ -114,6 +115,37 @@ export class MedicalRepRoutes {
     this.router.patch(
       "/notifications/mark-all-read/:userId",
       medicalRepController.markAllAsReadNotifications
+    );
+    this.router.get(
+      "/notifications/unread-count/:userId",
+      medicalRepController.notificaitonUnreadCount
+    );
+    this.router.get("/chat/conversations", medicalRepController.conversations);
+    this.router.get(
+      "/chat/messages/:conversationId",
+      medicalRepController.getAllMessages
+    );
+    this.router.post(
+      "/chat/message",
+      ValidateSchema(SendMessageSchema),
+      medicalRepController.createMessage
+    );
+    this.router.patch(
+      "/chat/message/read/:conversationId",
+      medicalRepController.markMessageAsRead
+    );
+    this.router.get("/subscriptions", medicalRepController.getAllSubscriptions);
+    this.router.post(
+      "/subscription/checkout",
+      medicalRepController.createCheckoutSession
+    );
+    this.router.get(
+      "/subscription/checkout-session/:sessionId",
+      medicalRepController.getCheckoutDetails
+    );
+    this.router.get(
+      "/subscription/status",
+      medicalRepController.getSubscriptionStatus
     );
   }
 }

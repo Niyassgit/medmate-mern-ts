@@ -7,3 +7,7 @@ export const getDepartments=async()=>{
 export const getTerritories=async()=>{
   return await api.get(CommonEndpoints.TERRITORIES);
 }
+export const doctorsForShow=async()=>{
+  const res= await api.get(CommonEndpoints.DOCTORS);
+  return res.data.data;
+}

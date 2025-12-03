@@ -13,7 +13,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
 import { createDepartment, updateDepartment } from "../api/superAdminApi";
 import {
   DepartmentSchema,
@@ -23,7 +22,6 @@ import {
 const CreateDepartment = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const userId = useSelector((state: any) => state.auth.user?.id);
 
   const state = location.state as {
     existingData?: DepartmentSchemaDTO;
@@ -53,7 +51,7 @@ const CreateDepartment = () => {
       if (departmentId) {
         res = await updateDepartment(departmentId, values);
       } else {
-        res = await createDepartment(userId, values);
+        res = await createDepartment(values);
       }
 
       const isSuccess = res?.data?.success || res?.data?.succes; 
