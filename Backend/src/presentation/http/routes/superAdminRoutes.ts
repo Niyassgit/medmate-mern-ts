@@ -73,7 +73,7 @@ export class SuperAdminRoutes {
       "/subscription/delete/:subscriptionId",
       superAdminController.deleteSubscriptionPlan
     );
-     this.router.get("/stats/summary",superAdminController.)
+    //  this.router.get("/stats/summary",superAdminController.)
     this.router.get("/:id", superAdminController.getSuperAdminByEmail);
    
   }

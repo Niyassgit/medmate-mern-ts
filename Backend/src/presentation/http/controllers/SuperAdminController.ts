@@ -257,9 +257,9 @@ export class SuperAdminController {
       .json({ success: true, message: "Subscription plan deleted successfully" });
   };
 
-  getStatsSummary=async (req:Request,res:Response)=>{
-    const userId=GetOptionalUserId(req.user);
-    const response=await this.
-  }
+  // getStatsSummary=async (req:Request,res:Response)=>{
+  //   const userId=GetOptionalUserId(req.user);
+  //   const response=await this.
+  // }
 
 }

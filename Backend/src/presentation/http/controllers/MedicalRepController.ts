@@ -34,10 +34,7 @@ import { CreateMessageDTO } from "../../../application/conversation/dto/CreateMe
 import { ICreateRepMessageUseCase } from "../../../application/conversation/interfaces/ICreateRepMessage";
 import { IRepMessageMarkAsReadUseCase } from "../../../application/conversation/interfaces/IRepMessageMarkAsReadUseCase";
 import { IGetAllSubscriptionsUseCase } from "../../../application/subscription/interfaces/IGetAllSubscriptionsUseCase";
-<<<<<<< HEAD
-=======
 import { IGetSubscriptionHistoryUseCase } from "../../../application/subscription/interfaces/IGetSubscriptionHistoryUseCase";
->>>>>>> 2926f2b (subscription history feature added on the front end for rep and subscription repo is completed)
 import { ICreateCheckoutSessionUseCase } from "../../../application/subscription/interfaces/ICreateCheckoutSessionUseCase";
 import { IGetCheckoutDetailsUseCase } from "../../../application/subscription/interfaces/IGetCheckoutDetailsUseCase";
 import { IGetSubscriptionStatusUseCase } from "../../../application/subscription/interfaces/IGetSubscriptionStatusUseCase";
