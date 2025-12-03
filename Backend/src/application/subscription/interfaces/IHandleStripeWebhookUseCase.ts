@@ -4,3 +4,4 @@ export interface IHandleStripeWebhookUseCase {
   execute(event: StripeWebhookEvent): Promise<void>;
 }
 
+

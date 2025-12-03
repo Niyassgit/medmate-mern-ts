@@ -147,5 +147,9 @@ export class MedicalRepRoutes {
       "/subscription/status",
       medicalRepController.getSubscriptionStatus
     );
+    this.router.get(
+      "/subscription/history",
+      medicalRepController.getSubscriptionHistory
+    );
   }
 }
