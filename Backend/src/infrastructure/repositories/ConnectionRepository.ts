@@ -13,7 +13,6 @@ import { IDoctorListOnRep } from "../../domain/doctor/entities/IDoctorListOnRep"
 import { DoctorMapper } from "../mappers/DoctorMapper";
 import { IMedicalRepListOnDoc } from "../../domain/medicalRep/entities/IMedicalRepListOnDoc";
 import { MedicalRepMapper } from "../mappers/MedicalRepMapper";
-import { runInThisContext } from "vm";
 
 export class ConnectionRepository
   extends BaseRepository<

@@ -55,6 +55,6 @@ export class SubscriptionRepository
   }
 
   async deleteSubscriptionById(subscriptionId: string): Promise<void> {
-    this.delete(subscriptionId);
+    await this.delete(subscriptionId);
   }
 }

@@ -32,7 +32,7 @@ export class NetworksUseCase implements INetworkUseCase {
     const doctor = await this._doctorRepository.getDoctorByUserId(userId);
     if (!doctor) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
     const { territoryId, departmentId } = doctor;
-    let reps = await this._medicalRepRepository.findByTerritoryAndDepartment(
+    const reps = await this._medicalRepRepository.findByTerritoryAndDepartment(
       territoryId,
       departmentId
     );
