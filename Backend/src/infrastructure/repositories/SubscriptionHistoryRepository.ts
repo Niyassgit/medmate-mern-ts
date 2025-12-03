@@ -47,5 +47,46 @@ export class SubscriptionHistoryRepository
     if(!result) return null;
     return SubscriptionHistoryMapper.toDomain(result);
   }
+
+  async getRevenueByTier(startDate?: Date, endDate?: Date): Promise<{ tierName: string; revenue: number }[]> {
+    const whereClause: any = {
+      status: 'paid'
+    };
+
+    if (startDate || endDate) {
+      whereClause.createdAt = {};
+      if (startDate) {
+        whereClause.createdAt.gte = startDate;
+      }
+      if (endDate) {
+        whereClause.createdAt.lte = endDate;
+      }
+    }
+
+    const subscriptions = await prisma.subscriptionHistory.findMany({
+      where: whereClause,
+      include: {
+        plan: {
+          select: {
+            name: true
+          }
+        }
+      }
+    });
+
+    // Group by plan and sum revenue
+    const revenueByPlan: { [key: string]: number } = {};
+
+    subscriptions.forEach((sub) => {
+      const tierName = sub.plan?.name || 'Unknown';
+      revenueByPlan[tierName] = (revenueByPlan[tierName] || 0) + sub.amount;
+    });
+
+    // Convert to array format
+    return Object.entries(revenueByPlan).map(([tierName, revenue]) => ({
+      tierName,
+      revenue
+    })).sort((a, b) => b.revenue - a.revenue); // Sort by revenue descending
+  }
 }
 

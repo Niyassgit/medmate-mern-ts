@@ -31,6 +31,9 @@ import { GetAdminDashboardSummaryUseCase } from "../../application/superAdmin/us
 import { SubscriptionHistoryRepository } from "../repositories/SubscriptionHistoryRepository";
 import { ProductPostRepository } from "../repositories/ProductPostRepository";
 import { ConnectionRepository } from "../repositories/ConnectionRepository";
+import { GetUserDistributionUseCase } from "../../application/superAdmin/useCases/GetUserDistributionUseCase";
+import { GetUserGrowthUseCase } from "../../application/superAdmin/useCases/GetUserGrowthUseCase";
+import { GetRevenueByTierUseCase } from "../../application/superAdmin/useCases/GetRevenueByTierUseCase";
 
 const superAdminRepositories = new SuperAdminRepository();
 const userRepository = new UserRepository();
@@ -107,6 +110,20 @@ const getAdminDashboardSummaryUseCase = new GetAdminDashboardSummaryUseCase(
   userRepository
 );
 
+const getUserDistributionUseCase = new GetUserDistributionUseCase(
+  doctorRepository,
+  medicalRepRepository
+);
+
+const getUserGrowthUseCase = new GetUserGrowthUseCase(
+  doctorRepository,
+  medicalRepRepository
+);
+
+const getRevenueByTierUseCase = new GetRevenueByTierUseCase(
+  subscriptionHistoryRepository
+);
+
 export const superAdminController = new SuperAdminController(
   createSuperAdminUseCase,
   getSuperAdminByEmailIdUseCase,
@@ -127,5 +144,8 @@ export const superAdminController = new SuperAdminController(
   updateSubscriptionPlan,
   toggleSubscriptionUseCase,
   deleteSubscriptionUseCase,
-  getAdminDashboardSummaryUseCase
+  getAdminDashboardSummaryUseCase,
+  getUserDistributionUseCase,
+  getUserGrowthUseCase,
+  getRevenueByTierUseCase
 );

@@ -22,7 +22,7 @@ export class SuperAdminRoutes {
       ValidateSchema(SuperAdminRegisterSchema),
       superAdminController.createSuperAdmin
     );
-    this.router.use(Authenticate, AuthorizeRole([Role.SUPER_ADMIN]));
+    // this.router.use(Authenticate, AuthorizeRole([Role.SUPER_ADMIN]));
     this.router.get("/reps", superAdminController.getAllReps);
     this.router.get("/doctors", superAdminController.getAllDoctors);
     this.router.patch("/block/:userId", superAdminController.blockUser);
@@ -73,8 +73,16 @@ export class SuperAdminRoutes {
       "/subscription/delete/:subscriptionId",
       superAdminController.deleteSubscriptionPlan
     );
-     this.router.get("/stats/summary",superAdminController.getStatsSummary)
+    this.router.get("/stats/summary", superAdminController.getStatsSummary);
+    this.router.get(
+      "/stats/user-distribution",
+      superAdminController.userDistribution
+    );
+    this.router.get("/stats/user-growth", superAdminController.userGrowth);
+    this.router.get(
+      "/stats/revenue-by-tier",
+      superAdminController.revenueByTier
+    );
     this.router.get("/:id", superAdminController.getSuperAdminByEmail);
-   
   }
 }

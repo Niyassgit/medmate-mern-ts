@@ -199,4 +199,44 @@ export class DoctorRepository
     
     return count;
   }
+
+  async getMonthlyDoctorGrowth(year: number): Promise<{ month: number; count: number }[]> {
+    const startDate = new Date(year, 0, 1);
+    const endDate = new Date(year, 11, 31, 23, 59, 59); 
+
+    const doctors = await prisma.doctor.findMany({
+      where: {
+        user: {
+          createdAt: {
+            gte: startDate,
+            lte: endDate
+          }
+        }
+      },
+      include: {
+        user: {
+          select: {
+            createdAt: true
+          }
+        }
+      }
+    });
+
+    const monthlyCount: { [key: number]: number } = {};
+    
+    doctors.forEach((doctor) => {
+      const month = doctor.user!.createdAt.getMonth();
+      monthlyCount[month] = (monthlyCount[month] || 0) + 1;
+    });
+
+    const result: { month: number; count: number }[] = [];
+    for (let month = 0; month < 12; month++) {
+      result.push({
+        month,
+        count: monthlyCount[month] || 0
+      });
+    }
+
+    return result;
+  }
 }

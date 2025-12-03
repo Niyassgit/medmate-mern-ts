@@ -208,4 +208,46 @@ export class MedicalRepRepository
     
     return count;
   }
+
+  async getMonthlyRepGrowth(year: number): Promise<{ month: number; count: number }[]> {
+    const startDate = new Date(year, 0, 1); // January 1st
+    const endDate = new Date(year, 11, 31, 23, 59, 59); // December 31st
+
+    const reps = await prisma.medicalRep.findMany({
+      where: {
+        user: {
+          createdAt: {
+            gte: startDate,
+            lte: endDate
+          }
+        }
+      },
+      include: {
+        user: {
+          select: {
+            createdAt: true
+          }
+        }
+      }
+    });
+
+    // Group by month (0-11)
+    const monthlyCount: { [key: number]: number } = {};
+    
+    reps.forEach((rep) => {
+      const month = rep.user!.createdAt.getMonth();
+      monthlyCount[month] = (monthlyCount[month] || 0) + 1;
+    });
+
+    // Convert to array format with all 12 months
+    const result: { month: number; count: number }[] = [];
+    for (let month = 0; month < 12; month++) {
+      result.push({
+        month,
+        count: monthlyCount[month] || 0
+      });
+    }
+
+    return result;
+  }
 }

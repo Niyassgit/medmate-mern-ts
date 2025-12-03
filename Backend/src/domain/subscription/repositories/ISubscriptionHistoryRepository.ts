@@ -5,5 +5,6 @@ export interface ISubscriptionHistoryRepository{
     findHistoryById(SubHisId:string):Promise<ISubscriptionHistory | null>;
     findHistoriesByRepId(repId:string):Promise<ISubscriptionHistory[] | null>;
     findAllPlans():Promise<ISubscriptionHistory[]>;
+    getRevenueByTier(startDate?: Date, endDate?: Date): Promise<{ tierName: string; revenue: number }[]>;
 }
 
