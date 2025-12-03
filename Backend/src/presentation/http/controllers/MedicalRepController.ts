@@ -34,6 +34,7 @@ import { CreateMessageDTO } from "../../../application/conversation/dto/CreateMe
 import { ICreateRepMessageUseCase } from "../../../application/conversation/interfaces/ICreateRepMessage";
 import { IRepMessageMarkAsReadUseCase } from "../../../application/conversation/interfaces/IRepMessageMarkAsReadUseCase";
 import { IGetAllSubscriptionsUseCase } from "../../../application/subscription/interfaces/IGetAllSubscriptionsUseCase";
+import { IGetSubscriptionHistoryUseCase } from "../../../application/subscription/interfaces/IGetSubscriptionHistoryUseCase";
 import { ICreateCheckoutSessionUseCase } from "../../../application/subscription/interfaces/ICreateCheckoutSessionUseCase";
 import { IGetCheckoutDetailsUseCase } from "../../../application/subscription/interfaces/IGetCheckoutDetailsUseCase";
 import { IGetSubscriptionStatusUseCase } from "../../../application/subscription/interfaces/IGetSubscriptionStatusUseCase";
@@ -70,7 +71,8 @@ export class MedicalRepController {
     private _getAllSubscriptionsUseCase: IGetAllSubscriptionsUseCase,
     private _createCheckoutSessionUseCase: ICreateCheckoutSessionUseCase,
     private _getCheckoutDetailsUseCase: IGetCheckoutDetailsUseCase,
-    private _getSubscriptionStatusUseCase: IGetSubscriptionStatusUseCase
+    private _getSubscriptionStatusUseCase: IGetSubscriptionStatusUseCase,
+    private _getSubscriptionHistoryUseCase: IGetSubscriptionHistoryUseCase
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -396,6 +398,14 @@ export class MedicalRepController {
   getSubscriptionStatus = async (req: Request, res: Response) => {
     const userId = GetOptionalUserId(req.user);
     const response = await this._getSubscriptionStatusUseCase.execute(userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  getSubscriptionHistory = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._getSubscriptionHistoryUseCase.execute(userId);
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
