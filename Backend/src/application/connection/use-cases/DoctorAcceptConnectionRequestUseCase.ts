@@ -98,7 +98,7 @@ export class DoctorAcceptConnectionRequestUseCase
       receiverUserId: repUserId,
       count: unreadCount,
     });
-    let conversation = await this._conversationRepository.findByUsers(
+    const conversation = await this._conversationRepository.findByUsers(
       repUserId,
       userId
     );

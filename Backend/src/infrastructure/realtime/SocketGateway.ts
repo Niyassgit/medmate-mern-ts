@@ -44,21 +44,27 @@ export function initSocket(server: HttpServer) {
       return;
     }
 
-    socket.join(`user:${user.id}`);
+    void socket.join(`user:${user.id}`);
 
-    socket.on("room:join:product", ({ productId }: { productId: string }) => {
-      socket.join(`product:${productId}`);
-    });
+    void socket.on(
+      "room:join:product",
+      ({ productId }: { productId: string }) => {
+        socket.join(`product:${productId}`);
+      }
+    );
 
-    socket.on("room:leave:product", ({ productId }: { productId: string }) => {
-      socket.leave(`product:${productId}`);
-    });
+    void socket.on(
+      "room:leave:product",
+      ({ productId }: { productId: string }) => {
+        socket.leave(`product:${productId}`);
+      }
+    );
 
-    socket.on("join_conversation", (conversationId: string) => {
+    void socket.on("join_conversation", (conversationId: string) => {
       socket.join(`conversation:${conversationId}`);
     });
 
-    socket.on("leave_conversation", (conversationId: string) => {
+    void socket.on("leave_conversation", (conversationId: string) => {
       socket.leave(`conversation:${conversationId}`);
     });
   });

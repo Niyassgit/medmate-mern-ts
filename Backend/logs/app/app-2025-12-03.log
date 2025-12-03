@@ -16,3 +16,11 @@
 [2025-12-03 10:58:46] [32minfo[39m: [32m server running on port 5000[39m
 [2025-12-03 12:04:52] [32minfo[39m: [32m server running on port 5000[39m
 [2025-12-03 12:28:22] [32minfo[39m: [32m server running on port 5000[39m
+[2025-12-03 16:52:15] [32minfo[39m: [32m server running on port 5000[39m
+[2025-12-03 16:53:26] [32minfo[39m: [32m server running on port 5000[39m
+[2025-12-03 16:59:00] [32minfo[39m: [32m server running on port 5000[39m
+[2025-12-03 17:51:42] [32minfo[39m: [32m server running on port 5000[39m
+[2025-12-03 17:53:43] [32minfo[39m: [32m server running on port 5000[39m
+[2025-12-03 17:54:04] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-12-03 17:54:08] [31merror[39m: [31mFailed to start server:argument handler is required[39m
+[2025-12-03 17:54:15] [31merror[39m: [31mFailed to start server:argument handler is required[39m

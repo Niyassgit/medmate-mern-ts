@@ -34,7 +34,6 @@ import { CreateMessageDTO } from "../../../application/conversation/dto/CreateMe
 import { ICreateRepMessageUseCase } from "../../../application/conversation/interfaces/ICreateRepMessage";
 import { IRepMessageMarkAsReadUseCase } from "../../../application/conversation/interfaces/IRepMessageMarkAsReadUseCase";
 import { IGetAllSubscriptionsUseCase } from "../../../application/subscription/interfaces/IGetAllSubscriptionsUseCase";
-import { IStripePaymentService } from "../../../domain/common/services/IStripePaymentService";
 import { ICreateCheckoutSessionUseCase } from "../../../application/subscription/interfaces/ICreateCheckoutSessionUseCase";
 import { IGetCheckoutDetailsUseCase } from "../../../application/subscription/interfaces/IGetCheckoutDetailsUseCase";
 import { IGetSubscriptionStatusUseCase } from "../../../application/subscription/interfaces/IGetSubscriptionStatusUseCase";
@@ -46,7 +45,7 @@ export class MedicalRepController {
     private _ProfileImageUpdateUseCase: IProfileImageUpdateUseCase,
     private _completeRepProfileUseCase: ICompleteRepProfileUseCase,
     private _createPostUseCase: ICreatePostUseCase,
-    private _editposUseCase: IEditProductPostUseCase,
+    private _editpostUseCase: IEditProductPostUseCase,
     private _getProductsListUseCase: IGetProductPostListUseCase,
     private _getPostDetailsUseCase: IGetProductPostDetailsUseCase,
     private _getNetworksUseCase: IGetNetworksUseCase,
@@ -156,7 +155,7 @@ export class MedicalRepController {
     const { postId } = req.params;
     const dto = req.body as Partial<ProductPostDTO>;
     dto.imageUrl = processImages(req.body.existingImages, req.files);
-    const response = await this._editposUseCase.execute(
+    const response = await this._editpostUseCase.execute(
       postId,
       dto as ProductPostDTO
     );
