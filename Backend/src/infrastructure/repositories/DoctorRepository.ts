@@ -180,10 +180,10 @@ export class DoctorRepository
 
   async countDoctors(startDate?: Date, endDate?: Date): Promise<number> {
     const whereClause: any = {};
-    
+
     if (startDate || endDate) {
       whereClause.user = {
-        createdAt: {}
+        createdAt: {},
       };
       if (startDate) {
         whereClause.user.createdAt.gte = startDate;
@@ -194,36 +194,38 @@ export class DoctorRepository
     }
 
     const count = await prisma.doctor.count({
-      where: whereClause
+      where: whereClause,
     });
-    
+
     return count;
   }
 
-  async getMonthlyDoctorGrowth(year: number): Promise<{ month: number; count: number }[]> {
+  async getMonthlyDoctorGrowth(
+    year: number
+  ): Promise<{ month: number; count: number }[]> {
     const startDate = new Date(year, 0, 1);
-    const endDate = new Date(year, 11, 31, 23, 59, 59); 
+    const endDate = new Date(year, 11, 31, 23, 59, 59);
 
     const doctors = await prisma.doctor.findMany({
       where: {
         user: {
           createdAt: {
             gte: startDate,
-            lte: endDate
-          }
-        }
+            lte: endDate,
+          },
+        },
       },
       include: {
         user: {
           select: {
-            createdAt: true
-          }
-        }
-      }
+            createdAt: true,
+          },
+        },
+      },
     });
 
     const monthlyCount: { [key: number]: number } = {};
-    
+
     doctors.forEach((doctor) => {
       const month = doctor.user!.createdAt.getMonth();
       monthlyCount[month] = (monthlyCount[month] || 0) + 1;
@@ -233,7 +235,7 @@ export class DoctorRepository
     for (let month = 0; month < 12; month++) {
       result.push({
         month,
-        count: monthlyCount[month] || 0
+        count: monthlyCount[month] || 0,
       });
     }
 

@@ -74,7 +74,6 @@ export class SubscriptionHistoryRepository
       }
     });
 
-    // Group by plan and sum revenue
     const revenueByPlan: { [key: string]: number } = {};
 
     subscriptions.forEach((sub) => {
@@ -82,11 +81,41 @@ export class SubscriptionHistoryRepository
       revenueByPlan[tierName] = (revenueByPlan[tierName] || 0) + sub.amount;
     });
 
-    // Convert to array format
     return Object.entries(revenueByPlan).map(([tierName, revenue]) => ({
       tierName,
       revenue
-    })).sort((a, b) => b.revenue - a.revenue); // Sort by revenue descending
+    })).sort((a, b) => b.revenue - a.revenue); 
+  }
+
+  async getRecentSubscriptions(limit: number): Promise<{ userId: string; name: string; tier: string; amount: number; date: Date; status: string }[]> {
+    const subscriptions = await prisma.subscriptionHistory.findMany({
+      take: limit,
+      orderBy: {
+        createdAt: 'desc'
+      },
+      include: {
+        plan: {
+          select: {
+            name: true
+          }
+        },
+        rep: {
+          select: {
+            id: true,
+            name: true
+          }
+        }
+      }
+    });
+
+    return subscriptions.map(sub => ({
+      userId: sub.repId,
+      name: sub.rep?.name || 'Unknown',
+      tier: sub.plan?.name || 'Unknown',
+      amount: sub.amount,
+      date: sub.createdAt,
+      status: sub.status
+    }));
   }
 }
 

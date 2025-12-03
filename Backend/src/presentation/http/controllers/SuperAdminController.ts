@@ -29,6 +29,7 @@ import { IGetAdminDashBoardSummaryUseCase } from "../../../application/superAdmi
 import { IGetUserDistributionUseCase } from "../../../application/superAdmin/interfaces/IGetUserDistributionUseCase";
 import { IGetUserGrowthUseCase } from "../../../application/superAdmin/interfaces/IGetUserGrowthUseCase";
 import { IGetRevenueByTierUseCase } from "../../../application/superAdmin/interfaces/IGetRevenueByTierUseCase";
+import { IGetRecentSubscriptionsUseCase } from "../../../application/superAdmin/interfaces/IGetRecentSubscriptionsUseCase";
 
 export class SuperAdminController {
   constructor(
@@ -54,7 +55,8 @@ export class SuperAdminController {
     private _getAdminDashboardSummaryUseCase: IGetAdminDashBoardSummaryUseCase,
     private _getUserDistributionUseCase: IGetUserDistributionUseCase,
     private _getUserGrowthUseCase: IGetUserGrowthUseCase,
-    private _getRevenueByTierUseCase: IGetRevenueByTierUseCase
+    private _getRevenueByTierUseCase: IGetRevenueByTierUseCase,
+    private _getRecentSubscriptionsUseCase: IGetRecentSubscriptionsUseCase
   ) {}
 
   createSuperAdmin = async (req: Request, res: Response) => {
@@ -314,6 +316,19 @@ export class SuperAdminController {
       userId,
       startDate as string | undefined,
       endDate as string | undefined
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  recentSubscriptions = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { limit } = req.query;
+    const parsedLimit = limit ? parseInt(limit as string) : 20;
+    const response = await this._getRecentSubscriptionsUseCase.execute(
+      userId,
+      parsedLimit
     );
     return res
       .status(HttpStatusCode.OK)
