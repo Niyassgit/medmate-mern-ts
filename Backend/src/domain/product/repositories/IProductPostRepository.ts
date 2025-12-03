@@ -15,5 +15,5 @@ export interface IProductPostRepository{
     findRepByPostId(postId:string):Promise<IMedicalRepWithUser | null>;
     findPostsByRepId(repId:string):Promise<IProductPostForFeed[] | null>;
     findRepIdByPostId(postId:string):Promise<{repId:string | null}>; 
-    
+    countTotalPosts(): Promise<number>;
 }

@@ -26,4 +26,5 @@ export interface IMedicalRepRepository {
     departmentId: string | null
   ): Promise<IMedicalRepWithUser[]>;
   getUserIdByRepId(repId: string): Promise<{ repUserId: string | null }>;
+  countReps(startDate?: Date, endDate?: Date): Promise<number>;
 }

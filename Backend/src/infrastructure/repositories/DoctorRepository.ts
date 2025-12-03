@@ -177,4 +177,26 @@ export class DoctorRepository
 
     return result.map((d) => DoctorWithUserMapper.toDomain(d));
   }
+
+  async countDoctors(startDate?: Date, endDate?: Date): Promise<number> {
+    const whereClause: any = {};
+    
+    if (startDate || endDate) {
+      whereClause.user = {
+        createdAt: {}
+      };
+      if (startDate) {
+        whereClause.user.createdAt.gte = startDate;
+      }
+      if (endDate) {
+        whereClause.user.createdAt.lte = endDate;
+      }
+    }
+
+    const count = await prisma.doctor.count({
+      where: whereClause
+    });
+    
+    return count;
+  }
 }

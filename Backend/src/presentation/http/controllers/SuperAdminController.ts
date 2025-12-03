@@ -25,6 +25,7 @@ import { IUpdateSubscriptionPlanUseCase } from "../../../application/subscriptio
 import { CreateSubscriptionDTO } from "../../../application/subscription/dto/CreateSubscriptionDTO";
 import { IListToggleSubscriptionPlanUseCase } from "../../../application/subscription/interfaces/IListToggleSubscriptionPlanUseCase";
 import { IDeleteSubscriptionUseCase } from "../../../application/subscription/interfaces/IDeleteSubscriptionUseCase";
+import { IGetAdminDashBoardSummaryUseCase } from "../../../application/superAdmin/interfaces/IGetAdminDashboardSummaryUseCase";
 
 export class SuperAdminController {
   constructor(
@@ -46,7 +47,8 @@ export class SuperAdminController {
     private _createSubscriptionPlanUseCase: ICreateSubscriptionPlanUseCase,
     private _updateSubscriptionPlanUseCase: IUpdateSubscriptionPlanUseCase,
     private _toggleSubscriptionStatusUseCase: IListToggleSubscriptionPlanUseCase,
-    private _deleteSubscriptionPlanUseCase: IDeleteSubscriptionUseCase
+    private _deleteSubscriptionPlanUseCase: IDeleteSubscriptionUseCase,
+    private _getAdminDashboardSummaryUseCase: IGetAdminDashBoardSummaryUseCase
   ) {}
 
   createSuperAdmin = async (req: Request, res: Response) => {
@@ -250,16 +252,27 @@ export class SuperAdminController {
     const { subscriptionId } = req.params;
     const userId = GetOptionalUserId(req.user);
 
-    await this._deleteSubscriptionPlanUseCase.execute(subscriptionId, userId);
+    const response = await this._deleteSubscriptionPlanUseCase.execute(
+      subscriptionId,
+      userId
+    );
 
-    return res
-      .status(HttpStatusCode.OK)
-      .json({ success: true, message: "Subscription plan deleted successfully" });
+    return res.status(HttpStatusCode.OK).json({
+      success: true,
+      message: response,
+    });
   };
 
-  // getStatsSummary=async (req:Request,res:Response)=>{
-  //   const userId=GetOptionalUserId(req.user);
-  //   const response=await this.
-  // }
-
+  getStatsSummary = async (req: Request, res: Response) => {
+    const userId =  GetOptionalUserId(req.user);
+    const { startDate, endDate } = req.query;
+    const response = await this._getAdminDashboardSummaryUseCase.execute(
+      userId,
+      startDate as string | undefined,
+      endDate as string | undefined
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
 }

@@ -186,4 +186,26 @@ export class MedicalRepRepository
     });
     return { repUserId: user ? user.loginId : null };
   }
+
+  async countReps(startDate?: Date, endDate?: Date): Promise<number> {
+    const whereClause: any = {};
+    
+    if (startDate || endDate) {
+      whereClause.user = {
+        createdAt: {}
+      };
+      if (startDate) {
+        whereClause.user.createdAt.gte = startDate;
+      }
+      if (endDate) {
+        whereClause.user.createdAt.lte = endDate;
+      }
+    }
+
+    const count = await prisma.medicalRep.count({
+      where: whereClause
+    });
+    
+    return count;
+  }
 }
