@@ -13,6 +13,8 @@ import PostDetailsPage from "@/features/rep/pages/PostDetailsPage";
 import PostEditPage from "@/features/rep/pages/PostEditPage";
 import DoctorProfile from "@/features/rep/pages/DoctorProfile";
 import RepChatPage from "@/features/rep/pages/RepChatPage";
+import SubscriptionSuccess from "@/features/rep/components/SubscriptionSuccess";
+import SubscriptionCancel from "@/features/rep/components/SubscriptionCancel";
 export const RepRoutes={
 
     path:"/rep",
@@ -35,6 +37,8 @@ export const RepRoutes={
         {path:"notification",element:<Notifications/>},
         {path:"doctor/details/:doctorId",element:<DoctorProfile />},
         {path:"notifications/post-details/:id",element:<PostDetailsPage />},
+        {path:"subscription-success",element:<SubscriptionSuccess />},
+        {path:"subscription-cancel",element:<SubscriptionCancel/>}
 
     ]
 }

@@ -179,7 +179,7 @@ export const subcriptionPlans=async()=>{
 
 export const checkoutSubscription=async(userId:string,planId:string)=>{
   const res=await api.post(RepEndpoints.CHECKOUT_SUB,{userId,planId});
-  return res.data.data.url;
+  return res.data.data;
 }
 
 export const getCheckoutDetails=async(sessionId:string)=>{

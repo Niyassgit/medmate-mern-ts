@@ -22,7 +22,7 @@ export class CreateCheckoutSessionUseCase
     if (!plan) throw new BadRequestError(ErrorMessages.SUB_NOT_FOUND);
     const url = await this._payementService.createCheckoutSession(
       repId,
-      planId,
+       plan,
       plan.price
     );
     if (!url) throw new BadRequestError(ErrorMessages.SUB_ATTEMPT_FAILED);

@@ -3,33 +3,21 @@ import { useSearchParams, Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { getCheckoutDetails, getSubscriptionStatus } from "../api";
 import { SpinnerButton } from "@/components/shared/SpinnerButton";
+import { CheckoutDetailsDTO } from "../dto/CheckoutDetailsDTO";
+import { SubscriptionStatusDTO } from "../dto/SubscriptionStatusDTO";
 
-interface CheckoutDetails {
-  amount_total: number;
-  currency: string;
-  payment_status: string;
-  planId: string;
-  repId: string;
-}
 
-interface SubscriptionStatus {
-  isActive: boolean;
-  planId: string | null;
-  startDate: string | null;
-  endDate: string | null;
-}
 
 const SubscriptionSuccess: React.FC = () => {
   const [params] = useSearchParams();
   const sessionId = params.get("session_id");
-  const [checkoutDetails, setCheckoutDetails] = useState<CheckoutDetails | null>(null);
-  const [subscriptionStatus, setSubscriptionStatus] = useState<SubscriptionStatus | null>(null);
+  const [checkoutDetails, setCheckoutDetails] = useState<CheckoutDetailsDTO | null>(null);
+  const [subscriptionStatus, setSubscriptionStatus] = useState<SubscriptionStatusDTO | null>(null);
   const [loading, setLoading] = useState(true);
   const [verifyingWebhook, setVerifyingWebhook] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [pollAttempts, setPollAttempts] = useState(0);
 
-  // Fetch checkout details
   useEffect(() => {
     const fetchCheckoutDetails = async () => {
       if (!sessionId) {
@@ -44,7 +32,6 @@ const SubscriptionSuccess: React.FC = () => {
         setCheckoutDetails(details);
       } catch (err) {
         setError("Failed to fetch payment details");
-        console.error("Error fetching checkout details:", err);
       } finally {
         setLoading(false);
       }
@@ -53,7 +40,6 @@ const SubscriptionSuccess: React.FC = () => {
     fetchCheckoutDetails();
   }, [sessionId]);
 
-  // Poll for subscription activation (webhook processing)
   useEffect(() => {
     if (!checkoutDetails || !verifyingWebhook) return;
 
@@ -65,21 +51,17 @@ const SubscriptionSuccess: React.FC = () => {
           setSubscriptionStatus(status);
           setVerifyingWebhook(false);
         } else {
-          // Continue polling if not active yet
           setPollAttempts((prev) => prev + 1);
         }
       } catch (err) {
-        console.error("Error checking subscription status:", err);
         setPollAttempts((prev) => prev + 1);
       }
     };
 
-    // Poll every 2 seconds for up to 30 seconds (15 attempts)
     if (pollAttempts < 15) {
       const timer = setTimeout(pollSubscriptionStatus, 2000);
       return () => clearTimeout(timer);
     } else {
-      // Stop polling after 15 attempts
       setVerifyingWebhook(false);
     }
   }, [checkoutDetails, verifyingWebhook, pollAttempts]);
