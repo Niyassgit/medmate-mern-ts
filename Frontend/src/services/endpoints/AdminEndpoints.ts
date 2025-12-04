@@ -40,4 +40,5 @@ export const AdminEndpoints = {
   STATS_USER_GROWTH: `/admin/stats/user-growth`,
   STATS_REVENUE_BY_TIER: `/admin/stats/revenue-by-tier`,
   RECENT_SUBSCRIPTION: `/admin/subscriptions/recent`,
+  SUBSCRIBED:(page:number,limit:number)=>`/admin/subscibed/list?page=${page}&limit=${limit}`,
 };

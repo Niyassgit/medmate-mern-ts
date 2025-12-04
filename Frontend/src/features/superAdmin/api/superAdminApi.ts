@@ -155,8 +155,16 @@ export const getRevenueByTier = async (
 
 export const getRecentSubscriptions = async (limit: number = 20) => {
   const res = await api.get(AdminEndpoints.RECENT_SUBSCRIPTION, {
-    params: { limit }
+    params: { limit },
   });
 
+  return res.data.data;
+};
+
+export const subscribedUsers= async (
+  page: number = 1,
+  limit: number = 10
+) => {
+  const res = await api.get(AdminEndpoints.SUBSCRIBED(page, limit));
   return res.data.data;
 };

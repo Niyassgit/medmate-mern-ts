@@ -8,6 +8,7 @@ import { StatusSummaryDTO } from "../dto/StatsSummaryDTO";
 import { IGetAdminDashBoardSummaryUseCase } from "../interfaces/IGetAdminDashboardSummaryUseCase";
 import { UnautharizedError } from "../../errors";
 import { ErrorMessages } from "../../../shared/Messages";
+import { getDateRange } from "../../../shared/DateRange";
 
 export class GetAdminDashboardSummaryUseCase
   implements IGetAdminDashBoardSummaryUseCase
@@ -27,14 +28,8 @@ export class GetAdminDashboardSummaryUseCase
     endDate?: string
   ): Promise<StatusSummaryDTO> {
     if (!userId) throw new UnautharizedError(ErrorMessages.UNAUTHORIZED);
-    const now = new Date();
-    const parsedStartDate = startDate 
-      ? new Date(startDate) 
-      : new Date(now.getFullYear(), 0, 1); 
-    const parsedEndDate = endDate 
-      ? new Date(endDate) 
-      : new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
-
+   const {parsedStartDate,parsedEndDate}=getDateRange(startDate,endDate);
+   const now=new Date();
     const totalDoctors = await this._doctorRepository.countDoctors(
       parsedStartDate,
       parsedEndDate

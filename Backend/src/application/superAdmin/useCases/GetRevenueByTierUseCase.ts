@@ -3,6 +3,7 @@ import { RevenueByTierDTO } from "../dto/RevenueByTierDTO";
 import { IGetRevenueByTierUseCase } from "../interfaces/IGetRevenueByTierUseCase";
 import { UnautharizedError } from "../../errors";
 import { ErrorMessages } from "../../../shared/Messages";
+import { getDateRange } from "../../../shared/DateRange";
 
 export class GetRevenueByTierUseCase implements IGetRevenueByTierUseCase {
   constructor(
@@ -16,13 +17,7 @@ export class GetRevenueByTierUseCase implements IGetRevenueByTierUseCase {
   ): Promise<RevenueByTierDTO> {
     if (!userId) throw new UnautharizedError(ErrorMessages.UNAUTHORIZED);
 
-    const now = new Date();
-    const parsedStartDate = startDate 
-      ? new Date(startDate) 
-      : new Date(now.getFullYear(), 0, 1); 
-    const parsedEndDate = endDate 
-      ? new Date(endDate) 
-      : new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999); 
+   const {parsedStartDate,parsedEndDate}=getDateRange(startDate,endDate);
 
     const revenueData = await this._subscriptionHistoryRepository.getRevenueByTier(
       parsedStartDate,

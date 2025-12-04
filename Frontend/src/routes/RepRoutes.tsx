@@ -38,7 +38,7 @@ export const RepRoutes={
         {path:"doctor/details/:doctorId",element:<DoctorProfile />},
         {path:"notifications/post-details/:id",element:<PostDetailsPage />},
         {path:"subscription-success",element:<SubscriptionSuccess />},
-        {path:"subscription-cancel",element:<SubscriptionCancel/>}
+        {path:"subscription-cancel",element:<SubscriptionCancel/>},
 
     ]
 }

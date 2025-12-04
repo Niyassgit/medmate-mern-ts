@@ -35,6 +35,7 @@ import { GetUserDistributionUseCase } from "../../application/superAdmin/useCase
 import { GetUserGrowthUseCase } from "../../application/superAdmin/useCases/GetUserGrowthUseCase";
 import { GetRevenueByTierUseCase } from "../../application/superAdmin/useCases/GetRevenueByTierUseCase";
 import { GetRecentSubscriptionsUseCase } from "../../application/superAdmin/useCases/GetRecentSubscriptionsUseCase";
+import { GetSubscribedListUseCase } from "../../application/superAdmin/useCases/GetSubscribedListUseCase";
 
 const superAdminRepositories = new SuperAdminRepository();
 const userRepository = new UserRepository();
@@ -129,6 +130,10 @@ const getRecentSubscriptionsUseCase = new GetRecentSubscriptionsUseCase(
   subscriptionHistoryRepository
 );
 
+const getSubscribedListUseCase = new GetSubscribedListUseCase(
+  subscriptionHistoryRepository
+);
+
 export const superAdminController = new SuperAdminController(
   createSuperAdminUseCase,
   getSuperAdminByEmailIdUseCase,
@@ -153,5 +158,6 @@ export const superAdminController = new SuperAdminController(
   getUserDistributionUseCase,
   getUserGrowthUseCase,
   getRevenueByTierUseCase,
-  getRecentSubscriptionsUseCase
+  getRecentSubscriptionsUseCase,
+  getSubscribedListUseCase
 );

@@ -1,4 +1,6 @@
+import { IRecentsubscription } from "../entities/IRecentSubscription";
 import { ISubscriptionHistory } from "../entities/ISubscriptionHistory";
+import { SubscribedListResponse } from "../../../application/superAdmin/dto/SubscribedListDTO";
 
 export interface ISubscriptionHistoryRepository {
   createHistory(
@@ -11,16 +13,15 @@ export interface ISubscriptionHistoryRepository {
     startDate?: Date,
     endDate?: Date
   ): Promise<{ tierName: string; revenue: number }[]>;
-  getRecentSubscriptions(
+  getRecentSubscriptions(limit: number): Promise<IRecentsubscription[]>;
+  getSubscribedList(
+    page: number,
     limit: number
-  ): Promise<
-    {
-      userId: string;
-      name: string;
-      tier: string;
-      amount: number;
-      date: Date;
-      status: string;
-    }[]
-  >;
+  ): Promise<{
+    subscriptions: IRecentsubscription[];
+    page: number;
+    total: number;
+    limit: number;
+    totalPages: number;
+  }>;
 }
