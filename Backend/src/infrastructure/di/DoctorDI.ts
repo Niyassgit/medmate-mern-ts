@@ -131,7 +131,9 @@ const getRepDetailsOnDoctorUseCase = new GetRepDetailsOnDoctorUseCase(
   userRepository,
   medicalRepRepository,
   productPostRepository,
-  storageService
+  storageService,
+  connectionRepository,
+  doctorRepository
 );
 const toggleLikeOnPostUseCase = new ToggleLikeOnPostUseCase(
   doctorRepository,

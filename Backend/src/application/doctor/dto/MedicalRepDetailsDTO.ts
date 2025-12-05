@@ -14,4 +14,6 @@ export interface MedicalRepDetailsOnDoctorDTO {
   educations?: EducationDTO[];
   certificates?: CertificateDTO[];
   loginId: string | null;
+  connectionStatus: string | null;
+  connectionInitiator: string | null;
 }

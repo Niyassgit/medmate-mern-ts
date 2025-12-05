@@ -19,6 +19,8 @@ export class NetworkMapper {
       about: rep.about,
       profileImage: signedUrl || rep.user?.profileImage,
       companyName: rep.companyName,
+      territoryNames: rep.territoryNames || [],
+      subscriptionStatus: rep.subscriptionStatus || false,
       connectionStatus,
       connectionInitiator,
     };

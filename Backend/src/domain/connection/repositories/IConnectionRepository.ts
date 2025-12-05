@@ -28,4 +28,5 @@ export interface IConnectionRepository {
   doctorMutualConnections(doctorId: string): Promise<IMedicalRepListOnDoc[]>;
   pendingConnectionForDoctor(doctorId: string): Promise<IMedicalRepListOnDoc[]>;
   doctorMutualConnectionRepIds(doctorId:string):Promise<string[]>;
+  findConnectionBetweenDoctorAndRep(doctorId:string,repId:string):Promise<IConnection | null>;
 }

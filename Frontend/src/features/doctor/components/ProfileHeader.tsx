@@ -1,8 +1,10 @@
 import { MedicalRep } from "../dto/RepFullDetailsDTO";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Mail, Phone, Building2, IdCard, MapPin, ChevronDown, ChevronUp } from "lucide-react";
+import { Mail, Phone, Building2, IdCard, MapPin, ChevronDown, ChevronUp, UserPlus, UserCheck, RefreshCcw, X } from "lucide-react";
 import { useState } from "react";
+import { connectionToggle, acceptRequest } from "../api";
+import toast from "react-hot-toast";
 
 interface ProfileHeaderProps {
   rep: MedicalRep;
@@ -10,6 +12,63 @@ interface ProfileHeaderProps {
 
 export const ProfileHeader = ({ rep }: ProfileHeaderProps) => {
   const [isAboutExpanded, setIsAboutExpanded] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState<string | null>(rep.connectionStatus);
+  const [initiator, setInitiator] = useState<string | null>(rep.connectionInitiator);
+
+  const handleConnect = async () => {
+    setStatus("PENDING");
+    setInitiator("DOCTOR");
+    setLoading(true);
+    try {
+      const data = await connectionToggle(rep.id);
+      toast.success(data.message || "Connection request sent");
+    } catch (error: any) {
+      setStatus(null);
+      setInitiator(null);
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAcceptRequest = async () => {
+    const previousStatus = status;
+    const previousInitiator = initiator;
+
+    setStatus("ACCEPTED");
+    setInitiator(null);
+    setLoading(true);
+    try {
+      const data = await acceptRequest(rep.id);
+      toast.success(data.message || "Connection accepted");
+    } catch (error: any) {
+      setStatus(previousStatus);
+      setInitiator(previousInitiator);
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCancelRequest = async () => {
+    const previousStatus = status;
+    const previousInitiator = initiator;
+
+    setStatus(null);
+    setInitiator(null);
+    setLoading(true);
+    try {
+      const data = await connectionToggle(rep.id);
+      toast.success(data.message || "Request cancelled");
+    } catch (error: any) {
+      setStatus(previousStatus);
+      setInitiator(previousInitiator);
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Card className="overflow-hidden">
@@ -112,12 +171,60 @@ export const ProfileHeader = ({ rep }: ProfileHeaderProps) => {
           )}
         </div>
 
-        {/* Contact Button */}
-        <div className="mt-6 flex justify-end">
-          <Button variant="outline" className="border-pink-500 text-pink-500 hover:border-pink-700 hover:text-pink-700">
-            Contact
-          </Button>
-        </div>
+        {/* Connection Buttons */}
+        {status !== "ACCEPTED" && (
+          <div className="mt-6 flex justify-end gap-2">
+            {status === null && (
+              <Button
+                onClick={handleConnect}
+                className="bg-[#3175B4] hover:bg-[#25629A] text-white flex items-center gap-2"
+                disabled={loading}
+              >
+                {loading ? (
+                  <RefreshCcw className="w-4 h-4 animate-spin" />
+                ) : (
+                  <UserPlus className="w-4 h-4" />
+                )}
+                {loading ? "Processing..." : "Connect"}
+              </Button>
+            )}
+            
+            {status === "PENDING" && initiator === "DOCTOR" && (
+              <>
+                <Button
+                  className="bg-gray-300 text-gray-600 cursor-not-allowed"
+                  disabled
+                >
+                  Pending
+                </Button>
+                <Button
+                  onClick={handleCancelRequest}
+                  variant="outline"
+                  size="sm"
+                  className="px-3 bg-transparent hover:bg-red-50 hover:border-red-300"
+                  disabled={loading}
+                >
+                  <X className="w-4 h-4 text-red-500" />
+                </Button>
+              </>
+            )}
+            
+            {status === "PENDING" && initiator === "REP" && (
+              <Button
+                onClick={handleAcceptRequest}
+                className="bg-[#3175B4] hover:bg-[#25629A] text-white flex items-center gap-2"
+                disabled={loading}
+              >
+                {loading ? (
+                  <RefreshCcw className="w-4 h-4 animate-spin" />
+                ) : (
+                  <UserCheck className="w-4 h-4" />
+                )}
+                {loading ? "Processing..." : "Follow Back"}
+              </Button>
+            )}
+          </div>
+        )}
       </CardContent>
     </Card>
   );

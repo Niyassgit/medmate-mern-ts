@@ -156,10 +156,21 @@ export class ConnectionRepository
     repId: string,
     status: ConnectionStatus
   ): Promise<boolean> {
-    const result=await prisma.connection.update({
+    const result = await prisma.connection.update({
       where: { doctorId_repId: { doctorId, repId } },
       data: { status },
     });
     return !!result;
+  }
+
+  async findConnectionBetweenDoctorAndRep(
+    doctorId: string,
+    repId: string
+  ): Promise<IConnection | null> {
+    const result = await prisma.connection.findFirst({
+      where: { doctorId, repId },
+    });
+
+    return result ?ConnectionMappers.toDomain(result):null;
   }
 }

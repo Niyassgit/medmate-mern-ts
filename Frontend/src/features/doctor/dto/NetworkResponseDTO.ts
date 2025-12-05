@@ -5,5 +5,6 @@ export interface NetworkResponseDTO {
   about?: string | null;
   companyName: string;
   connectionStatus: string | null;
+  territoryNames?: string[];
   connectionInitiator: string | null;
 }

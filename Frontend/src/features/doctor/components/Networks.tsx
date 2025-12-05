@@ -151,6 +151,18 @@ export default function Networks({
             <p className="text-sm text-[#3175B4] font-medium mt-1">
               {user.companyName}
             </p>
+            {user.territoryNames && user.territoryNames.length > 0 && (
+              <div className="mt-2 flex flex-wrap justify-center gap-1">
+                {user.territoryNames.map((territory, index) => (
+                  <span
+                    key={index}
+                    className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary"
+                  >
+                    📍 {territory}
+                  </span>
+                ))}
+              </div>
+            )}
             {user.about && (
               <p className="text-sm text-muted-foreground mt-3 line-clamp-2">
                 {user.about}

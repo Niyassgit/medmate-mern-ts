@@ -26,6 +26,7 @@ export interface IMedicalRepRepository {
     territoryId: string | null,
     departmentId: string | null
   ): Promise<IMedicalRepWithUser[]>;
+  findByDepartment(departmentId: string): Promise<IMedicalRepWithUser[]>;
   getUserIdByRepId(repId: string): Promise<{ repUserId: string | null }>;
   countReps(startDate?: Date, endDate?: Date): Promise<number>;
   getMonthlyRepGrowth(year: number): Promise<{ month: number; count: number }[]>;

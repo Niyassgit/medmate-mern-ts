@@ -33,8 +33,22 @@ export const completeProfile = async (
   });
 };
 
-export const getNetworks = async (id: string, search?: string) => {
-  const params = search ? { search } : {};
+export const getNetworks = async (
+  id: string, 
+  search?: string,
+  filters?: {
+    company?: string;
+    territories?: string[];
+  }
+) => {
+  const params: any = {};
+  
+  if (search) params.search = search;
+  if (filters?.company) params.company = filters.company;
+  if (filters?.territories && filters.territories.length > 0) {
+    params.territories = filters.territories.join(',');
+  }
+  
   const resp = await api.get(DoctorEndpoints.NETWORKS(id), { params });
   return resp.data.data;
 };
