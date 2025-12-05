@@ -137,8 +137,9 @@ model MedicalRep {
   educations   Education[]
   certificates Certificate[]
 
-  user    User?   @relation(fields: [loginId], references: [id])
-  loginId String? @unique @db.ObjectId
+  user                  User?                  @relation(fields: [loginId], references: [id])
+  loginId               String?                @unique @db.ObjectId
+  connectionRequestLogs ConnectionRequestLog[]
 }
 
 model SuperAdmin {
@@ -178,7 +179,7 @@ model SubscriptionPlan {
   description String
   price       Float
   tenure      String
-  isActive    Boolean @default(true)
+  isActive    Boolean  @default(true)
   features    String[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -388,4 +389,16 @@ model Message {
   createdAt      DateTime    @default(now())
 
   conversation Conversation @relation(fields: [conversationId], references: [id])
+}
+
+model ConnectionRequestLog {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  repId     String   @db.ObjectId
+  date      DateTime @default(now())
+  count     Int      @default(1)
+  createdAt DateTime @default(now())
+
+  rep MedicalRep @relation(fields: [repId], references: [id])
+
+  @@unique([repId, date])
 }

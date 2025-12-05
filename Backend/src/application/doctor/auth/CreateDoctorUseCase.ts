@@ -47,7 +47,6 @@ export class CreateDoctorUseCase implements ICreateDoctorUseCase {
       user.id,
       OtpPurpose.SIGNUP
     );
-    console.log("otp sended to user:", otp);
     void this._notificationService.sendEmail(
       data.email,
       NotificationMessages.OTP_SUBJECT,

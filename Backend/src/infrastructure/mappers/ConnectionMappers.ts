@@ -1,4 +1,4 @@
-import { Connection, Prisma} from "@prisma/client";
+import { Connection} from "@prisma/client";
 import { IConnection } from "../../domain/connection/entities/IConnection";
 import { ConnectionInitiator, ConnectionStatus } from "../../shared/Enums";
 

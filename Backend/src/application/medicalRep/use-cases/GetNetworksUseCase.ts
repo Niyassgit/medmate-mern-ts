@@ -29,7 +29,7 @@ export class GetNetworksUseCase implements IGetNetworksUseCase {
     const rep = await this._medicalRepRepository.getMedicalRepByUserId(userId);
     if (!rep) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
     const { territories, departmentId } = rep;
-    let doctors = await this._doctorRepository.findByTerritoryAndDepartment(
+    const doctors = await this._doctorRepository.findByTerritoryAndDepartment(
       departmentId,
       territories
     );

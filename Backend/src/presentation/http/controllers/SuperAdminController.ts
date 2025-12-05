@@ -80,10 +80,12 @@ export class SuperAdminController {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
     const search = (req.query.search as string) || "";
+    const territory = (req.query.territory as string) || "";
     const doctors = await this._getAllDoctorsUseCase.execute(
       page,
       limit,
-      search
+      search,
+      territory
     );
     res
       .status(HttpStatusCode.OK)
@@ -94,7 +96,8 @@ export class SuperAdminController {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 8;
     const search = (req.query.search as string) || "";
-    const reps = await this._getAllRepsUseCase.execute(page, limit, search);
+    const territory = (req.query.territory as string) || "";
+    const reps = await this._getAllRepsUseCase.execute(page, limit, search, territory);
     res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: reps, page, limit });

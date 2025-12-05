@@ -1,6 +1,6 @@
 import { IDoctor } from "../../domain/doctor/entities/IDoctor";
 import { IDoctorListItem } from "../../domain/doctor/entities/IDoctorListItem";
-import { Doctor, User, Education, Certificate, Prisma } from "@prisma/client";
+import { Doctor, User, Education, Certificate, Prisma, Territory } from "@prisma/client";
 import { IDoctorListOnRep } from "../../domain/doctor/entities/IDoctorListOnRep";
 
 export class DoctorMapper {
@@ -53,7 +53,7 @@ export class DoctorMapper {
   }
 
 
-  static toListItem(doctor: Doctor & { user?: User | null }): IDoctorListItem {
+  static toListItem(doctor: Doctor & { user?: User | null , territory?:Territory | null }): IDoctorListItem {
     return {
       id: doctor.id,
       name: doctor.name,
@@ -63,6 +63,7 @@ export class DoctorMapper {
       createdAt: doctor.user?.createdAt ?? null,
       hospital: doctor.hospital,
       loginId: doctor.user?.id ?? null,
+      territoryName:doctor.territory?.name ?? null,
     };
   }
 

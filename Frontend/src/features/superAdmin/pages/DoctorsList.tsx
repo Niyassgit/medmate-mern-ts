@@ -1,22 +1,32 @@
 import useFetchList from "@/hooks/useFetchItem";
 import { getAllDoctors, blockUser, unblockUser } from "../api/superAdminApi";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { Doctor } from "../dto/Doctor";
 import { DoctorResponse } from "../dto/DoctorResponse";
 import { useNavigate } from "react-router-dom";
 import { AdminTable } from "../components/AdminTable";
-import ConfirmDialog from "@/components/shared/ConfirmDialog"; // ⬅️ added
+import ConfirmDialog from "@/components/shared/ConfirmDialog";
+import { getTerritories } from "@/features/shared/api/SharedApi";
+import { Button } from "@/components/ui/button";
+
+interface Territory {
+  id: string;
+  name: string;
+}
 
 const DoctorsList = () => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const limit = 8;
   const [search, setSearch] = useState("");
+  const [territory, setTerritory] = useState("");
+  const [territories, setTerritories] = useState<Territory[]>([]);
+  const [territoriesLoading, setTerritoriesLoading] = useState(false);
 
   const fetchFn = useCallback(
-    () => getAllDoctors(page, limit, search),
-    [page, limit, search]
+    () => getAllDoctors(page, limit, search, territory),
+    [page, limit, search, territory]
   );
   const { data, loading, error, setData } =
     useFetchList<DoctorResponse>(fetchFn);
@@ -25,6 +35,22 @@ const DoctorsList = () => {
 
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
+
+  // Fetch territories on component mount
+  useEffect(() => {
+    const fetchTerritories = async () => {
+      try {
+        setTerritoriesLoading(true);
+        const response = await getTerritories();
+        setTerritories(response.data.data || []);
+      } catch (err) {
+        toast.error("Failed to load territories");
+      } finally {
+        setTerritoriesLoading(false);
+      }
+    };
+    fetchTerritories();
+  }, []);
 
   const doctors = data?.doctors ?? [];
   const total = data?.total ?? 0;
@@ -63,7 +89,8 @@ const DoctorsList = () => {
       setBlockLoading(null);
     }
   };
-
+  
+  console.log("doctors list:",doctors)
   const handleConfirmBlockToggle = async () => {
     if (!selectedDoctor) return;
     await handleBlockToggle(selectedDoctor);
@@ -84,11 +111,7 @@ const DoctorsList = () => {
     { key: "email", label: "Email" },
     { key: "phone", label: "Phone" },
     { key: "hospital", label: "Hospital" },
-    {
-      key: "createdAt",
-      label: "Registration Date",
-      render: (d: Doctor) => new Date(d.createdAt).toLocaleDateString(),
-    },
+    {key:"territory",label:"Territory"},
     {
       key: "isBlocked",
       label: "Status",
@@ -105,6 +128,39 @@ const DoctorsList = () => {
       ),
     },
   ];
+
+  const territoryFilter = (
+    <div className="flex items-center gap-2">
+      <select
+        value={territory}
+        onChange={(e) => {
+          setTerritory(e.target.value);
+          setPage(1); // Reset to first page when filter changes
+        }}
+        disabled={territoriesLoading}
+        className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-700 min-w-[200px]"
+      >
+        <option value="">All Territories</option>
+        {territories.map((terr) => (
+          <option key={terr.id} value={terr.id}>
+            {terr.name}
+          </option>
+        ))}
+      </select>
+      {territory && (
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            setTerritory("");
+            setPage(1);
+          }}
+        >
+          Clear
+        </Button>
+      )}
+    </div>
+  );
 
   return (
     <>
@@ -127,6 +183,7 @@ const DoctorsList = () => {
         blockLoadingId={blockLoading}
         getId={(d) => d.id}
         isBlocked={(d) => d.isBlocked}
+        filters={territoryFilter}
       />
 
       <ConfirmDialog

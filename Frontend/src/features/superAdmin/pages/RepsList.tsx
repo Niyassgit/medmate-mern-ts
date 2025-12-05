@@ -1,22 +1,32 @@
 import useFetchList from "@/hooks/useFetchItem";
 import { getAllReps, blockUser, unblockUser } from "../api/superAdminApi";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { MedicalRep } from "../dto/MedicalRep";
 import { MedicalRepResponse } from "../dto/MedicalRepResponse";
 import { AdminTable } from "../components/AdminTable";
-import ConfirmDialog from "@/components/shared/ConfirmDialog";  
+import ConfirmDialog from "@/components/shared/ConfirmDialog";
+import { getTerritories } from "@/features/shared/api/SharedApi";
+import { Button } from "@/components/ui/button";  
+
+interface Territory {
+  id: string;
+  name: string;
+}
 
 const RepsList = () => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const limit = 8;
   const [search, setSearch] = useState("");
+  const [territory, setTerritory] = useState("");
+  const [territories, setTerritories] = useState<Territory[]>([]);
+  const [territoriesLoading, setTerritoriesLoading] = useState(false);
 
   const fetchFn = useCallback(
-    () => getAllReps(page, limit, search),
-    [page, limit, search]
+    () => getAllReps(page, limit, search, territory),
+    [page, limit, search, territory]
   );
 
   const { data, loading, error, setData } =
@@ -27,6 +37,22 @@ const RepsList = () => {
   // ⬇️ added confirm dialog states
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [selectedRep, setSelectedRep] = useState<MedicalRep | null>(null);
+
+  // Fetch territories on component mount
+  useEffect(() => {
+    const fetchTerritories = async () => {
+      try {
+        setTerritoriesLoading(true);
+        const response = await getTerritories();
+        setTerritories(response.data.data || []);
+      } catch (err) {
+        toast.error("Failed to load territories");
+      } finally {
+        setTerritoriesLoading(false);
+      }
+    };
+    fetchTerritories();
+  }, []);
 
   const reps = data?.reps ?? [];
   const total = data?.total ?? 0;
@@ -85,7 +111,26 @@ const RepsList = () => {
     { key: "name", label: "Name" },
     { key: "email", label: "Email" },
     { key: "phone", label: "Phone" },
-    { key: "employeeId", label: "Employee Id" },
+    {
+      key: "territoryNames",
+      label: "Territories",
+      render: (rep: MedicalRep) => (
+        <div className="flex flex-wrap gap-1">
+          {rep.territoryNames && rep.territoryNames.length > 0 ? (
+            rep.territoryNames.map((territory, index) => (
+              <span
+                key={index}
+                className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700"
+              >
+                {territory}
+              </span>
+            ))
+          ) : (
+            <span className="text-gray-400 text-xs">No territories</span>
+          )}
+        </div>
+      ),
+    },
     {
       key: "subscriptionStatus",
       label: "Subscription Status",
@@ -123,6 +168,39 @@ const RepsList = () => {
     },
   ];
 
+  const territoryFilter = (
+    <div className="flex items-center gap-2">
+      <select
+        value={territory}
+        onChange={(e) => {
+          setTerritory(e.target.value);
+          setPage(1); // Reset to first page when filter changes
+        }}
+        disabled={territoriesLoading}
+        className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-700 min-w-[200px]"
+      >
+        <option value="">All Territories</option>
+        {territories.map((terr) => (
+          <option key={terr.id} value={terr.id}>
+            {terr.name}
+          </option>
+        ))}
+      </select>
+      {territory && (
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            setTerritory("");
+            setPage(1);
+          }}
+        >
+          Clear
+        </Button>
+      )}
+    </div>
+  );
+
   return (
     <>
       <AdminTable<MedicalRep>
@@ -144,6 +222,7 @@ const RepsList = () => {
         blockLoadingId={blockLoading}
         getId={(rep) => rep.id}
         isBlocked={(rep) => !!rep.isBlocked}
+        filters={territoryFilter}
       />
 
       <ConfirmDialog

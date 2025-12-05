@@ -9,12 +9,14 @@ export class GetAllRepsUseCase implements IGetAllRepsUseCase {
   async execute(
     page: number,
     limit: number,
-    search: string
+    search: string,
+    territory?: string
   ): Promise<RepsListResponseDTO> {
     const { reps, total } = await this._medicalRepRepository.getAllMedicalReps(
       page,
       limit,
-      search
+      search,
+      territory
     );
     return {
       reps: reps.map((rep) => RepListMapper.toRepListDTO(rep)),

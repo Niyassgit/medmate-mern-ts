@@ -30,3 +30,4 @@ export class CommonController {
       .json({ success: true, data: response });
   };
 }
+  

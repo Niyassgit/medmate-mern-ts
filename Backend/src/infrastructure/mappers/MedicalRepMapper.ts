@@ -55,7 +55,10 @@ export class MedicalRepMapper {
     };
   }
   static toListMedicalRep(
-    rep: MedicalRep & { user: User | null }
+    rep: MedicalRep & { 
+      user: User | null;
+      territories?: { territory: { id: string; name: string } }[];
+    }
   ): IRepListItem {
     return {
       id: rep.id,
@@ -67,6 +70,7 @@ export class MedicalRepMapper {
       isBlocked: rep.user?.isBlocked ?? null,
       createdAt: rep.createdAt,
       loginId: rep.loginId,
+      territoryNames: rep.territories?.map((t) => t.territory.name) ?? [],
     };
   }
 

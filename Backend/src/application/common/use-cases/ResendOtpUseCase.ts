@@ -24,7 +24,6 @@ export class ResendOtpUseCase implements IResendOtpUseCase {
       OtpPurpose.SIGNUP
     );
     
-    console.log("resend otp sended to user:", otp);
     void this._notificationService.sendEmail(
       user.email,
       NotificationMessages.OTP_SUBJECT,

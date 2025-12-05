@@ -13,6 +13,7 @@ export class RepListMapper {
       subscriptionStatus: entity.subscriptionStatus,
       createdAt: entity.createdAt,
       loginId: entity.loginId,
+      territoryNames: entity.territoryNames,
     };
   }
 }

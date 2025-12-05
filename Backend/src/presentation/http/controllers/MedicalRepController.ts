@@ -380,8 +380,8 @@ export class MedicalRepController {
   createCheckoutSession = async (req: Request, res: Response) => {
     const { userId, planId } = req.body;
     const response = await this._createCheckoutSessionUseCase.execute(
-      userId,
-      planId
+      userId as string,
+      planId as string
     );
     return res
       .status(HttpStatusCode.OK)

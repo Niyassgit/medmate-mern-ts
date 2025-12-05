@@ -5,7 +5,7 @@ import { Prisma, SubscriptionHistory } from "@prisma/client";
 import { SubscriptionHistoryMapper } from "../mappers/SubscriptionHistoryMapper";
 import { prisma } from "../config/db";
 import { IRecentsubscription } from "../../domain/subscription/entities/IRecentSubscription";
-import { SubscribedListResponse, SubscribedListItem } from "../../application/superAdmin/dto/SubscribedListDTO";
+import { SubscribedListResponse} from "../../application/superAdmin/dto/SubscribedListDTO";
 
 export class SubscriptionHistoryRepository
   extends BaseRepository<
@@ -56,18 +56,19 @@ export class SubscriptionHistoryRepository
     startDate?: Date,
     endDate?: Date
   ): Promise<{ tierName: string; revenue: number }[]> {
-    const whereClause: any = {
+    const whereClause: Prisma.SubscriptionHistoryWhereInput = {
       status: "paid",
     };
 
     if (startDate || endDate) {
-      whereClause.createdAt = {};
+      const createdAtFilter: Prisma.DateTimeFilter = {};
       if (startDate) {
-        whereClause.createdAt.gte = startDate;
+        createdAtFilter.gte = startDate;
       }
       if (endDate) {
-        whereClause.createdAt.lte = endDate;
+        createdAtFilter.lte = endDate;
       }
+      whereClause.createdAt = createdAtFilter;
     }
 
     const subscriptions = await prisma.subscriptionHistory.findMany({

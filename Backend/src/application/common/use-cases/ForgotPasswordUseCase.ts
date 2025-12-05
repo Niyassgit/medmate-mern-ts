@@ -29,9 +29,8 @@ export class ForgotPasswordUseCase implements IForgotPasswordUseCase {
       user.id,
       OtpPurpose.RESET_PASSWORD
     );
-    console.log("otp sent for reset password:", otp);
- 
-      void this._notificationService
+
+       void this._notificationService
       .sendEmail(
         user.email,
         NotificationMessages.OTP_SUBJECT,

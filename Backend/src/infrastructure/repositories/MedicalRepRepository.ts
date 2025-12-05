@@ -87,23 +87,38 @@ export class MedicalRepRepository
   async getAllMedicalReps(
     page: number,
     limit: number,
-    search: string
+    search: string,
+    territory?: string
   ): Promise<{ reps: IRepListItem[]; total: number }> {
     const skip = (page - 1) * limit;
 
-    const where: Prisma.MedicalRepWhereInput = search
-      ? {
-          OR: [
-            { name: { contains: search, mode: "insensitive" } },
-            { user: { email: { contains: search, mode: "insensitive" } } },
-          ],
-        }
-      : {};
+    const where: Prisma.MedicalRepWhereInput = {};
+
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: "insensitive" } },
+        { user: { email: { contains: search, mode: "insensitive" } } },
+      ];
+    }
+    if (territory) {
+      where.territories = {
+        some: {
+          territoryId: territory,
+        },
+      };
+    }
 
     const [reps, total] = await Promise.all([
       prisma.medicalRep.findMany({
         where,
-        include: { user: true },
+        include: {
+          user: true,
+          territories: {
+            include: {
+              territory: true,
+            },
+          },
+        },
         orderBy: { user: { createdAt: "desc" } },
         skip,
         take: limit,
@@ -188,66 +203,85 @@ export class MedicalRepRepository
   }
 
   async countReps(startDate?: Date, endDate?: Date): Promise<number> {
-    const whereClause: any = {};
-    
+    const whereClause: Prisma.MedicalRepWhereInput = {};
+
     if (startDate || endDate) {
-      whereClause.user = {
-        createdAt: {}
-      };
+      const createdAtFilter: Prisma.DateTimeFilter = {};
       if (startDate) {
-        whereClause.user.createdAt.gte = startDate;
+        createdAtFilter.gte = startDate;
       }
       if (endDate) {
-        whereClause.user.createdAt.lte = endDate;
+        createdAtFilter.lte = endDate;
       }
+      whereClause.user = {
+        createdAt: createdAtFilter,
+      };
     }
 
     const count = await prisma.medicalRep.count({
-      where: whereClause
+      where: whereClause,
     });
-    
+
     return count;
   }
 
-  async getMonthlyRepGrowth(year: number): Promise<{ month: number; count: number }[]> {
-    const startDate = new Date(year, 0, 1); // January 1st
-    const endDate = new Date(year, 11, 31, 23, 59, 59); // December 31st
+  async getMonthlyRepGrowth(
+    year: number
+  ): Promise<{ month: number; count: number }[]> {
+    const startDate = new Date(year, 0, 1);
+    const endDate = new Date(year, 11, 31, 23, 59, 59);
 
     const reps = await prisma.medicalRep.findMany({
       where: {
         user: {
           createdAt: {
             gte: startDate,
-            lte: endDate
-          }
-        }
+            lte: endDate,
+          },
+        },
       },
       include: {
         user: {
           select: {
-            createdAt: true
-          }
-        }
-      }
+            createdAt: true,
+          },
+        },
+      },
     });
 
-    // Group by month (0-11)
     const monthlyCount: { [key: number]: number } = {};
-    
+
     reps.forEach((rep) => {
       const month = rep.user!.createdAt.getMonth();
       monthlyCount[month] = (monthlyCount[month] || 0) + 1;
     });
 
-    // Convert to array format with all 12 months
     const result: { month: number; count: number }[] = [];
     for (let month = 0; month < 12; month++) {
       result.push({
         month,
-        count: monthlyCount[month] || 0
+        count: monthlyCount[month] || 0,
       });
     }
 
     return result;
+  }
+
+  async findByIds(repIds: string[]): Promise<IMedicalRep[]> {
+    const reps=await prisma.medicalRep.findMany({
+      where:{
+        id:{in:repIds}
+      },
+      include:{
+        subscriptionPlan:true,
+        department:true,
+        territories:{
+          include:{
+            territory:true
+          }
+        }
+      }
+    });
+    return reps.map(rep=>MedicalRepMapper.toDomain(rep));
   }
 }

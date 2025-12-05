@@ -13,7 +13,8 @@ export interface IMedicalRepRepository {
   getAllMedicalReps(
     page: number,
     limit: number,
-    search: string
+    search: string,
+    territory?: string
   ): Promise<{ reps: IRepListItem[]; total: number }>;
   findMedicalRepIdByUserId(userId: string): Promise<string | null>;
   getMedicalRepByUserId(id: string): Promise<IMedicalRepWithUser | null>;
@@ -28,5 +29,5 @@ export interface IMedicalRepRepository {
   getUserIdByRepId(repId: string): Promise<{ repUserId: string | null }>;
   countReps(startDate?: Date, endDate?: Date): Promise<number>;
   getMonthlyRepGrowth(year: number): Promise<{ month: number; count: number }[]>;
-  getRepsByTerritory(): Promise<{ territoryId: string; territoryName: string; count: number }[]>;
+  findByIds(repIds:string[]):Promise<IMedicalRep[]>;
 }

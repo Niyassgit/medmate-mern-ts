@@ -49,23 +49,23 @@ export function initSocket(server: HttpServer) {
     void socket.on(
       "room:join:product",
       ({ productId }: { productId: string }) => {
-        socket.join(`product:${productId}`);
+       void socket.join(`product:${productId}`);
       }
     );
 
     void socket.on(
       "room:leave:product",
       ({ productId }: { productId: string }) => {
-        socket.leave(`product:${productId}`);
+      void  socket.leave(`product:${productId}`);
       }
     );
 
     void socket.on("join_conversation", (conversationId: string) => {
-      socket.join(`conversation:${conversationId}`);
+    void  socket.join(`conversation:${conversationId}`);
     });
 
     void socket.on("leave_conversation", (conversationId: string) => {
-      socket.leave(`conversation:${conversationId}`);
+    void  socket.leave(`conversation:${conversationId}`);
     });
   });
 
