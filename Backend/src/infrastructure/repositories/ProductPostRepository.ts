@@ -161,4 +161,12 @@ export class ProductPostRepository
     });
     return ProductPostMapper.toDomainList(posts);
   }
+
+  async countTotalPosts(): Promise<number> {
+    const result=await prisma.productPost.findMany({
+      select:{id:true},
+    });
+    return result.length;
+    
+  }
 }

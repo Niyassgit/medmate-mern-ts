@@ -7,5 +7,4 @@ export interface StatusSummaryDTO {
   expiringPlans: number;
   totalPosts: number;
   totalConnections: number;
-  totalMessages: number;
 }

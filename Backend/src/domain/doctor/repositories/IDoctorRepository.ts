@@ -23,4 +23,6 @@ export interface IDoctorRepository {
   ): Promise<IDoctorWithUser[]>;
   getUserIdByDoctorId(doctorId: string): Promise<{ doctorUserId: string | null}>;
   getDoctorsForGuest():Promise<IDoctorWithUser[]>;
+  countDoctors(startDate?: Date, endDate?: Date): Promise<number>;
+  getMonthlyDoctorGrowth(year: number): Promise<{ month: number; count: number }[]>;
 }

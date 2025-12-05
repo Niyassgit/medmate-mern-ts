@@ -101,4 +101,12 @@ export class UserRepository
     });
     return user ? UserMapper.toDomain(user) : null;
   }
+
+  async countPendingValidations(): Promise<number> {
+    const result=await prisma.user.findMany({
+      where:{isVerified:false},
+      select:{id:true}
+    });
+    return result.length;
+  }
 }

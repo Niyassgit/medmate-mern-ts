@@ -73,8 +73,24 @@ export class SuperAdminRoutes {
       "/subscription/delete/:subscriptionId",
       superAdminController.deleteSubscriptionPlan
     );
-    //  this.router.get("/stats/summary",superAdminController.)
+    this.router.get("/stats/summary", superAdminController.getStatsSummary);
+    this.router.get(
+      "/stats/user-distribution",
+      superAdminController.userDistribution
+    );
+    this.router.get("/stats/user-growth", superAdminController.userGrowth);
+    this.router.get(
+      "/stats/revenue-by-tier",
+      superAdminController.revenueByTier
+    );
+    this.router.get(
+      "/subscriptions/recent",
+      superAdminController.recentSubscriptions
+    );
+    this.router.get("/subscibed/list",superAdminController.subscribedList);
     this.router.get("/:id", superAdminController.getSuperAdminByEmail);
-   
   }
 }
+
+
+// `/admin/subscribed/list?page=${page}&limit=${limit}`

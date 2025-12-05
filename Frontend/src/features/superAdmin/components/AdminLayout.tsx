@@ -106,7 +106,7 @@ const AdminLayout = () => {
               </NavLink>
             </li>
 
-            <li>
+            {/* <li>
               <NavLink
                 to={"content-moderation"}
                 className={({ isActive }) => `
@@ -119,7 +119,7 @@ const AdminLayout = () => {
                 <FilePen className="w-5 h-5" />
                 <span>Content Moderation</span>
               </NavLink>
-            </li>
+            </li> */}
             <li>
               <NavLink
                 to={"subscription-management"}

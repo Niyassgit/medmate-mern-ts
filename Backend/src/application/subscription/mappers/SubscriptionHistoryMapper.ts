@@ -1,4 +1,6 @@
+import { IRecentsubscription } from "../../../domain/subscription/entities/IRecentSubscription";
 import { ISubscriptionHistory } from "../../../domain/subscription/entities/ISubscriptionHistory";
+import { SubscribedListResponse } from "../../superAdmin/dto/SubscribedListDTO";
 import { CreateSubHistoryDTO } from "../dto/CreateSubHistoryDTO";
 
 export class SubscriptionHistoryMapper {
@@ -17,5 +19,20 @@ export class SubscriptionHistoryMapper {
       status: dto.status,
     };
   }
-}
 
+  static toDomain(
+    subscriptions: IRecentsubscription[],
+    page: number,
+    total: number,
+    limit: number,
+    totalPages: number,
+  ):SubscribedListResponse{
+    return{
+      subscriptions:subscriptions,
+      page,
+      total,
+      limit,
+      totalPages
+    }
+  }
+}

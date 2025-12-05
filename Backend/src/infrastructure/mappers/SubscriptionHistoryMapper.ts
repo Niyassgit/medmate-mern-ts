@@ -1,9 +1,11 @@
 import { Prisma, SubscriptionHistory } from "@prisma/client";
 import { ISubscriptionHistory } from "../../domain/subscription/entities/ISubscriptionHistory";
+import { IRecentsubscription } from "../../domain/subscription/entities/IRecentSubscription";
+import { IRecentSubscriptionPrisma } from "../types/IRecentSubscriptionPrisma";
 
 export class SubscriptionHistoryMapper {
   static toPersistance(
-    data: Omit<ISubscriptionHistory,"id">
+    data: Omit<ISubscriptionHistory, "id">
   ): Prisma.SubscriptionHistoryCreateInput {
     return {
       amount: data.amount,
@@ -36,5 +38,17 @@ export class SubscriptionHistoryMapper {
       repId: data.repId,
     };
   }
-}
 
+  static recentSubToDomain(
+    data: IRecentSubscriptionPrisma
+  ): IRecentsubscription {
+    return {
+      userId: data.repId,
+      name: data.rep?.name ?? "Unknown",
+      tier: data.plan?.name ?? "Unknown",
+      amount: data.amount,
+      date: data.createdAt,
+      status: data.status,
+    };
+  }
+}

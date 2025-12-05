@@ -22,10 +22,13 @@ import {
 } from "../api/superAdminApi";
 import PlanCard from "../components/PlanCard";
 import ConfirmDialog from "@/components/shared/ConfirmDialog";
+import { ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 type Plan = SubscriptionPlan & { id: string };
 
 const SubscriptionManagement = () => {
+  const navigate=useNavigate();
   const [plans, setPlans] = useState<Plan[]>([]);
   const [editingPlan, setEditingPlan] = useState<Plan | null>(null);
   const [currentFeature, setCurrentFeature] = useState("");
@@ -181,6 +184,10 @@ const SubscriptionManagement = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="mx-auto max-w-4xl space-y-6 p-6">
         <h1 className="text-2xl font-bold">Subscription Plans</h1>
+        <Button className="bg-[#f17175] hover:bg-[#a81519] flex items-center gap-2" onClick={()=>navigate(`/admin/subscription-management/list`)}>
+          View All Subscribers
+          <ArrowRight className="w-4 h-4" />
+        </Button>
 
         <Card>
           <CardHeader>

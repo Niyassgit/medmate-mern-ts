@@ -25,6 +25,12 @@ import { IUpdateSubscriptionPlanUseCase } from "../../../application/subscriptio
 import { CreateSubscriptionDTO } from "../../../application/subscription/dto/CreateSubscriptionDTO";
 import { IListToggleSubscriptionPlanUseCase } from "../../../application/subscription/interfaces/IListToggleSubscriptionPlanUseCase";
 import { IDeleteSubscriptionUseCase } from "../../../application/subscription/interfaces/IDeleteSubscriptionUseCase";
+import { IGetAdminDashBoardSummaryUseCase } from "../../../application/superAdmin/interfaces/IGetAdminDashboardSummaryUseCase";
+import { IGetUserDistributionUseCase } from "../../../application/superAdmin/interfaces/IGetUserDistributionUseCase";
+import { IGetUserGrowthUseCase } from "../../../application/superAdmin/interfaces/IGetUserGrowthUseCase";
+import { IGetRevenueByTierUseCase } from "../../../application/superAdmin/interfaces/IGetRevenueByTierUseCase";
+import { IGetRecentSubscriptionsUseCase } from "../../../application/superAdmin/interfaces/IGetRecentSubscriptionsUseCase";
+import { IGetSubscribedListUseCase } from "../../../application/superAdmin/interfaces/IGetSubscribedListUseCase";
 
 export class SuperAdminController {
   constructor(
@@ -46,7 +52,13 @@ export class SuperAdminController {
     private _createSubscriptionPlanUseCase: ICreateSubscriptionPlanUseCase,
     private _updateSubscriptionPlanUseCase: IUpdateSubscriptionPlanUseCase,
     private _toggleSubscriptionStatusUseCase: IListToggleSubscriptionPlanUseCase,
-    private _deleteSubscriptionPlanUseCase: IDeleteSubscriptionUseCase
+    private _deleteSubscriptionPlanUseCase: IDeleteSubscriptionUseCase,
+    private _getAdminDashboardSummaryUseCase: IGetAdminDashBoardSummaryUseCase,
+    private _getUserDistributionUseCase: IGetUserDistributionUseCase,
+    private _getUserGrowthUseCase: IGetUserGrowthUseCase,
+    private _getRevenueByTierUseCase: IGetRevenueByTierUseCase,
+    private _getRecentSubscriptionsUseCase: IGetRecentSubscriptionsUseCase,
+    private _getSubscribedListUseCase: IGetSubscribedListUseCase
   ) {}
 
   createSuperAdmin = async (req: Request, res: Response) => {
@@ -250,16 +262,95 @@ export class SuperAdminController {
     const { subscriptionId } = req.params;
     const userId = GetOptionalUserId(req.user);
 
-    await this._deleteSubscriptionPlanUseCase.execute(subscriptionId, userId);
+    const response = await this._deleteSubscriptionPlanUseCase.execute(
+      subscriptionId,
+      userId
+    );
 
-    return res
-      .status(HttpStatusCode.OK)
-      .json({ success: true, message: "Subscription plan deleted successfully" });
+    return res.status(HttpStatusCode.OK).json({
+      success: true,
+      message: response,
+    });
   };
 
-  // getStatsSummary=async (req:Request,res:Response)=>{
-  //   const userId=GetOptionalUserId(req.user);
-  //   const response=await this.
-  // }
+  getStatsSummary = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { startDate, endDate } = req.query;
+    const response = await this._getAdminDashboardSummaryUseCase.execute(
+      userId,
+      startDate as string | undefined,
+      endDate as string | undefined
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
 
+  userDistribution = async (req: Request, res: Response) => {
+    const userId =GetOptionalUserId(req.user);
+    const { startDate, endDate } = req.query;
+    const response = await this._getUserDistributionUseCase.execute(
+      userId,
+      startDate as string | undefined,
+      endDate as string | undefined
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+  
+  userGrowth = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { year } = req.query;
+    const response = await this._getUserGrowthUseCase.execute(
+      userId,
+      year as string | undefined
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  revenueByTier = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { startDate, endDate } = req.query;
+    const response = await this._getRevenueByTierUseCase.execute(
+      userId,
+      startDate as string | undefined,
+      endDate as string | undefined
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  recentSubscriptions = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { limit } = req.query;
+    const parsedLimit = limit ? parseInt(limit as string) : 20;
+    const response = await this._getRecentSubscriptionsUseCase.execute(
+      userId,
+      parsedLimit
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  subscribedList = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { page, limit } = req.query;
+    const parsedLimit = limit ? parseInt(limit as string) : 10;
+    const parsedPage = page ? parseInt(page as string) : 1;
+    
+    const response = await this._getSubscribedListUseCase.execute(
+      userId,
+      parsedPage,
+      parsedLimit
+    );
+    
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
 }
