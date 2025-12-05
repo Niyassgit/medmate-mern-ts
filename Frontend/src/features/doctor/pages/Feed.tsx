@@ -246,20 +246,21 @@ const Feed = () => {
           </Button>
         </div>
       ) : (
-      <div className="max-w-4xl w-full mx-auto space-y-6">
-        {localFeed.map((post) => (
-          <FeedCard
-            key={post.id}
-            post={post}
-            hasLiked={post.liked}
-            hasInterested={post.interested}
-            onLike={() => handleLike(post.id)}
-            onInterest={() => handleInterest(post.id)}
-          />
-        ))}
-      </div>
-    )}
-  </div>
+        <div className="max-w-4xl w-full mx-auto space-y-6">
+          {localFeed.map((post) => (
+            <FeedCard
+              key={post.id}
+              post={post}
+              hasLiked={post.liked}
+              hasInterested={post.interested}
+              isSubscribedRep={post.rep.isSubscribedRep}
+              onLike={() => handleLike(post.id)}
+              onInterest={() => handleInterest(post.id)}
+            />
+          ))}
+        </div>
+      )}
+    </div>
   );
 };
 

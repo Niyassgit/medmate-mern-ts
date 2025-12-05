@@ -81,6 +81,9 @@ export class ProductPostRepository
             id: true,
             name: true,
             companyName: true,
+            subscriptionStatus: true,
+            subscriptionStart: true,
+            subscriptionEnd: true,
             user: {
               select: { profileImage: true },
             },
@@ -163,10 +166,9 @@ export class ProductPostRepository
   }
 
   async countTotalPosts(): Promise<number> {
-    const result=await prisma.productPost.findMany({
-      select:{id:true},
+    const count = await prisma.productPost.count({
+      where: { isArchived: false },
     });
-    return result.length;
-    
+    return count;
   }
 }

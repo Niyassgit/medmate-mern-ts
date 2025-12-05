@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Heart, Share2 } from "lucide-react";
+import { Badge, Heart, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -11,6 +11,7 @@ interface FeedCardProps {
   onInterest?: (postId: string) => void;
   hasLiked?: boolean;
   hasInterested?: boolean;
+  isSubscribedRep?: boolean;
 }
 
 const FeedCard = ({
@@ -19,10 +20,11 @@ const FeedCard = ({
   hasInterested,
   hasLiked,
   onInterest,
+  isSubscribedRep,
 }: FeedCardProps) => {
   const navigate = useNavigate();
   const { rep, title, image, likes, interests, useCases, createdAt } = post;
-  
+
   const initials = rep?.name
     ? rep.name
         .split(" ")
@@ -35,11 +37,17 @@ const FeedCard = ({
     navigate(`/doctor/feed/${post.id}`);
   };
 
+
   return (
     <Card
-      className="max-w-xl mx-auto overflow-hidden transition-all hover:shadow-lg bg-card border border-border rounded-2xl cursor-pointer"
+      className="relative max-w-xl mx-auto overflow-hidden transition-all hover:shadow-lg bg-card border border-border rounded-2xl cursor-pointer"
       onClick={handleCardClick}
     >
+      {isSubscribedRep && (
+        <Badge className="absolute top-2 right-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-semibold shadow-lg">
+          ⭐ Premium Rep
+        </Badge>
+      )}
 
       <div className="flex items-center gap-3 p-4">
         <Avatar className="h-10 w-10">
@@ -115,10 +123,7 @@ const FeedCard = ({
           </div>
         </div>
 
-        <div
-          className="flex gap-3 pt-3"
-          onClick={(e) => e.stopPropagation()}
-        >
+        <div className="flex gap-3 pt-3" onClick={(e) => e.stopPropagation()}>
           <Button
             variant={hasLiked ? "default" : "outline"}
             size="sm"

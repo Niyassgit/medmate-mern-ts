@@ -91,29 +91,38 @@ export class ProductPostMapper {
     };
   }
   static toFeedList(posts: ProductPostWithRelations[]): IProductPostForFeed[] {
-    return posts.map((p) => ({
-      id: p.id,
-      repId: p.repId,
-      title: p.title,
-      description: p.description,
-      imageUrl: p.imageUrl,
-      brand: p.brand,
-      useCases: p.useCases,
-      ingredients: p.ingredients,
-      termsOfUse: p.termsOfUse,
-      territoryId: p.territoryId,
-      createdAt: p.createdAt,
-      updatedAt: p.updatedAt,
-      rep: {
-        id: p.rep.id,
-        name: p.rep.name,
-        company: p.rep.companyName,
-        image:p.rep.user?.profileImage,
-      },
-      _count: {
-        likes: p._count.likes,
-        interests: p._count.interests,
-      },
-    }));
+    return posts.map((p) => {
+      // Check if subscription is active and not expired
+      const isSubscribedRep = 
+        p.rep.subscriptionStatus && 
+        p.rep.subscriptionEnd && 
+        new Date(p.rep.subscriptionEnd) > new Date();
+      
+      return {
+        id: p.id,
+        repId: p.repId,
+        title: p.title,
+        description: p.description,
+        imageUrl: p.imageUrl,
+        brand: p.brand,
+        useCases: p.useCases,
+        ingredients: p.ingredients,
+        termsOfUse: p.termsOfUse,
+        territoryId: p.territoryId,
+        createdAt: p.createdAt,
+        updatedAt: p.updatedAt,
+        rep: {
+          id: p.rep.id,
+          name: p.rep.name,
+          company: p.rep.companyName,
+          isSubscribedRep: isSubscribedRep,
+          image: p.rep.user?.profileImage,
+        },
+        _count: {
+          likes: p._count.likes,
+          interests: p._count.interests,
+        },
+      };
+    });
   }
 }
