@@ -6,7 +6,7 @@ export const ErrorMessages = {
   INVALID_CREDENTIALS: "Invalid email or password",
   UNAUTHORIZED: "Unauthorized access",
   FORBIDDEN: "Forbidden",
-  USER_NOT_HAVE_PROFILE:"User dont have profile",
+  USER_NOT_HAVE_PROFILE: "User dont have profile",
   SERVER_ERROR: "Internal server error",
   EMAIL_ALREADY_EXISTS: "Email already exists",
   PASSWORD_REQUIRED: "Password is required",
@@ -49,16 +49,17 @@ export const ErrorMessages = {
   CONNECTION_NOT_FOUND: "Connection not found!",
   NO_CONNECTION_REQUEST_FOUND: "No connection found!",
   NOTIFICATION_NOT_FOUND: "Notification not found",
-  NOTIFICATION_ISREAD:"Failed to update notification read status",
-  CONVERSATION_NOT_FOUND:"Conversation not found",
-  DEPARTMENT_EXIST:"Department with same name exist",
-  TERRITORY_EXIST:"Territory with same name exist",
-  SUB_CREATE_ERROR:"failed to add subscription!",
-  SUB_NOT_FOUND:"Subscription not found!", 
-  SUB_UPDATE_ERROR:"Subscription updation failed",
-  SUB_ATTEMPT_FAILED:"Failed to register subscription!",
-  NO_STRIPE_SIG_FOUND:"No Stripe signature found",
-  WEB_HOOK_SIG_VER_FAILED:"Webhook signature verification failed"
+  NOTIFICATION_ISREAD: "Failed to update notification read status",
+  CONVERSATION_NOT_FOUND: "Conversation not found",
+  DEPARTMENT_EXIST: "Department with same name exist",
+  TERRITORY_EXIST: "Territory with same name exist",
+  SUB_CREATE_ERROR: "failed to add subscription!",
+  SUB_NOT_FOUND: "Subscription not found!",
+  SUB_UPDATE_ERROR: "Subscription updation failed",
+  SUB_ATTEMPT_FAILED: "Failed to register subscription!",
+  NO_STRIPE_SIG_FOUND: "No Stripe signature found",
+  WEB_HOOK_SIG_VER_FAILED: "Webhook signature verification failed",
+  CONNECTION_LIMIT: "Daily connection limit reached. Upgrade your subscription for more connections.",
 } as const;
 
 export const SuccessMessages = {
@@ -88,9 +89,9 @@ export const SuccessMessages = {
   INTEREST_SUCCESS: "Interest showed succesfully",
   UNINTERESTED_SUCCESS: "Interest removed",
   CONNECTION_REJECT: "Connection request rejected",
-  SUB_PLAN_CREATE_SUCCESS:"Subscription plan created",
-  SUB_UPDATED:"Subscription status updated successfully",
-  SUB_DELETED:"Subscription plan deleted successfully",
+  SUB_PLAN_CREATE_SUCCESS: "Subscription plan created",
+  SUB_UPDATED: "Subscription status updated successfully",
+  SUB_DELETED: "Subscription plan deleted successfully",
 } as const;
 
 export const NotificationMessages = {

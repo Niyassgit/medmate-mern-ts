@@ -92,7 +92,7 @@ export class ProductPostMapper {
   }
   static toFeedList(posts: ProductPostWithRelations[]): IProductPostForFeed[] {
     return posts.map((p) => {
-      // Check if subscription is active and not expired
+
       const isSubscribedRep = 
         p.rep.subscriptionStatus && 
         p.rep.subscriptionEnd && 

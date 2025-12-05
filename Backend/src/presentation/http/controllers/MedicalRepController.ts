@@ -38,6 +38,7 @@ import { IGetSubscriptionHistoryUseCase } from "../../../application/subscriptio
 import { ICreateCheckoutSessionUseCase } from "../../../application/subscription/interfaces/ICreateCheckoutSessionUseCase";
 import { IGetCheckoutDetailsUseCase } from "../../../application/subscription/interfaces/IGetCheckoutDetailsUseCase";
 import { IGetSubscriptionStatusUseCase } from "../../../application/subscription/interfaces/IGetSubscriptionStatusUseCase";
+import { IGetConnectionRequestStatsUseCase } from "../../../application/connection/interfaces/IGetConnectionRequestStatsUseCase";
 
 export class MedicalRepController {
   constructor(
@@ -72,7 +73,8 @@ export class MedicalRepController {
     private _createCheckoutSessionUseCase: ICreateCheckoutSessionUseCase,
     private _getCheckoutDetailsUseCase: IGetCheckoutDetailsUseCase,
     private _getSubscriptionStatusUseCase: IGetSubscriptionStatusUseCase,
-    private _getSubscriptionHistoryUseCase: IGetSubscriptionHistoryUseCase
+    private _getSubscriptionHistoryUseCase: IGetSubscriptionHistoryUseCase,
+    private _getConnectionRequestStatsUseCase: IGetConnectionRequestStatsUseCase
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -232,6 +234,14 @@ export class MedicalRepController {
   analytics = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const response = await this._getRepAnalticsUseCase.execute(userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  connectionRequestStats = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._getConnectionRequestStatsUseCase.execute(userId);
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });

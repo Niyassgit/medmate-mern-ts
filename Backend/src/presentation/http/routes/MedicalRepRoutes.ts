@@ -85,6 +85,10 @@ export class MedicalRepRoutes {
     );
     this.router.get("/analytics/:userId", medicalRepController.analytics);
     this.router.get(
+      "/connection-request-stats",
+      medicalRepController.connectionRequestStats
+    );
+    this.router.get(
       "/doctor/details/:doctorId",
       medicalRepController.doctorDetails
     );

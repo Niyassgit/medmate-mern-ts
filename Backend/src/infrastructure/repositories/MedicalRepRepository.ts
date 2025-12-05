@@ -111,7 +111,7 @@ export class MedicalRepRepository
     const [reps, total] = await Promise.all([
       prisma.medicalRep.findMany({
         where,
-        include: {
+        include: { 
           user: true,
           territories: {
             include: {
@@ -204,7 +204,7 @@ export class MedicalRepRepository
 
   async countReps(startDate?: Date, endDate?: Date): Promise<number> {
     const whereClause: Prisma.MedicalRepWhereInput = {};
-
+    
     if (startDate || endDate) {
       const createdAtFilter: Prisma.DateTimeFilter = {};
       if (startDate) {
@@ -214,43 +214,41 @@ export class MedicalRepRepository
         createdAtFilter.lte = endDate;
       }
       whereClause.user = {
-        createdAt: createdAtFilter,
+        createdAt: createdAtFilter
       };
     }
 
     const count = await prisma.medicalRep.count({
-      where: whereClause,
+      where: whereClause
     });
-
+    
     return count;
   }
 
-  async getMonthlyRepGrowth(
-    year: number
-  ): Promise<{ month: number; count: number }[]> {
-    const startDate = new Date(year, 0, 1);
-    const endDate = new Date(year, 11, 31, 23, 59, 59);
+  async getMonthlyRepGrowth(year: number): Promise<{ month: number; count: number }[]> {
+    const startDate = new Date(year, 0, 1); 
+    const endDate = new Date(year, 11, 31, 23, 59, 59); 
 
     const reps = await prisma.medicalRep.findMany({
       where: {
         user: {
           createdAt: {
             gte: startDate,
-            lte: endDate,
-          },
-        },
+            lte: endDate
+          }
+        }
       },
       include: {
         user: {
           select: {
-            createdAt: true,
-          },
-        },
-      },
+            createdAt: true
+          }
+        }
+      }
     });
 
     const monthlyCount: { [key: number]: number } = {};
-
+    
     reps.forEach((rep) => {
       const month = rep.user!.createdAt.getMonth();
       monthlyCount[month] = (monthlyCount[month] || 0) + 1;
@@ -260,28 +258,10 @@ export class MedicalRepRepository
     for (let month = 0; month < 12; month++) {
       result.push({
         month,
-        count: monthlyCount[month] || 0,
+        count: monthlyCount[month] || 0
       });
     }
 
     return result;
-  }
-
-  async findByIds(repIds: string[]): Promise<IMedicalRep[]> {
-    const reps=await prisma.medicalRep.findMany({
-      where:{
-        id:{in:repIds}
-      },
-      include:{
-        subscriptionPlan:true,
-        department:true,
-        territories:{
-          include:{
-            territory:true
-          }
-        }
-      }
-    });
-    return reps.map(rep=>MedicalRepMapper.toDomain(rep));
   }
 }

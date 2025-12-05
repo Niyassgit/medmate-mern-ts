@@ -10,10 +10,11 @@ import {
 } from "@/components/ui/select";
 import PostCard from "../components/PostCard";
 import ProfileCard from "../components/ProfileCard";
+import { ConnectionLimitBadge } from "../components/ConnectionLimitBadge";
 import { Link } from "react-router-dom";
 
 import { useSelector } from "react-redux";
-import { getPostList, getProfileRep } from "../api";
+import { getPostList, getProfileRep, getConnectionRequestStats } from "../api";
 import useFetchList from "@/hooks/useFetchItem";
 import { useCallback, useEffect, useState } from "react";
 import { ProductListDTO } from "../dto/productListDto";
@@ -36,6 +37,15 @@ const RepDashboard = () => {
     return response.data;
   }, [id]);
 
+  const fetchConnectionStats = useCallback(async () => {
+    try {
+      return await getConnectionRequestStats();
+    } catch (error) {
+      console.error("Failed to fetch connection stats:", error);
+      return null;
+    }
+  }, []);
+
   const {
     data: fetchedPost,
     loading: postLoading,
@@ -50,6 +60,11 @@ const RepDashboard = () => {
     loading: profileLoading,
     error: profileError,
   } = useFetchList<MedicalRepDetailsDTO | null>(fetchProfile);
+
+  const {
+    data: connectionStats,
+    loading: statsLoading,
+  } = useFetchList<any>(fetchConnectionStats);
 
   const refreshSingnedUrls = async () => {
     try {
@@ -134,7 +149,17 @@ const RepDashboard = () => {
 
           {/* Sidebar */}
           <aside className="hidden lg:sticky lg:top-8 lg:self-start lg:block">
-            <ProfileCard rep={rep} />
+            <div className="space-y-4">
+              {/* Connection Limit Badge */}
+              {connectionStats && (
+                <ConnectionLimitBadge
+                  used={connectionStats.used || 0}
+                  limit={connectionStats.limit}
+                  isSubscribed={connectionStats.isSubscribed || false}
+                />
+              )}
+              <ProfileCard rep={rep} />
+            </div>
           </aside>
         </div>
       </main>

@@ -1,7 +1,8 @@
-import { NotFoundError } from "../../../domain/common/errors";
+import { NotFoundError,BadRequestError } from "../../../domain/common/errors";
 import { INotificationEventPublisher } from "../../../domain/common/services/INotificationEventPublisher";
 import { IStorageService } from "../../../domain/common/services/IStorageService";
 import { IConnectionRepository } from "../../../domain/connection/repositories/IConnectionRepository";
+import { IConnectionRequestLogRepository } from "../../../domain/connection/repositories/IConnectionRequestLogRepository";
 import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRepository";
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
 import { INotificationRepository } from "../../../domain/notification/repositories/INotificationService";
@@ -16,7 +17,6 @@ import {
   NotificationMessages,
   SuccessMessages,
 } from "../../../shared/Messages";
-import { BadRequestError } from "../../errors";
 import { ANotificationMapper } from "../../notification/mappers/ANotificationMapper";
 import { IRepMakeConnectionRequestUseCase } from "../interfaces/IMakeConnectionRequestUseCase";
 
@@ -29,12 +29,17 @@ export class RepMakeConnectionRequestUseCase
     private _connectionRepository: IConnectionRepository,
     private _notificationRepository: INotificationRepository,
     private _storageService: IStorageService,
-    private _notificationEventPublisher: INotificationEventPublisher
+    private _notificationEventPublisher: INotificationEventPublisher,
+    private _connectionRequestLogRepository: IConnectionRequestLogRepository
   ) {}
   async execute(doctorId: string, userId?: string): Promise<string> {
     if (!userId) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
     const { repId } = await this._medicalRepRepository.getRepIdByUserId(userId);
     if (!repId) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
+    const repDetails = await this._medicalRepRepository.getMedicalRepById(
+      repId
+    );
+
     const { doctorUserId } = await this._doctorRepository.getUserIdByDoctorId(
       doctorId
     );
@@ -44,6 +49,12 @@ export class RepMakeConnectionRequestUseCase
 
     if (existingConnection) {
       if (existingConnection.status === ConnectionStatus.PENDING) {
+        if (existingConnection.initiator === ConnectionInitiator.REP) {
+          await this._connectionRequestLogRepository.decrementRequestCount(
+            repId
+          );
+        }
+
         await this._connectionRepository.deleteByDoctorAndRep(doctorId, repId);
         const deletedNotificationId =
           await this._notificationRepository.deleteConnectionNotificationById(
@@ -71,6 +82,22 @@ export class RepMakeConnectionRequestUseCase
         return ErrorMessages.ALREADY_CONNECTED;
       }
     }
+
+    const DEFAULT_CONNECTION_LIMIT = 3;
+    const isSubscribed =
+      repDetails?.subscriptionStatus &&
+      repDetails.subscriptionEnd &&
+      new Date(repDetails.subscriptionEnd) > new Date();
+
+    if (!isSubscribed) {
+      const todayCount =
+        await this._connectionRequestLogRepository.getTodayRequestCount(repId);
+
+      if (todayCount >= DEFAULT_CONNECTION_LIMIT) {
+        throw new BadRequestError(ErrorMessages.CONNECTION_LIMIT);
+      }
+    }
+
     const requestRes = await this._connectionRepository.createConnection(
       doctorId,
       repId,
@@ -78,6 +105,11 @@ export class RepMakeConnectionRequestUseCase
     );
     if (!requestRes)
       throw new BadRequestError(ErrorMessages.CONNECTION_REQUEST);
+
+    if (!isSubscribed) {
+      await this._connectionRequestLogRepository.incrementRequestCount(repId);
+    }
+
     const notification = await this._notificationRepository.createNotification(
       userId,
       Role.MEDICAL_REP,

@@ -113,11 +113,6 @@ export class DoctorController {
   connectionRequest = async (req: Request, res: Response) => {
     const { repId } = req.params;
     const userId = GetOptionalUserId(req.user);
-    if (!userId) {
-      return res
-        .status(HttpStatusCode.UNAUTHORIZED)
-        .json({ success: false, message: "Unauthorized" });
-    }
     const response = await this._connectionRequestUseCase.execute(
       repId,
       userId

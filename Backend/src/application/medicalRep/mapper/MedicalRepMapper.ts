@@ -18,7 +18,7 @@ export class MedicalRepMapper {
       companyName: dto.companyName,
       employeeId: dto.employeeId,
       subscriptionStatus: false,
-      maxConnectionsPerDay: 10,
+      maxConnectionsPerDay: 3,
       companyLogoUrl: logoUrl,
       loginId,
       about: (dto as CompleteRepProfileDTO).about ?? null,
