@@ -10,9 +10,8 @@ export class ChatEventPublisher implements IChatEventPublisher {
     const room = `conversation:${conversationId}`;
     io.to(room).emit("new_message", message);
   }
-
   async updateChatAsSeen(conversationId: string): Promise<void> {
-    const room=`conversation:${conversationId}`;
-    io.to(room).emit("message_seen",conversationId);
+    const room = `conversation:${conversationId}`;
+    io.to(room).emit("message_seen", conversationId);
   }
 }

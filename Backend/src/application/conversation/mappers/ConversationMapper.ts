@@ -21,6 +21,8 @@ export class ConversationMapper {
       unread: entity.unread,
       doctorId: entity.doctorId,
       repId: entity.repId,
+      repUserId: entity.repUserId,
+      doctorUserId: entity.doctorUserId,
       lastMessageIsRead: entity.lastMessageIsRead,
       senderId: entity.senderId
     };

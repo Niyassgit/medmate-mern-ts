@@ -79,6 +79,8 @@ export class ConversationRepository
         unread: unreadMap.get(conv.id) ?? 0,
         doctorId: conv.doctorId,
         repId: conv.repId,
+        repUserId: conv.rep?.user?.id ?? null,
+        doctorUserId: conv.doctor?.user?.id ?? null,
         lastMessageIsRead: lastMessageIsRead,
         senderId: latest?.senderId ?? ""
       });

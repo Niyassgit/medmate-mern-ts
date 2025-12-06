@@ -16,6 +16,7 @@ import { Conversation } from "../Dto/Conversation";
 import { Role } from "@/types/Role";
 import { getSocket } from "@/lib/socket";
 import { ChatResponseDTO } from "../Dto/ChatResponseDTO";
+import TypingIndicator from "./TypingIndicator";
 
 interface ChatViewProps {
   conversation: Conversation | null;
@@ -24,12 +25,33 @@ interface ChatViewProps {
 
 export const ChatView = ({ conversation, owner }: ChatViewProps) => {
   const [localMessages, setLocalMessages] = useState<MessageDTO[]>([]);
+  const [isOtherUserTyping, setIsOtherUserTyping] = useState(false);
   const hasMarkedAsReadRef = useRef(false);
   const isMarkingAsReadRef = useRef(false);
 
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = useCallback((smooth: boolean = true) => {
+    if (scrollContainerRef.current) {
+      const container = scrollContainerRef.current;
+      container.scrollTo({
+        top: container.scrollHeight,
+        behavior: smooth ? "smooth" : "auto",
+      });
+    }
+  }, []);
+
+  const isNearBottom = useCallback(() => {
+    if (!scrollContainerRef.current) return true;
+    const container = scrollContainerRef.current;
+    const threshold = 100;
+    return (
+      container.scrollHeight - container.scrollTop - container.clientHeight <
+      threshold
+    );
+  }, []);
 
   const fetchMessages = useCallback(() => {
     if (!conversation)
@@ -65,6 +87,7 @@ export const ChatView = ({ conversation, owner }: ChatViewProps) => {
 
   const handleMessageSent = (newMessage: MessageDTO) => {
     setLocalMessages((prev) => [...prev, newMessage]);
+    setTimeout(() => scrollToBottom(true), 100);
   };
 
   const loadMoreMessages = useCallback(async () => {
@@ -83,7 +106,6 @@ export const ChatView = ({ conversation, owner }: ChatViewProps) => {
       const reversedMessages = [...res.messages].reverse();
       setLocalMessages((prev) => [...reversedMessages, ...prev]);
       setNextCursor(res.nextCursor);
-
 
       setTimeout(() => {
         if (div) {
@@ -120,12 +142,23 @@ export const ChatView = ({ conversation, owner }: ChatViewProps) => {
     if (!token) return;
 
     const socket = getSocket(token);
-    socket.emit("join_conversation", conversation.id);
+    const joinConversation = () => {
+      socket.emit("join_conversation", conversation.id);
+    };
+
+    if (socket.connected) {
+      joinConversation();
+    } else {
+      socket.once("connect", joinConversation);
+    }
 
     const handleIncoming = (newMessage: MessageDTO) => {
       if (newMessage.senderRole !== owner) {
+        const shouldAutoScroll = isNearBottom();
         setLocalMessages((prev) => [...prev, newMessage]);
-
+        if (shouldAutoScroll) {
+          setTimeout(() => scrollToBottom(true), 100);
+        }
         if (!isMarkingAsReadRef.current) {
           isMarkingAsReadRef.current = true;
           if (owner === Role.MEDICAL_REP) {
@@ -149,15 +182,64 @@ export const ChatView = ({ conversation, owner }: ChatViewProps) => {
       );
     };
 
+    const handleUserTyping = ({
+      userId,
+      conversationId: eventConvId,
+    }: {
+      userId: string;
+      conversationId: string;
+    }) => {
+      const otherUserId =
+        owner === Role.DOCTOR ? conversation.repUserId : conversation.doctorUserId;
+
+      if (eventConvId !== conversation.id) {
+        return;
+      }
+      
+      if (!otherUserId) {
+        return;
+      }
+      
+      const normalizedReceivedId = String(userId).trim();
+      const normalizedOtherId = String(otherUserId).trim();
+      
+      if (normalizedReceivedId === normalizedOtherId) {
+        setIsOtherUserTyping(true);
+      }
+    };
+    const handleUserStoppedTyping = ({
+      userId,
+      conversationId: eventConvId,
+    }: {
+      userId: string;
+      conversationId: string;
+    }) => {
+      const otherUserId =
+        owner === Role.DOCTOR ? conversation.repUserId : conversation.doctorUserId;
+      
+      if (eventConvId !== conversation.id || !otherUserId) {
+        return;
+      }
+
+      if (userId === otherUserId) {
+        setIsOtherUserTyping(false);
+      }
+    };
+
     socket.on("new_message", handleIncoming);
     socket.on("message_seen", handleSeen);
+    socket.on("user:typing", handleUserTyping);
+    socket.on("user:stopped_typing", handleUserStoppedTyping);
 
     return () => {
       socket.off("new_message", handleIncoming);
       socket.off("message_seen", handleSeen);
+      socket.off("user:typing", handleUserTyping);
+      socket.off("user:stopped_typing", handleUserStoppedTyping);
       socket.emit("leave_conversation", conversation.id);
+      setIsOtherUserTyping(false);
     };
-  }, [conversation?.id, owner]);
+  }, [conversation?.id, owner, conversation?.repUserId, conversation?.doctorUserId]);
 
   useEffect(() => {
     if (!conversation || !localMessages.length) return;
@@ -263,6 +345,7 @@ export const ChatView = ({ conversation, owner }: ChatViewProps) => {
             isRead={message.isRead}
           />
         ))}
+        {isOtherUserTyping && <TypingIndicator name={conversation.name} />}
       </div>
 
       {/* Input */}

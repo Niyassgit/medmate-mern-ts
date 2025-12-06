@@ -49,24 +49,54 @@ export function initSocket(server: HttpServer) {
     void socket.on(
       "room:join:product",
       ({ productId }: { productId: string }) => {
-       void socket.join(`product:${productId}`);
+        void socket.join(`product:${productId}`);
       }
     );
 
     void socket.on(
       "room:leave:product",
       ({ productId }: { productId: string }) => {
-      void  socket.leave(`product:${productId}`);
+        void socket.leave(`product:${productId}`);
       }
     );
 
     void socket.on("join_conversation", (conversationId: string) => {
-    void  socket.join(`conversation:${conversationId}`);
+      void socket.join(`conversation:${conversationId}`);
     });
 
     void socket.on("leave_conversation", (conversationId: string) => {
-    void  socket.leave(`conversation:${conversationId}`);
+      void socket.leave(`conversation:${conversationId}`);
     });
+
+    void socket.on(
+      "typing:start",
+      ({
+        conversationId,
+        userId,
+      }: {
+        conversationId: string;
+        userId: string;
+      }) => {
+        void io
+          .to(`conversation:${conversationId}`)
+          .emit("user:typing", { userId, conversationId });
+      }
+    );
+
+    void socket.on(
+      "typing:stop",
+      ({
+        conversationId,
+        userId,
+      }: {
+        conversationId: string;
+        userId: string;
+      }) => {
+        void io
+          .to(`conversation:${conversationId}`)
+          .emit("user:stopped_typing", { userId, conversationId });
+      }
+    );
   });
 
   return io;

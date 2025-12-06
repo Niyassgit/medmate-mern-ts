@@ -7,6 +7,8 @@ export interface ConversationDTO {
   unread: number;
   repId: string;
   doctorId: string;
+  repUserId: string | null;
+  doctorUserId: string | null;
   lastMessageIsRead: boolean;
   senderId:string | null;
 }

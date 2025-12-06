@@ -8,6 +8,9 @@ import { useSelector } from "react-redux";
 import { getSocket } from "@/lib/socket";
 import { MessageDTO } from "../Dto/MessageDTO";
 import { Role } from "@/types/Role";
+import { repConversations } from "@/features/rep/api";
+import { Conversation } from "../Dto/Conversation";
+import toast from "react-hot-toast";
 
 const DoctorNavbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -61,6 +64,25 @@ const DoctorNavbar = () => {
   useEffect(() => {
     if (!token || !userId) return;
     const socket = getSocket(token);
+
+    const joinAllConversations=async()=>{
+      try {
+        const res=await doctorConversations();
+        const conversations=res.data || [];
+
+        conversations.forEach((conv:Conversation)=>{
+          socket.emit("join_conversation",conv.id);
+        });
+      } catch (error) {
+        console.error("Failed to join conversations", error);
+      }
+    };
+
+    if(socket.connected){
+      joinAllConversations();
+    }else{
+      socket.once("connect",joinAllConversations);
+    }
 
     const handleNewMessage = (message: MessageDTO) => {
       if (message.senderRole !== Role.DOCTOR) {

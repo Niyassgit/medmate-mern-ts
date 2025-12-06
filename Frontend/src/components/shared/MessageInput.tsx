@@ -1,12 +1,14 @@
-import { Smile, Paperclip, Send, Mic } from "lucide-react";
+import { Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MessageDTO } from "../Dto/MessageDTO";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createMessageForDoctor } from "@/features/doctor/api";
 import { MessageType } from "@/types/MessageTypes";
 import { createMessageForRep } from "@/features/rep/api";
 import { Role } from "@/types/Role";
+import { useSelector } from "react-redux";
+import { getSocket } from "@/lib/socket";
 
 interface MessageInputProps {
   conversationId: string;
@@ -22,10 +24,18 @@ export const MessageInput = ({
   onMessageSent,
 }: MessageInputProps) => {
   const [text, setText] = useState("");
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const isTypingRef = useRef(false);
+  const userId = useSelector((state: any) => state.auth.user?.id);
 
   const handleSend = async () => {
     if (!text.trim()) return;
 
+    emitTypingStop();
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+      typingTimeoutRef.current = null;
+    }
     const payload = {
       conversationId,
       content: text,
@@ -43,13 +53,69 @@ export const MessageInput = ({
     setText("");
   };
 
+  const emitTypingStart = () => {
+    const token = localStorage.getItem("accessToken");
+    if (!token || !userId || !conversationId) {
+      return;
+    }
+
+    const socket = getSocket(token);
+    if (!socket.connected) {
+      return;
+    }
+    socket.emit("typing:start", { conversationId, userId });
+    isTypingRef.current = true;
+  };
+
+  const emitTypingStop = () => {
+    const token = localStorage.getItem("accessToken");
+    if (!token || !userId || !conversationId) {
+      return;
+    }
+
+    const socket = getSocket(token);
+    if (!socket.connected) {
+      return;
+    }
+    socket.emit("typing:stop", { conversationId, userId });
+    isTypingRef.current = false;
+  };
+
+  const handleTextChange = (value: string) => {
+    setText(value);
+    if (value && !isTypingRef.current) {
+      emitTypingStart();
+    }
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+
+    if (value) {
+      typingTimeoutRef.current = setTimeout(() => {
+        emitTypingStop();
+      }, 2000);
+    } else {
+      emitTypingStop();
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+      if (isTypingRef.current) {
+        emitTypingStop();
+      }
+    };
+  }, [conversationId]);
   return (
     <div className="px-6 py-4 border-t border-border bg-background">
       <div className="flex items-center gap-2">
         <Input
           placeholder="Type your message..."
           value={text}
-          onChange={(e) => setText(e.target.value)}
+          onChange={(e) => handleTextChange(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSend()}
           className="flex-1 bg-background border-border"
         />
