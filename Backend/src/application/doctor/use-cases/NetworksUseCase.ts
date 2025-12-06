@@ -23,21 +23,26 @@ export class NetworksUseCase implements INetworkUseCase {
   ) {}
   async execute(
     userId: string,
-    search?: string
+    search?: string,
+    filters?: {
+      company?: string;
+      territories?: string[];
+    }
   ): Promise<NetworkResponseDTO[] | null> {
     const user = await this._userRepository.findById(userId);
     if (!user) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
     if (user.role !== Role.DOCTOR)
       throw new UnautharizedError(ErrorMessages.DOCTOR_ACCESS);
     const doctor = await this._doctorRepository.getDoctorByUserId(userId);
-    if (!doctor) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
-    const { territoryId, departmentId } = doctor;
-    const reps = await this._medicalRepRepository.findByTerritoryAndDepartment(
-      territoryId,
+    if (!doctor || !doctor.departmentId) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
+    const { departmentId } = doctor;
+    
+ 
+    const reps = await this._medicalRepRepository.findByDepartment(
       departmentId
     );
     if (!reps) return null;
-    const filteredRep = MedicalRepFilterService.apply(reps, search);
+    const filteredRep = MedicalRepFilterService.apply(reps, search, filters);
     const connections =
       await this._connectionRepository.findConnectionsForDoctor(doctor.id);
     const evaluatedReps = RepNetworkEvaluator.evaluate(
@@ -45,9 +50,15 @@ export class NetworksUseCase implements INetworkUseCase {
       connections
     );
 
-    return evaluatedReps.length
+    const sortedReps = evaluatedReps.sort((a, b) => {
+      const aSubscribed = a.subscriptionStatus === true ? 1 : 0;
+      const bSubscribed = b.subscriptionStatus === true ? 1 : 0;
+      return bSubscribed - aSubscribed;
+    });
+
+    return sortedReps.length
       ? Promise.all(
-          evaluatedReps.map((rep) =>
+          sortedReps.map((rep) =>
             NetworkMapper.toResponse(
               rep,
               this._storageService,

@@ -5,6 +5,7 @@ export interface IDoctorListItem {
   phone: string;
   isBlocked: boolean | null;
   hospital: string;
+  territoryName:string | null;
   createdAt: Date | null;
   loginId: string | null;
 }

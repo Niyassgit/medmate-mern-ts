@@ -14,7 +14,7 @@ export const MedicalRepProfileUpdateSchema = z.object({
   companyName: z.string().optional(),
   employeeId: z.string().optional(),
   about: z.string().optional(),
-  companyLogoUrl: z.any(),
+  companyLogoUrl: z.string().optional(),
   departmentId: z.string().min(1, "Department is required"),
   territories: z
     .array(z.string().min(1))

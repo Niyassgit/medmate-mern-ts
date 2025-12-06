@@ -1,6 +1,6 @@
 import { INotificationRepository } from "../../../domain/notification/repositories/INotificationService";
 import { INotificationEventPublisher } from "../../../domain/common/services/INotificationEventPublisher";
-import { ErrorMessages, SuccessMessages } from "../../../shared/Messages";
+import { ErrorMessages} from "../../../shared/Messages";
 import { BadRequestError, UnautharizedError } from "../../errors";
 import { IMakeAllAsReadNotificationUseCase } from "../interfaces/IMarkAllAsReadNotificartionUseCase";
 

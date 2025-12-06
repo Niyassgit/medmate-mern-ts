@@ -8,4 +8,5 @@ export interface MedicalRep {
   employeeId: string;
   createdAt: Date;
   loginId: string;
+  territoryNames: string[];
 }

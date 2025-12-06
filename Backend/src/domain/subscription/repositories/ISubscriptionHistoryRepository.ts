@@ -1,6 +1,5 @@
 import { IRecentsubscription } from "../entities/IRecentSubscription";
 import { ISubscriptionHistory } from "../entities/ISubscriptionHistory";
-import { SubscribedListResponse } from "../../../application/superAdmin/dto/SubscribedListDTO";
 
 export interface ISubscriptionHistoryRepository {
   createHistory(

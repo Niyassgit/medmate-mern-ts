@@ -47,16 +47,13 @@ export class CreateMedicalRepUseCase implements ICreateMedicalRepUseCase {
       data,
       user.id,
       logoUrl
-    );
-    console.log("data before send to repository:",medicalRepEntity);
-    
+    );    
     await this._medicalRepRepository.createMedicalRep(medicalRepEntity);
 
     const { otp, record } = await this._otpService.generateOtp(
       user.id,
       OtpPurpose.SIGNUP
     );
-    console.log("otp sended from rep register:", otp);
     void this._notificationService.sendEmail(
       data.email,
       NotificationMessages.OTP_SUBJECT,

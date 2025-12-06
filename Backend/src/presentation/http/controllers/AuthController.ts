@@ -156,6 +156,7 @@ export class AuthController {
   forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email } = req.body as ForgotPasswordBody;
+      console.log("email:",email);
       const response = await this._forgotPasswordUseCase.execute(email);
       res.status(HttpStatusCode.OK).json({ success: true, ...response });
     } catch (error) {

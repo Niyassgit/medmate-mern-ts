@@ -10,19 +10,21 @@ import {
 export const getAllDoctors = async (
   page: number = 1,
   limit: number = 10,
-  search: string = ""
+  search: string = "",
+  territory: string = ""
 ) => {
   const response = await api.get(
-    AdminEndpoints.GET_DOCTORS(page, limit, search)
+    AdminEndpoints.GET_DOCTORS(page, limit, search, territory)
   );
   return response.data.data;
 };
 export const getAllReps = async (
   page: number = 1,
   limit: number = 10,
-  search: string = ""
+  search: string = "",
+  territory: string = ""
 ) => {
-  const response = await api.get(AdminEndpoints.GET_REPS(page, limit, search));
+  const response = await api.get(AdminEndpoints.GET_REPS(page, limit, search, territory));
   return response.data.data;
 };
 export const blockUser = async (userId: string) => {

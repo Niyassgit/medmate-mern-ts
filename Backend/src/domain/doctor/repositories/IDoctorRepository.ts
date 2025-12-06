@@ -13,7 +13,8 @@ export interface IDoctorRepository {
   getAllDoctors(
     page: number,
     limit: number,
-    search: string
+    search: string,
+    territory?: string
   ): Promise<{ doctors: IDoctorListItem[]; total: number }>;
   getDoctorByUserId(id: string): Promise<IDoctorWithUser | null>;
   updateDoctor(userId: string, data: Partial<IDoctor>): Promise<IDoctor | null>;

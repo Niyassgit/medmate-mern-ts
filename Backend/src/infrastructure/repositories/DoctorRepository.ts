@@ -48,22 +48,28 @@ export class DoctorRepository
   async getAllDoctors(
     page: number,
     limit: number,
-    search: string
+    search: string,
+    territory?: string
   ): Promise<{ doctors: IDoctorListItem[]; total: number }> {
     const skip = (page - 1) * limit;
 
-    const where: Prisma.DoctorWhereInput = search
-      ? {
-          OR: [
-            { name: { contains: search, mode: "insensitive" } },
-            { user: { email: { contains: search, mode: "insensitive" } } },
-          ],
-        }
-      : {};
+    const where: Prisma.DoctorWhereInput = {};
+
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: "insensitive" } },
+        { user: { email: { contains: search, mode: "insensitive" } } },
+      ];
+    }
+
+    if (territory) {
+      where.territoryId = territory;
+    }
+
     const [doctors, total] = await Promise.all([
       prisma.doctor.findMany({
         where,
-        include: { user: true },
+        include: { user: true, territory: true },
         orderBy: { user: { createdAt: "desc" } },
         skip,
         take: limit,
@@ -179,18 +185,19 @@ export class DoctorRepository
   }
 
   async countDoctors(startDate?: Date, endDate?: Date): Promise<number> {
-    const whereClause: any = {};
+    const whereClause: Prisma.DoctorWhereInput = {};
 
     if (startDate || endDate) {
-      whereClause.user = {
-        createdAt: {},
-      };
+      const createdAtFilter: Prisma.DateTimeFilter = {};
       if (startDate) {
-        whereClause.user.createdAt.gte = startDate;
+        createdAtFilter.gte = startDate;
       }
       if (endDate) {
-        whereClause.user.createdAt.lte = endDate;
+        createdAtFilter.lte = endDate;
       }
+      whereClause.user = {
+        createdAt: createdAtFilter,
+      };
     }
 
     const count = await prisma.doctor.count({

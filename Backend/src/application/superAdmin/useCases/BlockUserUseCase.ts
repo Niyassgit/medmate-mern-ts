@@ -1,6 +1,5 @@
 import { IUser } from "../../../domain/common/entities/IUser";
 import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
-import { SuccessMessages } from "../../../shared/Messages";
 import { IBlockUserUseCase } from "../interfaces/IBlockUserUseCase";
 
 export class BlockUserUseCase implements IBlockUserUseCase {

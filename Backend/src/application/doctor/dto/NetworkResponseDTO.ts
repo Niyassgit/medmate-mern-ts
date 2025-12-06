@@ -4,6 +4,8 @@ export interface NetworkResponseDTO {
   profileImage?: string | null;
   about?: string | null;
   companyName: string;
+  territoryNames?: string[];
+  subscriptionStatus?: boolean;
   connectionStatus:string | null;
   connectionInitiator:string | null;
 }

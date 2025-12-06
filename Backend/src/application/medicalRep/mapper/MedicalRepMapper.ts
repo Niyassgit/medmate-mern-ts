@@ -18,7 +18,7 @@ export class MedicalRepMapper {
       companyName: dto.companyName,
       employeeId: dto.employeeId,
       subscriptionStatus: false,
-      maxConnectionsPerDay: 10,
+      maxConnectionsPerDay: 3,
       companyLogoUrl: logoUrl,
       loginId,
       about: (dto as CompleteRepProfileDTO).about ?? null,
@@ -68,7 +68,9 @@ export class MedicalRepMapper {
   }
   static async repDetailsOnDoctorDomain(
     rep: IMedicalRepWithUser,
-    storageService: IStorageService
+    storageService: IStorageService,
+    connectionStatus: string | null = null,
+    connectionInitiator: string | null = null
   ):Promise< MedicalRepDetailsOnDoctorDTO >{
     let signedUrl: string | null = null;
     if (rep.user?.profileImage) {
@@ -87,6 +89,8 @@ export class MedicalRepMapper {
       profileImage: signedUrl,
       certificates: rep.certificates,
       educations: rep.educations,
+      connectionStatus,
+      connectionInitiator,
     };
   }
 }

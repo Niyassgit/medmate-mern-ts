@@ -41,4 +41,5 @@ export const RepEndpoints = {
   CHECKOUT_SESSION:(sessionId:string)=>`/rep/subscription/checkout-session/${sessionId}`,
   SUBSCRIPTION_STATUS:`/rep/subscription/status`,
   SUBSCRIPTION_HISTORY:`/rep/subscription/history`,
+  CONNECTION_REQUEST_STATS:`/rep/connection-request-stats`,
 };

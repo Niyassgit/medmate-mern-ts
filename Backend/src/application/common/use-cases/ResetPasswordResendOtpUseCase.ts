@@ -24,7 +24,6 @@ export class ResetPasswordResendOtpUseCase implements IResetPasswordResendOtpUse
       OtpPurpose.RESET_PASSWORD
     );
     if (!otp) throw new BadRequestError(ErrorMessages.RETRY_LATER);
-    console.log("otp recreated :", otp);
 
     void this._notificationService.sendEmail(
       user.email,

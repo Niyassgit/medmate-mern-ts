@@ -13,7 +13,6 @@ import { NetworksUseCase } from "../../application/doctor/use-cases/NetworksUseC
 import { MedicalRepRepository } from "../repositories/MedicalRepRepository";
 import { DoctorConnectionRequestUseCase } from "../../application/connection/use-cases/DoctorConnectionRequestUseCase";
 import { ConnectionRepository } from "../repositories/ConnectionRepository";
-import { RepAcceptingConnectionRequest } from "../../application/connection/use-cases/RepAcceptConnectionRequestUseCase";
 import { DoctorAnalyticsUseCase } from "../../application/doctor/use-cases/DoctorAnalyticsUseCase";
 import { DepartmentRepository } from "../repositories/DepatmentRepository";
 import { GetFeedUseCase } from "../../application/doctor/use-cases/GetFeedUseCase";
@@ -119,7 +118,8 @@ const getFeedUseCase = new GetFeedUseCase(
   productPostRepository,
   likeRepository,
   interestRepository,
-  storageService
+  storageService,
+  medicalRepRepository
 );
 const postDetailsUseCase = new PostDetailsUseCase(
   doctorRepository,
@@ -131,7 +131,9 @@ const getRepDetailsOnDoctorUseCase = new GetRepDetailsOnDoctorUseCase(
   userRepository,
   medicalRepRepository,
   productPostRepository,
-  storageService
+  storageService,
+  connectionRepository,
+  doctorRepository
 );
 const toggleLikeOnPostUseCase = new ToggleLikeOnPostUseCase(
   doctorRepository,

@@ -12,7 +12,7 @@ export const registerMedicalRepSchema = z.object({
     .min(6, "Password must be atleast 6 characters")
     .optional(),
   companyName: z.string().min(1),
-  companyLogoUrl: z.any(),
+  companyLogoUrl: z.string().optional(),
   employeeId: z.string().min(1, "Employee Id required"),
   territories: z
     .array(z.string().min(1))

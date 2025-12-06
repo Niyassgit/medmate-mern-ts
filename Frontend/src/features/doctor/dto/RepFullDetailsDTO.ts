@@ -25,6 +25,8 @@ export interface MedicalRep {
   profileImage: string;
   certificates: Certificate[];
   educations: Education[];
+  connectionStatus: string | null;
+  connectionInitiator: string | null;
 }
 
 export interface Post {

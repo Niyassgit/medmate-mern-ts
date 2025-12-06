@@ -51,6 +51,8 @@ import { GetCheckoutDetailsUseCase } from "../../application/subscription/use-ca
 import { GetSubscriptionStatusUseCase } from "../../application/subscription/use-cases/GetSubscriptionStatusUseCase";
 import { GetSubscriptionHistoryUseCase } from "../../application/subscription/use-cases/GetSubscriptionHistoryUseCase";
 import { SubscriptionHistoryRepository } from "../repositories/SubscriptionHistoryRepository";
+import { ConnectionRequestLogRepository } from "../repositories/ConnectionRequestLogRepository";
+import { GetConnectionRequestStatsUseCase } from "../../application/connection/use-cases/GetConnectionRequestStatsUseCase";
 
 const medicalRepRepository = new MedicalRepRepository();
 const doctorRepository = new DoctorRepository();
@@ -74,6 +76,7 @@ const chatEventPublisher = new ChatEventPublisher();
 const subscriptionRepository = new SubscriptionRepository();
 const stripePaymentService = new StripePaymentService();
 const subscriptionHistoryRepository = new SubscriptionHistoryRepository();
+const connectionRequestLogRepository = new ConnectionRequestLogRepository();
 
 const createMedicalRepUseCase = new CreateMedicalRepUseCase(
   medicalRepRepository,
@@ -130,7 +133,8 @@ const makeConnectionRequestUseCase = new RepMakeConnectionRequestUseCase(
   connectionRepository,
   notificationRepository,
   storageService,
-  notificationEventPublisher
+  notificationEventPublisher,
+  connectionRequestLogRepository
 );
 const acceptConnectionRequestUseCase = new DoctorAcceptConnectionRequestUseCase(
   medicalRepRepository,
@@ -256,6 +260,11 @@ const getSubscriptionHistoryUseCase = new GetSubscriptionHistoryUseCase(
   subscriptionHistoryRepository
 );
 
+const getConnectionRequestStatsUseCase = new GetConnectionRequestStatsUseCase(
+  medicalRepRepository,
+  connectionRequestLogRepository
+);
+
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
   getRepProfileByIdUseCase,
@@ -288,5 +297,6 @@ export const medicalRepController = new MedicalRepController(
   createCheckoutSessionUseCase,
   getCheckoutDetailsUseCase,
   getSubscriptionStatusUseCase,
-  getSubscriptionHistoryUseCase
+  getSubscriptionHistoryUseCase,
+  getConnectionRequestStatsUseCase
 );

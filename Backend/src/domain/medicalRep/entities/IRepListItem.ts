@@ -8,4 +8,5 @@ export interface IRepListItem {
   employeeId: string | null;
   createdAt: Date | null;
   loginId: string | null;
+  territoryNames: string[];
 }

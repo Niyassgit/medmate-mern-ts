@@ -12,6 +12,7 @@ export class DoctorListMapper {
       hospital: entity.hospital,
       createdAt: entity.createdAt,
       loginId: entity.loginId,
+      territory:entity.territoryName,
     };
   }
 }

@@ -102,10 +102,17 @@ export class DoctorController {
 
   networks = async (req: Request, res: Response) => {
     const { userId } = req.params;
-    const { search } = req.query;
+    const { search, company, territories } = req.query;
+    
+    const filters = {
+      company: company ? String(company) : undefined,
+      territories: territories ? String(territories).split(',') : undefined,
+    };
+    
     const response = await this._networkUseCase.execute(
       userId,
-      search as string
+      search as string,
+      filters
     );
     res.status(HttpStatusCode.OK).json({ success: true, data: response });
   };
@@ -113,11 +120,6 @@ export class DoctorController {
   connectionRequest = async (req: Request, res: Response) => {
     const { repId } = req.params;
     const userId = GetOptionalUserId(req.user);
-    if (!userId) {
-      return res
-        .status(HttpStatusCode.UNAUTHORIZED)
-        .json({ success: false, message: "Unauthorized" });
-    }
     const response = await this._connectionRequestUseCase.execute(
       repId,
       userId

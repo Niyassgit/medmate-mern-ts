@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { getSocket } from "@/lib/socket";
 import { MessageDTO } from "../Dto/MessageDTO";
 import { Role } from "@/types/Role";
+import { Conversation } from "../Dto/Conversation";
 
 const RepNavbar = () => {
   const userId = useSelector((state: any) => state.auth.user?.id);
@@ -28,7 +29,11 @@ const RepNavbar = () => {
   const updateUnreadChatCount = useCallback(async () => {
     try {
       const res = await repConversations();
-      const totalUnread = res.data?.reduce((sum: number, conv: any) => sum + (conv.unread || 0), 0) || 0;
+      const totalUnread =
+        res.data?.reduce(
+          (sum: number, conv: any) => sum + (conv.unread || 0),
+          0
+        ) || 0;
       setUnreadChatCount(totalUnread);
     } catch (err) {
       console.error("Failed to fetch unread chat count", err);
@@ -54,6 +59,25 @@ const RepNavbar = () => {
   useEffect(() => {
     if (!token || !userId) return;
     const socket = getSocket(token);
+
+    const joinAllConversations = async () => {
+      try {
+        const res = await repConversations();
+        const conversations = res.data || [];
+
+        conversations.forEach((conv: Conversation) => {
+          socket.emit("join_conversation", conv.id);
+        });
+      } catch (error) {
+        console.error("Failed to join conversations", error);
+      }
+    };
+
+    if (socket.connected) {
+      joinAllConversations();
+    } else {
+      socket.once("connect", joinAllConversations);
+    }
 
     const handleNewMessage = (message: MessageDTO) => {
       if (message.senderRole !== Role.MEDICAL_REP) {
@@ -181,7 +205,9 @@ const RepNavbar = () => {
               {({ isActive }) => (
                 <div className="relative w-fit">
                   <Mail
-                    className={`${navLinkClass(isActive)} h-6 w-6 cursor-pointer`}
+                    className={`${navLinkClass(
+                      isActive
+                    )} h-6 w-6 cursor-pointer`}
                   />
                   {unreadChatCount > 0 && (
                     <span className="absolute -top-1 -right-2 bg-red-600 text-white text-[10px] font-bold rounded-full px-1.5 py-[1px]">

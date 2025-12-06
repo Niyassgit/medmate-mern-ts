@@ -4,6 +4,7 @@ export interface IGetAllDoctorsUseCase {
   execute(
     page: number,
     limit: number,
-    search: string
+    search: string,
+    territory?: string
   ): Promise<DoctorsListResponseDTO>;
 }

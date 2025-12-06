@@ -3,4 +3,5 @@ export interface RepInfo {
   name: string;
   company: string;
   ProfileImage: string;
+  isSubscribedRep: boolean;
 }

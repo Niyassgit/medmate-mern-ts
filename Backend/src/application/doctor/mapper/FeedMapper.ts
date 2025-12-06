@@ -31,7 +31,8 @@ export class FeedMapper {
             id:feed.rep.id,
             company:feed.rep.company,
             name:feed.rep.name,
-            ProfileImage:profileImage
+            ProfileImage:profileImage,
+            isSubscribedRep:feed.rep.isSubscribedRep,
           }
         };
       })

@@ -27,6 +27,7 @@ interface AdminTableProps<T> {
   blockLoadingId?: string | null;
   getId: (item: T) => string;
   isBlocked?: (item: T) => boolean;
+  filters?: React.ReactNode;
 }
 
 export function AdminTable<T extends object>({
@@ -46,20 +47,24 @@ export function AdminTable<T extends object>({
   blockLoadingId,
   getId,
   isBlocked,
+  filters,
 }: AdminTableProps<T>) {
   return (
     <div className="min-h-screen bg-gray-50 p-4">
       {/* Header Section */}
       <h1 className="font-bold text-2xl text-gray-700 mb-3">{title}</h1>
 
-      {/* Search */}
-      {onSearchChange && (
-        <div className="flex items-center gap-2 p-2">
-          <SearchInput
-            value={search ?? ""}
-            onChange={onSearchChange}
-            placeholder={`Search ${title.toLowerCase()}...`}
-          />
+      {/* Search and Filters */}
+      {(onSearchChange || filters) && (
+        <div className="flex items-center gap-2 p-2 flex-wrap">
+          {onSearchChange && (
+            <SearchInput
+              value={search ?? ""}
+              onChange={onSearchChange}
+              placeholder={`Search ${title.toLowerCase()}...`}
+            />
+          )}
+          {filters}
         </div>
       )}
 
