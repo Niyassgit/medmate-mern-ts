@@ -212,7 +212,12 @@ export class MedicalRepMapper {
     return persistence;
   }
 
-  static toListOnDoctor( persistence: MedicalRep & { user: User | null } ):IMedicalRepListOnDoc{
+  static toListOnDoctor( 
+    persistence: MedicalRep & { 
+      user: User | null;
+      department?: { name: string } | null;
+    } 
+  ):IMedicalRepListOnDoc{
     return{
       id:persistence.id,
       name:persistence.name,
@@ -220,6 +225,7 @@ export class MedicalRepMapper {
       departmentId:persistence.departmentId,
       phone:persistence.phone,
       image:persistence.user?.profileImage ??null,
+      departmentName: persistence.department?.name,
     }
   }
 }

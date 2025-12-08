@@ -34,7 +34,7 @@ export const completeProfile = async (
 };
 
 export const getNetworks = async (
-  id: string, 
+  id: string,
   search?: string,
   filters?: {
     company?: string;
@@ -42,13 +42,13 @@ export const getNetworks = async (
   }
 ) => {
   const params: any = {};
-  
+
   if (search) params.search = search;
   if (filters?.company) params.company = filters.company;
   if (filters?.territories && filters.territories.length > 0) {
-    params.territories = filters.territories.join(',');
+    params.territories = filters.territories.join(",");
   }
-  
+
   const resp = await api.get(DoctorEndpoints.NETWORKS(id), { params });
   return resp.data.data;
 };
@@ -179,4 +179,14 @@ export const createMessageForDoctor = async (body: {
 export const messageMarkAsReadForDoctor = async (conversationId: string) => {
   const res = await api.patch(DoctorEndpoints.MARK_AS_READ(conversationId));
   return res.data;
+};
+
+export const getAllReps = async () => {
+  const res = await api.get(DoctorEndpoints.REPS);
+  return res.data.data;
+};
+
+export const getRepProducts = async (repId: string) => {
+  const res = await api.get(DoctorEndpoints.REP_PRODUCTS(repId));
+  return res.data.data;
 };

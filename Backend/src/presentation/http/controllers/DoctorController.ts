@@ -29,6 +29,8 @@ import { IGetAllMessagesUseCase } from "../../../application/conversation/interf
 import { CreateMessageDTO } from "../../../application/conversation/dto/CreateMessageDTO";
 import { ICreateDoctorMessageUseCase } from "../../../application/conversation/interfaces/ICreateDoctorMessageUseCase";
 import { IDoctorMessageMarkAsReadUseCase } from "../../../application/conversation/interfaces/IDoctorMessageMarkAsReadUseCase";
+import { IGetRepsListForPracticeUseCase } from "../../../application/doctor/interfaces/IGetRepsListForPracticeUseCase";
+import { IGetRepProductsForDoctorUseCase } from "../../../application/doctor/interfaces/IGetRepProductsForDoctorUseCase";
 
 export class DoctorController {
   constructor(
@@ -56,7 +58,9 @@ export class DoctorController {
     private _getUserConversationsUseCase: IGetConversationsUseCase,
     private _getAllMessagesUseCase: IGetAllMessagesUseCase,
     private _createMessageUseCase: ICreateDoctorMessageUseCase,
-    private _DoctorMessageMarkAsRead: IDoctorMessageMarkAsReadUseCase
+    private _DoctorMessageMarkAsRead: IDoctorMessageMarkAsReadUseCase,
+    private _getRepsListForPracticeUseCase: IGetRepsListForPracticeUseCase,
+    private _getRepProductsForDoctorUseCase: IGetRepProductsForDoctorUseCase
   ) {}
 
   createDoctor = async (req: Request, res: Response) => {
@@ -318,5 +322,35 @@ export class DoctorController {
     const userId = GetOptionalUserId(req.user);
     await this._DoctorMessageMarkAsRead.execute(conversationId, userId);
     return res.sendStatus(HttpStatusCode.NO_CONTENT);
+  };
+
+  repsList = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    if (!userId) {
+      return res
+        .status(HttpStatusCode.UNAUTHORIZED)
+        .json({ success: false, message: "Unauthorized" });
+    }
+    const response = await this._getRepsListForPracticeUseCase.execute(userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  repProducts = async (req: Request, res: Response) => {
+    const { repId } = req.params;
+    const userId = GetOptionalUserId(req.user);
+    if (!userId) {
+      return res
+        .status(HttpStatusCode.UNAUTHORIZED)
+        .json({ success: false, message: "Unauthorized" });
+    }
+    const response = await this._getRepProductsForDoctorUseCase.execute(
+      repId,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
   };
 }

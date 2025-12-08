@@ -1,11 +1,13 @@
 import { IStorageService } from "../../../domain/common/services/IStorageService";
 import { IProduct } from "../../../domain/product/entities/IProduct";
 import { ProductDTO } from "../dto/ProdductDTO";
+import { ITerritoryRepository } from "../../../domain/territory/ITerritoryRepository";
 
 export class ProductMapper {
   static async toDomain(
     data: IProduct,
-    storageService: IStorageService
+    storageService: IStorageService,
+    territoryRepository?: ITerritoryRepository
   ): Promise<ProductDTO> {
     let signedUrls: string[] | null = null;
     if (data.imageUrl && data.imageUrl.length > 0) {
@@ -13,6 +15,19 @@ export class ProductMapper {
         data.imageUrl.map(storageService.generateSignedUrl)
       );
     }
+
+    // Fetch territory names if repository is provided
+    let territoryNames: string[] | undefined;
+    if (territoryRepository && data.territoryIds && data.territoryIds.length > 0) {
+      territoryNames = await Promise.all(
+        data.territoryIds.map(async (id) => {
+          const name = await territoryRepository.getTerritoryName(id);
+          return name || "";
+        })
+      );
+      territoryNames = territoryNames.filter((name) => name !== "");
+    }
+
     return {
       id: data.id,
       name: data.name,
@@ -22,6 +37,7 @@ export class ProductMapper {
       mrp: data.mrp,
       ptr: data.ptr,
       territoryIds: data.territoryIds || [],
+      territoryNames,
       useCase: data.useCase,
     };
   }

@@ -42,6 +42,10 @@ import { MessageRepository } from "../repositories/MessageRepository";
 import { CreateDoctorMessageUseCase } from "../../application/conversation/use-case/CreateDoctorMessageUseCase";
 import { ChatEventPublisher } from "../realtime/publishers/ChatEventPublisher";
 import { DoctoMessageMarkAsReadUseCase } from "../../application/conversation/use-case/DoctorMessageMarkAsReadUseCase";
+import { ProductRepository } from "../repositories/ProductRepository";
+import { GetRepsListForPracticeUseCase } from "../../application/doctor/use-cases/GetRepsListForPracticeUseCase";
+import { GetRepProductsForDoctorUseCase } from "../../application/doctor/use-cases/GetRepProductsForDoctorUseCase";
+import { TerritoryRepository } from "../repositories/TerritoryRepository";
 
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
@@ -223,6 +227,26 @@ const markMessageAsReadUseCase = new DoctoMessageMarkAsReadUseCase(
   conversationRepository,
   chatEventPublisher
 );
+
+const productRepository = new ProductRepository();
+const territoryRepository = new TerritoryRepository();
+
+const getRepsListForPracticeUseCase = new GetRepsListForPracticeUseCase(
+  userRepository,
+  doctorRepository,
+  connectionRepository,
+  storageService
+);
+
+const getRepProductsForDoctorUseCase = new GetRepProductsForDoctorUseCase(
+  userRepository,
+  doctorRepository,
+  connectionRepository,
+  productRepository,
+  storageService,
+  territoryRepository
+);
+
 export const doctorController = new DoctorController(
   createDoctorUseCase,
   getDoctorprofileById,
@@ -248,5 +272,7 @@ export const doctorController = new DoctorController(
   getUserConversationsUseCase,
   getAllMessagesUseCase,
   createMessageUseCase,
-  markMessageAsReadUseCase
+  markMessageAsReadUseCase,
+  getRepsListForPracticeUseCase,
+  getRepProductsForDoctorUseCase
 );

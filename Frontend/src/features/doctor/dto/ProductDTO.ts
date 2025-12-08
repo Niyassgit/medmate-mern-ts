@@ -10,3 +10,4 @@ export interface ProductDTO {
   territoryIds: string[];
   territoryNames?: string[];
 }
+

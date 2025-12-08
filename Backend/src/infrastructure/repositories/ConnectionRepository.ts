@@ -122,7 +122,10 @@ export class ConnectionRepository
       where: { doctorId, status: ConnectionStatus.ACCEPTED },
       select: {
         rep: {
-          include: { user: true },
+          include: { 
+            user: true,
+            department: true,
+          },
         },
       },
     });

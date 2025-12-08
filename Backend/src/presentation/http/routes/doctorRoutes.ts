@@ -95,5 +95,7 @@ export class DoctorRoutes {
       "/chat/message/read/:conversationId",
       doctorController.markMessageAsRead
     );
+    this.router.get("/practice/reps", doctorController.repsList);
+    this.router.get("/practice/reps/:repId/products", doctorController.repProducts);
   }
 }
