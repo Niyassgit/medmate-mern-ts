@@ -42,4 +42,21 @@ export class ProductMapper {
       useCase: dto.useCase,
     };
   }
+    static toEditEntity(
+    dto: ProductDTO,
+    repId: string
+  ): Omit<IProduct, "id" | "createdAt"> {
+    return {
+      name: dto.name,
+      brand: dto.brand,
+      imageUrl: dto.imageUrls || [],
+      ingredients: dto.ingredients,
+      mrp: dto.mrp,
+      ptr: dto.ptr,
+      repId: repId,
+      territoryIds: dto.territoryIds || [],
+      useCase: dto.useCase,
+      updatedAt:new Date(),
+    };
+  }
 }

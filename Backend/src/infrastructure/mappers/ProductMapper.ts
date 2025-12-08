@@ -18,6 +18,22 @@ export class ProductMapper {
     };
   }
 
+  static toUpdatePersistance(
+    data: Omit<IProduct, "id" | "createdAt">
+  ): Prisma.ProductUpdateInput {
+    return {
+      name: data.name,
+      brand: data.brand,
+      mrp: data.mrp,
+      ptr: data.ptr,
+      imageUrl: data.imageUrl,
+      territoryIds: data.territoryIds || [],
+      useCases: data.useCase,
+      ingredients: data.ingredients,
+      updatedAt: new Date(),
+    };
+  }
+
   static toDomain(data: Product): IProduct {
     return {
       id: data.id,

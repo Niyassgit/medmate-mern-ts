@@ -42,6 +42,7 @@ import { IGetConnectionRequestStatsUseCase } from "../../../application/connecti
 import { IGetAllProductsUseCase } from "../../../application/product/interfaces/IGetAllProductsUseCase";
 import { ICreateProductUseCase } from "../../../application/product/interfaces/ICreateProductUseCase";
 import { ProductDTO } from "../../../application/product/dto/ProdductDTO";
+import { IEditProductUseCase } from "../../../application/product/interfaces/IEditProductUseCase";
 
 export class MedicalRepController {
   constructor(
@@ -79,7 +80,8 @@ export class MedicalRepController {
     private _getSubscriptionHistoryUseCase: IGetSubscriptionHistoryUseCase,
     private _getConnectionRequestStatsUseCase: IGetConnectionRequestStatsUseCase,
     private _getAllProductsUseCase: IGetAllProductsUseCase,
-    private _createProductUseCase: ICreateProductUseCase
+    private _createProductUseCase: ICreateProductUseCase,
+    private _updateProductUseCase: IEditProductUseCase
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -453,6 +455,34 @@ export class MedicalRepController {
     );
     return res
       .status(HttpStatusCode.CREATED)
+      .json({ success: true, message: response });
+  };
+
+  updateProduct = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { productId } = req.params;
+    const dto = req.body as Omit<ProductDTO, "id">;
+    const existingImages =
+      (req.body as { existingImages?: string[] }).existingImages || [];
+
+    const newImageKeys: string[] = [];
+    if (req.files && Array.isArray(req.files)) {
+      newImageKeys.push(
+        ...req.files
+          .map((file: { key?: string }) => file.key)
+          .filter((key): key is string => !!key)
+      );
+    }
+    
+    dto.imageUrls = [...existingImages, ...newImageKeys];
+
+    const response = await this._updateProductUseCase.execute(
+      productId,
+      dto as ProductDTO,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
       .json({ success: true, message: response });
   };
 }

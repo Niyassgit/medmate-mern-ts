@@ -18,7 +18,7 @@ import SubscriptionCancel from "@/features/rep/components/SubscriptionCancel";
 import Order from "@/features/rep/pages/Order";
 import Product from "@/features/rep/pages/Product";
 import ProductAddForm from "@/features/rep/components/ProductAddForm";
-import EditProduct from "@/features/rep/components/EditProductPage";
+import EditProductPage from "@/features/rep/components/EditProductPage";
 export const RepRoutes={
 
     path:"/rep",
@@ -46,7 +46,7 @@ export const RepRoutes={
         {path:"business/orders",element:<Order />},
         {path:"business/products",element:<Product />},
         {path:"business/product/upload",element:<ProductAddForm />},
-        {path:"business/product/edit-product",element:<EditProduct />}
+        {path:"business/product/edit-product",element:<EditProductPage />}
 
     ]
 }

@@ -212,8 +212,8 @@ export const getProducts = async () => {
 };
 
 export const editProduct = async (productId: string, formData: FormData) => {
-  const res = await api.patch(RepEndpoints.EDIT_PRODUCT(productId), {
-    formData,
+  const res = await api.patch(RepEndpoints.EDIT_PRODUCT(productId), formData, {
+    headers: { "Content-Type": "multipart/form-data" },
   });
   return res.data.data;
 };

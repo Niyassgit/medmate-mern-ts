@@ -8,7 +8,7 @@ export const productValidateSchema = z.object({
   territoryIds: z.array(z.string()).optional(),
 //   useCase: z.array(z.string()).optional(),
   ingredients: z.array(z.string()).optional(),
-  imageUrls: z.array(z.string()).optional(),
+  imageUrls: z.array(z.string()).nullable().optional(),
 });
 
 export type ProductFormValues = z.infer<typeof productValidateSchema>;

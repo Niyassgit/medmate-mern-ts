@@ -9,7 +9,7 @@ export const productValidateSchema = z.object({
   useCase: z.array(z.string()).optional(),
   ingredients: z.array(z.string()).optional(),
   imageUrls: z.array(z.string()).optional(),
-});
+}).passthrough(); // Allow additional fields like existingImages
 
 export type ProductFormValues = z.infer<typeof productValidateSchema>;
 

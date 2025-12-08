@@ -56,6 +56,7 @@ import { GetConnectionRequestStatsUseCase } from "../../application/connection/u
 import { GetAllProductsUseCase } from "../../application/product/use-cases/GetAllProductsUseCase";
 import { CreateProductUseCase } from "../../application/product/use-cases/CreateProductUseCase";
 import { ProductRepository } from "../repositories/ProductRepository";
+import { EditProductUseCase } from "../../application/product/use-cases/EditProductUseCase";
 
 const medicalRepRepository = new MedicalRepRepository();
 const doctorRepository = new DoctorRepository();
@@ -280,6 +281,11 @@ const createProductUseCase = new CreateProductUseCase(
   productRepository
 );
 
+const editProductUseCase = new EditProductUseCase(
+  medicalRepRepository,
+  productRepository,
+  storageService
+);
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
   getRepProfileByIdUseCase,
@@ -315,5 +321,6 @@ export const medicalRepController = new MedicalRepController(
   getSubscriptionHistoryUseCase,
   getConnectionRequestStatsUseCase,
   getAllProductsUseCase,
-  createProductUseCase
+  createProductUseCase,
+  editProductUseCase
 );

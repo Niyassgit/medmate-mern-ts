@@ -60,6 +60,7 @@ export const ErrorMessages = {
   NO_STRIPE_SIG_FOUND: "No Stripe signature found",
   WEB_HOOK_SIG_VER_FAILED: "Webhook signature verification failed",
   CONNECTION_LIMIT: "Daily connection limit reached. Upgrade your subscription for more connections.",
+  PRODUCT_NOT_FOUND:"Product not found!"
 } as const;
 
 export const SuccessMessages = {
@@ -92,6 +93,7 @@ export const SuccessMessages = {
   SUB_PLAN_CREATE_SUCCESS: "Subscription plan created",
   SUB_UPDATED: "Subscription status updated successfully",
   SUB_DELETED: "Subscription plan deleted successfully",
+  PRODUCT_UPDATED:"Product updated successfully",
 } as const;
 
 export const NotificationMessages = {

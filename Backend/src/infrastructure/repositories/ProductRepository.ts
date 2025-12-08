@@ -30,4 +30,16 @@ export class ProductRepository
     });
     return result.map((prd) => ProductMapper.toDomain(prd));
   }
+
+  async editProduct(
+    productId: string,
+    data: Omit<IProduct, "id" | "createdAt">
+  ): Promise<IProduct> {
+    const mappedData = ProductMapper.toUpdatePersistance(data);
+    const updated = await prisma.product.update({
+      where: { id: productId },
+      data: mappedData,
+    });
+    return ProductMapper.toDomain(updated);
+  }
 }

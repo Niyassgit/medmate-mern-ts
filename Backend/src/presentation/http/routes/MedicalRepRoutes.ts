@@ -164,5 +164,12 @@ export class MedicalRepRoutes {
       ValidateSchema(productValidateSchema),
       medicalRepController.createProduct
     );
+    this.router.patch(
+      "/product/edit-product/:productId",
+      uploadS3.array("images", 5),
+      parsePostField,
+      ValidateSchema(productValidateSchema),
+      medicalRepController.updateProduct
+    );
   }
 }
