@@ -1,5 +1,5 @@
 import { NotFoundError } from "../../../domain/common/errors";
-import { IProductPostRepository } from "../../../domain/product/repositories/IProductPostRepository";
+import { IProductPostRepository } from "../../../domain/productPost/repositories/IProductPostRepository";
 import { ErrorMessages } from "../../../shared/Messages";
 import { IStorageService } from "../../../domain/common/services/IStorageService";
 import { PostDetailsDTO } from "../dto/PostDetailsDTO";

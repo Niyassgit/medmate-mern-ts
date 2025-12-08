@@ -65,6 +65,7 @@ export const parsePostField = (
   req.body.existingImages = parseStringArray(req.body.existingImages).map(
     extractS3key
   );
-   req.body.territories = parseStringArray(req.body.territories);
+  req.body.territories = parseStringArray(req.body.territories);
+  req.body.territoryIds = parseStringArray(req.body.territoryIds);
   next();
 };

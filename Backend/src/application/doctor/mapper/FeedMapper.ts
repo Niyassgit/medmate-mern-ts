@@ -1,5 +1,5 @@
 import { IStorageService } from "../../../domain/common/services/IStorageService";
-import { IProductPostForFeed } from "../../../domain/product/entity/IProductPostForFeed";
+import { IProductPostForFeed } from "../../../domain/productPost/entity/IProductPostForFeed";
 import { FeedDTO } from "../dto/FeedDTO";
 
 export class FeedMapper {

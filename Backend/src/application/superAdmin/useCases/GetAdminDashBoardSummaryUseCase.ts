@@ -1,7 +1,7 @@
 import { IConnectionRepository } from "../../../domain/connection/repositories/IConnectionRepository";
 import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRepository";
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
-import { IProductPostRepository } from "../../../domain/product/repositories/IProductPostRepository";
+import { IProductPostRepository } from "../../../domain/productPost/repositories/IProductPostRepository";
 import { ISubscriptionHistoryRepository } from "../../../domain/subscription/repositories/ISubscriptionHistoryRepository";
 import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 import { StatusSummaryDTO } from "../dto/StatsSummaryDTO";

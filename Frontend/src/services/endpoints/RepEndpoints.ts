@@ -42,4 +42,7 @@ export const RepEndpoints = {
   SUBSCRIPTION_STATUS:`/rep/subscription/status`,
   SUBSCRIPTION_HISTORY:`/rep/subscription/history`,
   CONNECTION_REQUEST_STATS:`/rep/connection-request-stats`,
+  UPLOAD_NEW_PRODUCT:`/rep/product/upload`,
+  GET_ALL_PRODUCTS:`/rep/products`,
+  EDIT_PRODUCT:(productId:string)=>`/rep/product/edit-product/${productId}`,
 };

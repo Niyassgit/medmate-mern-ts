@@ -1,5 +1,5 @@
 import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
-import { IProductPostRepository } from "../../../domain/product/repositories/IProductPostRepository";
+import { IProductPostRepository } from "../../../domain/productPost/repositories/IProductPostRepository";
 import { BadRequestError, NotFoundError } from "../../errors";
 import { ProductPostDTO } from "../dto/ProductPostDTO";
 import { ICreatePostUseCase } from "../interfaces/ICreatePostUseCase";

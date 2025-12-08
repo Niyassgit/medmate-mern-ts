@@ -1,5 +1,5 @@
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
-import { IProductPostForFeed } from "../../../domain/product/entity/IProductPostForFeed";
+import { IProductPostForFeed } from "../../../domain/productPost/entity/IProductPostForFeed";
 
 export class SortPostBySubscription {
   static async sorted(

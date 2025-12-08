@@ -172,32 +172,48 @@ export const messageMarkAsReadForRep = async (conversationId: string) => {
   return res.data;
 };
 
-export const subcriptionPlans=async()=>{
-  const res=await api.get(RepEndpoints.SUBCSRIPTION_PLANS);
+export const subcriptionPlans = async () => {
+  const res = await api.get(RepEndpoints.SUBCSRIPTION_PLANS);
   return res.data.data;
-}
+};
 
-export const checkoutSubscription=async(userId:string,planId:string)=>{
-  const res=await api.post(RepEndpoints.CHECKOUT_SUB,{userId,planId});
+export const checkoutSubscription = async (userId: string, planId: string) => {
+  const res = await api.post(RepEndpoints.CHECKOUT_SUB, { userId, planId });
   return res.data.data;
-}
+};
 
-export const getCheckoutDetails=async(sessionId:string)=>{
-  const res=await api.get(RepEndpoints.CHECKOUT_SESSION(sessionId));
+export const getCheckoutDetails = async (sessionId: string) => {
+  const res = await api.get(RepEndpoints.CHECKOUT_SESSION(sessionId));
   return res.data.data;
-}
+};
 
-export const getSubscriptionStatus=async()=>{
-  const res=await api.get(RepEndpoints.SUBSCRIPTION_STATUS);
+export const getSubscriptionStatus = async () => {
+  const res = await api.get(RepEndpoints.SUBSCRIPTION_STATUS);
   return res.data.data;
-}
+};
 
-export const getSubscriptionHistory=async()=>{
-  const res=await api.get(RepEndpoints.SUBSCRIPTION_HISTORY);
+export const getSubscriptionHistory = async () => {
+  const res = await api.get(RepEndpoints.SUBSCRIPTION_HISTORY);
   return res.data.data;
-}
+};
 
-export const getConnectionRequestStats=async()=>{
-  const res=await api.get(RepEndpoints.CONNECTION_REQUEST_STATS);
+export const getConnectionRequestStats = async () => {
+  const res = await api.get(RepEndpoints.CONNECTION_REQUEST_STATS);
   return res.data.data;
-}
+};
+
+export const uploadNewProduct = async (data: FormData) => {
+  const res = await api.post(RepEndpoints.UPLOAD_NEW_PRODUCT, data);
+  return res.data.data;
+};
+export const getProducts = async () => {
+  const res = await api.get(RepEndpoints.GET_ALL_PRODUCTS);
+  return res.data.data;
+};
+
+export const editProduct = async (productId: string, formData: FormData) => {
+  const res = await api.patch(RepEndpoints.EDIT_PRODUCT(productId), {
+    formData,
+  });
+  return res.data.data;
+};

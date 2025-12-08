@@ -1,4 +1,4 @@
-import { IProductPostRepository } from "../../../domain/product/repositories/IProductPostRepository";
+import { IProductPostRepository } from "../../../domain/productPost/repositories/IProductPostRepository";
 import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 import { ProductListDTO } from "../dto/ProductListDTO";
 import { NotFoundError } from "../../errors";

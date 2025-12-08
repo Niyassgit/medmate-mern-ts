@@ -6,13 +6,13 @@ import { SpinnerButton } from "@/components/shared/SpinnerButton";
 import { CheckoutDetailsDTO } from "../dto/CheckoutDetailsDTO";
 import { SubscriptionStatusDTO } from "../dto/SubscriptionStatusDTO";
 
-
-
 const SubscriptionSuccess: React.FC = () => {
   const [params] = useSearchParams();
   const sessionId = params.get("session_id");
-  const [checkoutDetails, setCheckoutDetails] = useState<CheckoutDetailsDTO | null>(null);
-  const [subscriptionStatus, setSubscriptionStatus] = useState<SubscriptionStatusDTO | null>(null);
+  const [checkoutDetails, setCheckoutDetails] =
+    useState<CheckoutDetailsDTO | null>(null);
+  const [subscriptionStatus, setSubscriptionStatus] =
+    useState<SubscriptionStatusDTO | null>(null);
   const [loading, setLoading] = useState(true);
   const [verifyingWebhook, setVerifyingWebhook] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -46,7 +46,7 @@ const SubscriptionSuccess: React.FC = () => {
     const pollSubscriptionStatus = async () => {
       try {
         const status = await getSubscriptionStatus();
-        
+
         if (status.isActive) {
           setSubscriptionStatus(status);
           setVerifyingWebhook(false);
@@ -80,7 +80,9 @@ const SubscriptionSuccess: React.FC = () => {
         <Card className="max-w-md w-full space-y-6 p-6 bg-white rounded-lg shadow-lg dark:bg-gray-800">
           <div className="flex flex-col items-center">
             <XCircleIcon className="text-red-500 h-16 w-16" />
-            <p className="text-red-500 mt-4">{error || "Failed to load payment details"}</p>
+            <p className="text-red-500 mt-4">
+              {error || "Failed to load payment details"}
+            </p>
             <Link
               to="/subscriptions"
               className="mt-4 inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-900 hover:bg-gray-800 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-200"
@@ -94,18 +96,18 @@ const SubscriptionSuccess: React.FC = () => {
   }
 
   const formatAmount = (amount: number, currency: string) => {
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
       currency: currency.toUpperCase(),
     }).format(amount / 100);
   };
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return "N/A";
-    return new Date(dateString).toLocaleDateString('en-IN', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
+    return new Date(dateString).toLocaleDateString("en-IN", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   };
 
@@ -166,7 +168,8 @@ const SubscriptionSuccess: React.FC = () => {
                   Activation Pending
                 </p>
                 <p className="text-xs text-yellow-700 dark:text-yellow-300 mt-1">
-                  Your subscription will be activated shortly. Please refresh the page in a few moments.
+                  Your subscription will be activated shortly. Please refresh
+                  the page in a few moments.
                 </p>
               </div>
             </div>
@@ -175,19 +178,28 @@ const SubscriptionSuccess: React.FC = () => {
 
         <div className="border-t border-gray-200 dark:border-gray-700 pt-6 space-y-4">
           <div className="flex justify-between">
-            <span className="text-gray-500 dark:text-gray-400">Amount Paid:</span>
+            <span className="text-gray-500 dark:text-gray-400">
+              Amount Paid:
+            </span>
             <span className="font-medium text-gray-900 dark:text-gray-50">
-              {formatAmount(checkoutDetails.amount_total || 0, checkoutDetails.currency)}
+              {formatAmount(
+                checkoutDetails.amount_total || 0,
+                checkoutDetails.currency
+              )}
             </span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-500 dark:text-gray-400">Payment Status:</span>
+            <span className="text-gray-500 dark:text-gray-400">
+              Payment Status:
+            </span>
             <span className="font-medium text-green-600 dark:text-green-400 capitalize">
               {checkoutDetails.payment_status}
             </span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-500 dark:text-gray-400">Transaction ID:</span>
+            <span className="text-gray-500 dark:text-gray-400">
+              Transaction ID:
+            </span>
             <span className="font-medium text-gray-900 dark:text-gray-50 text-xs">
               {sessionId?.slice(0, 20)}...
             </span>
@@ -202,13 +214,13 @@ const SubscriptionSuccess: React.FC = () => {
 
         <div className="flex flex-col space-y-2">
           <Link
-            to="/rep/profile"
+            to="/rep/dashboard"
             className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-900 hover:bg-gray-800 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-200"
           >
             Go to Dashboard
           </Link>
           <Link
-            to="/subscriptions"
+            to="/rep/subscriptions"
             className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
           >
             View Subscriptions

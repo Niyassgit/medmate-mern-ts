@@ -1,10 +1,10 @@
-import { IProductPost } from "../../domain/product/entity/IProductPost";
-import { IProductPostRepository } from "../../domain/product/repositories/IProductPostRepository";
+import { IProductPost } from "../../domain/productPost/entity/IProductPost";
+import { IProductPostRepository } from "../../domain/productPost/repositories/IProductPostRepository";
 import { prisma } from "../config/db";
 import { ProductPostMapper } from "../mappers/ProductPostMapper";
 import { BaseRepository } from "../database/BaseRepository";
 import { Prisma, ProductPost } from "@prisma/client";
-import { IProductPostForFeed } from "../../domain/product/entity/IProductPostForFeed";
+import { IProductPostForFeed } from "../../domain/productPost/entity/IProductPostForFeed";
 import { IMedicalRepWithUser } from "../../domain/medicalRep/entities/IMedicalRepWithUser";
 import { MedicalRepWithUserMapper } from "../mappers/MedicalRepWithUserMapper";
 

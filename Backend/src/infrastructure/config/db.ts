@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import logger from "../logger/Logger";
+
 export const prisma = new PrismaClient();
 
 export const connectDB = async () => {

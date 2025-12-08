@@ -1,6 +1,6 @@
 import { NotFoundError } from "../../../domain/common/errors";
 import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
-import { IProductPostRepository } from "../../../domain/product/repositories/IProductPostRepository";
+import { IProductPostRepository } from "../../../domain/productPost/repositories/IProductPostRepository";
 import { ErrorMessages, SuccessMessages } from "../../../shared/Messages";
 import { BadRequestError, UnautharizedError } from "../../errors";
 import { IArchivePostUseCase } from "../interfaces/IArchivePostUseCase";

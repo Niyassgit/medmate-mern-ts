@@ -1,7 +1,7 @@
-import { IProductPost } from "../../domain/product/entity/IProductPost";
+import { IProductPost } from "../../domain/productPost/entity/IProductPost";
 import { Prisma, ProductPost } from "@prisma/client";
 import { ProductPostWithRelations } from "../types/ProductPostWithRelations";
-import { IProductPostForFeed } from "../../domain/product/entity/IProductPostForFeed";
+import { IProductPostForFeed } from "../../domain/productPost/entity/IProductPostForFeed";
 
 export class ProductPostMapper {
   static toPersistance(

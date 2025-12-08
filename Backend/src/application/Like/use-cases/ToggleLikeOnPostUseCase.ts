@@ -2,7 +2,7 @@ import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRe
 import { ILikeRepository } from "../../../domain/Like/repositories/ILikeRepository";
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
 import { INotificationRepository } from "../../../domain/notification/repositories/INotificationService";
-import { IProductPostRepository } from "../../../domain/product/repositories/IProductPostRepository";
+import { IProductPostRepository } from "../../../domain/productPost/repositories/IProductPostRepository";
 import { NotificationType, Role } from "../../../shared/Enums";
 import {
   ErrorMessages,

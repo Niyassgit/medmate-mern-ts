@@ -1,6 +1,6 @@
 import { IStorageService } from "../../../domain/common/services/IStorageService";
 import { INotificationWithUser } from "../../../domain/notification/entities/INotificationWithUser";
-import { IProductPostRepository } from "../../../domain/product/repositories/IProductPostRepository";
+import { IProductPostRepository } from "../../../domain/productPost/repositories/IProductPostRepository";
 import { NotificationType } from "../../../shared/Enums";
 import { NotificationsResponseDTO } from "../dto/NotificationsResponseDTO";
 
