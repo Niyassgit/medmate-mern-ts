@@ -28,7 +28,6 @@ const ProductPage: React.FC = () => {
   } = useFetchItem<RepDTO[] | null>(getAllReps);
   const navigate = useNavigate();
 
-  // Filter products based on search query
   const filteredProducts = useMemo(() => {
     if (!searchQuery.trim()) {
       return products;
@@ -85,9 +84,9 @@ const ProductPage: React.FC = () => {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-amber-50">
       {/* Left Side - Reps List */}
-      <div className="w-80 bg-white border-r border-gray-200 overflow-y-auto">
+      <div className="w-80 bg-white border-r border-gray-200 overflow-y-auto no-scrollbar">
         <div className="p-4 border-b border-gray-200 bg-slate-700 text-white sticky top-0 z-10">
           <h1 className="text-xl font-bold">MedMate</h1>
           <p className="text-sm text-blue-100">Connected Representatives</p>
@@ -151,7 +150,7 @@ const ProductPage: React.FC = () => {
       </div>
 
       {/* Right Side - Products */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto no-scrollbar">
         {!selectedRep ? (
           <div className="h-full flex items-center justify-center text-gray-400">
             <div className="text-center">

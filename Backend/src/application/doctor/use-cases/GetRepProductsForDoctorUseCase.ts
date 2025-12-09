@@ -13,7 +13,7 @@ import { Role, ConnectionStatus } from "../../../shared/Enums";
 import { IGetRepProductsForDoctorUseCase } from "../interfaces/IGetRepProductsForDoctorUseCase";
 import { ProductDTO } from "../../product/dto/ProdductDTO";
 import { ProductMapper } from "../../product/mappers/ProductMapper";
-import { IUserRepository } from "../../../domain/user/repositories/IUserRepository";
+import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 
 export class GetRepProductsForDoctorUseCase
   implements IGetRepProductsForDoctorUseCase
@@ -35,8 +35,6 @@ export class GetRepProductsForDoctorUseCase
 
     const doctor = await this._doctorRepository.getDoctorByUserId(doctorUserId);
     if (!doctor) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
-
-    // Verify that doctor is connected to this rep
     const connection =
       await this._connectionRepository.findConnectionBetweenDoctorAndRep(
         doctor.id,
@@ -44,20 +42,18 @@ export class GetRepProductsForDoctorUseCase
       );
 
     if (!connection || connection.status !== ConnectionStatus.ACCEPTED) {
-      throw new BadRequestError(
-        "You are not connected to this medical representative"
-      );
+      throw new BadRequestError(ErrorMessages.NOT_CONNECTED);
     }
 
-    // Get products for this rep
     const products = await this._productRepository.getAllProductsByRepId(repId);
-
-    // Map to DTO with signed URLs and territory names
     return Promise.all(
       products.map((product) =>
-        ProductMapper.toDomain(product, this._storageService, this._territoryRepository)
+        ProductMapper.toDomain(
+          product,
+          this._storageService,
+          this._territoryRepository
+        )
       )
     );
   }
 }
-

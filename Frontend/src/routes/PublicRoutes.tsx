@@ -5,11 +5,17 @@ import SelectRolePage from "@/features/auth/components/SelectRole";
 import OtpPage from "@/features/auth/components/OtpPage";
 import ForgotPassword from "@/features/auth/pages/ForgotPassword";
 import ResetPassword from "@/features/auth/pages/ResetPassword";
+import GuestInfoPage from "@/features/landing/pages/GuestInfoPage";
+import LoginGuest from "@/features/auth/pages/LoginGuest";
+import SignupPatient from "@/features/auth/pages/SignupPatient";
 
 export const publicRoutes = [
   { path: "/", element: <LandingPage /> },
+  { path: "/guest-info", element: <GuestInfoPage /> },
   { path: "/register/:type", element: <RegisterPage /> },
+  { path: "/register/guest", element: <SignupPatient /> },
   { path: "/auth/login", element: <LoginPage /> },
+  { path: "/auth/login/guest", element: <LoginGuest /> },
   { path: "/auth/login/selectrole", element: <SelectRolePage /> },
   { path: "/verifyotp", element: <OtpPage /> },
   { path: "/forgotpassword", element: <ForgotPassword /> },

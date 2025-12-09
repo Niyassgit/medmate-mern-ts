@@ -2,7 +2,7 @@
 export interface User{
     id:string
     email:string,
-    role:"DOCTOR"|"MEDICAL_REP" |"SUPER_ADMIN",
+    role:"DOCTOR"|"MEDICAL_REP" |"SUPER_ADMIN" | "GUEST",
     image?:string
 }
 

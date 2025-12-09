@@ -16,7 +16,7 @@ import { CommonRoutes } from "./presentation/http/routes/CommonRoutes";
 import { WebhookRoutes } from "./presentation/http/routes/WebhookRoutes";
 import { initSocket } from "./infrastructure/realtime/SocketGateway";
 import logger from "./infrastructure/logger/Logger";
-// import { GuestRoutes } from "./presentation/http/routes/GuestRoutes";
+import { PatientRoutes } from "./presentation/http/routes/PatientRoutes";
 
 const app = express();
 
@@ -48,7 +48,7 @@ const startServer = async () => {
     app.use("/api/admin", new SuperAdminRoutes().router);
     app.use("/api/auth", new LoginRoute().router);
     app.use("/api/common", new CommonRoutes().router);
-    // app.use("/api/guest",new GuestRoutes().router);
+    app.use("/api/patient",new PatientRoutes().router);
 
     app.use(ErrorHandler);
 

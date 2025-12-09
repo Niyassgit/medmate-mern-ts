@@ -60,7 +60,8 @@ export const ErrorMessages = {
   NO_STRIPE_SIG_FOUND: "No Stripe signature found",
   WEB_HOOK_SIG_VER_FAILED: "Webhook signature verification failed",
   CONNECTION_LIMIT: "Daily connection limit reached. Upgrade your subscription for more connections.",
-  PRODUCT_NOT_FOUND:"Product not found!"
+  PRODUCT_NOT_FOUND:"Product not found!",
+  NOT_CONNECTED: "You are not connected to this medical representative" ,
 } as const;
 
 export const SuccessMessages = {
@@ -108,4 +109,6 @@ export const NotificationMessages = {
   CONNECTION_ACCEPT_MESSAGE: "Accepted your connection request",
   LIKE_MESSAGE: "Liked your post",
   INTEREST_MESSAGE: "Showed interested on your Post",
+  REGISTER_SUCCESS:"registeration completed successfully. Please verify your email",
+  
 } as const;

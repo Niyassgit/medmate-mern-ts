@@ -51,8 +51,8 @@ model User {
   superAdmin       SuperAdmin?
   doctor           Doctor?
   medicalRep       MedicalRep?
+  patient          Patient?  
   otpVerifications otpVerification[]
-  patients         Patient[]
 }
 
 enum Role {
@@ -438,21 +438,27 @@ model SubscriptionHistory {
 
 model Patient {
   id           String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId       String? @db.ObjectId
+  loginId      String? @unique @db.ObjectId  
   doctorId     String? @db.ObjectId
   name         String
   phone        String?
   email        String?
-  isRegistered Boolean @default(false)
+  isRegistered Boolean @default(false)  
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user          User?          @relation(fields: [userId], references: [id])
+  user          User?          @relation(fields: [loginId], references: [id])
   doctor        Doctor?        @relation(fields: [doctorId], references: [id])
   prescriptions Prescription[]
   orders        Order[]
   addresses     Address[]
+
+
+  @@index([doctorId])
+  @@index([email])
+  @@index([isRegistered])
+  @@unique([email, doctorId], name: "unique_patient_per_doctor")
 }
 
 model Address {
