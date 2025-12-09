@@ -1,6 +1,6 @@
 import PrivateRoute from "@/components/shared/PrivateRoute";
 import GuestLayout from "@/features/Guest/components/GuestLayout";
-import Dashboard from "@/features/Guest/pages/Dashboard";
+import HomePage from "@/features/Guest/pages/HomePage";
 import { Role } from "@/types/Role";
 
 export const GuestRoutes = {
@@ -10,5 +10,5 @@ export const GuestRoutes = {
       <GuestLayout />
     </PrivateRoute>
   ),
-  children: [{ path: "dashboard", element: <Dashboard /> }],
+  children: [{ path: "dashboard", element: <HomePage /> }],
 };

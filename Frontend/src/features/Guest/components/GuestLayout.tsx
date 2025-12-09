@@ -1,11 +1,10 @@
 import GuestNavbar from "@/components/navbar/GuestNavbar";
-import Footer from "@/features/landing/pages/Footer";
-import React from "react";
 import { Outlet } from "react-router-dom";
+import GuestFooter from "./GuestFooter";
 
 const GuestLayout = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0A1A3F] via-[#0B152F] to-black text-white">
+    <div className="min-h-screen bg-gradient-to-b from-[#0A1A3F] via-[#0B152F] to-black text-white pt-6">
       {/* Navbar */}
       <GuestNavbar />
 
@@ -13,9 +12,8 @@ const GuestLayout = () => {
       <main className="flex-1 p-4">
         <Outlet />
       </main>
-
-      {/* Footer */}
-      {/* <Footer /> */}
+      
+      <GuestFooter />
     </div>
   );
 };
