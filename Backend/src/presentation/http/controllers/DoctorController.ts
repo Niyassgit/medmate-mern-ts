@@ -31,6 +31,8 @@ import { ICreateDoctorMessageUseCase } from "../../../application/conversation/i
 import { IDoctorMessageMarkAsReadUseCase } from "../../../application/conversation/interfaces/IDoctorMessageMarkAsReadUseCase";
 import { IGetRepsListForPracticeUseCase } from "../../../application/doctor/interfaces/IGetRepsListForPracticeUseCase";
 import { IGetRepProductsForDoctorUseCase } from "../../../application/doctor/interfaces/IGetRepProductsForDoctorUseCase";
+import { PrescriptionDTO } from "../../../application/prescription/dto/PrescriptionDTO";
+import { ICreatePrescriptionUseCase } from "../../../application/prescription/interfaces/ICreatePrescriptionUseCase";
 
 export class DoctorController {
   constructor(
@@ -60,7 +62,8 @@ export class DoctorController {
     private _createMessageUseCase: ICreateDoctorMessageUseCase,
     private _DoctorMessageMarkAsRead: IDoctorMessageMarkAsReadUseCase,
     private _getRepsListForPracticeUseCase: IGetRepsListForPracticeUseCase,
-    private _getRepProductsForDoctorUseCase: IGetRepProductsForDoctorUseCase
+    private _getRepProductsForDoctorUseCase: IGetRepProductsForDoctorUseCase,
+    private _createPrescriptionUseCase: ICreatePrescriptionUseCase
   ) {}
 
   createDoctor = async (req: Request, res: Response) => {
@@ -107,12 +110,12 @@ export class DoctorController {
   networks = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const { search, company, territories } = req.query;
-    
+
     const filters = {
       company: company ? String(company) : undefined,
-      territories: territories ? String(territories).split(',') : undefined,
+      territories: territories ? String(territories).split(",") : undefined,
     };
-    
+
     const response = await this._networkUseCase.execute(
       userId,
       search as string,
@@ -351,6 +354,20 @@ export class DoctorController {
     );
     return res
       .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  createPrescription = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { guestId } = req.params;
+    const dto = req.body as PrescriptionDTO;
+    const response = await this._createPrescriptionUseCase.execute(
+      guestId,
+      dto,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.CREATED)
       .json({ success: true, data: response });
   };
 }

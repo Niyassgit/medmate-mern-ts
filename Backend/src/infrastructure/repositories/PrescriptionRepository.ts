@@ -1,0 +1,72 @@
+import { Prescription, Prisma } from "@prisma/client";
+import { IPrescription } from "../../domain/prescription/entites/IPrescription";
+import { IPrescriptionRepository } from "../../domain/prescription/repositories/IPrescriptionRepository";
+import { BaseRepository } from "../database/BaseRepository";
+import { prisma } from "../database/prisma";
+import { PrescriptionMapper } from "../mappers/PrescriptionMapper";
+import { NotFoundError } from "../../application/errors";
+import { ErrorMessages } from "../../shared/Messages";
+
+export class PrescriptionRepository
+  extends BaseRepository<
+    IPrescription,
+    Prescription,
+    Prisma.PrescriptionCreateInput,
+    "prescription"
+  >
+  implements IPrescriptionRepository
+{
+  constructor() {
+    super(prisma.prescription, (p) => PrescriptionMapper.toDomain(p));
+  }
+
+  async createPrescription(
+    data: Omit<IPrescription, "id" | "createdAt" | "updatedAt">
+  ): Promise<IPrescription> {
+    const mappedData = PrescriptionMapper.toPersistance(data);
+    return await this.create(mappedData);
+  }
+
+  async findAllPrescriptionByDoctorId(
+    DoctorId: string
+  ): Promise<IPrescription[]> {
+    const prescriptions = await prisma.prescription.findMany({
+      where: { doctorId: DoctorId },
+      orderBy: { createdAt: "desc" },
+    });
+    return prescriptions.map((p) => PrescriptionMapper.toDomain(p));
+  }
+
+  async findAllPrescriptionsByGuestId(
+    GuestId: string
+  ): Promise<IPrescription[]> {
+    const prescriptions = await prisma.prescription.findMany({
+      where: { guestId: GuestId },
+      orderBy: { createdAt: "desc" },
+    });
+    return prescriptions.map((p) => PrescriptionMapper.toDomain(p));
+  }
+
+  async findPrescriptionById(prescriptionId: string): Promise<IPrescription> {
+    const prescription = await prisma.prescription.findUnique({
+      where: { id: prescriptionId },
+    });
+    if (!prescription) {
+      throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
+    }
+    return PrescriptionMapper.toDomain(prescription);
+  }
+
+  async updatePrescription(
+    prescriptionId: string,
+    data: Partial<Omit<IPrescription, "id" | "createdAt" | "updatedAt">>
+  ): Promise<IPrescription> {
+    const mappedData = PrescriptionMapper.toUpdatePersistance(data);
+    const updated = await prisma.prescription.update({
+      where: { id: prescriptionId },
+      data: mappedData,
+    });
+    return PrescriptionMapper.toDomain(updated);
+  }
+}
+ 

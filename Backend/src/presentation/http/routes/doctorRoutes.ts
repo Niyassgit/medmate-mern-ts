@@ -11,6 +11,7 @@ import { uploadS3 } from "../../../infrastructure/storage/multer/MulterS3BucketC
 import { makeValidateUserMiddleware } from "../middlewares/ValidateUserMiddleware";
 import { UserValidate } from "../../../infrastructure/di/UserValidateDI";
 import { SendMessageSchema } from "../validators/MessageSchema";
+import { PrescriptionSchema } from "../validators/PrescriptionSchema";
 
 const validateUser = makeValidateUserMiddleware(UserValidate);
 
@@ -96,6 +97,14 @@ export class DoctorRoutes {
       doctorController.markMessageAsRead
     );
     this.router.get("/practice/reps", doctorController.repsList);
-    this.router.get("/practice/reps/:repId/products", doctorController.repProducts);
+    this.router.get(
+      "/practice/reps/:repId/products",
+      doctorController.repProducts
+    );
+    this.router.post(
+      "/practice/prescription/create/:guestId",
+      ValidateSchema(PrescriptionSchema),
+      doctorController.createPrescription
+    );
   }
 }

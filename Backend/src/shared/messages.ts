@@ -59,9 +59,11 @@ export const ErrorMessages = {
   SUB_ATTEMPT_FAILED: "Failed to register subscription!",
   NO_STRIPE_SIG_FOUND: "No Stripe signature found",
   WEB_HOOK_SIG_VER_FAILED: "Webhook signature verification failed",
-  CONNECTION_LIMIT: "Daily connection limit reached. Upgrade your subscription for more connections.",
-  PRODUCT_NOT_FOUND:"Product not found!",
-  NOT_CONNECTED: "You are not connected to this medical representative" ,
+  CONNECTION_LIMIT:
+    "Daily connection limit reached. Upgrade your subscription for more connections.",
+  PRODUCT_NOT_FOUND: "Product not found!",
+  NOT_CONNECTED: "You are not connected to this medical representative",
+  PRESCRIPTION_ITEM_NEEDED: "At least one prescription item is required",
 } as const;
 
 export const SuccessMessages = {
@@ -94,7 +96,8 @@ export const SuccessMessages = {
   SUB_PLAN_CREATE_SUCCESS: "Subscription plan created",
   SUB_UPDATED: "Subscription status updated successfully",
   SUB_DELETED: "Subscription plan deleted successfully",
-  PRODUCT_UPDATED:"Product updated successfully",
+  PRODUCT_UPDATED: "Product updated successfully",
+  PRESCRIPTION_CREATED: "Prescription created successfuly",
 } as const;
 
 export const NotificationMessages = {
@@ -109,6 +112,6 @@ export const NotificationMessages = {
   CONNECTION_ACCEPT_MESSAGE: "Accepted your connection request",
   LIKE_MESSAGE: "Liked your post",
   INTEREST_MESSAGE: "Showed interested on your Post",
-  REGISTER_SUCCESS:"registeration completed successfully. Please verify your email",
-  
+  REGISTER_SUCCESS:
+    "registeration completed successfully. Please verify your email",
 } as const;
