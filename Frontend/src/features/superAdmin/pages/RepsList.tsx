@@ -1,4 +1,3 @@
-import useFetchList from "@/hooks/useFetchItem";
 import { getAllReps, blockUser, unblockUser } from "../api/superAdminApi";
 import { useCallback, useState, useEffect } from "react";
 import toast from "react-hot-toast";
@@ -9,6 +8,7 @@ import { AdminTable } from "../components/AdminTable";
 import ConfirmDialog from "@/components/shared/ConfirmDialog";
 import { getTerritories } from "@/features/shared/api/SharedApi";
 import { Button } from "@/components/ui/button";  
+import useFetchItem from "@/hooks/useFetchItem";
 
 interface Territory {
   id: string;
@@ -30,15 +30,14 @@ const RepsList = () => {
   );
 
   const { data, loading, error, setData } =
-    useFetchList<MedicalRepResponse>(fetchFn);
+    useFetchItem<MedicalRepResponse>(fetchFn);
+
 
   const [blockLoading, setBlockLoading] = useState<string | null>(null);
 
-  // ⬇️ added confirm dialog states
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [selectedRep, setSelectedRep] = useState<MedicalRep | null>(null);
 
-  // Fetch territories on component mount
   useEffect(() => {
     const fetchTerritories = async () => {
       try {

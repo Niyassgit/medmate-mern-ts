@@ -24,7 +24,9 @@ export const getAllReps = async (
   search: string = "",
   territory: string = ""
 ) => {
-  const response = await api.get(AdminEndpoints.GET_REPS(page, limit, search, territory));
+  const response = await api.get(
+    AdminEndpoints.GET_REPS(page, limit, search, territory)
+  );
   return response.data.data;
 };
 export const blockUser = async (userId: string) => {
@@ -163,10 +165,19 @@ export const getRecentSubscriptions = async (limit: number = 20) => {
   return res.data.data;
 };
 
-export const subscribedUsers= async (
-  page: number = 1,
-  limit: number = 10
-) => {
+export const subscribedUsers = async (page: number = 1, limit: number = 10) => {
   const res = await api.get(AdminEndpoints.SUBSCRIBED(page, limit));
+  return res.data.data;
+};
+
+export const getAllGuests = async (
+  page: number,
+  limit: number,
+  search: string = "",
+  territory: string = ""
+) => {
+  const res = await api.get(
+    AdminEndpoints.GET_ALL_GUESTS(page, limit, search, territory)
+  );
   return res.data.data;
 };

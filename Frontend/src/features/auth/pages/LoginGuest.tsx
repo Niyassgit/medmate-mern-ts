@@ -35,13 +35,13 @@ const LoginGuest = () => {
   };
 
   return (
-    <div className="relative min-h-screen w-full flex justify-center items-center bg-gradient-to-b from-[#185891]">
+    <div className="relative min-h-screen w-full flex justify-center items-center ">
       <div className="absolute inset-0"></div>
 
       <div className="relative z-10 flex w-full max-w-4xl min-h-[500px] md:min-h-[600px] rounded-2xl shadow-2xl overflow-hidden bg-white">
         <div className="hidden md:flex w-1/2 relative">
           <img
-            src="/LoginImg.png"
+            src="/Healthy.png"
             alt="Login"
             className="w-full h-full object-cover"
           />

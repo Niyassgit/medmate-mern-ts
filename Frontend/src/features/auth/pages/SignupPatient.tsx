@@ -11,33 +11,70 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
-import { registerPatient } from "../api";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import {
-  RegisterPatientSchema,
-  RegisterPatientBody,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { registerGuest } from "../api";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import {
+  RegisterGuestSchema,
+  RegisterGuestBody,
 } from "../schemas/RegisterPatientSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
+import { getTerritories } from "@/features/shared/api/SharedApi";
+
+interface Territory {
+  id: string;
+  name: string;
+  region: string;
+}
 
 const SignupPatient = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showCPassword, setShowCPassword] = useState(false);
+  const [territories, setTerritories] = useState<Territory[]>([]);
+  const [loadingTerritories, setLoadingTerritories] = useState(false);
 
-  const form = useForm<RegisterPatientBody>({
-    resolver: zodResolver(RegisterPatientSchema),
+  const form = useForm<RegisterGuestBody>({
+    resolver: zodResolver(RegisterGuestSchema),
     defaultValues: {
       name: "",
       email: "",
       phone: "",
       password: "",
       Cpassword: "",
+      territoryId: "",
     },
   });
 
-  const onSubmit = async (values: RegisterPatientBody) => {
+  useEffect(() => {
+    const fetchTerritories = async () => {
+      try {
+        setLoadingTerritories(true);
+        const response = await getTerritories();
+        if (response.data?.data) {
+          setTerritories(response.data.data);
+        } else if (Array.isArray(response.data)) {
+          setTerritories(response.data);
+        }
+      } catch (error) {
+        console.error("Failed to load territories:", error);
+        toast.error("Failed to load territories");
+      } finally {
+        setLoadingTerritories(false);
+      }
+    };
+    fetchTerritories();
+  }, []);
+
+  const onSubmit = async (values: RegisterGuestBody) => {
     try {
       // Ensure all required fields are present and not empty
       if (!values.name || !values.email || !values.phone || !values.password) {
@@ -50,12 +87,13 @@ const SignupPatient = () => {
         email: String(values.email).trim(),
         phone: String(values.phone).trim(),
         password: String(values.password),
+        territoryId: values.territoryId || undefined,
       };
 
       // Debug: Log the payload to see what's being sent
-      console.log("Patient registration payload:", payload);
+      console.log("Guest registration payload:", payload);
 
-      const res = await registerPatient(payload);
+      const res = await registerGuest(payload);
 
       if (res.data.success && res.data.email && res.data.expiredAt) {
         toast.success(res.data.message || "Registration successful!");
@@ -94,7 +132,7 @@ const SignupPatient = () => {
         {/* Right form */}
         <div className="w-full md:w-1/2 flex flex-col justify-center p-8 sm:p-10">
           <h2 className="text-2xl sm:text-3xl font-bold mb-2 text-gray-800 text-center md:text-left">
-            Create Patient Account
+            Create Guest Account
           </h2>
           <p className="text-sm text-gray-600 mb-6 text-center md:text-left">
             Join MedMate to manage your prescriptions and health records
@@ -154,6 +192,36 @@ const SignupPatient = () => {
                         {...field}
                       />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Territory */}
+              <FormField
+                control={form.control}
+                name="territoryId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Territory (Optional)</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      disabled={loadingTerritories}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select your territory" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {territories.map((territory) => (
+                          <SelectItem key={territory.id} value={territory.id}>
+                            {territory.name} - {territory.region}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}

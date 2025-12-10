@@ -19,15 +19,13 @@ const HomePage = () => {
       <div className="p-5 m-5">
         <HomePage2 />
       </div>
-   <div className="p-5 m-5">
+      <div className="p-5 m-5">
         <Testimonial />
       </div>
 
       <div className="m-10">
         <Brands />
       </div>
-
-
     </div>
   );
 };

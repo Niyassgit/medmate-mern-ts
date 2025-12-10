@@ -4,25 +4,25 @@ import { IBcryptService } from "../../../domain/common/services/IHashService";
 import { INotificationService } from "../../../domain/common/services/INotificationService";
 import { IOtpService } from "../../../domain/common/services/IOtpService";
 import { OtpPurpose } from "../../../domain/common/types/OtpPurpose";
-import { IPatientRepository } from "../../../domain/Patient/repositories/IPatientRepositories";
+import { IGuestRepository } from "../../../domain/Patient/repositories/IGuestRepositories";
 import { Role } from "../../../shared/Enums";
 import { ErrorMessages, NotificationMessages } from "../../../shared/Messages";
 import { UserMapper } from "../../common/mapper/UserMapper";
 import { RegisterRepResponseDTO } from "../../medicalRep/dto/RegisterRepResponseDTO";
-import { RegisterPatientDTO } from "../dto/RegisterPatientDTO";
-import { ICreatePatientUseCase } from "../interefaces/ICreatePatientUseCase";
-import { PatientMapper } from "../mappers/PatientMapper";
+import { RegisterGuestDTO } from "../dto/RegisterPatientDTO";
+import { ICreateGuestUseCase } from "../interefaces/ICreateGuestUseCase";
+import { GuestMapper } from "../mappers/GuestMapper";
 
-export class CreatePatientUseCase implements ICreatePatientUseCase {
+export class CreateGuestUseCase implements ICreateGuestUseCase {
   constructor(
     private _userRepository: IUserRepository,
-    private _patientRepository: IPatientRepository,
+    private _guestRepository: IGuestRepository,
     private _bcryptService: IBcryptService,
     private _otpService: IOtpService,
     private _notificationService: INotificationService
   ) {}
 
-  async execute(dto: RegisterPatientDTO): Promise<RegisterRepResponseDTO> {
+  async execute(dto: RegisterGuestDTO): Promise<RegisterRepResponseDTO> {
     const existingUser = await this._userRepository.findByEmail(dto.email);
     if (existingUser) {
       throw new ConflictError(ErrorMessages.ACCOUNT_EXIST);
@@ -41,8 +41,8 @@ export class CreatePatientUseCase implements ICreatePatientUseCase {
     );
     const user = await this._userRepository.createUser(userEntity);
 
-    const patientEntity = PatientMapper.toPatientEntity(dto, user.id);
-    await this._patientRepository.createPatient(patientEntity);
+    const guestEntity = GuestMapper.toGuestEntity(dto, user.id);
+    await this._guestRepository.createGuest(guestEntity);
 
     const { otp, record } = await this._otpService.generateOtp(
       user.id,
@@ -55,6 +55,6 @@ export class CreatePatientUseCase implements ICreatePatientUseCase {
       NotificationMessages.OTP_VERIFICATION(otp)
     );
 
-    return PatientMapper.toRegisterResponse(user, record?.expiredAt);
+    return GuestMapper.toRegisterResponse(user, record?.expiredAt);
   }
 }

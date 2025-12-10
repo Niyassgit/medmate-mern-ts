@@ -1,8 +1,9 @@
 import { Role } from "../../../shared/Enums";
 
-export interface CreatePatientDTO{
+export interface CreateGuestDTO{
   userId?: string;  
   doctorId?: string; 
+  territoryId?: string;
   name: string;
   phone: string;
   email: string; 

@@ -9,7 +9,7 @@ import {
 import { AuthEndpoints } from "@/services/endpoints/AuthEndpoints";
 import { DoctorEndpoints } from "@/services/endpoints/DoctorEndpoints";
 import { RepEndpoints } from "@/services/endpoints/RepEndpoints";
-import { PatientEndpoints } from "../Guest/api";
+import { GuestEndpoints } from "../Guest/api";
 
 interface loginPayload {
   email: string;
@@ -111,14 +111,15 @@ export const resetPassword = (email: string, otp: string, password: string) => {
     password,
   });
 };
-export const registerPatient = (values: {
+export const registerGuest = (values: {
   name: string;
   email: string;
   phone: string;
   password: string;
+  territoryId?: string;
 }) => {
   return api.post<RegisterResponseBody>(
-    PatientEndpoints.PATIENT_REGISTER,
+    GuestEndpoints.GUEST_REGISTER,
     values,
     {
       headers: {

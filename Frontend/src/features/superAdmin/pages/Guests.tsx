@@ -1,22 +1,20 @@
-import useFetchList from "@/hooks/useFetchItem";
-import { getAllDoctors, blockUser, unblockUser } from "../api/superAdminApi";
+import { getAllGuests, blockUser, unblockUser } from "../api/superAdminApi";
 import { useCallback, useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import { Doctor } from "../dto/Doctor";
-import { DoctorResponse } from "../dto/DoctorResponse";
-import { useNavigate } from "react-router-dom";
+import { Guest } from "../dto/Guest";
+import { GuestResponse } from "../dto/GuestResponse";
 import { AdminTable } from "../components/AdminTable";
 import ConfirmDialog from "@/components/shared/ConfirmDialog";
 import { getTerritories } from "@/features/shared/api/SharedApi";
 import { Button } from "@/components/ui/button";
+import useFetchItem from "@/hooks/useFetchItem";
 
 interface Territory {
   id: string;
   name: string;
 }
 
-const DoctorsList = () => {
-  const navigate = useNavigate();
+const Guests = () => {
   const [page, setPage] = useState(1);
   const limit = 8;
   const [search, setSearch] = useState("");
@@ -25,18 +23,18 @@ const DoctorsList = () => {
   const [territoriesLoading, setTerritoriesLoading] = useState(false);
 
   const fetchFn = useCallback(
-    () => getAllDoctors(page, limit, search, territory),
+    () => getAllGuests(page, limit, search, territory),
     [page, limit, search, territory]
   );
+
   const { data, loading, error, setData } =
-    useFetchList<DoctorResponse>(fetchFn);
+    useFetchItem<GuestResponse>(fetchFn);
 
   const [blockLoading, setBlockLoading] = useState<string | null>(null);
 
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
+  const [selectedGuest, setSelectedGuest] = useState<Guest | null>(null);
 
-  // Fetch territories on component mount
   useEffect(() => {
     const fetchTerritories = async () => {
       try {
@@ -52,22 +50,27 @@ const DoctorsList = () => {
     fetchTerritories();
   }, []);
 
-  const doctors = data?.doctors ?? [];
+  const guests = data?.guests ?? [];
   const total = data?.total ?? 0;
-  const totalPage = Math.ceil(total / 10);
+  const totalPage = Math.ceil(total / limit);
 
-  const handleBlockToggle = async (doctor: Doctor) => {
+  const handleBlockToggle = async (guest: Guest) => {
+    if (!guest.loginId) {
+      toast.error("Invalid guest user ID");
+      return;
+    }
+
     try {
-      setBlockLoading(doctor.loginId);
+      setBlockLoading(guest.loginId);
 
       let userUpdated;
-      if (doctor.isBlocked) {
-        const res = await unblockUser(doctor.loginId);
-        userUpdated = res?.updatedUser;
+      if (guest.isBlocked) {
+        const res = await unblockUser(guest.loginId);
+        userUpdated = res.updatedUser;
         toast.success(res.message);
       } else {
-        const res = await blockUser(doctor.loginId);
-        userUpdated = res?.updatedUser;
+        const res = await blockUser(guest.loginId);
+        userUpdated = res.updatedUser;
         toast.success(res.message);
       }
 
@@ -75,54 +78,63 @@ const DoctorsList = () => {
         prev
           ? {
               ...prev,
-              doctors: prev.doctors.map((doc) =>
-                doc.id === doctor.id
-                  ? { ...doc, isBlocked: userUpdated.isBlocked }
-                  : doc
+              guests: prev.guests.map((g) =>
+                g.id === guest.id
+                  ? { ...g, isBlocked: userUpdated.isBlocked }
+                  : g
               ),
             }
           : prev
       );
-    } catch (err) {
-      toast.error("Something went wrong while updating block status");
+    } catch {
+      toast.error("Something went wrong updating block status");
     } finally {
       setBlockLoading(null);
     }
   };
-  
-  const handleConfirmBlockToggle = async () => {
-    if (!selectedDoctor) return;
-    await handleBlockToggle(selectedDoctor);
-    setConfirmDialogOpen(false);
-    setSelectedDoctor(null);
-  };
 
-  const handleDetailPage = async (id: string) => {
-    if (id) {
-      navigate(`/admin/doctors/${id}`);
-    } else {
-      toast.error("Invalid request");
-    }
+  const handleConfirmBlockToggle = async () => {
+    if (!selectedGuest) return;
+    await handleBlockToggle(selectedGuest);
+    setConfirmDialogOpen(false);
+    setSelectedGuest(null);
   };
 
   const columns = [
     { key: "name", label: "Name" },
     { key: "email", label: "Email" },
     { key: "phone", label: "Phone" },
-    { key: "hospital", label: "Hospital" },
-    {key:"territory",label:"Territory"},
+    {
+      key: "territory",
+      label: "Territory",
+      render: (guest: Guest) => (
+        <span className="text-gray-700">
+          {guest.territory || (
+            <span className="text-gray-400 text-xs">No territory</span>
+          )}
+        </span>
+      ),
+    },
+    {
+      key: "createdAt",
+      label: "Registration Date",
+      render: (guest: Guest) =>
+        guest.createdAt
+          ? new Date(guest.createdAt).toLocaleDateString()
+          : "N/A",
+    },
     {
       key: "isBlocked",
       label: "Status",
-      render: (d: Doctor) => (
+      render: (guest: Guest) => (
         <span
           className={`px-2 py-1 rounded-full text-xs font-medium ${
-            d.isBlocked
+            guest.isBlocked
               ? "bg-red-100 text-red-700"
               : "bg-green-100 text-green-700"
           }`}
         >
-          {d.isBlocked ? "Blocked" : "Active"}
+          {guest.isBlocked ? "Blocked" : "Active"}
         </span>
       ),
     },
@@ -134,7 +146,7 @@ const DoctorsList = () => {
         value={territory}
         onChange={(e) => {
           setTerritory(e.target.value);
-          setPage(1); // Reset to first page when filter changes
+          setPage(1);
         }}
         disabled={territoriesLoading}
         className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-700 min-w-[200px]"
@@ -163,9 +175,9 @@ const DoctorsList = () => {
 
   return (
     <>
-      <AdminTable
-        title="Doctors Management"
-        data={doctors}
+      <AdminTable<Guest>
+        title="Guests Management"
+        data={guests}
         columns={columns}
         loading={loading}
         error={error}
@@ -174,36 +186,31 @@ const DoctorsList = () => {
         onPageChange={setPage}
         search={search}
         onSearchChange={setSearch}
-        onView={handleDetailPage}
-        onBlockToggle={(doctor) => {
-          setSelectedDoctor(doctor);      
-          setConfirmDialogOpen(true);    
+        onBlockToggle={(guest) => {
+          setSelectedGuest(guest);
+          setConfirmDialogOpen(true);
         }}
         blockLoadingId={blockLoading}
-        getId={(d) => d.id}
-        isBlocked={(d) => d.isBlocked}
+        getId={(guest) => guest.id}
+        isBlocked={(guest) => !!guest.isBlocked}
         filters={territoryFilter}
       />
 
       <ConfirmDialog
         open={confirmDialogOpen}
-        title={
-          selectedDoctor?.isBlocked
-            ? "Unblock Doctor"
-            : "Block Doctor"
-        }
+        title={selectedGuest?.isBlocked ? "Unblock Guest" : "Block Guest"}
         message={
-          selectedDoctor?.isBlocked
-            ? `Are you sure you want to unblock Dr. ${selectedDoctor?.name}?`
-            : `Are you sure you want to block Dr. ${selectedDoctor?.name}?`
+          selectedGuest?.isBlocked
+            ? `Are you sure you want to unblock ${selectedGuest?.name}?`
+            : `Are you sure you want to block ${selectedGuest?.name}?`
         }
         onConfirm={handleConfirmBlockToggle}
         onCancel={() => {
           setConfirmDialogOpen(false);
-          setSelectedDoctor(null);
+          setSelectedGuest(null);
         }}
         confirmButtonClassName={
-          selectedDoctor?.isBlocked
+          selectedGuest?.isBlocked
             ? "bg-green-600 text-white hover:bg-green-700"
             : "bg-red-600 text-white hover:bg-red-700"
         }
@@ -212,4 +219,4 @@ const DoctorsList = () => {
   );
 };
 
-export default DoctorsList;
+export default Guests;

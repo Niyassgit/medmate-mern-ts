@@ -1,7 +1,8 @@
-export interface IPatient {
+export interface IGuest {
   id: string;
   userId?: string | null;  
   doctorId?: string | null; 
+  territoryId?: string | null;
   name: string;
   phone?: string;
   email?: string | null;   

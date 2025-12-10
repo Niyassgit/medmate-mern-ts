@@ -36,6 +36,8 @@ import { GetUserGrowthUseCase } from "../../application/superAdmin/useCases/GetU
 import { GetRevenueByTierUseCase } from "../../application/superAdmin/useCases/GetRevenueByTierUseCase";
 import { GetRecentSubscriptionsUseCase } from "../../application/superAdmin/useCases/GetRecentSubscriptionsUseCase";
 import { GetSubscribedListUseCase } from "../../application/superAdmin/useCases/GetSubscribedListUseCase";
+import { GetAllGuestsUseCase } from "../../application/superAdmin/useCases/GetAllGuestsUseCase";
+import { GuestRepository } from "../repositories/GuestRepository";
 
 const superAdminRepositories = new SuperAdminRepository();
 const userRepository = new UserRepository();
@@ -49,6 +51,7 @@ const subscriptionRepository = new SubscriptionRepository();
 const subscriptionHistoryRepository = new SubscriptionHistoryRepository();
 const productPostRepository = new ProductPostRepository();
 const connectionRepository = new ConnectionRepository();
+const guestRepository = new GuestRepository();
 
 const createSuperAdminUseCase = new CreateSuperAdminUseCase(
   superAdminRepositories,
@@ -134,6 +137,8 @@ const getSubscribedListUseCase = new GetSubscribedListUseCase(
   subscriptionHistoryRepository
 );
 
+const getAllGuestsUseCase = new GetAllGuestsUseCase(guestRepository);
+
 export const superAdminController = new SuperAdminController(
   createSuperAdminUseCase,
   getSuperAdminByEmailIdUseCase,
@@ -159,5 +164,6 @@ export const superAdminController = new SuperAdminController(
   getUserGrowthUseCase,
   getRevenueByTierUseCase,
   getRecentSubscriptionsUseCase,
-  getSubscribedListUseCase
+  getSubscribedListUseCase,
+  getAllGuestsUseCase
 );

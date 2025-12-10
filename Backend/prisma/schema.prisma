@@ -51,7 +51,7 @@ model User {
   superAdmin       SuperAdmin?
   doctor           Doctor?
   medicalRep       MedicalRep?
-  patient          Patient?  
+  guest            Guest?  
   otpVerifications otpVerification[]
 }
 
@@ -103,7 +103,7 @@ model Doctor {
   user          User?          @relation(fields: [loginId], references: [id])
   loginId       String?        @unique @db.ObjectId
   Like          Like[]
-  patients      Patient[]
+  guests        Guest[]
   prescriptions Prescription[]
   commissions   Commission[]
 }
@@ -206,6 +206,7 @@ model Territory {
   products       ProductPost[]
   // requirements   DoctorRequirementPost[]
   repTerritories MedicalRepTerritory[]
+  guests         Guest[]
 }
 
 model MedicalRepTerritory {
@@ -436,10 +437,11 @@ model SubscriptionHistory {
   @@index([createdAt])
 }
 
-model Patient {
+model Guest {
   id           String  @id @default(auto()) @map("_id") @db.ObjectId
   loginId      String? @unique @db.ObjectId  
   doctorId     String? @db.ObjectId
+  territoryId  String? @db.ObjectId
   name         String
   phone        String?
   email        String?
@@ -450,6 +452,7 @@ model Patient {
 
   user          User?          @relation(fields: [loginId], references: [id])
   doctor        Doctor?        @relation(fields: [doctorId], references: [id])
+  territory     Territory?     @relation(fields: [territoryId], references: [id])
   prescriptions Prescription[]
   orders        Order[]
   addresses     Address[]
@@ -458,12 +461,13 @@ model Patient {
   @@index([doctorId])
   @@index([email])
   @@index([isRegistered])
-  @@unique([email, doctorId], name: "unique_patient_per_doctor")
+  @@index([territoryId])
+  @@unique([email, doctorId], name: "unique_guest_per_doctor")
 }
 
 model Address {
   id        String      @id @default(auto()) @map("_id") @db.ObjectId
-  patientId String      @db.ObjectId
+  guestId   String      @db.ObjectId
   type      AddressType @default(HOME)
   fullName  String
   phone     String
@@ -478,17 +482,17 @@ model Address {
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
 
-  patient Patient @relation(fields: [patientId], references: [id])
-  orders  Order[]
+  guest  Guest  @relation(fields: [guestId], references: [id])
+  orders Order[]
 
-  @@index([patientId])
-  @@index([patientId, isDefault])
+  @@index([guestId])
+  @@index([guestId, isDefault])
 }
 
 model Prescription {
   id            String             @id @default(auto()) @map("_id") @db.ObjectId
   doctorId      String             @db.ObjectId
-  patientId     String             @db.ObjectId
+  guestId       String             @db.ObjectId
   notes         String?
   status        PrescriptionStatus @default(PENDING)
   expiresAt     DateTime?
@@ -499,7 +503,7 @@ model Prescription {
   updatedAt DateTime @updatedAt
 
   doctor  Doctor             @relation(fields: [doctorId], references: [id])
-  patient Patient            @relation(fields: [patientId], references: [id])
+  guest   Guest              @relation(fields: [guestId], references: [id])
   items   PrescriptionItem[]
   order   Order?
 }
@@ -533,7 +537,7 @@ enum AddressType {
 
 model Order {
   id              String        @id @default(auto()) @map("_id") @db.ObjectId
-  patientId       String        @db.ObjectId
+  guestId         String        @db.ObjectId
   prescriptionId  String        @unique @db.ObjectId
   addressId       String        @db.ObjectId
   totalAmount     Float
@@ -544,10 +548,10 @@ model Order {
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
-  patient      Patient      @relation(fields: [patientId], references: [id])
-  prescription Prescription @relation(fields: [prescriptionId], references: [id])
-  address      Address      @relation(fields: [addressId], references: [id])
-  commission   Commission[]
+  guest         Guest         @relation(fields: [guestId], references: [id])
+  prescription  Prescription  @relation(fields: [prescriptionId], references: [id])
+  address       Address       @relation(fields: [addressId], references: [id])
+  commission    Commission[]
 }
 
 enum OrderStatus {

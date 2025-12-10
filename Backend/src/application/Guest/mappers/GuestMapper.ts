@@ -1,14 +1,14 @@
 import { IUser } from "../../../domain/common/entities/IUser";
 import { NotificationMessages } from "../../../shared/Messages";
 import { RegisterResponseDTO } from "../../doctor/dto/RegisterResponseDTO";
-import { RegisterPatientDTO } from "../dto/RegisterPatientDTO";
-import { IPatient } from "../../../domain/Patient/entities/IPatient";
+import { RegisterGuestDTO } from "../dto/RegisterPatientDTO";
+import { IGuest } from "../../../domain/Patient/entities/IGuest";
 
-export class PatientMapper {
-  static toPatientEntity(
-    dto: RegisterPatientDTO,
+export class GuestMapper {
+  static toGuestEntity(
+    dto: RegisterGuestDTO,
     loginId: string
-  ): Omit<IPatient, "id" | "createdAt" | "updatedAt"> {
+  ): Omit<IGuest, "id" | "createdAt" | "updatedAt"> {
     return {
       name: dto.name,
       email: dto.email,
@@ -16,6 +16,7 @@ export class PatientMapper {
       userId: loginId,
       isRegistered: true,
       doctorId: null,
+      territoryId: dto.territoryId || null,
     };
   }
 

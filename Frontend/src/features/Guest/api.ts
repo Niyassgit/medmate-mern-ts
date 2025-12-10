@@ -1,3 +1,3 @@
-export const PatientEndpoints = {
-  PATIENT_REGISTER: "/patient/signup",
+export const GuestEndpoints = {
+  GUEST_REGISTER: "/guest/signup",
 };

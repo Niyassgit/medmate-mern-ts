@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { patientController } from "../../../infrastructure/di/PatientDi";
+import { guestController } from "../../../infrastructure/di/GuestDi";
 import { ValidateSchema } from "../middlewares/ValidateSchema";
-import { PatientRegisterSchema } from "../validators/PatientSchema";
+import { GuestRegisterSchema } from "../validators/GuestSchema";
 
-export class PatientRoutes {
+export class GuestRoutes {
   public router: Router;
 
   constructor() {
@@ -14,8 +14,8 @@ export class PatientRoutes {
   private initializeRoutes() {
     this.router.post(
       "/signup",
-      ValidateSchema(PatientRegisterSchema),
-      patientController.createPatient
+      ValidateSchema(GuestRegisterSchema),
+      guestController.createGuest
     );
   }
 }
