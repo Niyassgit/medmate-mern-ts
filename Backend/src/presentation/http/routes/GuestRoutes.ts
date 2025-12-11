@@ -2,7 +2,13 @@ import { Router } from "express";
 import { guestController } from "../../../infrastructure/di/GuestDi";
 import { ValidateSchema } from "../middlewares/ValidateSchema";
 import { GuestRegisterSchema } from "../validators/GuestSchema";
+import { Authenticate } from "../middlewares/Authenticate";
+import { AuthorizeRole } from "../middlewares/AuthorizeRole";
+import { Role } from "@prisma/client";
+import { makeValidateUserMiddleware } from "../middlewares/ValidateUserMiddleware";
+import { UserValidate } from "../../../infrastructure/di/UserValidateDI";
 
+const validateUser = makeValidateUserMiddleware(UserValidate);
 export class GuestRoutes {
   public router: Router;
 
@@ -17,7 +23,7 @@ export class GuestRoutes {
       ValidateSchema(GuestRegisterSchema),
       guestController.createGuest
     );
-
+    this.router.use(Authenticate, AuthorizeRole([Role.GUEST]), validateUser);
     this.router.post(
       "/signup/:shareToken",
       ValidateSchema(GuestRegisterSchema),

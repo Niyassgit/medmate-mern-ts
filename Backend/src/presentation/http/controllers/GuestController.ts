@@ -32,6 +32,7 @@ export class GuestController {
 
   getPrescriptions = async (req: Request, res: Response) => {
     const userId = GetOptionalUserId(req.user);
+    console.log("user id:",userId)
     const response = await this._getAllPrescriptionsUseCase.execute(userId);
     return res
       .status(HttpStatusCode.OK)
