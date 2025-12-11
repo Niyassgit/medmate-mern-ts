@@ -223,6 +223,14 @@ export const createPrescription = async (
     }>;
   }
 ) => {
-  const res = await api.post(DoctorEndpoints.CREATE_PRESCRIPTION(guestId), data);
+  const res = await api.post(
+    DoctorEndpoints.CREATE_PRESCRIPTION(guestId),
+    data
+  );
   return res.data;
+};
+
+export const getAllDoctorPrescriptions = async () => {
+  const res = await api.get(DoctorEndpoints.GET_ALL_PRESCRIPTIONS);
+  return res.data.data;
 };

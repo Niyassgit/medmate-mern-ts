@@ -13,8 +13,8 @@ import Notifications from "@/features/doctor/pages/Notifications";
 import ChatPage from "@/features/doctor/pages/ChatPage";
 import ProductPage from "@/features/doctor/pages/ProductPage";
 import PrescriptionPage from "@/features/doctor/pages/PrescriptionPage";
-import Commission from "@/features/doctor/pages/Commission";
 import ProductDetails from "@/features/doctor/pages/ProductDetails";
+import CommissionCatalogue from "@/features/doctor/pages/CommissionCatalogue";
 
 export const DoctorRoutes = {
   path: "/doctor",
@@ -36,7 +36,7 @@ export const DoctorRoutes = {
     { path: "messages", element: <ChatPage /> },
     { path: "practice/reps-products", element: <ProductPage /> },
     { path: "prescription", element: <PrescriptionPage /> },
-    { path: "commission", element: <Commission /> },
+    { path: "commission", element: <CommissionCatalogue /> },
     { path: "practice/product/details", element: <ProductDetails /> },
   ],
 };

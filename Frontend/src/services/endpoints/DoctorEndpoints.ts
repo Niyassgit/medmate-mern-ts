@@ -39,4 +39,5 @@ export const DoctorEndpoints = {
   GET_GUESTS: `/doctor/practice/guests`,
   CREATE_GUEST: `/doctor/practice/guests/create`,
   CREATE_PRESCRIPTION: (guestId: string) => `/doctor/practice/prescription/create/${guestId}`,
+  GET_ALL_PRESCRIPTIONS:`/doctor/prescriptions`
 };

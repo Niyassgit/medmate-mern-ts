@@ -1,7 +1,7 @@
 import PrivateRoute from "@/components/shared/PrivateRoute";
 import GuestLayout from "@/features/Guest/components/GuestLayout";
 import HomePage from "@/features/Guest/pages/HomePage";
-import PrescriptionList from "@/features/Guest/pages/PriscriptionList";
+import PrescriptionList from "@/features/Guest/pages/Priscriptions";
 import { Role } from "@/types/Role";
 
 export const GuestRoutes = {
