@@ -36,6 +36,7 @@ import { ICreatePrescriptionUseCase } from "../../../application/prescription/in
 import { IGetGuestsByDoctorUseCase } from "../../../application/doctor/interfaces/IGetGuestsByDoctorUseCase";
 import { ICreateGuestByDoctorUseCase } from "../../../application/doctor/interfaces/ICreateGuestByDoctorUseCase";
 import { CreateGuestByDoctorDTO } from "../../../application/doctor/dto/CreateGuestByDoctorDTO";
+import { IGetAllPrescriptionsMadeUseCase } from "../../../application/doctor/interfaces/IGetAllPrescriptionsMadeUseCase";
 
 export class DoctorController {
   constructor(
@@ -68,7 +69,8 @@ export class DoctorController {
     private _getRepProductsForDoctorUseCase: IGetRepProductsForDoctorUseCase,
     private _createPrescriptionUseCase: ICreatePrescriptionUseCase,
     private _getGuestsByDoctorUseCase: IGetGuestsByDoctorUseCase,
-    private _createGuestByDoctorUseCase: ICreateGuestByDoctorUseCase
+    private _createGuestByDoctorUseCase: ICreateGuestByDoctorUseCase,
+    private _getAllPrescriptionsMadeUseCase: IGetAllPrescriptionsMadeUseCase
   ) {}
 
   createDoctor = async (req: Request, res: Response) => {
@@ -381,9 +383,20 @@ export class DoctorController {
   createGuest = async (req: Request, res: Response) => {
     const userId = GetOptionalUserId(req.user);
     const dto = req.body as CreateGuestByDoctorDTO;
-    const response = await this._createGuestByDoctorUseCase.execute(dto, userId);
+    const response = await this._createGuestByDoctorUseCase.execute(
+      dto,
+      userId
+    );
     return res
       .status(HttpStatusCode.CREATED)
+      .json({ success: true, data: response });
+  };
+
+  getAllPrescriptions = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._getAllPrescriptionsMadeUseCase.execute(userId);
+    return res
+      .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
   };
 }

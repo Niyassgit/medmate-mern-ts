@@ -54,6 +54,7 @@ import { CreateGuestByDoctorUseCase } from "../../application/doctor/use-cases/C
 import { GuestRepository } from "../repositories/GuestRepository";
 import { TokenService } from "../services/TokenService";
 import { ConfigService } from "../services/ConfigService";
+import { GetAllPresscriptionsMadeUseCase } from "../../application/doctor/use-cases/GetAllPrescriptionsMadeUseCase";
 
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
@@ -281,6 +282,12 @@ const createGuestByDoctorUseCase = new CreateGuestByDoctorUseCase(
   guestRepository
 );
 
+const getAllPrescriptionsMadeUseCase = new GetAllPresscriptionsMadeUseCase(
+  doctorRepository,
+  prescriptionRepository,
+  storageService
+);
+
 export const doctorController = new DoctorController(
   createDoctorUseCase,
   getDoctorprofileById,
@@ -311,5 +318,6 @@ export const doctorController = new DoctorController(
   getRepProductsForDoctorUseCase,
   createPrescriptionUseCase,
   getGuestsByDoctorUseCase,
-  createGuestByDoctorUseCase
+  createGuestByDoctorUseCase,
+  getAllPrescriptionsMadeUseCase
 );
