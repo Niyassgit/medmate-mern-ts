@@ -334,11 +334,6 @@ export class DoctorController {
 
   repsList = async (req: Request, res: Response) => {
     const userId = GetOptionalUserId(req.user);
-    if (!userId) {
-      return res
-        .status(HttpStatusCode.UNAUTHORIZED)
-        .json({ success: false, message: "Unauthorized" });
-    }
     const response = await this._getRepsListForPracticeUseCase.execute(userId);
     return res
       .status(HttpStatusCode.OK)
@@ -348,11 +343,6 @@ export class DoctorController {
   repProducts = async (req: Request, res: Response) => {
     const { repId } = req.params;
     const userId = GetOptionalUserId(req.user);
-    if (!userId) {
-      return res
-        .status(HttpStatusCode.UNAUTHORIZED)
-        .json({ success: false, message: "Unauthorized" });
-    }
     const response = await this._getRepProductsForDoctorUseCase.execute(
       repId,
       userId
@@ -379,11 +369,6 @@ export class DoctorController {
   getGuests = async (req: Request, res: Response) => {
     const userId = GetOptionalUserId(req.user);
     const { search } = req.query;
-    if (!userId) {
-      return res
-        .status(HttpStatusCode.UNAUTHORIZED)
-        .json({ success: false, message: "Unauthorized" });
-    }
     const response = await this._getGuestsByDoctorUseCase.execute(
       userId,
       search as string | undefined

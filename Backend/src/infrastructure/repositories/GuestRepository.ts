@@ -7,12 +7,7 @@ import { prisma } from "../database/prisma";
 import { GuestMapper } from "../mappers/GuestMapper";
 
 export class GuestRepository
-  extends BaseRepository<
-    IGuest,
-    Guest,
-    Prisma.GuestCreateInput,
-    "guest"
-  >
+  extends BaseRepository<IGuest, Guest, Prisma.GuestCreateInput, "guest">
   implements IGuestRepository
 {
   constructor() {
@@ -71,9 +66,9 @@ export class GuestRepository
     const [guests, total] = await Promise.all([
       prisma.guest.findMany({
         where,
-        include: { 
-          user: true, 
-          territory: true
+        include: {
+          user: true,
+          territory: true,
         },
         orderBy: { createdAt: "desc" },
         skip,
@@ -81,7 +76,7 @@ export class GuestRepository
       }),
       prisma.guest.count({ where }),
     ]);
-    
+
     if (!guests || !Array.isArray(guests)) {
       return { guests: [], total: total || 0 };
     }
@@ -94,7 +89,7 @@ export class GuestRepository
           user: g.user || null,
           territory: g.territory || null,
         } as Guest & { user?: User | null; territory?: Territory | null };
-        
+
         return GuestMapper.toListItem(guestData);
       });
 
@@ -108,17 +103,33 @@ export class GuestRepository
     doctorId: string,
     search?: string
   ): Promise<IGuestListItem[]> {
-    const where: Prisma.GuestWhereInput = {
-      doctorId,
-    };
+    const searchConditions: Prisma.GuestWhereInput[] = [];
 
     if (search) {
-      where.OR = [
+      searchConditions.push(
         { name: { contains: search, mode: "insensitive" } },
         { email: { contains: search, mode: "insensitive" } },
-        { phone: { contains: search, mode: "insensitive" } },
-      ];
+        { phone: { contains: search, mode: "insensitive" } }
+      );
     }
+
+    const whereConditions: Prisma.GuestWhereInput[] = [
+      {
+        doctorId,
+        ...(searchConditions.length > 0 ? { OR: searchConditions } : {}),
+      },
+    ];
+
+    if (search && searchConditions.length > 0) {
+      whereConditions.push({
+        isRegistered: true,
+        OR: searchConditions,
+      });
+    }
+
+    const where: Prisma.GuestWhereInput = {
+      OR: whereConditions,
+    };
 
     const guests = await prisma.guest.findMany({
       where,
@@ -127,7 +138,8 @@ export class GuestRepository
         territory: true,
       },
       orderBy: { createdAt: "desc" },
-      take: 50, // Limit to 50 for search dropdown
+      take: 50,
+      distinct: ["id"],
     });
 
     if (!guests || !Array.isArray(guests)) {

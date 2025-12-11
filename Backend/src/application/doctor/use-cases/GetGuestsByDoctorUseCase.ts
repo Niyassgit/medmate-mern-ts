@@ -10,7 +10,7 @@ export class GetGuestsByDoctorUseCase implements IGetGuestsByDoctorUseCase {
     private _guestRepository: IGuestRepository
   ) {}
 
-  async execute(userId: string, search?: string): Promise<any[]> {
+  async execute(userId?: string, search?: string): Promise<any[]> {
     if (!userId) throw new UnautharizedError(ErrorMessages.UNAUTHORIZED);
 
     const { doctorId } = await this._doctorRepository.getDoctorIdByUserId(

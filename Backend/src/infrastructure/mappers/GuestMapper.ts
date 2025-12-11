@@ -34,16 +34,7 @@ export class GuestMapper {
   }
 
   static toListItem(guest: Guest & { user?: User | null; territory?: Territory | null }): IGuestListItem {
-    if (!guest) {
-      console.error("GuestMapper.toListItem - guest is undefined");
-      throw new Error("Guest data is undefined");
-    }
-    if (typeof guest !== 'object') {
-      console.error("GuestMapper.toListItem - guest is not an object:", typeof guest, guest);
-      throw new Error("Guest data is not an object");
-    }
     
-    try {
       return {
         id: guest.id,
         name: guest.name,
@@ -54,17 +45,6 @@ export class GuestMapper {
         loginId: guest.user?.id ?? null,
         territoryName: guest.territory?.name ?? null,
       };
-    } catch (error) {
-      console.error("GuestMapper.toListItem - Error accessing guest properties:", error);
-      console.error("GuestMapper.toListItem - Guest structure:", {
-        hasId: !!guest.id,
-        hasName: !!guest.name,
-        hasEmail: 'email' in guest,
-        emailValue: guest.email,
-        guestKeys: Object.keys(guest),
-      });
-      throw error;
-    }
   }
 
   static toGuestEntityByDoctor(
@@ -74,7 +54,7 @@ export class GuestMapper {
     return {
       name: dto.name,
       email: dto.email || null,
-      phone: dto.phone || undefined, // Use undefined instead of null to match interface
+      phone: dto.phone || undefined, 
       userId: null,
       doctorId: doctorId,
       territoryId: dto.territoryId || null,

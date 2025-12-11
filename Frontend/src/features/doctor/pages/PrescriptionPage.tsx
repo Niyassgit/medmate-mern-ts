@@ -57,10 +57,14 @@ export default function PrescriptionPage() {
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
-      if (guestSearchQuery.trim()) {
+      if (guestSearchQuery.trim().length >= 2) {
         loadGuests(guestSearchQuery);
+      } else if (guestSearchQuery.trim().length === 0) {
+        setGuests([]);
+        setShowGuestDropdown(false);
       } else {
         setGuests([]);
+        setShowGuestDropdown(true);
       }
     }, 300);
 
@@ -276,58 +280,123 @@ export default function PrescriptionPage() {
                     value={guestSearchQuery}
                     onChange={(e) => {
                       setGuestSearchQuery(e.target.value);
-                      setShowGuestDropdown(true);
+                      if (e.target.value.trim().length >= 2) {
+                        setShowGuestDropdown(true);
+                      } else if (e.target.value.trim().length === 0) {
+                        setShowGuestDropdown(false);
+                      } else {
+                        setShowGuestDropdown(true);
+                      }
                     }}
                     onFocus={() => {
-                      if (guests.length > 0) setShowGuestDropdown(true);
+                      if (guestSearchQuery.trim().length >= 2 || guests.length > 0) {
+                        setShowGuestDropdown(true);
+                      }
+                    }}
+                    onBlur={() => {
+                      // Delay to allow click on dropdown items
+                      setTimeout(() => setShowGuestDropdown(false), 200);
                     }}
                     placeholder="Search for patient by name, email, or phone..."
                     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                   {loadingGuests && (
-                    <Loader2 className="absolute right-3 top-1/2 transform -translate-y-1/2 animate-spin text-gray-400 w-5 h-5" />
+                    <Loader2 className="absolute right-3 top-1/2 transform -translate-y-1/2 animate-spin text-blue-500 w-5 h-5" />
                   )}
                 </div>
                 <button
                   type="button"
                   onClick={() => setShowCreateGuestModal(true)}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 whitespace-nowrap"
                 >
                   <Plus className="w-4 h-4" />
                   New Patient
                 </button>
               </div>
 
-              {showGuestDropdown && guests.length > 0 && (
-                <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                  {guests.map((guest) => (
-                    <div
-                      key={guest.id}
-                      onClick={() => {
-                        setSelectedGuest(guest);
-                        setGuestSearchQuery(guest.name);
-                        setShowGuestDropdown(false);
-                      }}
-                      className="p-3 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0"
-                    >
-                      <div className="font-semibold text-gray-800">{guest.name}</div>
-                      {guest.email && (
-                        <div className="text-sm text-gray-600">{guest.email}</div>
-                      )}
-                      {guest.phone && (
-                        <div className="text-sm text-gray-600">{guest.phone}</div>
-                      )}
+              {/* Guest Dropdown */}
+              {showGuestDropdown && guestSearchQuery.trim().length > 0 && (
+                <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+                  {loadingGuests ? (
+                    <div className="p-4 text-center">
+                      <Loader2 className="animate-spin text-blue-500 w-6 h-6 mx-auto" />
+                      <p className="text-sm text-gray-500 mt-2">Searching...</p>
                     </div>
-                  ))}
+                  ) : guests.length > 0 ? (
+                    guests.map((guest) => (
+                      <div
+                        key={guest.id}
+                        onClick={() => {
+                          setSelectedGuest(guest);
+                          setGuestSearchQuery(guest.name);
+                          setShowGuestDropdown(false);
+                        }}
+                        className="p-3 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors"
+                      >
+                        <div className="font-semibold text-gray-800">{guest.name}</div>
+                        {guest.email && (
+                          <div className="text-sm text-gray-600 mt-1">{guest.email}</div>
+                        )}
+                      </div>
+                    ))
+                  ) : guestSearchQuery.trim().length >= 2 ? (
+                    <div className="p-6 text-center">
+                      <div className="text-gray-400 mb-3">
+                        <UserPlus className="w-12 h-12 mx-auto opacity-50" />
+                      </div>
+                      <p className="text-gray-600 font-medium mb-1">No patients found</p>
+                      <p className="text-sm text-gray-500 mb-4">
+                        No patients found matching "{guestSearchQuery}"
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowCreateGuestModal(true);
+                          setShowGuestDropdown(false);
+                        }}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm flex items-center gap-2 mx-auto"
+                      >
+                        <Plus className="w-4 h-4" />
+                        Create New Patient
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="p-4 text-center">
+                      <p className="text-sm text-gray-500">
+                        Type at least 2 characters to search
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
 
+              {/* Selected Guest Display */}
               {selectedGuest && (
-                <div className="mt-3 p-3 bg-blue-100 rounded-lg">
-                  <div className="font-semibold text-blue-800">Selected: {selectedGuest.name}</div>
-                  {selectedGuest.email && (
-                    <div className="text-sm text-blue-600">{selectedGuest.email}</div>
-                  )}
+                <div className="mt-3 p-3 bg-blue-100 border-2 border-blue-300 rounded-lg">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="font-semibold text-blue-800 flex items-center gap-2 mb-1">
+                        <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                        Selected Patient: {selectedGuest.name}
+                      </div>
+                      {selectedGuest.email && (
+                        <div className="text-sm text-blue-700">{selectedGuest.email}</div>
+                      )}
+                      {selectedGuest.phone && (
+                        <div className="text-sm text-blue-700">{selectedGuest.phone}</div>
+                      )}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedGuest(null);
+                        setGuestSearchQuery("");
+                      }}
+                      className="ml-2 text-blue-700 hover:text-blue-900"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
                 </div>
               )}
             </div>

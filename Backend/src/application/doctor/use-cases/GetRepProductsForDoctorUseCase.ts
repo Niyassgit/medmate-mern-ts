@@ -27,7 +27,8 @@ export class GetRepProductsForDoctorUseCase
     private _territoryRepository: ITerritoryRepository
   ) {}
 
-  async execute(repId: string, doctorUserId: string): Promise<ProductDTO[]> {
+  async execute(repId: string, doctorUserId?: string): Promise<ProductDTO[]> {
+    if(!doctorUserId) throw new UnautharizedError(ErrorMessages.UNAUTHORIZED);
     const user = await this._userRepository.findById(doctorUserId);
     if (!user) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
     if (user.role !== Role.DOCTOR)

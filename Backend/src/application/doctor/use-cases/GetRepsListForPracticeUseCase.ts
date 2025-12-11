@@ -9,7 +9,7 @@ import { ErrorMessages } from "../../../shared/Messages";
 import { Role } from "../../../shared/Enums";
 import { IGetRepsListForPracticeUseCase } from "../interfaces/IGetRepsListForPracticeUseCase";
 import { RepListForPracticeDTO } from "../dto/RepListForPracticeDTO";
-import { IUserRepository } from "../../../domain/user/repositories/IUserRepository";
+import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 
 export class GetRepsListForPracticeUseCase
   implements IGetRepsListForPracticeUseCase
@@ -21,7 +21,8 @@ export class GetRepsListForPracticeUseCase
     private _storageService: IStorageService
   ) {}
 
-  async execute(userId: string): Promise<RepListForPracticeDTO[]> {
+  async execute(userId?: string): Promise<RepListForPracticeDTO[]> {
+    if (!userId) throw new UnautharizedError(ErrorMessages.UNAUTHORIZED);
     const user = await this._userRepository.findById(userId);
     if (!user) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
     if (user.role !== Role.DOCTOR)
@@ -30,11 +31,9 @@ export class GetRepsListForPracticeUseCase
     const doctor = await this._doctorRepository.getDoctorByUserId(userId);
     if (!doctor) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
 
-    // Get connected reps (ACCEPTED connections only)
     const connectedReps =
       await this._connectionRepository.doctorMutualConnections(doctor.id);
 
-    // Map to DTO with signed URLs
     return Promise.all(
       connectedReps.map(async (rep) => {
         let signedImageUrl: string | null = null;
@@ -57,4 +56,3 @@ export class GetRepsListForPracticeUseCase
     );
   }
 }
-
