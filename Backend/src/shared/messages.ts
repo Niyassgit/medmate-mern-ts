@@ -64,7 +64,9 @@ export const ErrorMessages = {
   PRODUCT_NOT_FOUND: "Product not found!",
   NOT_CONNECTED: "You are not connected to this medical representative",
   PRESCRIPTION_ITEM_NEEDED: "At least one prescription item is required",
-  GUEST_ALREADY_EXISTS:"Guest already exists for this doctor"
+  GUEST_ALREADY_EXISTS: "Guest already exists for this doctor",
+  INVALID_INVITATION_LINK:"Invalid invitation link",
+  FAILED_TO_UPDATE_OTP:"Failed to update otp",
 } as const;
 
 export const SuccessMessages = {
@@ -99,7 +101,6 @@ export const SuccessMessages = {
   SUB_DELETED: "Subscription plan deleted successfully",
   PRODUCT_UPDATED: "Product updated successfully",
   PRESCRIPTION_CREATED: "Prescription created successfuly",
-
 } as const;
 
 export const NotificationMessages = {
@@ -116,4 +117,21 @@ export const NotificationMessages = {
   INTEREST_MESSAGE: "Showed interested on your Post",
   REGISTER_SUCCESS:
     "registeration completed successfully. Please verify your email",
+  PRESCRIPTION_INVITATION_SUBJECT: "Prescription Invitation",
+  PRESCRIPTION_INVITATION_BODY: (
+    guestName: string,
+    registrationLink: string,
+    expiresAt?: Date
+  ) => `
+Hello ${guestName},
+
+You have been prescribed medications. Please register using this link to access your prescription:
+
+${registrationLink}
+
+This link expires on ${expiresAt ? expiresAt.toLocaleDateString() : "never"}.
+
+Best regards,
+MedMate Team
+`,
 } as const;

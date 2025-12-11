@@ -14,7 +14,9 @@ export class GuestMapper {
       isRegistered: data.isRegistered,
       ...(data.doctorId ? { doctor: { connect: { id: data.doctorId } } } : {}),
       ...(data.userId ? { user: { connect: { id: data.userId } } } : {}),
-      ...(data.territoryId ? { territory: { connect: { id: data.territoryId } } } : {}),
+      ...(data.territoryId
+        ? { territory: { connect: { id: data.territoryId } } }
+        : {}),
     };
   }
 
@@ -33,18 +35,20 @@ export class GuestMapper {
     };
   }
 
-  static toListItem(guest: Guest & { user?: User | null; territory?: Territory | null }): IGuestListItem {
-    
-      return {
-        id: guest.id,
-        name: guest.name,
-        email: guest.email ?? null,
-        phone: guest.phone ?? null,
-        isBlocked: guest.user?.isBlocked ?? null,
-        createdAt: guest.createdAt,
-        loginId: guest.user?.id ?? null,
-        territoryName: guest.territory?.name ?? null,
-      };
+  static toListItem(
+    guest: Guest & { user?: User | null; territory?: Territory | null }
+  ): IGuestListItem {
+    return {
+      id: guest.id,
+      name: guest.name,
+      email: guest.email ?? null,
+      phone: guest.phone ?? null,
+      isBlocked: guest.user?.isBlocked ?? null,
+      isRegistered: guest.isRegistered,
+      createdAt: guest.createdAt,
+      loginId: guest.user?.id ?? null,
+      territoryName: guest.territory?.name ?? null,
+    };
   }
 
   static toGuestEntityByDoctor(
@@ -54,11 +58,43 @@ export class GuestMapper {
     return {
       name: dto.name,
       email: dto.email || null,
-      phone: dto.phone || undefined, 
+      phone: dto.phone || undefined,
       userId: null,
       doctorId: doctorId,
       territoryId: dto.territoryId || null,
       isRegistered: false,
     };
+  }
+
+  static toPersistenceUpdate(
+    data: Partial<Omit<IGuest, "id" | "createdAt" | "updatedAt">>
+  ): Prisma.GuestUpdateInput {
+    const updateData: Prisma.GuestUpdateInput = {};
+
+    if (data.name !== undefined) updateData.name = data.name;
+    if (data.email !== undefined) updateData.email = data.email;
+    if (data.phone !== undefined) updateData.phone = data.phone;
+    if (data.isRegistered !== undefined)
+      updateData.isRegistered = data.isRegistered;
+
+    if (data.userId !== undefined) {
+      updateData.user = data.userId
+        ? { connect: { id: data.userId } }
+        : { disconnect: true };
+    }
+
+    if (data.territoryId !== undefined) {
+      updateData.territory = data.territoryId
+        ? { connect: { id: data.territoryId } }
+        : { disconnect: true };
+    }
+
+    if (data.doctorId !== undefined) {
+      updateData.doctor = data.doctorId
+        ? { connect: { id: data.doctorId } }
+        : { disconnect: true };
+    }
+
+    return updateData;
   }
 }

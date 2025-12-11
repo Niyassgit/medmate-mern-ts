@@ -34,9 +34,10 @@ export class GuestRepository
     guestId: string,
     data: Omit<IGuest, "id" | "createdAt">
   ): Promise<IGuest> {
+    const prismaData = GuestMapper.toPersistenceUpdate(data);
     const result = await prisma.guest.update({
       where: { id: guestId },
-      data,
+      data: prismaData,
     });
     return GuestMapper.toDomain(result);
   }
@@ -156,5 +157,15 @@ export class GuestRepository
         } as Guest & { user?: User | null; territory?: Territory | null };
         return GuestMapper.toListItem(guestData);
       });
+  }
+  async findGuestIdByUserId(
+    userId: string
+  ): Promise<{ guestId: string | null }> {
+    const guest = await prisma.guest.findFirst({
+      where: { loginId: userId },
+      select: { id: true },
+    });
+
+    return { guestId: guest?.id ?? null };
   }
 }

@@ -1,3 +1,3 @@
-export const GuestEndpoints = {
-  GUEST_REGISTER: "/guest/signup",
-};
+import { api } from "@/services/api";
+import { GuestEndpoints } from "@/services/endpoints/GuestEndpoints";
+

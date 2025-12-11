@@ -52,6 +52,8 @@ import { PrescriptionItemRepository } from "../repositories/PrescriptionItemRepo
 import { GetGuestsByDoctorUseCase } from "../../application/doctor/use-cases/GetGuestsByDoctorUseCase";
 import { CreateGuestByDoctorUseCase } from "../../application/doctor/use-cases/CreateGuestByDoctorUseCase";
 import { GuestRepository } from "../repositories/GuestRepository";
+import { TokenService } from "../services/TokenService";
+import { ConfigService } from "../services/ConfigService";
 
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
@@ -71,6 +73,7 @@ const notificationEventPublisher = new NotificationEventPublisher();
 const conversationRepository = new ConversationRepository();
 const messageRepository = new MessageRepository();
 const chatEventPublisher = new ChatEventPublisher();
+const tokenService = new TokenService();
 
 const createDoctorUseCase = new CreateDoctorUseCase(
   doctorRepository,
@@ -256,10 +259,16 @@ const getRepProductsForDoctorUseCase = new GetRepProductsForDoctorUseCase(
   territoryRepository
 );
 
+const configService = new ConfigService();
+
 const createPrescriptionUseCase = new CreatePrescriptionUseCase(
   doctorRepository,
   prescriptionRepository,
-  prescriptionItemRepository
+  prescriptionItemRepository,
+  guestRepository,
+  notificationService,
+  tokenService,
+  configService
 );
 
 const getGuestsByDoctorUseCase = new GetGuestsByDoctorUseCase(

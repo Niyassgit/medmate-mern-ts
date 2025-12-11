@@ -4,6 +4,7 @@ import { IOtpService } from "../../domain/common/services/IOtpService";
 import { IOtpRecord } from "../../domain/common/entities/IOtpRecord";
 import { OtpPurpose } from "../../domain/common/types/OtpPurpose";
 import { IResendOtpRecord } from "../../domain/common/entities/IResendOtpRecord";
+import { ErrorMessages } from "../../shared/Messages";
 
 export class OtpService implements IOtpService {
   async generateOtp(
@@ -67,7 +68,7 @@ export class OtpService implements IOtpService {
     });
 
     if (!otpRecord) {
-      throw new Error("Failed to update OTP");
+      throw new Error(ErrorMessages.FAILED_TO_UPDATE_OTP);
     }
     return {
       otp,

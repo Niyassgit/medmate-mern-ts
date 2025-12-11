@@ -68,5 +68,18 @@ export class PrescriptionRepository
     });
     return PrescriptionMapper.toDomain(updated);
   }
+
+  async findPrescriptionByShareToken(
+    shareToken: string
+  ): Promise<IPrescription | null> {
+
+    const prescription=await prisma.prescription.findUnique({
+      where:{shareToken},
+    });
+    if(!prescription) return null;
+    if(prescription.linkExpiresAt && prescription.linkExpiresAt <new Date()){
+      return null;
+    }
+    return PrescriptionMapper.toDomain(prescription);
+  }
 }
- 

@@ -9,7 +9,7 @@ import {
 import { AuthEndpoints } from "@/services/endpoints/AuthEndpoints";
 import { DoctorEndpoints } from "@/services/endpoints/DoctorEndpoints";
 import { RepEndpoints } from "@/services/endpoints/RepEndpoints";
-import { GuestEndpoints } from "../Guest/api";
+import { GuestEndpoints } from "@/services/endpoints/GuestEndpoints"; 
 
 interface loginPayload {
   email: string;
@@ -117,9 +117,14 @@ export const registerGuest = (values: {
   phone: string;
   password: string;
   territoryId?: string;
+  shareToken?: string;
 }) => {
+  const endpoint = values.shareToken 
+    ? GuestEndpoints.GUEST_REGISTER_WITH_TOKEN(values.shareToken)
+    : GuestEndpoints.GUEST_REGISTER;
+    
   return api.post<RegisterResponseBody>(
-    GuestEndpoints.GUEST_REGISTER,
+    endpoint,
     values,
     {
       headers: {

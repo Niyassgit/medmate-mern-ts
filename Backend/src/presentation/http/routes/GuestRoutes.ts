@@ -17,5 +17,13 @@ export class GuestRoutes {
       ValidateSchema(GuestRegisterSchema),
       guestController.createGuest
     );
+    
+    this.router.post(
+      "/signup/:shareToken",
+      ValidateSchema(GuestRegisterSchema),
+      guestController.createGuest
+    );
+
+    this.router.get("prescriptions",guestController.)
   }
 }

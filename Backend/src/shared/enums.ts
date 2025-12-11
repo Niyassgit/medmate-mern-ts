@@ -41,3 +41,11 @@ export enum StripePaymentStatus{
   UNPAID="UNPAID",
   NO_PAYMENT_REQUIRED="NO_PAYMENT_REQUIRED",  
 }
+
+export enum PrescriptionStatus{
+   PENDING="PENDING",
+  APPROVED="APPROVED",
+  REJECTED="REJECTED",
+  USED="USED",
+  EXPIRED="EXPIRED"
+}

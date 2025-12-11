@@ -2,7 +2,7 @@ import { IUser } from "../../../domain/common/entities/IUser";
 import { NotificationMessages } from "../../../shared/Messages";
 import { RegisterResponseDTO } from "../../doctor/dto/RegisterResponseDTO";
 import { RegisterGuestDTO } from "../dto/RegisterPatientDTO";
-import { IGuest } from "../../../domain/Patient/entities/IGuest";
+import { IGuest } from "../../../domain/Guest/entities/IGuest";
 
 export class GuestMapper {
   static toGuestEntity(

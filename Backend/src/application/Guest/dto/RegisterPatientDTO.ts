@@ -4,5 +4,6 @@ export interface RegisterGuestDTO {
   phone: string;
   password: string;
   territoryId?: string;
+  shareToken?:string;
 }
 

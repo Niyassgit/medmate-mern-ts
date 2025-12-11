@@ -1,11 +1,11 @@
 import { PrescriptionStatus } from "../../../shared/Enums";
-import { PrescriptionItemDTO } from "./PrescriptionItemDTO";
+import { PrescriptionProductDTO } from "./PrescriptionProductDTO";
 
-export interface PrescriptionDTO{
+export interface PrescriptionDetailsDTO{
      notes?:string;
      status?:PrescriptionStatus,
      expiresAt?:Date,
      shareToken?:string,
      linkExpiresAt?:Date,
-     items: PrescriptionItemDTO[];
+     items: PrescriptionProductDTO[];
 }

@@ -11,4 +11,7 @@ export interface IPrescriptionRepository {
   ): Promise<IPrescription>;
   findAllPrescriptionsByGuestId(GuestId: string): Promise<IPrescription[]>;
   findAllPrescriptionByDoctorId(DoctorId: string): Promise<IPrescription[]>;
+  findPrescriptionByShareToken(
+    shareToken: string
+  ): Promise<IPrescription | null>;
 }

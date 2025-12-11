@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
   Form,
   FormItem,
@@ -35,8 +35,9 @@ interface Territory {
   region: string;
 }
 
-const SignupPatient = () => {
+const SignupGuest = () => {
   const navigate = useNavigate();
+  const { shareToken } = useParams();
   const [showPassword, setShowPassword] = useState(false);
   const [showCPassword, setShowCPassword] = useState(false);
   const [territories, setTerritories] = useState<Territory[]>([]);
@@ -88,6 +89,7 @@ const SignupPatient = () => {
         phone: String(values.phone).trim(),
         password: String(values.password),
         territoryId: values.territoryId || undefined,
+        shareToken: shareToken || undefined,
       };
 
       // Debug: Log the payload to see what's being sent
@@ -106,7 +108,10 @@ const SignupPatient = () => {
         });
       }
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || error.message || "Something went wrong";
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Something went wrong";
       toast.error(errorMessage);
       console.error("Registration error:", error.response?.data || error);
     }
@@ -317,5 +322,4 @@ const SignupPatient = () => {
   );
 };
 
-export default SignupPatient;
-
+export default SignupGuest;

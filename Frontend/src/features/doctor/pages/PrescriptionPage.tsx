@@ -9,8 +9,8 @@ import { RepDTO } from "../dto/RepDTO";
 interface Guest {
   id: string;
   name: string;
-  email?: string;
-  phone?: string;
+  email?: string | null;
+  phone?: string | null;
   isRegistered: boolean;
 }
 
@@ -439,17 +439,23 @@ export default function PrescriptionPage() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Share Token (Optional)
+                  Share Token (Auto-generated for unregistered guests)
                 </label>
                 <input
                   type="text"
-                  value={prescription.shareToken}
+                  value={prescription.shareToken || ""}
                   onChange={(e) =>
                     setPrescription((prev) => ({ ...prev, shareToken: e.target.value }))
                   }
-                  placeholder="e.g., ABC123XYZ"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  placeholder="Leave empty to auto-generate"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-gray-50"
+                  disabled={!selectedGuest || selectedGuest.isRegistered}
                 />
+                <p className="text-xs text-gray-500 mt-1">
+                  {!selectedGuest || selectedGuest.isRegistered
+                    ? "Token will be auto-generated for unregistered guests"
+                    : "Optional: Leave empty to auto-generate"}
+                </p>
               </div>
 
               <div>
