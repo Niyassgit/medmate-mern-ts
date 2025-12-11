@@ -3,7 +3,7 @@ import { IGuest } from "../../domain/Guest/entities/IGuest";
 import { IGuestListItem } from "../../domain/Patient/entities/IGuestListItem";
 import { IGuestRepository } from "../../domain/Patient/repositories/IGuestRepositories";
 import { BaseRepository } from "../database/BaseRepository";
-import { prisma } from "../config/db";
+import { prisma } from "../database/prisma";
 import { GuestMapper } from "../mappers/GuestMapper";
 
 export class GuestRepository
@@ -102,5 +102,47 @@ export class GuestRepository
       guests: mappedGuests,
       total: total || 0,
     };
+  }
+
+  async getGuestsByDoctorId(
+    doctorId: string,
+    search?: string
+  ): Promise<IGuestListItem[]> {
+    const where: Prisma.GuestWhereInput = {
+      doctorId,
+    };
+
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: "insensitive" } },
+        { email: { contains: search, mode: "insensitive" } },
+        { phone: { contains: search, mode: "insensitive" } },
+      ];
+    }
+
+    const guests = await prisma.guest.findMany({
+      where,
+      include: {
+        user: true,
+        territory: true,
+      },
+      orderBy: { createdAt: "desc" },
+      take: 50, // Limit to 50 for search dropdown
+    });
+
+    if (!guests || !Array.isArray(guests)) {
+      return [];
+    }
+
+    return guests
+      .filter((g) => g !== null && g !== undefined && g.id)
+      .map((g) => {
+        const guestData = {
+          ...g,
+          user: g.user || null,
+          territory: g.territory || null,
+        } as Guest & { user?: User | null; territory?: Territory | null };
+        return GuestMapper.toListItem(guestData);
+      });
   }
 }

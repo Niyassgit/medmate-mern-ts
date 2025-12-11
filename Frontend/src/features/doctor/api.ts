@@ -190,3 +190,39 @@ export const getRepProducts = async (repId: string) => {
   const res = await api.get(DoctorEndpoints.REP_PRODUCTS(repId));
   return res.data.data;
 };
+
+export const getGuests = async (search?: string) => {
+  const res = await api.get(DoctorEndpoints.GET_GUESTS, {
+    params: { search },
+  });
+  return res.data.data;
+};
+
+export const createGuest = async (data: {
+  name: string;
+  email?: string;
+  phone?: string;
+  territoryId?: string;
+}) => {
+  const res = await api.post(DoctorEndpoints.CREATE_GUEST, data);
+  return res.data.data;
+};
+
+export const createPrescription = async (
+  guestId: string,
+  data: {
+    notes?: string;
+    status?: string;
+    expiresAt?: string;
+    shareToken?: string;
+    linkExpiresAt?: string;
+    items: Array<{
+      productId: string;
+      dosage?: string;
+      quantity?: number;
+    }>;
+  }
+) => {
+  const res = await api.post(DoctorEndpoints.CREATE_PRESCRIPTION(guestId), data);
+  return res.data;
+};

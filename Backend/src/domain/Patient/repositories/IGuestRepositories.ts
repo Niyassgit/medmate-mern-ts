@@ -12,5 +12,9 @@ export interface IGuestRepository{
         search: string,
         territory?: string
     ): Promise<{ guests: IGuestListItem[]; total: number }>;
+    getGuestsByDoctorId(
+        doctorId: string,
+        search?: string
+    ): Promise<IGuestListItem[]>;
 }
 

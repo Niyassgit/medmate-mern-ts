@@ -33,6 +33,9 @@ import { IGetRepsListForPracticeUseCase } from "../../../application/doctor/inte
 import { IGetRepProductsForDoctorUseCase } from "../../../application/doctor/interfaces/IGetRepProductsForDoctorUseCase";
 import { PrescriptionDTO } from "../../../application/prescription/dto/PrescriptionDTO";
 import { ICreatePrescriptionUseCase } from "../../../application/prescription/interfaces/ICreatePrescriptionUseCase";
+import { IGetGuestsByDoctorUseCase } from "../../../application/doctor/interfaces/IGetGuestsByDoctorUseCase";
+import { ICreateGuestByDoctorUseCase } from "../../../application/doctor/interfaces/ICreateGuestByDoctorUseCase";
+import { CreateGuestByDoctorDTO } from "../../../application/doctor/dto/CreateGuestByDoctorDTO";
 
 export class DoctorController {
   constructor(
@@ -63,7 +66,9 @@ export class DoctorController {
     private _DoctorMessageMarkAsRead: IDoctorMessageMarkAsReadUseCase,
     private _getRepsListForPracticeUseCase: IGetRepsListForPracticeUseCase,
     private _getRepProductsForDoctorUseCase: IGetRepProductsForDoctorUseCase,
-    private _createPrescriptionUseCase: ICreatePrescriptionUseCase
+    private _createPrescriptionUseCase: ICreatePrescriptionUseCase,
+    private _getGuestsByDoctorUseCase: IGetGuestsByDoctorUseCase,
+    private _createGuestByDoctorUseCase: ICreateGuestByDoctorUseCase
   ) {}
 
   createDoctor = async (req: Request, res: Response) => {
@@ -366,6 +371,32 @@ export class DoctorController {
       dto,
       userId
     );
+    return res
+      .status(HttpStatusCode.CREATED)
+      .json({ success: true, data: response });
+  };
+
+  getGuests = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { search } = req.query;
+    if (!userId) {
+      return res
+        .status(HttpStatusCode.UNAUTHORIZED)
+        .json({ success: false, message: "Unauthorized" });
+    }
+    const response = await this._getGuestsByDoctorUseCase.execute(
+      userId,
+      search as string | undefined
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  createGuest = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const dto = req.body as CreateGuestByDoctorDTO;
+    const response = await this._createGuestByDoctorUseCase.execute(dto, userId);
     return res
       .status(HttpStatusCode.CREATED)
       .json({ success: true, data: response });

@@ -49,6 +49,9 @@ import { TerritoryRepository } from "../repositories/TerritoryRepository";
 import { CreatePrescriptionUseCase } from "../../application/prescription/use-cases/CreatePrescriptionUseCase";
 import { PrescriptionRepository } from "../repositories/PrescriptionRepository";
 import { PrescriptionItemRepository } from "../repositories/PrescriptionItemRepository";
+import { GetGuestsByDoctorUseCase } from "../../application/doctor/use-cases/GetGuestsByDoctorUseCase";
+import { CreateGuestByDoctorUseCase } from "../../application/doctor/use-cases/CreateGuestByDoctorUseCase";
+import { GuestRepository } from "../repositories/GuestRepository";
 
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
@@ -235,6 +238,7 @@ const productRepository = new ProductRepository();
 const territoryRepository = new TerritoryRepository();
 const prescriptionRepository = new PrescriptionRepository();
 const prescriptionItemRepository = new PrescriptionItemRepository();
+const guestRepository = new GuestRepository();
 
 const getRepsListForPracticeUseCase = new GetRepsListForPracticeUseCase(
   userRepository,
@@ -256,6 +260,16 @@ const createPrescriptionUseCase = new CreatePrescriptionUseCase(
   doctorRepository,
   prescriptionRepository,
   prescriptionItemRepository
+);
+
+const getGuestsByDoctorUseCase = new GetGuestsByDoctorUseCase(
+  doctorRepository,
+  guestRepository
+);
+
+const createGuestByDoctorUseCase = new CreateGuestByDoctorUseCase(
+  doctorRepository,
+  guestRepository
 );
 
 export const doctorController = new DoctorController(
@@ -286,5 +300,7 @@ export const doctorController = new DoctorController(
   markMessageAsReadUseCase,
   getRepsListForPracticeUseCase,
   getRepProductsForDoctorUseCase,
-  createPrescriptionUseCase
+  createPrescriptionUseCase,
+  getGuestsByDoctorUseCase,
+  createGuestByDoctorUseCase
 );

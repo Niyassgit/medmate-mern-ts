@@ -64,6 +64,7 @@ export const ErrorMessages = {
   PRODUCT_NOT_FOUND: "Product not found!",
   NOT_CONNECTED: "You are not connected to this medical representative",
   PRESCRIPTION_ITEM_NEEDED: "At least one prescription item is required",
+  GUEST_ALREADY_EXISTS:"Guest already exists for this doctor"
 } as const;
 
 export const SuccessMessages = {
@@ -98,6 +99,7 @@ export const SuccessMessages = {
   SUB_DELETED: "Subscription plan deleted successfully",
   PRODUCT_UPDATED: "Product updated successfully",
   PRESCRIPTION_CREATED: "Prescription created successfuly",
+
 } as const;
 
 export const NotificationMessages = {

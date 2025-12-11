@@ -1,6 +1,7 @@
 import { Guest, Prisma, User, Territory } from "@prisma/client";
 import { IGuest } from "../../domain/Guest/entities/IGuest";
 import { IGuestListItem } from "../../domain/Patient/entities/IGuestListItem";
+import { CreateGuestByDoctorDTO } from "../../application/doctor/dto/CreateGuestByDoctorDTO";
 
 export class GuestMapper {
   static toPersistance(
@@ -64,5 +65,20 @@ export class GuestMapper {
       });
       throw error;
     }
+  }
+
+  static toGuestEntityByDoctor(
+    dto: CreateGuestByDoctorDTO,
+    doctorId: string
+  ): Omit<IGuest, "id" | "createdAt" | "updatedAt"> {
+    return {
+      name: dto.name,
+      email: dto.email || null,
+      phone: dto.phone || undefined, // Use undefined instead of null to match interface
+      userId: null,
+      doctorId: doctorId,
+      territoryId: dto.territoryId || null,
+      isRegistered: false,
+    };
   }
 }
