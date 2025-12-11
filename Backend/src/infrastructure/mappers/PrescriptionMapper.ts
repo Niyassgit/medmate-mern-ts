@@ -1,5 +1,11 @@
-import { Prisma, Prescription } from "@prisma/client";
+import {
+  Prisma,
+  Prescription,
+  PrescriptionItem,
+  Product,
+} from "@prisma/client";
 import { IPrescription } from "../../domain/prescription/entites/IPrescription";
+import { IPrescriptionWithItemsAndProduct } from "../../domain/prescription/entites/IPrescriptionWIthItemsAndProduct";
 
 export class PrescriptionMapper {
   static toDomain(data: Prescription): IPrescription {
@@ -35,7 +41,7 @@ export class PrescriptionMapper {
     data: Partial<Omit<IPrescription, "id" | "createdAt" | "updatedAt">>
   ): Prisma.PrescriptionUpdateInput {
     const updateData: Prisma.PrescriptionUpdateInput = {};
-    
+
     if (data.doctorId !== undefined) {
       updateData.doctor = { connect: { id: data.doctorId } };
     }
@@ -57,7 +63,50 @@ export class PrescriptionMapper {
     if (data.linkExpiresAt !== undefined) {
       updateData.linkExpiresAt = data.linkExpiresAt ?? null;
     }
-    
+
     return updateData;
+  }
+
+  static toDomainWithItems(
+    data: Prescription & {
+      items: (PrescriptionItem & {
+        product: Product;
+      })[];
+    }
+  ): IPrescriptionWithItemsAndProduct {
+    return {
+      id: data.id,
+      doctorId: data.doctorId,
+      guestId: data.guestId,
+      notes: data.notes ?? undefined,
+      status: data.status,
+      expiresAt: data.expiresAt ?? undefined,
+      shareToken: data.shareToken ?? undefined,
+      linkExpiresAt: data.linkExpiresAt ?? undefined,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt,
+
+      items: data.items.map((item) => ({
+        id: item.id,
+        prescriptionId: item.prescriptionId,
+        productId: item.productId,
+        dosage: item.dosage ?? undefined,
+        quantity: item.quantity,
+
+        product: {
+          id: item.product.id,
+          repId: item.product.repId,
+          name: item.product.name,
+          brand: item.product.brand,
+          imageUrl: item.product.imageUrl, 
+          ingredients: item.product.ingredients, 
+          mrp: item.product.mrp,
+          ptr: item.product.ptr,
+          territoryIds: item.product.territoryIds,
+          createdAt: item.product.createdAt,
+          updatedAt: item.product.updatedAt,
+        },
+      })),
+    };
   }
 }

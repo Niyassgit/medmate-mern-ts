@@ -6,6 +6,7 @@ import { prisma } from "../database/prisma";
 import { PrescriptionMapper } from "../mappers/PrescriptionMapper";
 import { NotFoundError } from "../../application/errors";
 import { ErrorMessages } from "../../shared/Messages";
+import { IPrescriptionWithItemsAndProduct } from "../../domain/prescription/entites/IPrescriptionWIthItemsAndProduct";
 
 export class PrescriptionRepository
   extends BaseRepository<
@@ -37,14 +38,20 @@ export class PrescriptionRepository
     return prescriptions.map((p) => PrescriptionMapper.toDomain(p));
   }
 
-  async findAllPrescriptionsByGuestId(
-    GuestId: string
-  ): Promise<IPrescription[]> {
+  async findAllPrescriptionsByGuestId(guestId: string): Promise<IPrescriptionWithItemsAndProduct[]> {
     const prescriptions = await prisma.prescription.findMany({
-      where: { guestId: GuestId },
+      where: { guestId },
       orderBy: { createdAt: "desc" },
+      include: {
+        items: {
+          include: {
+            product: true, 
+          },
+        },
+      },
     });
-    return prescriptions.map((p) => PrescriptionMapper.toDomain(p));
+
+    return prescriptions.map((p) => PrescriptionMapper.toDomainWithItems(p));
   }
 
   async findPrescriptionById(prescriptionId: string): Promise<IPrescription> {
@@ -72,12 +79,11 @@ export class PrescriptionRepository
   async findPrescriptionByShareToken(
     shareToken: string
   ): Promise<IPrescription | null> {
-
-    const prescription=await prisma.prescription.findUnique({
-      where:{shareToken},
+    const prescription = await prisma.prescription.findUnique({
+      where: { shareToken },
     });
-    if(!prescription) return null;
-    if(prescription.linkExpiresAt && prescription.linkExpiresAt <new Date()){
+    if (!prescription) return null;
+    if (prescription.linkExpiresAt && prescription.linkExpiresAt < new Date()) {
       return null;
     }
     return PrescriptionMapper.toDomain(prescription);

@@ -601,7 +601,7 @@ model Product {
   brand        String
   imageUrl     String[]
   ingredients  String[]
-  useCases     String[]
+  // useCases     String[]
   mrp          Float
   ptr          Float
   territoryIds String[] @db.ObjectId

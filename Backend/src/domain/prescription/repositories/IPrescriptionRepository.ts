@@ -1,4 +1,5 @@
 import { IPrescription } from "../entites/IPrescription";
+import { IPrescriptionWithItemsAndProduct } from "../entites/IPrescriptionWIthItemsAndProduct";
 
 export interface IPrescriptionRepository {
   createPrescription(
@@ -9,7 +10,7 @@ export interface IPrescriptionRepository {
     prescriptionId: string,
     data: Partial<Omit<IPrescription, "id" | "createdAt" | "updatedAt">>
   ): Promise<IPrescription>;
-  findAllPrescriptionsByGuestId(GuestId: string): Promise<IPrescription[]>;
+  findAllPrescriptionsByGuestId(GuestId: string): Promise<IPrescriptionWithItemsAndProduct[]>;
   findAllPrescriptionByDoctorId(DoctorId: string): Promise<IPrescription[]>;
   findPrescriptionByShareToken(
     shareToken: string

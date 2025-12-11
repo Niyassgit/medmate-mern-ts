@@ -3,9 +3,13 @@ import { RegisterGuestDTO } from "../../../application/Guest/dto/RegisterPatient
 import { ICreateGuestUseCase } from "../../../application/Guest/interefaces/ICreateGuestUseCase";
 import { HttpStatusCode } from "../../../shared/HttpStatusCodes";
 import { GetOptionalUserId } from "../utils/GetOptionalUserId";
+import { IGetAllPrescriptionsUseCase } from "../../../application/Guest/interefaces/IGetAllPrescriptions";
 
 export class GuestController {
-  constructor(private _createGuestUseCase: ICreateGuestUseCase) {}
+  constructor(
+    private _createGuestUseCase: ICreateGuestUseCase,
+    private _getAllPrescriptionsUseCase: IGetAllPrescriptionsUseCase
+  ) {}
 
   createGuest = async (req: Request, res: Response) => {
     const { name, email, phone, password, territoryId } = req.body;
@@ -25,9 +29,12 @@ export class GuestController {
       .status(HttpStatusCode.CREATED)
       .json({ success: true, ...response });
   };
- 
-  getPrescriptions=async(req:Request,res:Response)=>{
-    const userId=GetOptionalUserId(req.user);
-    const response=await this.
-  }
+
+  getPrescriptions = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._getAllPrescriptionsUseCase.execute(userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
 }

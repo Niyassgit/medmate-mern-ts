@@ -5,7 +5,7 @@ export interface IProduct {
   brand: string;
   imageUrl: string[];
   ingredients: string[];
-  useCase: string[];
+  // useCase: string[];
   mrp: number;
   ptr: number;
   territoryIds: string[];
