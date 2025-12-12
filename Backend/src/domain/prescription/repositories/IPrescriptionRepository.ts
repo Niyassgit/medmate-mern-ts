@@ -15,4 +15,5 @@ export interface IPrescriptionRepository {
   findPrescriptionByShareToken(
     shareToken: string
   ): Promise<IPrescription | null>;
+  findPrescriptionByIdWithItems(id: string): Promise<IPrescriptionWithItemsAndProduct | null>;
 }

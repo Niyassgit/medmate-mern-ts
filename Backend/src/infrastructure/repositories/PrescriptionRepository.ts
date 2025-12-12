@@ -15,8 +15,7 @@ export class PrescriptionRepository
     Prisma.PrescriptionCreateInput,
     "prescription"
   >
-  implements IPrescriptionRepository
-{
+  implements IPrescriptionRepository {
   constructor() {
     super(prisma.prescription, (p) => PrescriptionMapper.toDomain(p));
   }
@@ -91,5 +90,20 @@ export class PrescriptionRepository
       return null;
     }
     return PrescriptionMapper.toDomain(prescription);
+  }
+
+  async findPrescriptionByIdWithItems(
+    id: string
+  ): Promise<IPrescriptionWithItemsAndProduct | null> {
+    const prescription = await prisma.prescription.findUnique({
+      where: { id },
+      include: {
+        items: { include: { product: true } },
+        order: true,
+      },
+    });
+
+    if (!prescription) return null;
+    return PrescriptionMapper.toDomainWithItems(prescription);
   }
 }

@@ -17,5 +17,6 @@ export interface IGuestRepository{
         search?: string
     ): Promise<IGuestListItem[]>;
     findGuestIdByUserId(userId:string):Promise<{guestId:string | null}>;
+    findGuestByuserId(userId:string):Promise<IGuest | null>;
 }
 

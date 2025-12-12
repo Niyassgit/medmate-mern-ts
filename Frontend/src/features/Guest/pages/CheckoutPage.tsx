@@ -14,7 +14,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { PrescriptionDTO } from "@/components/Dto/Prescriptions";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { getAddress, createAddress, deleteAddress } from "../api";
+import { getAddress, createAddress, deleteAddress, makePayment } from "../api";
 import toast from "react-hot-toast";
 import { AddressDTO } from "../dto/Address";
 import {
@@ -91,12 +91,35 @@ const CheckoutPage = () => {
     }
   };
 
-  const handlePayment = () => {
+  const handlePayment = async () => {
     if (!selectedAddressId) {
       toast.error("Please select a delivery address");
       return;
     }
-    toast.success("Processing payment...");
+
+    try {
+      toast.loading("Processing payment...", { id: "payment" });
+      const sessionUrl = await makePayment(
+        prescription.id,
+        selectedAddressId,
+        paymentMethod
+      );
+
+      toast.dismiss("payment");
+
+      if (paymentMethod === "cod") {
+        toast.success("Order placed successfully via Cash on Delivery!");
+        navigate("/guest/order-success");
+      } else if (sessionUrl) {
+        window.location.href = sessionUrl;
+      } else {
+        toast.error("Failed to initiate payment");
+      }
+    } catch (error) {
+      toast.dismiss("payment");
+      console.error("Payment failed", error);
+      toast.error("Payment failed. Please try again.");
+    }
   };
 
   const handleDeleteAddress = (e: React.MouseEvent, addressId: string) => {
@@ -130,8 +153,7 @@ const CheckoutPage = () => {
     (sum, item) => sum + item.mrp * item.quantity,
     0
   );
-  const deliveryCharge = 50;
-  const total = subtotal + deliveryCharge;
+  const total = subtotal;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
@@ -189,11 +211,10 @@ const CheckoutPage = () => {
                     <div
                       key={address.id}
                       onClick={() => setSelectedAddressId(address.id)}
-                      className={`relative border-2 rounded-xl p-4 cursor-pointer transition-all ${
-                        selectedAddressId === address.id
-                          ? "border-blue-500 bg-blue-50"
-                          : "border-gray-200 hover:border-gray-300"
-                      }`}
+                      className={`relative border-2 rounded-xl p-4 cursor-pointer transition-all ${selectedAddressId === address.id
+                        ? "border-blue-500 bg-blue-50"
+                        : "border-gray-200 hover:border-gray-300"
+                        }`}
                     >
                       {selectedAddressId === address.id && (
                         <div className="absolute top-4 right-4 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
@@ -202,11 +223,10 @@ const CheckoutPage = () => {
                       )}
                       <div className="flex items-start gap-3">
                         <MapPin
-                          className={`w-5 h-5 mt-1 ${
-                            selectedAddressId === address.id
-                              ? "text-blue-500"
-                              : "text-gray-400"
-                          }`}
+                          className={`w-5 h-5 mt-1 ${selectedAddressId === address.id
+                            ? "text-blue-500"
+                            : "text-gray-400"
+                            }`}
                         />
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-1">
@@ -406,27 +426,24 @@ const CheckoutPage = () => {
               <div className="p-6 space-y-4">
                 <div
                   onClick={() => setPaymentMethod("card")}
-                  className={`border-2 rounded-xl p-4 cursor-pointer transition-all ${
-                    paymentMethod === "card"
-                      ? "border-purple-500 bg-purple-50"
-                      : "border-gray-200 hover:border-gray-300"
-                  }`}
+                  className={`border-2 rounded-xl p-4 cursor-pointer transition-all ${paymentMethod === "card"
+                    ? "border-purple-500 bg-purple-50"
+                    : "border-gray-200 hover:border-gray-300"
+                    }`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div
-                        className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                          paymentMethod === "card"
-                            ? "bg-purple-500"
-                            : "bg-gray-200"
-                        }`}
+                        className={`w-10 h-10 rounded-full flex items-center justify-center ${paymentMethod === "card"
+                          ? "bg-purple-500"
+                          : "bg-gray-200"
+                          }`}
                       >
                         <CreditCard
-                          className={`w-5 h-5 ${
-                            paymentMethod === "card"
-                              ? "text-white"
-                              : "text-gray-600"
-                          }`}
+                          className={`w-5 h-5 ${paymentMethod === "card"
+                            ? "text-white"
+                            : "text-gray-600"
+                            }`}
                         />
                       </div>
                       <div>
@@ -448,27 +465,24 @@ const CheckoutPage = () => {
 
                 <div
                   onClick={() => setPaymentMethod("cod")}
-                  className={`border-2 rounded-xl p-4 cursor-pointer transition-all ${
-                    paymentMethod === "cod"
-                      ? "border-purple-500 bg-purple-50"
-                      : "border-gray-200 hover:border-gray-300"
-                  }`}
+                  className={`border-2 rounded-xl p-4 cursor-pointer transition-all ${paymentMethod === "cod"
+                    ? "border-purple-500 bg-purple-50"
+                    : "border-gray-200 hover:border-gray-300"
+                    }`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div
-                        className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                          paymentMethod === "cod"
-                            ? "bg-purple-500"
-                            : "bg-gray-200"
-                        }`}
+                        className={`w-10 h-10 rounded-full flex items-center justify-center ${paymentMethod === "cod"
+                          ? "bg-purple-500"
+                          : "bg-gray-200"
+                          }`}
                       >
                         <Package
-                          className={`w-5 h-5 ${
-                            paymentMethod === "cod"
-                              ? "text-white"
-                              : "text-gray-600"
-                          }`}
+                          className={`w-5 h-5 ${paymentMethod === "cod"
+                            ? "text-white"
+                            : "text-gray-600"
+                            }`}
                         />
                       </div>
                       <div>
@@ -542,12 +556,6 @@ const CheckoutPage = () => {
                     <span className="text-gray-600">Subtotal</span>
                     <span className="font-medium text-gray-900">
                       ₹{subtotal}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Delivery Charge</span>
-                    <span className="font-medium text-gray-900">
-                      ₹{deliveryCharge}
                     </span>
                   </div>
                   <div className="border-t pt-3 flex justify-between">

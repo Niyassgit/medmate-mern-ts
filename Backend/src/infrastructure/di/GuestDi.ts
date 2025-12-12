@@ -13,6 +13,10 @@ import { NotificationService } from "../services/NotificationService";
 import { OtpService } from "../services/OtpService";
 import { s3StorageService } from "../services/S3StorageService";
 
+import { MakePaymentUseCase } from "../../application/Guest/use-cases/MakePaymentUseCase";
+import { OrderRepository } from "../repositories/OrderRepository";
+import { StripePaymentService } from "../services/StripePaymentService";
+
 const userRepository = new UserRepository();
 const guestRepository = new GuestRepository();
 const bcryptServices = new BcryptServices();
@@ -21,6 +25,8 @@ const storageService = new s3StorageService();
 const notificationService = new NotificationService();
 const prescriptionRepository = new PrescriptionRepository();
 const addressRepository = new AddressRepository();
+const orderRepository = new OrderRepository();
+const stripePaymentService = new StripePaymentService();
 
 const createGuestUseCase = new CreateGuestUseCase(
   userRepository,
@@ -29,6 +35,13 @@ const createGuestUseCase = new CreateGuestUseCase(
   otpService,
   notificationService,
   prescriptionRepository
+);
+
+const makePaymentUseCase = new MakePaymentUseCase(
+  orderRepository,
+  prescriptionRepository,
+  stripePaymentService,
+  guestRepository
 );
 
 const getAllPrescriptionsUseCase = new GetAllPrescriptionsUseCase(
@@ -55,5 +68,6 @@ export const guestController = new GuestController(
   getAllPrescriptionsUseCase,
   getAllAddressUseCase,
   createAddressUseCase,
-  deleteAddressUseCase
+  deleteAddressUseCase,
+  makePaymentUseCase
 );

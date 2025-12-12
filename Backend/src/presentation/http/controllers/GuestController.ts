@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { RegisterGuestDTO } from "../../../application/Guest/dto/RegisterPatientDTO";
+import { IMakePaymentUseCase } from "../../../application/Guest/interefaces/IMakePaymentUseCase";
 import { ICreateGuestUseCase } from "../../../application/Guest/interefaces/ICreateGuestUseCase";
 import { HttpStatusCode } from "../../../shared/HttpStatusCodes";
 import { GetOptionalUserId } from "../utils/GetOptionalUserId";
@@ -15,8 +16,9 @@ export class GuestController {
     private _getAllPrescriptionsUseCase: IGetAllPrescriptionsUseCase,
     private _getAllAddressUseCase: IGetAllAddressUseCase,
     private _createAddressUseCase: ICreateAddressUseCase,
-    private _deleteAddressUseCase: IDeleteAddressUseCase
-  ) {}
+    private _deleteAddressUseCase: IDeleteAddressUseCase,
+    private _makePaymentUseCase: IMakePaymentUseCase
+  ) { }
 
   createGuest = async (req: Request, res: Response) => {
     const { name, email, phone, password, territoryId } = req.body;
@@ -72,5 +74,19 @@ export class GuestController {
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, message: response });
+  };
+
+  makePayment = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { prescriptionId, addressId, paymentMethod } = req.body;
+    const response = await this._makePaymentUseCase.execute(
+      prescriptionId,
+      addressId,
+      paymentMethod,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, url: response });
   };
 }

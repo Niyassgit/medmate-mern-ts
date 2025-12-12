@@ -39,5 +39,9 @@ export class GuestRoutes {
       guestController.createAddress
     );
     this.router.delete("/address/:addressId", guestController.deleteAddress);
+    this.router.post(
+      "/payment",
+      guestController.makePayment
+    );
   }
 }

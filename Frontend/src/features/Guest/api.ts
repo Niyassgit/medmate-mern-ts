@@ -20,3 +20,16 @@ export const deleteAddress = async (addressId: string) => {
   const res = await api.delete(`${GuestEndpoints.ADDRESS}/${addressId}`);
   return res.data;
 };
+
+export const makePayment = async (
+  prescriptionId: string,
+  addressId: string,
+  paymentMethod: string
+): Promise<string | null> => {
+  const res = await api.post(GuestEndpoints.MAKE_PAYMENT, {
+    prescriptionId,
+    addressId,
+    paymentMethod,
+  });
+  return res.data.url;
+};
