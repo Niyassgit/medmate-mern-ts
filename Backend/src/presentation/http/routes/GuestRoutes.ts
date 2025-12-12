@@ -32,11 +32,12 @@ export class GuestRoutes {
     );
 
     this.router.get("/prescriptions", guestController.getPrescriptions);
-    this.router.get(
+    this.router.get("/address", guestController.getAllAddress);
+    this.router.post(
       "/address",
       ValidateSchema(AddressSchema),
       guestController.createAddress
     );
-    this.router.post("/address", guestController.createAddress);
+    this.router.delete("/address/:addressId", guestController.deleteAddress);
   }
 }

@@ -14,8 +14,7 @@ export class AddressRepository
     Prisma.AddressCreateInput,
     "address"
   >
-  implements IAddressRepository
-{
+  implements IAddressRepository {
   constructor() {
     super(prisma.address, (a) => AddressMapper.toDomain(a));
   }
@@ -33,7 +32,7 @@ export class AddressRepository
 
   async findAllAddress(guestId: string): Promise<IAddress[]> {
     const result = await prisma.address.findMany({
-      where: { guestId: guestId },
+      where: { guestId: guestId, isActive: true },
     });
 
     return result.map((a) => AddressMapper.toDomain(a));
@@ -52,6 +51,9 @@ export class AddressRepository
     return AddressMapper.toDomain(updated);
   }
   async deleteAddress(addressId: string): Promise<void> {
-    await this.delete(addressId);
+    await prisma.address.update({
+      where: { id: addressId },
+      data: { isActive: false },
+    });
   }
 }

@@ -1,6 +1,10 @@
 import { CreateGuestUseCase } from "../../application/Guest/auth/CreateGuestUseCase";
+import { CreateAddressUseCase } from "../../application/Guest/use-cases/CreateAddressUseCase";
+import { DeleteAddressUseCase } from "../../application/Guest/use-cases/DeleteAddressUseCase";
+import { GetAllAddressUseCase } from "../../application/Guest/use-cases/GetAllAddressUseCase";
 import { GetAllPrescriptionsUseCase } from "../../application/Guest/use-cases/GetAllPrescriptionsUaseCase";
 import { GuestController } from "../../presentation/http/controllers/GuestController";
+import { AddressRepository } from "../repositories/AddressRepository";
 import { GuestRepository } from "../repositories/GuestRepository";
 import { PrescriptionRepository } from "../repositories/PrescriptionRepository";
 import { UserRepository } from "../repositories/UserRepository";
@@ -16,6 +20,7 @@ const otpService = new OtpService();
 const storageService = new s3StorageService();
 const notificationService = new NotificationService();
 const prescriptionRepository = new PrescriptionRepository();
+const addressRepository = new AddressRepository();
 
 const createGuestUseCase = new CreateGuestUseCase(
   userRepository,
@@ -31,8 +36,24 @@ const getAllPrescriptionsUseCase = new GetAllPrescriptionsUseCase(
   prescriptionRepository,
   storageService
 );
+const getAllAddressUseCase = new GetAllAddressUseCase(
+  guestRepository,
+  addressRepository
+);
+const createAddressUseCase = new CreateAddressUseCase(
+  guestRepository,
+  addressRepository
+);
+
+const deleteAddressUseCase = new DeleteAddressUseCase(
+  guestRepository,
+  addressRepository
+);
 
 export const guestController = new GuestController(
   createGuestUseCase,
-  getAllPrescriptionsUseCase
+  getAllPrescriptionsUseCase,
+  getAllAddressUseCase,
+  createAddressUseCase,
+  deleteAddressUseCase
 );

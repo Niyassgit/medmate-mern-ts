@@ -9,7 +9,7 @@ export class AddressMapper {
       city: data.city,
       country: data.country,
       guestId: data.guestId,
-      landmark: data.landmark,
+      landmark: data.landmark ?? "",
       phone: data.phone,
       state: data.state,
       street: data.street,

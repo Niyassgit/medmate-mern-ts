@@ -103,7 +103,8 @@ export const SuccessMessages = {
   SUB_DELETED: "Subscription plan deleted successfully",
   PRODUCT_UPDATED: "Product updated successfully",
   PRESCRIPTION_CREATED: "Prescription created successfuly",
-  ADDRESS_SUCCESS:"Address created successfully"
+  ADDRESS_SUCCESS:"Address created successfully",
+  ADDRESS_DELETE: "Address deleted successfully"
 } as const;
 
 export const NotificationMessages = {

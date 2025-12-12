@@ -7,13 +7,15 @@ import { IGetAllPrescriptionsUseCase } from "../../../application/Guest/interefa
 import { IGetAllAddressUseCase } from "../../../application/Guest/interefaces/IGetAllAddressUseCase";
 import { ICreateAddressUseCase } from "../../../application/Guest/interefaces/ICreateAddressUseCase";
 import { AddressDTO } from "../../../application/Guest/dto/AddressDTO";
+import { IDeleteAddressUseCase } from "../../../application/Guest/interefaces/IDeleteAddressUseCase";
 
 export class GuestController {
   constructor(
     private _createGuestUseCase: ICreateGuestUseCase,
     private _getAllPrescriptionsUseCase: IGetAllPrescriptionsUseCase,
     private _getAllAddressUseCase: IGetAllAddressUseCase,
-    private _createAddressUseCase: ICreateAddressUseCase
+    private _createAddressUseCase: ICreateAddressUseCase,
+    private _deleteAddressUseCase: IDeleteAddressUseCase
   ) {}
 
   createGuest = async (req: Request, res: Response) => {
@@ -58,5 +60,17 @@ export class GuestController {
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
+  };
+
+  deleteAddress = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { addressId } = req.params;
+    const response = await this._deleteAddressUseCase.execute(
+      addressId,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, message: response });
   };
 }
