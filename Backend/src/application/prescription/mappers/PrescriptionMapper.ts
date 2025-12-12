@@ -73,6 +73,14 @@ export class PrescriptionMapper {
       linkExpiresAt: data.linkExpiresAt ?? undefined,
       createdAt: data.createdAt,
       items,
+      order: data.order
+        ? {
+            id: data.order.id,
+            totalAmount: data.order.totalAmount,
+            paymentStatus: data.order.paymentStatus,
+            status: data.order.status,
+          }
+        : null,
     };
   }
 }

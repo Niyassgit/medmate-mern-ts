@@ -1,4 +1,5 @@
 import { PrescriptionStatus } from "../../../shared/Enums";
+import { PrescriptionOrderDTO } from "../dto/PrescriptionOrderDTO";
 import { PrescriptionProductDTO } from "./PrescriptionProductDTO";
 
 export interface PrescriptionDetailsDTO {
@@ -10,4 +11,5 @@ export interface PrescriptionDetailsDTO {
   createdAt: Date;
 
   items: PrescriptionProductDTO[];
+  order?: PrescriptionOrderDTO | null;
 }

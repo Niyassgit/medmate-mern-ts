@@ -35,11 +35,8 @@ export class PrescriptionRepository
       where: { doctorId },
       orderBy: { createdAt: "desc" },
       include: {
-        items: {
-          include: {
-            product: true,
-          },
-        },
+        items: { include: { product: true } },
+        order: true,
       },
     });
 
@@ -53,11 +50,8 @@ export class PrescriptionRepository
       where: { guestId },
       orderBy: { createdAt: "desc" },
       include: {
-        items: {
-          include: {
-            product: true,
-          },
-        },
+        items: { include: { product: true } },
+        order: true,
       },
     });
 

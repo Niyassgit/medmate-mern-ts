@@ -1,3 +1,4 @@
+import { IOrderMinimal } from "../../order/entitiy/IOrderMinimal";
 import { IProduct } from "../../product/entities/IProduct";
 import { IPrescription } from "./IPrescription";
 import { IPrescriptionItem } from "./IPrescriptionItem";
@@ -5,4 +6,7 @@ import { IPrescriptionItem } from "./IPrescriptionItem";
 export type IPrescriptionWithItemsAndProduct =
   IPrescription & {
     items: (IPrescriptionItem & { product: IProduct })[];
+    order?:IOrderMinimal | null,
   };
+
+
