@@ -1,16 +1,17 @@
-import { useEffect, useMemo, useState, useCallback } from "react";
+import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { Button } from "../ui/button";
-import { Bell, Mail, Menu, X } from "lucide-react";
+import { Bell, Hospital, Mail, Menu, X } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import UserAvatar from "../shared/UserAvatar";
-import { notificationUnreadCount, doctorConversations } from "@/features/doctor/api";
+import {
+  notificationUnreadCount,
+  doctorConversations,
+} from "@/features/doctor/api";
 import { useSelector } from "react-redux";
 import { getSocket } from "@/lib/socket";
 import { MessageDTO } from "../Dto/MessageDTO";
 import { Role } from "@/types/Role";
-import { repConversations } from "@/features/rep/api";
 import { Conversation } from "../Dto/Conversation";
-import toast from "react-hot-toast";
 
 const DoctorNavbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -18,6 +19,8 @@ const DoctorNavbar = () => {
   const [unreadChatCount, setUnreadChatCount] = useState(0);
   const userId = useSelector((state: any) => state.auth.user?.id);
   const token = useMemo(() => localStorage.getItem("accessToken"), []);
+  const [practiceOpen, setPracticeOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!userId) return;
@@ -31,18 +34,35 @@ const DoctorNavbar = () => {
   const updateUnreadChatCount = useCallback(async () => {
     try {
       const res = await doctorConversations();
-      const totalUnread = res.data?.reduce((sum: number, conv: any) => sum + (conv.unread || 0), 0) || 0;
+      const totalUnread = res.data?.reduce(
+        (sum: number, conv: any) => sum + (conv.unread || 0),
+        0
+      );
       setUnreadChatCount(totalUnread);
     } catch (err) {
       console.error("Failed to fetch unread chat count", err);
     }
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
+        setPracticeOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     if (!userId) return;
     updateUnreadChatCount();
   }, [userId, updateUnreadChatCount]);
+
   const navLinkClass = (isActive: boolean) =>
     `hover:text-gray-200 transition ${
       isActive ? "text-blue-600 font-semibold" : "text-white"
@@ -51,38 +71,33 @@ const DoctorNavbar = () => {
   useEffect(() => {
     if (!token || !userId) return;
     const socket = getSocket(token);
-    socket.on("notification:count", (data) => {
-      setUnreadCount(data);
-    });
+
+    socket.on("notification:count", (data) => setUnreadCount(data));
 
     return () => {
       socket.off("notification:count");
     };
   }, [token, userId]);
 
-
   useEffect(() => {
     if (!token || !userId) return;
     const socket = getSocket(token);
 
-    const joinAllConversations=async()=>{
+    const joinAllConversations = async () => {
       try {
-        const res=await doctorConversations();
-        const conversations=res.data || [];
-
-        conversations.forEach((conv:Conversation)=>{
-          socket.emit("join_conversation",conv.id);
+        const res = await doctorConversations();
+        const conversations = res.data || [];
+        conversations.forEach((conv: Conversation) => {
+          socket.emit("join_conversation", conv.id);
         });
       } catch (error) {
         console.error("Failed to join conversations", error);
       }
     };
 
-    if(socket.connected){
-      joinAllConversations();
-    }else{
-      socket.once("connect",joinAllConversations);
-    }
+    socket.connected
+      ? joinAllConversations()
+      : socket.once("connect", joinAllConversations);
 
     const handleNewMessage = (message: MessageDTO) => {
       if (message.senderRole !== Role.DOCTOR) {
@@ -90,21 +105,17 @@ const DoctorNavbar = () => {
       }
     };
 
-    const handleMessageSeen = (conversationId: string) => {
-      updateUnreadChatCount();
-    };
-
     socket.on("new_message", handleNewMessage);
-    socket.on("message_seen", handleMessageSeen);
+    socket.on("message_seen", updateUnreadChatCount);
 
     return () => {
       socket.off("new_message", handleNewMessage);
-      socket.off("message_seen", handleMessageSeen);
+      socket.off("message_seen", updateUnreadChatCount);
     };
   }, [token, userId, updateUnreadChatCount]);
+
   return (
     <nav className="bg-[#E8618C] shadow-md">
-      {/* Header */}
       <div className="flex items-center justify-between h-16 px-6">
         {/* Logo */}
         <div className="flex items-center">
@@ -113,11 +124,14 @@ const DoctorNavbar = () => {
             alt="MedMate Logo"
             className="h-18 object-contain"
           />
-          <span className="font-semibold text-2xl">MedMate</span>
+          <span className="font-semibold text-2xl text-white ml-2">
+            MedMate
+          </span>
         </div>
 
-        {/* Desktop links */}
+        {/* ---------- Desktop Links ---------- */}
         <div className="hidden md:flex items-center space-x-6">
+          {/* Main Nav */}
           {[
             { label: "Feed", to: "/doctor/feed" },
             { label: "Connections", to: "/doctor/analytics" },
@@ -132,17 +146,60 @@ const DoctorNavbar = () => {
             </NavLink>
           ))}
 
+          {/* ---------- Practice Dropdown ----------
+              New Dropdown for Prescriptions + Commission + Reps Products
+          */}
+          {/* ---------- Practice Dropdown (Click to open) ---------- */}
+          <div className="relative" ref={dropdownRef}>
+            <Button
+              variant="ghost"
+              className="text-white hover:text-gray-200"
+              onClick={() => setPracticeOpen((prev) => !prev)}
+            >
+             <Hospital className="h-4 w-3" /> Practice ▾
+            </Button>
+
+            {practiceOpen && (
+              <div className="absolute bg-white shadow-lg rounded-md py-2 w-52 z-50">
+                <NavLink
+                  to="/doctor/practice/reps-products"
+                  onClick={() => setPracticeOpen(false)}
+                >
+                  <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                    Reps & Products
+                  </div>
+                </NavLink>
+
+                <NavLink
+                  to="/doctor/prescription"
+                  onClick={() => setPracticeOpen(false)}
+                >
+                  <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                    Create Prescription
+                  </div>
+                </NavLink>
+
+                <NavLink
+                  to="/doctor/commission"
+                  onClick={() => setPracticeOpen(false)}
+                >
+                  <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                    Commission Catalogue
+                  </div>
+                </NavLink>
+              </div>
+            )}
+          </div>
+
           {/* Icons */}
           <NavLink to="/doctor/messages">
             {({ isActive }) => (
-              <div className="relative w-fit">
+              <div className="relative">
                 <Mail
-                  className={`h-6 w-6 cursor-pointer hover:text-gray-200 ${navLinkClass(
-                    isActive
-                  )}`}
+                  className={`h-6 w-6 cursor-pointer ${navLinkClass(isActive)}`}
                 />
                 {unreadChatCount > 0 && (
-                  <span className="absolute -top-1 -right-2 bg-red-600 text-white text-[10px] font-bold rounded-full px-1.5 py-[1px]">
+                  <span className="absolute -top-1 -right-2 bg-red-600 text-white text-[10px] font-bold rounded-full px-1.5">
                     {unreadChatCount > 99 ? "99+" : unreadChatCount}
                   </span>
                 )}
@@ -152,14 +209,12 @@ const DoctorNavbar = () => {
 
           <NavLink to="/doctor/notifications">
             {({ isActive }) => (
-              <div className="relative w-fit">
+              <div className="relative">
                 <Bell
-                  className={`h-6 w-6 cursor-pointer hover:text-gray-200 ${navLinkClass(
-                    isActive
-                  )}`}
+                  className={`h-6 w-6 cursor-pointer ${navLinkClass(isActive)}`}
                 />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-2 bg-red-600 text-white text-[10px] font-bold rounded-full px-1.5 py-[1px]">
+                  <span className="absolute -top-1 -right-2 bg-red-600 text-white text-[10px] font-bold rounded-full px-1.5">
                     {unreadCount > 99 ? "99+" : unreadCount}
                   </span>
                 )}
@@ -170,80 +225,65 @@ const DoctorNavbar = () => {
           <UserAvatar to="/doctor/profile" />
         </div>
 
-        {/* Mobile menu toggle */}
+        {/* Mobile Menu Button */}
         <button
-          className="md:hidden text-white hover:text-gray-200"
+          className="md:hidden text-white"
           onClick={() => setMobileOpen(!mobileOpen)}
         >
           {mobileOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
       </div>
 
-      {/* Mobile dropdown */}
+      {/* -------- Mobile Menu -------- */}
       {mobileOpen && (
-        <div className="md:hidden flex flex-col space-y-4 px-6 pb-5 mt-2">
-          {[
-            { label: "Feed", to: "/doctor/feed" },
-            { label: "Connections", to: "/doctor/analytics" },
-            { label: "Search Network", to: "/doctor/network" },
-          ].map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              end
-              onClick={() => setMobileOpen(false)}
-            >
-              {({ isActive }) => (
-                <span
-                  className={`block font-semibold text-lg ${navLinkClass(
-                    isActive
-                  )}`}
-                >
-                  {item.label}
-                </span>
-              )}
-            </NavLink>
-          ))}
+        <div className="md:hidden flex flex-col space-y-4 px-6 pb-5 mt-2 text-white">
+          {/* Normal links */}
+          <NavLink to="/doctor/feed" onClick={() => setMobileOpen(false)}>
+            Feed
+          </NavLink>
+          <NavLink to="/doctor/analytics" onClick={() => setMobileOpen(false)}>
+            Connections
+          </NavLink>
+          <NavLink to="/doctor/network" onClick={() => setMobileOpen(false)}>
+            Search Network
+          </NavLink>
 
-          {/* Icons + Avatar */}
-          <div className="flex items-center space-x-6 mt-2">
+          {/* Practice Mobile Section */}
+          <div className="border-t border-white/30 pt-3">
+            <span className="text-white font-semibold">Practice</span>
+            <div className="ml-3 flex flex-col space-y-2 mt-2">
+              <NavLink
+                to="/doctor/practice/reps-products"
+                onClick={() => setMobileOpen(false)}
+              >
+                Reps & Products
+              </NavLink>
+              <NavLink
+                to="/doctor/prescription"
+                onClick={() => setMobileOpen(false)}
+              >
+                Create Prescription
+              </NavLink>
+              <NavLink
+                to="/doctor/commission"
+                onClick={() => setMobileOpen(false)}
+              >
+                Commission Catalogue
+              </NavLink>
+            </div>
+          </div>
+
+          {/* Messages + Notifications + Profile */}
+          <div className="flex items-center space-x-6 mt-3">
             <NavLink to="/doctor/messages" onClick={() => setMobileOpen(false)}>
-              {({ isActive }) => (
-                <div className="relative w-fit">
-                  <Mail
-                    className={`h-6 w-6 cursor-pointer hover:text-gray-200 ${navLinkClass(
-                      isActive
-                    )}`}
-                  />
-                  {unreadChatCount > 0 && (
-                    <span className="absolute -top-1 -right-2 bg-red-600 text-white text-[10px] font-bold rounded-full px-1.5 py-[1px]">
-                      {unreadChatCount > 99 ? "99+" : unreadChatCount}
-                    </span>
-                  )}
-                </div>
-              )}
+              <Mail className="h-6 w-6 text-white" />
             </NavLink>
-
             <NavLink
               to="/doctor/notifications"
               onClick={() => setMobileOpen(false)}
             >
-              {({ isActive }) => (
-                <div className="relative w-fit">
-                  <Bell
-                    className={`h-6 w-6 cursor-pointer hover:text-gray-200 ${navLinkClass(
-                      isActive
-                    )}`}
-                  />
-                  {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-2 bg-red-600 text-white text-[10px] font-bold rounded-full px-1.5 py-[1px]">
-                      {unreadCount > 99 ? "99+" : unreadCount}
-                    </span>
-                  )}
-                </div>
-              )}
+              <Bell className="h-6 w-6 text-white" />
             </NavLink>
-
             <UserAvatar to="/doctor/profile" />
           </div>
         </div>

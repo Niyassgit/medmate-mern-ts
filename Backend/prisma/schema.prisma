@@ -51,6 +51,7 @@ model User {
   superAdmin       SuperAdmin?
   doctor           Doctor?
   medicalRep       MedicalRep?
+  guest            Guest?  
   otpVerifications otpVerification[]
 }
 
@@ -99,9 +100,12 @@ model Doctor {
   educations           Education[]
   certificates         Certificate[]
 
-  user    User?   @relation(fields: [loginId], references: [id])
-  loginId String? @unique @db.ObjectId
-  Like    Like[]
+  user          User?          @relation(fields: [loginId], references: [id])
+  loginId       String?        @unique @db.ObjectId
+  Like          Like[]
+  guests        Guest[]
+  prescriptions Prescription[]
+  commissions   Commission[]
 }
 
 model MedicalRep {
@@ -141,6 +145,8 @@ model MedicalRep {
   user                  User?                  @relation(fields: [loginId], references: [id])
   loginId               String?                @unique @db.ObjectId
   connectionRequestLogs ConnectionRequestLog[]
+  subscriptionHistory   SubscriptionHistory[]
+  catalogProducts       Product[]              @relation("RepCatalogProducts")
 }
 
 model SuperAdmin {
@@ -185,7 +191,8 @@ model SubscriptionPlan {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  reps MedicalRep[]
+  reps                MedicalRep[]
+  subscriptionHistory SubscriptionHistory[]
 }
 
 model Territory {
@@ -199,6 +206,7 @@ model Territory {
   products       ProductPost[]
   // requirements   DoctorRequirementPost[]
   repTerritories MedicalRepTerritory[]
+  guests         Guest[]
 }
 
 model MedicalRepTerritory {
@@ -211,23 +219,25 @@ model MedicalRepTerritory {
 }
 
 model ProductPost {
-  id          String     @id @default(auto()) @map("_id") @db.ObjectId
-  repId       String     @db.ObjectId
-  title       String
-  description String
-  isArchived  Boolean    @default(false)
-  imageUrl    String[]
-  brand       String
-  territoryId String?    @db.ObjectId
-  useCases    String[]
-  ingredients String[]
-  termsOfUse  String
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  rep         MedicalRep @relation(fields: [repId], references: [id])
-  territory   Territory? @relation(fields: [territoryId], references: [id])
-  likes       Like[]
-  interests   Interest[]
+  id                String             @id @default(auto()) @map("_id") @db.ObjectId
+  repId             String             @db.ObjectId
+  title             String
+  description       String
+  isArchived        Boolean            @default(false)
+  imageUrl          String[]
+  brand             String
+  territoryId       String?            @db.ObjectId
+  useCases          String[]
+  ingredients       String[]
+  termsOfUse        String
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  rep               MedicalRep         @relation(fields: [repId], references: [id])
+  territory         Territory?         @relation(fields: [territoryId], references: [id])
+  likes             Like[]
+  interests         Interest[]
+  prescriptionItems PrescriptionItem[]
+  commissions       Commission[]
 }
 
 model Like {
@@ -404,4 +414,202 @@ model ConnectionRequestLog {
   @@unique([repId, date])
 }
 
+model SubscriptionHistory {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  repId           String   @db.ObjectId
+  planId          String   @db.ObjectId
+  sessionId       String
+  paymentIntentId String?
+  invoiceId       String?
+  amount          Float
+  currency        String
+  status          String
+  startDate       DateTime
+  endDate         DateTime
+  createdAt       DateTime @default(now())
 
+  rep  MedicalRep       @relation(fields: [repId], references: [id])
+  plan SubscriptionPlan @relation(fields: [planId], references: [id])
+
+  @@index([repId])
+  @@index([planId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model Guest {
+  id           String  @id @default(auto()) @map("_id") @db.ObjectId
+  loginId      String? @unique @db.ObjectId  
+  doctorId     String? @db.ObjectId
+  territoryId  String? @db.ObjectId
+  name         String
+  phone        String?
+  email        String?
+  isRegistered Boolean @default(false)  
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user          User?          @relation(fields: [loginId], references: [id])
+  doctor        Doctor?        @relation(fields: [doctorId], references: [id])
+  territory     Territory?     @relation(fields: [territoryId], references: [id])
+  prescriptions Prescription[]
+  orders        Order[]
+  addresses     Address[]
+
+
+  @@index([doctorId])
+  @@index([email])
+  @@index([isRegistered])
+  @@index([territoryId])
+  @@unique([email, doctorId], name: "unique_guest_per_doctor")
+}
+
+model Address {
+  id        String      @id @default(auto()) @map("_id") @db.ObjectId
+  guestId   String      @db.ObjectId
+  type      AddressType @default(HOME)
+  fullName  String
+  phone     String
+  street    String
+  city      String
+  state     String
+  zipCode   String
+  country   String      @default("India")
+  landmark  String?
+  isDefault Boolean     @default(false)
+  isActive  Boolean     @default(true)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  guest  Guest  @relation(fields: [guestId], references: [id])
+  orders Order[]
+
+  @@index([guestId])
+  @@index([guestId, isDefault])
+}
+
+model Prescription {
+  id            String             @id @default(auto()) @map("_id") @db.ObjectId
+  doctorId      String             @db.ObjectId
+  guestId       String             @db.ObjectId
+  notes         String?
+  status        PrescriptionStatus @default(PENDING)
+  expiresAt     DateTime?
+  shareToken    String?            @unique
+  linkExpiresAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  doctor  Doctor             @relation(fields: [doctorId], references: [id])
+  guest   Guest              @relation(fields: [guestId], references: [id])
+  items   PrescriptionItem[]
+  order   Order?
+}
+
+model PrescriptionItem {
+  id             String  @id @default(auto()) @map("_id") @db.ObjectId
+  prescriptionId String  @db.ObjectId
+  productId      String  @db.ObjectId
+  dosage         String?
+  quantity       Int     @default(1)
+
+  prescription  Prescription @relation(fields: [prescriptionId], references: [id])
+  product       Product      @relation(fields: [productId], references: [id])
+  productPost   ProductPost? @relation(fields: [productPostId], references: [id])
+  productPostId String?      @db.ObjectId
+}
+
+enum PrescriptionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  USED
+  EXPIRED
+}
+
+enum AddressType {
+  HOME
+  WORK
+  OTHER
+}
+
+model Order {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  guestId         String        @db.ObjectId
+  prescriptionId  String        @unique @db.ObjectId
+  addressId       String        @db.ObjectId
+  totalAmount     Float
+  status          OrderStatus   @default(PENDING)
+  paymentStatus   PaymentStatus @default(PENDING)
+  deliveryAddress String
+  paymentId       String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  guest         Guest         @relation(fields: [guestId], references: [id])
+  prescription  Prescription  @relation(fields: [prescriptionId], references: [id])
+  address       Address       @relation(fields: [addressId], references: [id])
+  commission    Commission[]
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+model Commission {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  orderId   String @db.ObjectId
+  productId String @db.ObjectId
+  doctorId  String @db.ObjectId
+
+  mrp       Float
+  ptr       Float
+  adminCut  Float
+  doctorCut Float
+
+  status    CommissionStatus @default(PENDING)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  order   Order       @relation(fields: [orderId], references: [id])
+  doctor  Doctor      @relation(fields: [doctorId], references: [id])
+  product ProductPost @relation(fields: [productId], references: [id])
+}
+
+enum CommissionStatus {
+  PENDING
+  SETTLED
+}
+
+model Product {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  repId        String   @db.ObjectId
+  name         String
+  brand        String
+  imageUrl     String[]
+  ingredients  String[]
+  // useCases     String[]
+  mrp          Float
+  ptr          Float
+  territoryIds String[] @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  rep MedicalRep @relation("RepCatalogProducts", fields: [repId], references: [id])
+
+  prescriptionItems PrescriptionItem[]
+}

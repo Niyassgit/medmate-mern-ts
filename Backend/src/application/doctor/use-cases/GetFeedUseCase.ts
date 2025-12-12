@@ -4,7 +4,7 @@ import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRe
 import { IInterestRepository } from "../../../domain/Interest/repositories/IInterestRepository";
 import { ILikeRepository } from "../../../domain/Like/repositories/ILikeRepository";
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
-import { IProductPostRepository } from "../../../domain/product/repositories/IProductPostRepository";
+import { IProductPostRepository } from "../../../domain/productPost/repositories/IProductPostRepository";
 import { ErrorMessages } from "../../../shared/Messages";
 import { UnautharizedError } from "../../errors";
 import { FeedDTO } from "../dto/FeedDTO";

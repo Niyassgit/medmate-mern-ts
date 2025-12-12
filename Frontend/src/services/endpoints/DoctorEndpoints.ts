@@ -33,4 +33,11 @@ export const DoctorEndpoints = {
   ADD_MESSAGE: `/doctor/chat/message`,
   MARK_AS_READ: (conversationId: string) =>
     `/doctor/chat/message/read/${conversationId}`,
+  REPS: `/doctor/practice/reps`,
+  REP_PRODUCTS: (repId: string) => `/doctor/practice/reps/${repId}/products`,
+  PRODUCT_DETAILS:(productId:string)=>`/doctor/practice/product/details/${productId}`,
+  GET_GUESTS: `/doctor/practice/guests`,
+  CREATE_GUEST: `/doctor/practice/guests/create`,
+  CREATE_PRESCRIPTION: (guestId: string) => `/doctor/practice/prescription/create/${guestId}`,
+  GET_ALL_PRESCRIPTIONS:`/doctor/prescriptions`
 };

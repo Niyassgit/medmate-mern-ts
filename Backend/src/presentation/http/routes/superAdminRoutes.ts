@@ -88,9 +88,8 @@ export class SuperAdminRoutes {
       superAdminController.recentSubscriptions
     );
     this.router.get("/subscibed/list",superAdminController.subscribedList);
+    this.router.get("/guests",superAdminController.getAllGuests);
     this.router.get("/:id", superAdminController.getSuperAdminByEmail);
   }
 }
 
-
-// `/admin/subscribed/list?page=${page}&limit=${limit}`

@@ -29,6 +29,14 @@ import { IGetAllMessagesUseCase } from "../../../application/conversation/interf
 import { CreateMessageDTO } from "../../../application/conversation/dto/CreateMessageDTO";
 import { ICreateDoctorMessageUseCase } from "../../../application/conversation/interfaces/ICreateDoctorMessageUseCase";
 import { IDoctorMessageMarkAsReadUseCase } from "../../../application/conversation/interfaces/IDoctorMessageMarkAsReadUseCase";
+import { IGetRepsListForPracticeUseCase } from "../../../application/doctor/interfaces/IGetRepsListForPracticeUseCase";
+import { IGetRepProductsForDoctorUseCase } from "../../../application/doctor/interfaces/IGetRepProductsForDoctorUseCase";
+import { PrescriptionDTO } from "../../../application/prescription/dto/PrescriptionDTO";
+import { ICreatePrescriptionUseCase } from "../../../application/prescription/interfaces/ICreatePrescriptionUseCase";
+import { IGetGuestsByDoctorUseCase } from "../../../application/doctor/interfaces/IGetGuestsByDoctorUseCase";
+import { ICreateGuestByDoctorUseCase } from "../../../application/doctor/interfaces/ICreateGuestByDoctorUseCase";
+import { CreateGuestByDoctorDTO } from "../../../application/doctor/dto/CreateGuestByDoctorDTO";
+import { IGetAllPrescriptionsMadeUseCase } from "../../../application/doctor/interfaces/IGetAllPrescriptionsMadeUseCase";
 
 export class DoctorController {
   constructor(
@@ -56,7 +64,13 @@ export class DoctorController {
     private _getUserConversationsUseCase: IGetConversationsUseCase,
     private _getAllMessagesUseCase: IGetAllMessagesUseCase,
     private _createMessageUseCase: ICreateDoctorMessageUseCase,
-    private _DoctorMessageMarkAsRead: IDoctorMessageMarkAsReadUseCase
+    private _DoctorMessageMarkAsRead: IDoctorMessageMarkAsReadUseCase,
+    private _getRepsListForPracticeUseCase: IGetRepsListForPracticeUseCase,
+    private _getRepProductsForDoctorUseCase: IGetRepProductsForDoctorUseCase,
+    private _createPrescriptionUseCase: ICreatePrescriptionUseCase,
+    private _getGuestsByDoctorUseCase: IGetGuestsByDoctorUseCase,
+    private _createGuestByDoctorUseCase: ICreateGuestByDoctorUseCase,
+    private _getAllPrescriptionsMadeUseCase: IGetAllPrescriptionsMadeUseCase
   ) {}
 
   createDoctor = async (req: Request, res: Response) => {
@@ -103,12 +117,12 @@ export class DoctorController {
   networks = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const { search, company, territories } = req.query;
-    
+
     const filters = {
       company: company ? String(company) : undefined,
-      territories: territories ? String(territories).split(',') : undefined,
+      territories: territories ? String(territories).split(",") : undefined,
     };
-    
+
     const response = await this._networkUseCase.execute(
       userId,
       search as string,
@@ -318,5 +332,71 @@ export class DoctorController {
     const userId = GetOptionalUserId(req.user);
     await this._DoctorMessageMarkAsRead.execute(conversationId, userId);
     return res.sendStatus(HttpStatusCode.NO_CONTENT);
+  };
+
+  repsList = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._getRepsListForPracticeUseCase.execute(userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  repProducts = async (req: Request, res: Response) => {
+    const { repId } = req.params;
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._getRepProductsForDoctorUseCase.execute(
+      repId,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  createPrescription = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { guestId } = req.params;
+    const dto = req.body as PrescriptionDTO;
+    const response = await this._createPrescriptionUseCase.execute(
+      guestId,
+      dto,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.CREATED)
+      .json({ success: true, data: response });
+  };
+
+  getGuests = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { search } = req.query;
+    const response = await this._getGuestsByDoctorUseCase.execute(
+      userId,
+      search as string | undefined
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  createGuest = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const dto = req.body as CreateGuestByDoctorDTO;
+    const response = await this._createGuestByDoctorUseCase.execute(
+      dto,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.CREATED)
+      .json({ success: true, data: response });
+  };
+
+  getAllPrescriptions = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._getAllPrescriptionsMadeUseCase.execute(userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
   };
 }

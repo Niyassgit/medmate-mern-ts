@@ -59,7 +59,14 @@ export const ErrorMessages = {
   SUB_ATTEMPT_FAILED: "Failed to register subscription!",
   NO_STRIPE_SIG_FOUND: "No Stripe signature found",
   WEB_HOOK_SIG_VER_FAILED: "Webhook signature verification failed",
-  CONNECTION_LIMIT: "Daily connection limit reached. Upgrade your subscription for more connections.",
+  CONNECTION_LIMIT:
+    "Daily connection limit reached. Upgrade your subscription for more connections.",
+  PRODUCT_NOT_FOUND: "Product not found!",
+  NOT_CONNECTED: "You are not connected to this medical representative",
+  PRESCRIPTION_ITEM_NEEDED: "At least one prescription item is required",
+  GUEST_ALREADY_EXISTS: "Guest already exists for this doctor",
+  INVALID_INVITATION_LINK:"Invalid invitation link",
+  FAILED_TO_UPDATE_OTP:"Failed to update otp",
 } as const;
 
 export const SuccessMessages = {
@@ -92,6 +99,8 @@ export const SuccessMessages = {
   SUB_PLAN_CREATE_SUCCESS: "Subscription plan created",
   SUB_UPDATED: "Subscription status updated successfully",
   SUB_DELETED: "Subscription plan deleted successfully",
+  PRODUCT_UPDATED: "Product updated successfully",
+  PRESCRIPTION_CREATED: "Prescription created successfuly",
 } as const;
 
 export const NotificationMessages = {
@@ -106,4 +115,23 @@ export const NotificationMessages = {
   CONNECTION_ACCEPT_MESSAGE: "Accepted your connection request",
   LIKE_MESSAGE: "Liked your post",
   INTEREST_MESSAGE: "Showed interested on your Post",
+  REGISTER_SUCCESS:
+    "registeration completed successfully. Please verify your email",
+  PRESCRIPTION_INVITATION_SUBJECT: "Prescription Invitation",
+  PRESCRIPTION_INVITATION_BODY: (
+    guestName: string,
+    registrationLink: string,
+    expiresAt?: Date
+  ) => `
+Hello ${guestName},
+
+You have been prescribed medications. Please register using this link to access your prescription:
+
+${registrationLink}
+
+This link expires on ${expiresAt ? expiresAt.toLocaleDateString() : "never"}.
+
+Best regards,
+MedMate Team
+`,
 } as const;

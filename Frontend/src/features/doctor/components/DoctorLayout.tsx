@@ -1,6 +1,6 @@
-import DoctorNavbar from '@/components/navbar/DoctorNavbar';
-import { Outlet } from 'react-router-dom';
-import Footer from './Footer';
+import DoctorNavbar from "@/components/navbar/DoctorNavbar";
+import { Outlet } from "react-router-dom";
+import Footer from "./Footer";
 
 const DoctorLayout = () => {
   return (
@@ -9,7 +9,7 @@ const DoctorLayout = () => {
       <DoctorNavbar />
 
       {/* Main content */}
-      <main className="flex-1 p-4">
+      <main className="flex-1 w-full h-full p-0 m-0">
         <Outlet />
       </main>
 

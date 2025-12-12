@@ -2,7 +2,7 @@ import { NotFoundError } from "../../../domain/common/errors";
 import { IStorageService } from "../../../domain/common/services/IStorageService";
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
 import { INotificationRepository } from "../../../domain/notification/repositories/INotificationService";
-import { IProductPostRepository } from "../../../domain/product/repositories/IProductPostRepository";
+import { IProductPostRepository } from "../../../domain/productPost/repositories/IProductPostRepository";
 import { ErrorMessages } from "../../../shared/Messages";
 import { NotificationFullResponseDTO } from "../dto/NotificaionFullResponseDTO";
 import { IGetRepNotificationsUseCase } from "../interfaces/IGetRepNotificationsUseCase";

@@ -6,6 +6,7 @@ export enum Role {
   SUPER_ADMIN = "SUPER_ADMIN",
   DOCTOR = "DOCTOR",
   MEDICAL_REP = "MEDICAL_REP",
+  GUEST = "GUEST",
 }
 
 export enum ConnectionStatus {
@@ -39,4 +40,12 @@ export enum StripePaymentStatus{
   PAID="PAID",
   UNPAID="UNPAID",
   NO_PAYMENT_REQUIRED="NO_PAYMENT_REQUIRED",  
+}
+
+export enum PrescriptionStatus{
+   PENDING="PENDING",
+  APPROVED="APPROVED",
+  REJECTED="REJECTED",
+  USED="USED",
+  EXPIRED="EXPIRED"
 }

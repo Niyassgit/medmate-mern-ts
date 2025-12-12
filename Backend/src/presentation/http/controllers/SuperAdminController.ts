@@ -31,6 +31,7 @@ import { IGetUserGrowthUseCase } from "../../../application/superAdmin/interface
 import { IGetRevenueByTierUseCase } from "../../../application/superAdmin/interfaces/IGetRevenueByTierUseCase";
 import { IGetRecentSubscriptionsUseCase } from "../../../application/superAdmin/interfaces/IGetRecentSubscriptionsUseCase";
 import { IGetSubscribedListUseCase } from "../../../application/superAdmin/interfaces/IGetSubscribedListUseCase";
+import { IGetAllGuestsUseCase } from "../../../application/superAdmin/interfaces/IGetAllGuestsUseCase";
 
 export class SuperAdminController {
   constructor(
@@ -58,7 +59,8 @@ export class SuperAdminController {
     private _getUserGrowthUseCase: IGetUserGrowthUseCase,
     private _getRevenueByTierUseCase: IGetRevenueByTierUseCase,
     private _getRecentSubscriptionsUseCase: IGetRecentSubscriptionsUseCase,
-    private _getSubscribedListUseCase: IGetSubscribedListUseCase
+    private _getSubscribedListUseCase: IGetSubscribedListUseCase,
+    private _getAllGuestsUseCase: IGetAllGuestsUseCase
   ) {}
 
   createSuperAdmin = async (req: Request, res: Response) => {
@@ -97,7 +99,12 @@ export class SuperAdminController {
     const limit = parseInt(req.query.limit as string) || 8;
     const search = (req.query.search as string) || "";
     const territory = (req.query.territory as string) || "";
-    const reps = await this._getAllRepsUseCase.execute(page, limit, search, territory);
+    const reps = await this._getAllRepsUseCase.execute(
+      page,
+      limit,
+      search,
+      territory
+    );
     res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: reps, page, limit });
@@ -290,7 +297,7 @@ export class SuperAdminController {
   };
 
   userDistribution = async (req: Request, res: Response) => {
-    const userId =GetOptionalUserId(req.user);
+    const userId = GetOptionalUserId(req.user);
     const { startDate, endDate } = req.query;
     const response = await this._getUserDistributionUseCase.execute(
       userId,
@@ -301,7 +308,7 @@ export class SuperAdminController {
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
   };
-  
+
   userGrowth = async (req: Request, res: Response) => {
     const userId = GetOptionalUserId(req.user);
     const { year } = req.query;
@@ -345,15 +352,32 @@ export class SuperAdminController {
     const { page, limit } = req.query;
     const parsedLimit = limit ? parseInt(limit as string) : 10;
     const parsedPage = page ? parseInt(page as string) : 1;
-    
+
     const response = await this._getSubscribedListUseCase.execute(
       userId,
       parsedPage,
       parsedLimit
     );
-    
+
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
+  };
+
+  getAllGuests = async (req: Request, res: Response) => {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const search = (req.query.search as string) || "";
+    const territory = (req.query.territory as string) || "";
+
+    const guests = await this._getAllGuestsUseCase.execute(
+      page,
+      limit,
+      search,
+      territory
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: guests, page, limit });
   };
 }

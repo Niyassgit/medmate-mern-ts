@@ -39,6 +39,10 @@ import { ICreateCheckoutSessionUseCase } from "../../../application/subscription
 import { IGetCheckoutDetailsUseCase } from "../../../application/subscription/interfaces/IGetCheckoutDetailsUseCase";
 import { IGetSubscriptionStatusUseCase } from "../../../application/subscription/interfaces/IGetSubscriptionStatusUseCase";
 import { IGetConnectionRequestStatsUseCase } from "../../../application/connection/interfaces/IGetConnectionRequestStatsUseCase";
+import { IGetAllProductsUseCase } from "../../../application/product/interfaces/IGetAllProductsUseCase";
+import { ICreateProductUseCase } from "../../../application/product/interfaces/ICreateProductUseCase";
+import { ProductDTO } from "../../../application/product/dto/ProdductDTO";
+import { IEditProductUseCase } from "../../../application/product/interfaces/IEditProductUseCase";
 
 export class MedicalRepController {
   constructor(
@@ -74,7 +78,10 @@ export class MedicalRepController {
     private _getCheckoutDetailsUseCase: IGetCheckoutDetailsUseCase,
     private _getSubscriptionStatusUseCase: IGetSubscriptionStatusUseCase,
     private _getSubscriptionHistoryUseCase: IGetSubscriptionHistoryUseCase,
-    private _getConnectionRequestStatsUseCase: IGetConnectionRequestStatsUseCase
+    private _getConnectionRequestStatsUseCase: IGetConnectionRequestStatsUseCase,
+    private _getAllProductsUseCase: IGetAllProductsUseCase,
+    private _createProductUseCase: ICreateProductUseCase,
+    private _updateProductUseCase: IEditProductUseCase
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -241,7 +248,9 @@ export class MedicalRepController {
 
   connectionRequestStats = async (req: Request, res: Response) => {
     const userId = GetOptionalUserId(req.user);
-    const response = await this._getConnectionRequestStatsUseCase.execute(userId);
+    const response = await this._getConnectionRequestStatsUseCase.execute(
+      userId
+    );
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
@@ -419,5 +428,61 @@ export class MedicalRepController {
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
+  };
+
+  getAllProducts = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._getAllProductsUseCase.execute(userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  createProduct = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const dto = req.body as Omit<ProductDTO, "id">;
+    if (req.files && Array.isArray(req.files)) {
+      dto.imageUrls = req.files
+        .map((file) => file.key)
+        .filter((key): key is string => !!key);
+    } else {
+      dto.imageUrls = [];
+    }
+
+    const response = await this._createProductUseCase.execute(
+      userId!,
+      dto as ProductDTO
+    );
+    return res
+      .status(HttpStatusCode.CREATED)
+      .json({ success: true, message: response });
+  };
+
+  updateProduct = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { productId } = req.params;
+    const dto = req.body as Omit<ProductDTO, "id">;
+    const existingImages =
+      (req.body as { existingImages?: string[] }).existingImages || [];
+
+    const newImageKeys: string[] = [];
+    if (req.files && Array.isArray(req.files)) {
+      newImageKeys.push(
+        ...req.files
+          .map((file: { key?: string }) => file.key)
+          .filter((key): key is string => !!key)
+      );
+    }
+    
+    dto.imageUrls = [...existingImages, ...newImageKeys];
+
+    const response = await this._updateProductUseCase.execute(
+      productId,
+      dto as ProductDTO,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, message: response });
   };
 }

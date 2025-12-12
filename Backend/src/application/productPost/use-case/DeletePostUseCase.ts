@@ -1,5 +1,5 @@
 import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
-import { IProductPostRepository } from "../../../domain/product/repositories/IProductPostRepository";
+import { IProductPostRepository } from "../../../domain/productPost/repositories/IProductPostRepository";
 import { ErrorMessages, SuccessMessages } from "../../../shared/Messages";
 import { BadRequestError, NotFoundError, UnautharizedError } from "../../errors";
 import { IDeletePostUseCase } from "../interfaces/IDeletePostUseCase";

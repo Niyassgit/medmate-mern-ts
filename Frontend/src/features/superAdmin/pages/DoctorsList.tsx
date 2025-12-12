@@ -90,7 +90,6 @@ const DoctorsList = () => {
     }
   };
   
-  console.log("doctors list:",doctors)
   const handleConfirmBlockToggle = async () => {
     if (!selectedDoctor) return;
     await handleBlockToggle(selectedDoctor);

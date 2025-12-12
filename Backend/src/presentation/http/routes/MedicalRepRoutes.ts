@@ -14,6 +14,7 @@ import { UserValidate } from "../../../infrastructure/di/UserValidateDI";
 import { makeValidateUserMiddleware } from "../middlewares/ValidateUserMiddleware";
 import { uploadS3 } from "../../../infrastructure/storage/multer/MulterS3BucketConfig";
 import { SendMessageSchema } from "../validators/MessageSchema";
+import { productValidateSchema } from "../validators/ProductValidateSchema";
 
 const validateUser = makeValidateUserMiddleware(UserValidate);
 
@@ -154,6 +155,21 @@ export class MedicalRepRoutes {
     this.router.get(
       "/subscription/history",
       medicalRepController.getSubscriptionHistory
+    );
+    this.router.get("/products", medicalRepController.getAllProducts);
+    this.router.post(
+      "/product/upload",
+      uploadS3.array("images", 5),
+      parsePostField,
+      ValidateSchema(productValidateSchema),
+      medicalRepController.createProduct
+    );
+    this.router.patch(
+      "/product/edit-product/:productId",
+      uploadS3.array("images", 5),
+      parsePostField,
+      ValidateSchema(productValidateSchema),
+      medicalRepController.updateProduct
     );
   }
 }

@@ -1,8 +1,22 @@
 export const AdminEndpoints = {
-  GET_DOCTORS: (page: number, limit: number, search: string = "", territory: string = "") =>
-    `/admin/doctors?page=${page}&limit=${limit}&search=${search}${territory ? `&territory=${territory}` : ""}`,
-  GET_REPS: (page: number, limit: number, search: string = "", territory: string = "") =>
-    `/admin/reps?page=${page}&limit=${limit}&search=${search}${territory ? `&territory=${territory}` : ""}`,
+  GET_DOCTORS: (
+    page: number,
+    limit: number,
+    search: string = "",
+    territory: string = ""
+  ) =>
+    `/admin/doctors?page=${page}&limit=${limit}&search=${search}${
+      territory ? `&territory=${territory}` : ""
+    }`,
+  GET_REPS: (
+    page: number,
+    limit: number,
+    search: string = "",
+    territory: string = ""
+  ) =>
+    `/admin/reps?page=${page}&limit=${limit}&search=${search}${
+      territory ? `&territory=${territory}` : ""
+    }`,
   BLOCK_USER: (userId: string) => `/admin/block/${userId}`,
   UNBLOCK_USER: (userId: string) => `/admin/unblock/${userId}`,
   DOCTOR_DETAILS: (userId: string) => `/admin/doctors/${userId}`,
@@ -40,5 +54,15 @@ export const AdminEndpoints = {
   STATS_USER_GROWTH: `/admin/stats/user-growth`,
   STATS_REVENUE_BY_TIER: `/admin/stats/revenue-by-tier`,
   RECENT_SUBSCRIPTION: `/admin/subscriptions/recent`,
-  SUBSCRIBED:(page:number,limit:number)=>`/admin/subscibed/list?page=${page}&limit=${limit}`,
+  SUBSCRIBED: (page: number, limit: number) =>
+    `/admin/subscibed/list?page=${page}&limit=${limit}`,
+  GET_ALL_GUESTS: (
+    page: number,
+    limit: number,
+    search: string = "",
+    territory: string = ""
+  ) =>
+    `/admin/guests?page=${page}&limit=${limit}&search=${search}${
+      territory ? `&territory=${territory}` : ""
+    }`,
 };

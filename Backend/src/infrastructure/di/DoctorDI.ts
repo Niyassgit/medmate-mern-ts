@@ -42,6 +42,19 @@ import { MessageRepository } from "../repositories/MessageRepository";
 import { CreateDoctorMessageUseCase } from "../../application/conversation/use-case/CreateDoctorMessageUseCase";
 import { ChatEventPublisher } from "../realtime/publishers/ChatEventPublisher";
 import { DoctoMessageMarkAsReadUseCase } from "../../application/conversation/use-case/DoctorMessageMarkAsReadUseCase";
+import { ProductRepository } from "../repositories/ProductRepository";
+import { GetRepsListForPracticeUseCase } from "../../application/doctor/use-cases/GetRepsListForPracticeUseCase";
+import { GetRepProductsForDoctorUseCase } from "../../application/doctor/use-cases/GetRepProductsForDoctorUseCase";
+import { TerritoryRepository } from "../repositories/TerritoryRepository";
+import { CreatePrescriptionUseCase } from "../../application/prescription/use-cases/CreatePrescriptionUseCase";
+import { PrescriptionRepository } from "../repositories/PrescriptionRepository";
+import { PrescriptionItemRepository } from "../repositories/PrescriptionItemRepository";
+import { GetGuestsByDoctorUseCase } from "../../application/doctor/use-cases/GetGuestsByDoctorUseCase";
+import { CreateGuestByDoctorUseCase } from "../../application/doctor/use-cases/CreateGuestByDoctorUseCase";
+import { GuestRepository } from "../repositories/GuestRepository";
+import { TokenService } from "../services/TokenService";
+import { ConfigService } from "../services/ConfigService";
+import { GetAllPresscriptionsMadeUseCase } from "../../application/doctor/use-cases/GetAllPrescriptionsMadeUseCase";
 
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
@@ -61,6 +74,7 @@ const notificationEventPublisher = new NotificationEventPublisher();
 const conversationRepository = new ConversationRepository();
 const messageRepository = new MessageRepository();
 const chatEventPublisher = new ChatEventPublisher();
+const tokenService = new TokenService();
 
 const createDoctorUseCase = new CreateDoctorUseCase(
   doctorRepository,
@@ -223,6 +237,57 @@ const markMessageAsReadUseCase = new DoctoMessageMarkAsReadUseCase(
   conversationRepository,
   chatEventPublisher
 );
+
+const productRepository = new ProductRepository();
+const territoryRepository = new TerritoryRepository();
+const prescriptionRepository = new PrescriptionRepository();
+const prescriptionItemRepository = new PrescriptionItemRepository();
+const guestRepository = new GuestRepository();
+
+const getRepsListForPracticeUseCase = new GetRepsListForPracticeUseCase(
+  userRepository,
+  doctorRepository,
+  connectionRepository,
+  storageService
+);
+
+const getRepProductsForDoctorUseCase = new GetRepProductsForDoctorUseCase(
+  userRepository,
+  doctorRepository,
+  connectionRepository,
+  productRepository,
+  storageService,
+  territoryRepository
+);
+
+const configService = new ConfigService();
+
+const createPrescriptionUseCase = new CreatePrescriptionUseCase(
+  doctorRepository,
+  prescriptionRepository,
+  prescriptionItemRepository,
+  guestRepository,
+  notificationService,
+  tokenService,
+  configService
+);
+
+const getGuestsByDoctorUseCase = new GetGuestsByDoctorUseCase(
+  doctorRepository,
+  guestRepository
+);
+
+const createGuestByDoctorUseCase = new CreateGuestByDoctorUseCase(
+  doctorRepository,
+  guestRepository
+);
+
+const getAllPrescriptionsMadeUseCase = new GetAllPresscriptionsMadeUseCase(
+  doctorRepository,
+  prescriptionRepository,
+  storageService
+);
+
 export const doctorController = new DoctorController(
   createDoctorUseCase,
   getDoctorprofileById,
@@ -248,5 +313,11 @@ export const doctorController = new DoctorController(
   getUserConversationsUseCase,
   getAllMessagesUseCase,
   createMessageUseCase,
-  markMessageAsReadUseCase
+  markMessageAsReadUseCase,
+  getRepsListForPracticeUseCase,
+  getRepProductsForDoctorUseCase,
+  createPrescriptionUseCase,
+  getGuestsByDoctorUseCase,
+  createGuestByDoctorUseCase,
+  getAllPrescriptionsMadeUseCase
 );

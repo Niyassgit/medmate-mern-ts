@@ -1,10 +1,10 @@
-import { IProductPost } from "../../../domain/product/entity/IProductPost";
+import { IProductPost } from "../../../domain/productPost/entity/IProductPost";
 import { ProductPostDTO } from "../dto/ProductPostDTO";
 import { ProductListDTO } from "../dto/ProductListDTO";
 import { PostDetailsDTO } from "../dto/PostDetailsDTO";
 import { RelatedProductDTO } from "../../doctor/dto/RelatedProductDTO";
 import { IStorageService } from "../../../domain/common/services/IStorageService";
-import { IProductPostForFeed } from "../../../domain/product/entity/IProductPostForFeed";
+import { IProductPostForFeed } from "../../../domain/productPost/entity/IProductPostForFeed";
 
 export class ProductPostMapper {
   static toProductPostEntity(

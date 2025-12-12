@@ -8,6 +8,7 @@ import {
   FilePen,
   Building2, 
   BanknoteArrowDown,
+  ShoppingCart,
 } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import AdminNavbar from "@/components/navbar/AdminNavbar";
@@ -75,6 +76,22 @@ const AdminLayout = () => {
                 <span>Medical Reps</span>
               </NavLink>
             </li>
+               <li className="space-y-2">
+              <NavLink
+                to={"guests"}
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
+                    isActive
+                      ? "bg-gray-200 text-black font-semibold"
+                      : "text-white hover:bg-[#a81519]"
+                  }`
+                }
+              >
+                <ShoppingCart className="w-5 h-5" />
+                <span>Guests</span>
+              </NavLink>
+            </li>
+
 
             <li>
               <NavLink

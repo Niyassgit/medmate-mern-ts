@@ -1,4 +1,4 @@
-import { IProductPostRepository } from "../../../domain/product/repositories/IProductPostRepository";
+import { IProductPostRepository } from "../../../domain/productPost/repositories/IProductPostRepository";
 import { ErrorMessages, SuccessMessages } from "../../../shared/Messages";
 import { IStorageService } from "../../../domain/common/services/IStorageService";
 import { BadRequestError, NotFoundError } from "../../errors";

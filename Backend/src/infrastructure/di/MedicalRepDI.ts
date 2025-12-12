@@ -53,6 +53,10 @@ import { GetSubscriptionHistoryUseCase } from "../../application/subscription/us
 import { SubscriptionHistoryRepository } from "../repositories/SubscriptionHistoryRepository";
 import { ConnectionRequestLogRepository } from "../repositories/ConnectionRequestLogRepository";
 import { GetConnectionRequestStatsUseCase } from "../../application/connection/use-cases/GetConnectionRequestStatsUseCase";
+import { GetAllProductsUseCase } from "../../application/product/use-cases/GetAllProductsUseCase";
+import { CreateProductUseCase } from "../../application/product/use-cases/CreateProductUseCase";
+import { ProductRepository } from "../repositories/ProductRepository";
+import { EditProductUseCase } from "../../application/product/use-cases/EditProductUseCase";
 
 const medicalRepRepository = new MedicalRepRepository();
 const doctorRepository = new DoctorRepository();
@@ -77,6 +81,7 @@ const subscriptionRepository = new SubscriptionRepository();
 const stripePaymentService = new StripePaymentService();
 const subscriptionHistoryRepository = new SubscriptionHistoryRepository();
 const connectionRequestLogRepository = new ConnectionRequestLogRepository();
+const productRepository = new ProductRepository();
 
 const createMedicalRepUseCase = new CreateMedicalRepUseCase(
   medicalRepRepository,
@@ -265,6 +270,22 @@ const getConnectionRequestStatsUseCase = new GetConnectionRequestStatsUseCase(
   connectionRequestLogRepository
 );
 
+const getAllProductsUseCase = new GetAllProductsUseCase(
+  medicalRepRepository,
+  productRepository,
+  storageService
+);
+
+const createProductUseCase = new CreateProductUseCase(
+  medicalRepRepository,
+  productRepository
+);
+
+const editProductUseCase = new EditProductUseCase(
+  medicalRepRepository,
+  productRepository,
+  storageService
+);
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
   getRepProfileByIdUseCase,
@@ -298,5 +319,8 @@ export const medicalRepController = new MedicalRepController(
   getCheckoutDetailsUseCase,
   getSubscriptionStatusUseCase,
   getSubscriptionHistoryUseCase,
-  getConnectionRequestStatsUseCase
+  getConnectionRequestStatsUseCase,
+  getAllProductsUseCase,
+  createProductUseCase,
+  editProductUseCase
 );

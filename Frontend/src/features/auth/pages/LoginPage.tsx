@@ -21,6 +21,8 @@ const LoginPage = () => {
          navigate("/doctor/feed", { replace: true });
       } else if (data.user.role === Role.MEDICAL_REP) {
          navigate("/rep/dashboard", { replace: true });
+      } else if (data.user.role === Role.GUEST) {
+        navigate("/guest/dashboard", { replace: true });
       } else if (data.user.role === Role.SUPER_ADMIN) {
         navigate("/admin/dashboard", { replace: true });
       } else {
