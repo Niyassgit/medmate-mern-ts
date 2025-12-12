@@ -67,6 +67,8 @@ export const ErrorMessages = {
   GUEST_ALREADY_EXISTS: "Guest already exists for this doctor",
   INVALID_INVITATION_LINK:"Invalid invitation link",
   FAILED_TO_UPDATE_OTP:"Failed to update otp",
+  ADDRESS_ADD_FAILED:"Something happend to create address,!try again",
+  ADDRESS_NOT_FOUND:"Address Not Found!",
 } as const;
 
 export const SuccessMessages = {
@@ -101,6 +103,7 @@ export const SuccessMessages = {
   SUB_DELETED: "Subscription plan deleted successfully",
   PRODUCT_UPDATED: "Product updated successfully",
   PRESCRIPTION_CREATED: "Prescription created successfuly",
+  ADDRESS_SUCCESS:"Address created successfully"
 } as const;
 
 export const NotificationMessages = {

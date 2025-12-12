@@ -22,7 +22,7 @@ interface Props {
   title?: string;
   emptyMessage?: string;
   mode: string;
-  onPay: (id: string) => void;
+  onPay: (data: PrescriptionDTO) => void;
 }
 
 const PrescriptionList: React.FC<Props> = ({
@@ -79,6 +79,7 @@ const PrescriptionList: React.FC<Props> = ({
 
   const calculateTotal = (items: PrescriptionDTO["items"]) =>
     items.reduce((sum, item) => sum + item.mrp * item.quantity, 0);
+
 
   if (loading) return <SpinnerButton />;
 
@@ -226,7 +227,7 @@ const PrescriptionList: React.FC<Props> = ({
                                 className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  onPay?.(prescription.id);
+                                  onPay?.(prescription);
                                 }}
                               >
                                 <CreditCard className="w-5 h-5" />

@@ -57,3 +57,10 @@ export enum OrderStatus {
   DELIVERED="DELIVERED",
   CANCELLED="CANCELLED"
 }
+
+
+export enum AddressType {
+  HOME="HOME",
+  WORK="WORK",
+  OTHER="OTHER"
+}

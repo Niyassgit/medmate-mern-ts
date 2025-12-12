@@ -7,6 +7,7 @@ import { AuthorizeRole } from "../middlewares/AuthorizeRole";
 import { Role } from "@prisma/client";
 import { makeValidateUserMiddleware } from "../middlewares/ValidateUserMiddleware";
 import { UserValidate } from "../../../infrastructure/di/UserValidateDI";
+import { AddressSchema } from "../validators/CreateAddressSchema";
 
 const validateUser = makeValidateUserMiddleware(UserValidate);
 export class GuestRoutes {
@@ -31,5 +32,11 @@ export class GuestRoutes {
     );
 
     this.router.get("/prescriptions", guestController.getPrescriptions);
+    this.router.get(
+      "/address",
+      ValidateSchema(AddressSchema),
+      guestController.createAddress
+    );
+    this.router.post("/address", guestController.createAddress);
   }
 }
