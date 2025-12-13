@@ -73,6 +73,7 @@ export class PrescriptionMapper {
     data: Prescription & {
       items: (PrescriptionItem & { product: Product })[];
       order?: Order | null;
+      doctor: { name: string; hospital: string };
     }
   ): IPrescriptionWithItemsAndProduct {
     return {
@@ -117,6 +118,10 @@ export class PrescriptionMapper {
           totalAmount: data.order.totalAmount,
         }
         : null,
+      doctor: {
+        name: data.doctor.name,
+        hospital: data.doctor.hospital,
+      },
     };
   }
 }

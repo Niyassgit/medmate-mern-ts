@@ -75,12 +75,16 @@ export class PrescriptionMapper {
       items,
       order: data.order
         ? {
-            id: data.order.id,
-            totalAmount: data.order.totalAmount,
-            paymentStatus: data.order.paymentStatus,
-            status: data.order.status,
-          }
+          id: data.order.id,
+          totalAmount: data.order.totalAmount,
+          paymentStatus: data.order.paymentStatus,
+          status: data.order.status,
+        }
         : null,
+      doctor: {
+        name: data.doctor.name,
+        hospital: data.doctor.hospital,
+      },
     };
   }
 }

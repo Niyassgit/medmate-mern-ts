@@ -121,8 +121,8 @@ const PrescriptionList: React.FC<Props> = ({
             <button
               onClick={() => setFilterStatus("ALL")}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${filterStatus === "ALL"
-                  ? "bg-blue-600 text-white shadow-sm"
-                  : "text-gray-600 hover:bg-gray-50"
+                ? "bg-blue-600 text-white shadow-sm"
+                : "text-gray-600 hover:bg-gray-50"
                 }`}
             >
               All
@@ -130,8 +130,8 @@ const PrescriptionList: React.FC<Props> = ({
             <button
               onClick={() => setFilterStatus("PENDING")}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${filterStatus === "PENDING"
-                  ? "bg-blue-600 text-white shadow-sm"
-                  : "text-gray-600 hover:bg-gray-50"
+                ? "bg-blue-600 text-white shadow-sm"
+                : "text-gray-600 hover:bg-gray-50"
                 }`}
             >
               Pending
@@ -139,8 +139,8 @@ const PrescriptionList: React.FC<Props> = ({
             <button
               onClick={() => setFilterStatus("PAID")}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${filterStatus === "PAID"
-                  ? "bg-blue-600 text-white shadow-sm"
-                  : "text-gray-600 hover:bg-gray-50"
+                ? "bg-blue-600 text-white shadow-sm"
+                : "text-gray-600 hover:bg-gray-50"
                 }`}
             >
               Paid
@@ -183,9 +183,14 @@ const PrescriptionList: React.FC<Props> = ({
                           {getStatusIcon(prescription.status)}
                           {prescription.status}
                         </span>
-                        <span className="text-sm text-black">
-                          ID: {prescription.id.slice(-8).toUpperCase()}
-                        </span>
+                        <div className="flex flex-col">
+                          <span className="text-sm font-medium text-black">
+                            Dr. {prescription.doctor?.name}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            {prescription.doctor?.hospital}
+                          </span>
+                        </div>
                       </div>
 
                       <div className="flex items-center gap-6 text-sm text-black">

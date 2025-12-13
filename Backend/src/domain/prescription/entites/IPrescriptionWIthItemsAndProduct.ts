@@ -6,7 +6,11 @@ import { IPrescriptionItem } from "./IPrescriptionItem";
 export type IPrescriptionWithItemsAndProduct =
   IPrescription & {
     items: (IPrescriptionItem & { product: IProduct })[];
-    order?:IOrderMinimal | null,
+    order?: IOrderMinimal | null,
+    doctor: {
+      name: string;
+      hospital: string;
+    };
   };
 
 

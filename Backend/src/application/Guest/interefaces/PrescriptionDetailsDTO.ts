@@ -12,4 +12,8 @@ export interface PrescriptionDetailsDTO {
 
   items: PrescriptionProductDTO[];
   order?: PrescriptionOrderDTO | null;
+  doctor: {
+    name: string;
+    hospital: string;
+  };
 }

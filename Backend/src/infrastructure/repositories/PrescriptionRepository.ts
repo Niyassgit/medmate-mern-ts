@@ -36,6 +36,7 @@ export class PrescriptionRepository
       include: {
         items: { include: { product: true } },
         order: true,
+        doctor: true,
       },
     });
 
@@ -51,6 +52,7 @@ export class PrescriptionRepository
       include: {
         items: { include: { product: true } },
         order: true,
+        doctor: true,
       },
     });
 
@@ -100,6 +102,7 @@ export class PrescriptionRepository
       include: {
         items: { include: { product: true } },
         order: true,
+        doctor: true,
       },
     });
 

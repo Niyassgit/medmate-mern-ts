@@ -21,5 +21,9 @@ export interface PrescriptionDTO {
   linkExpiresAt?: string | Date;
   createdAt: string | Date;
   items: PrescriptionItemDTO[];
-   order?: PrescriptionOrderDTO | null;
+  order?: PrescriptionOrderDTO | null;
+  doctor: {
+    name: string;
+    hospital: string;
+  };
 }
