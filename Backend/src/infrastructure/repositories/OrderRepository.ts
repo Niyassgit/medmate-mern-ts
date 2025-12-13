@@ -6,6 +6,7 @@ import { BaseRepository } from "../database/BaseRepository";
 import { OrderMapper } from "../mappers/OrderMapper";
 import { NotFoundError } from "../../domain/common/errors";
 import { ErrorMessages } from "../../shared/Messages";
+import { IOrderDetail } from "../../domain/order/entitiy/IOrderDetail";
 
 export class OrderRepository
     extends BaseRepository<
@@ -46,6 +47,30 @@ export class OrderRepository
             }
         });
         return orders.map((o) => OrderMapper.toDomain(o));
+    }
+
+    async findOrderDetailsById(orderId: string): Promise<IOrderDetail | null> {
+        return await prisma.order.findUnique({
+            where: { id: orderId },
+            include: {
+                address: true,
+                guest: true,
+                prescription: {
+                    include: {
+                        doctor: {
+                            include: {
+                                user: true
+                            }
+                        },
+                        items: {
+                            include: {
+                                product: true
+                            }
+                        }
+                    }
+                }
+            }
+        }) as unknown as IOrderDetail | null;
     }
 
     async updateOrder(

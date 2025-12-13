@@ -1,4 +1,5 @@
 import { IOrder } from "../entitiy/IOrder";
+import { IOrderDetail } from "../entitiy/IOrderDetail";
 
 export interface IOrderRepository {
   createOrder(
@@ -10,4 +11,5 @@ export interface IOrderRepository {
     guestId: string,
     data: Omit<IOrder, "id" | "createdAt" | "updatedAt">
   ): Promise<IOrder>;
+  findOrderDetailsById(orderId: string): Promise<IOrderDetail | null>;
 }

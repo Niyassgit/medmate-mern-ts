@@ -11,6 +11,8 @@ import { AddressDTO } from "../../../application/Guest/dto/AddressDTO";
 import { IDeleteAddressUseCase } from "../../../application/Guest/interefaces/IDeleteAddressUseCase";
 import { IGetOrdersUseCase } from "../../../application/Guest/interefaces/IGetOrdersUseCase";
 
+import { IGetOrderDetailUseCase } from "../../../application/Guest/interefaces/IGetOrderDetailUseCase";
+
 export class GuestController {
   constructor(
     private _createGuestUseCase: ICreateGuestUseCase,
@@ -19,8 +21,9 @@ export class GuestController {
     private _createAddressUseCase: ICreateAddressUseCase,
     private _deleteAddressUseCase: IDeleteAddressUseCase,
     private _makePaymentUseCase: IMakePaymentUseCase,
-    private _getodersUseCase: IGetOrdersUseCase
-  ) {}
+    private _getodersUseCase: IGetOrdersUseCase,
+    private _getOrderDetailUseCase: IGetOrderDetailUseCase
+  ) { }
 
   createGuest = async (req: Request, res: Response) => {
     const { name, email, phone, password, territoryId } = req.body;
@@ -93,6 +96,15 @@ export class GuestController {
   getOrders = async (req: Request, res: Response) => {
     const userId = GetOptionalUserId(req.user);
     const response = await this._getodersUseCase.execute(userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  getOrderDetails = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { orderId } = req.params;
+    const response = await this._getOrderDetailUseCase.execute(orderId, userId);
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });

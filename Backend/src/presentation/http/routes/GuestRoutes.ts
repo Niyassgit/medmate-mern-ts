@@ -41,5 +41,6 @@ export class GuestRoutes {
     this.router.delete("/address/:addressId", guestController.deleteAddress);
     this.router.post("/payment", guestController.makePayment);
     this.router.get("/orders", guestController.getOrders);
+    this.router.get("/orders/:orderId", guestController.getOrderDetails);
   }
 }
