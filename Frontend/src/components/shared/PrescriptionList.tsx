@@ -15,7 +15,7 @@ import {
 import useFetchItem from "@/hooks/useFetchItem";
 import { SpinnerButton } from "@/components/shared/SpinnerButton";
 import { PrescriptionDTO } from "../Dto/Prescriptions";
-import { StripePaymentStatus } from "@/types/PaymentTypes";
+import { PaymentStatus } from "@/types/PaymentTypes";
 
 interface Props {
   fetcher: () => Promise<PrescriptionDTO[]>;
@@ -79,7 +79,6 @@ const PrescriptionList: React.FC<Props> = ({
 
   const calculateTotal = (items: PrescriptionDTO["items"]) =>
     items.reduce((sum, item) => sum + item.mrp * item.quantity, 0);
-
 
   if (loading) return <SpinnerButton />;
 
@@ -201,7 +200,6 @@ const PrescriptionList: React.FC<Props> = ({
                         ))}
                       </div>
 
-               
                       {"order" in prescription && (
                         <div className="p-6 bg-gray-50 rounded-xl border flex justify-between items-center">
                           <div>
@@ -214,7 +212,8 @@ const PrescriptionList: React.FC<Props> = ({
                                 prescription.items.reduce(
                                   (sum, item) => sum + item.mrp * item.quantity,
                                   0
-                                )}.00
+                                )}
+                              .00
                             </p>
                           </div>
 
@@ -222,7 +221,7 @@ const PrescriptionList: React.FC<Props> = ({
                           {mode === "guest" ? (
                             !prescription.order ||
                             prescription.order.paymentStatus ===
-                              StripePaymentStatus.UNPAID ? (
+                              PaymentStatus.PENDING ? (
                               <button
                                 className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"
                                 onClick={(e) => {
@@ -234,7 +233,7 @@ const PrescriptionList: React.FC<Props> = ({
                                 Proceed to Pay
                               </button>
                             ) : prescription.order.paymentStatus ===
-                              StripePaymentStatus.PAID ? (
+                              PaymentStatus.SUCCESS ? (
                               <button
                                 disabled
                                 className="px-6 py-3 bg-green-500 text-white rounded-lg flex items-center gap-2 cursor-not-allowed"

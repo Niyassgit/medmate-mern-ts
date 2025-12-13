@@ -1,7 +1,8 @@
-export enum StripePaymentStatus{
-  PAID="PAID",
-  UNPAID="UNPAID",
-  NO_PAYMENT_REQUIRED="NO_PAYMENT_REQUIRED",  
+export enum PaymentStatus{
+ PENDING="PENDING",
+  SUCCESS="SUCCESS",
+  FAILED="FAILED",
+  REFUNDED="REFUNDED"
 }
 
 export enum PrescriptionStatus{
