@@ -33,12 +33,33 @@ const PrescriptionList: React.FC<Props> = ({
   onPay,
 }) => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [filterStatus, setFilterStatus] = useState<"ALL" | "PAID" | "PENDING">("ALL");
 
   const fetchData = useCallback(() => fetcher(), [fetcher]);
 
   const { data, error, loading } = useFetchItem<PrescriptionDTO[]>(fetchData);
 
-  const prescriptions = data ?? [];
+  const rawPrescriptions = data ?? [];
+
+  // Filter Logic
+  const prescriptions = rawPrescriptions.filter((prescription) => {
+    if (filterStatus === "ALL") return true;
+
+    // Check if order exists and its payment status
+    const hasOrder = !!prescription.order;
+    const paymentStatus = prescription.order?.paymentStatus;
+
+    if (filterStatus === "PAID") {
+      return hasOrder && paymentStatus === PaymentStatus.SUCCESS;
+    }
+
+    if (filterStatus === "PENDING") {
+      // Pending includes: No order yet OR Order exists but payment is PENDING/FAILED
+      return !hasOrder || paymentStatus === PaymentStatus.PENDING || paymentStatus === PaymentStatus.FAILED || paymentStatus === PaymentStatus.REFUNDED;
+    }
+
+    return true;
+  });
 
   const toggleExpand = (id: string) => {
     setExpandedId(expandedId === id ? null : id);
@@ -71,10 +92,10 @@ const PrescriptionList: React.FC<Props> = ({
   const formatDate = (date: string | Date | undefined) =>
     date
       ? new Date(date).toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        })
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      })
       : "-";
 
   const calculateTotal = (items: PrescriptionDTO["items"]) =>
@@ -92,8 +113,40 @@ const PrescriptionList: React.FC<Props> = ({
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-8 px-4">
       <div className="max-w-5xl mx-auto">
-        {/* Title */}
-        <h1 className="text-3xl font-bold text-black mb-2">{title}</h1>
+        {/* Title and Filter */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <h1 className="text-3xl font-bold text-black">{title}</h1>
+
+          <div className="flex bg-white rounded-lg p-1 shadow-sm border border-gray-200">
+            <button
+              onClick={() => setFilterStatus("ALL")}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${filterStatus === "ALL"
+                  ? "bg-blue-600 text-white shadow-sm"
+                  : "text-gray-600 hover:bg-gray-50"
+                }`}
+            >
+              All
+            </button>
+            <button
+              onClick={() => setFilterStatus("PENDING")}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${filterStatus === "PENDING"
+                  ? "bg-blue-600 text-white shadow-sm"
+                  : "text-gray-600 hover:bg-gray-50"
+                }`}
+            >
+              Pending
+            </button>
+            <button
+              onClick={() => setFilterStatus("PAID")}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${filterStatus === "PAID"
+                  ? "bg-blue-600 text-white shadow-sm"
+                  : "text-gray-600 hover:bg-gray-50"
+                }`}
+            >
+              Paid
+            </button>
+          </div>
+        </div>
 
         {prescriptions.length === 0 ? (
           <div className="bg-white rounded-xl shadow-sm p-12 text-center">
@@ -101,6 +154,9 @@ const PrescriptionList: React.FC<Props> = ({
             <h3 className="text-xl font-semibold text-black mb-2">
               {emptyMessage}
             </h3>
+            {filterStatus !== "ALL" && (
+              <p className="text-gray-500">No prescriptions found with status "{filterStatus.toLowerCase()}".</p>
+            )}
           </div>
         ) : (
           <div className="space-y-4">
@@ -220,7 +276,7 @@ const PrescriptionList: React.FC<Props> = ({
                           {/* Guest mode — PAY BUTTON */}
                           {mode === "guest" ? (
                             !prescription.order ||
-                            prescription.order.paymentStatus ===
+                              prescription.order.paymentStatus ===
                               PaymentStatus.PENDING ? (
                               <button
                                 className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"
@@ -260,13 +316,13 @@ const PrescriptionList: React.FC<Props> = ({
                                     Not Purchased
                                   </span>
                                 ) : prescription.order.paymentStatus ===
-                                  "PAID" ? (
+                                  PaymentStatus.SUCCESS ? (
                                   <span className="px-4 py-2 bg-green-200 text-green-900 rounded-full text-sm flex items-center gap-1">
                                     <CheckCircle className="w-4 h-4" /> Payment
                                     Completed
                                   </span>
                                 ) : prescription.order.paymentStatus ===
-                                  "UNPAID" ? (
+                                  PaymentStatus.PENDING ? (
                                   <span className="px-4 py-2 bg-yellow-200 text-yellow-900 rounded-full text-sm flex items-center gap-1">
                                     <Clock className="w-4 h-4" /> Yet to Pay
                                   </span>
