@@ -1,17 +1,14 @@
 import { OrderStatus, PaymentStatus } from "../../../shared/Enums";
 
-export interface IOrder {
+export interface OrderDTO {
   id: string;
   guestId: string;
   prescriptionId: string;
-  addressId: string;
   totalAmount: number;
   status: OrderStatus;
   paymentStatus: PaymentStatus;
-  deliveryAddress: string;
   paymentId: string;
   createdAt: Date;
-  updatedAt: Date;
   items?: {
     name: string;
     quantity: number;

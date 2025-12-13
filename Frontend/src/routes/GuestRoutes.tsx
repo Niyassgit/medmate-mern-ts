@@ -6,6 +6,7 @@ import PrescriptionList from "@/features/Guest/pages/Priscriptions";
 import OrderSuccessPage from "@/features/Guest/pages/OrderSuccessPage";
 import OrderCancelPage from "@/features/Guest/pages/OrderCancelPage";
 import { Role } from "@/types/Role";
+import OrderListingPage from "@/features/Guest/pages/OrdersListPage";
 
 export const GuestRoutes = {
   path: "/guest",
@@ -20,5 +21,6 @@ export const GuestRoutes = {
     { path: "checkout", element: <CheckoutPage /> },
     { path: "order-success", element: <OrderSuccessPage /> },
     { path: "order-cancel", element: <OrderCancelPage /> },
+    { path: "orders", element: <OrderListingPage /> },
   ],
 };

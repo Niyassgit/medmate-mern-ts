@@ -4,4 +4,5 @@ export const GuestEndpoints = {
   GET_ALL_PRESCRIPTIONS: `/guest/prescriptions`,
   ADDRESS: `/guest/address`,
   MAKE_PAYMENT: `/guest/payment`,
+  GET_ORDERS:`guest/orders`,
 };

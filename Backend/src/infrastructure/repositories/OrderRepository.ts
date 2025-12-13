@@ -33,6 +33,17 @@ export class OrderRepository
     async findAllOrders(guestId: string): Promise<IOrder[]> {
         const orders = await prisma.order.findMany({
             where: { guestId },
+            include: {
+                prescription: {
+                    include: {
+                        items: {
+                            include: {
+                                product: true
+                            }
+                        }
+                    }
+                }
+            }
         });
         return orders.map((o) => OrderMapper.toDomain(o));
     }

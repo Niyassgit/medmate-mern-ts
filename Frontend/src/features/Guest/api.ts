@@ -33,3 +33,8 @@ export const makePayment = async (
   });
   return res.data.url;
 };
+
+export const getOrders = async () => {
+  const res = await api.get(GuestEndpoints.GET_ORDERS);
+  return res.data.data;
+};

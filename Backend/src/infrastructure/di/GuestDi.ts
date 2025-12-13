@@ -16,6 +16,7 @@ import { s3StorageService } from "../services/S3StorageService";
 import { MakePaymentUseCase } from "../../application/Guest/use-cases/MakePaymentUseCase";
 import { OrderRepository } from "../repositories/OrderRepository";
 import { StripePaymentService } from "../services/StripePaymentService";
+import { GetOrdersUseCase } from "../../application/Guest/use-cases/GetOrdersUseCase";
 
 const userRepository = new UserRepository();
 const guestRepository = new GuestRepository();
@@ -63,11 +64,18 @@ const deleteAddressUseCase = new DeleteAddressUseCase(
   addressRepository
 );
 
+const getOrdersUseCase = new GetOrdersUseCase(
+  guestRepository,
+  orderRepository,
+  storageService
+);
+
 export const guestController = new GuestController(
   createGuestUseCase,
   getAllPrescriptionsUseCase,
   getAllAddressUseCase,
   createAddressUseCase,
   deleteAddressUseCase,
-  makePaymentUseCase
+  makePaymentUseCase,
+  getOrdersUseCase
 );

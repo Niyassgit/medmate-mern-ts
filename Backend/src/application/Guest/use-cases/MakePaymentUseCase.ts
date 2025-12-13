@@ -10,7 +10,7 @@ import { ErrorMessages } from "../../../shared/Messages";
 import { OrderUtils } from "../utils/OrderUtils";
 import { OrderApplicationMapper } from "../mappers/OrderApplicationMapper";
 import { IGuestRepository } from "../../../domain/Patient/repositories/IGuestRepositories";
-import { StripePaymentStatus } from "../../../shared/Enums";
+import { PaymentStatus } from "../../../shared/Enums";
 
 export class MakePaymentUseCase implements IMakePaymentUseCase {
   constructor(
@@ -18,7 +18,7 @@ export class MakePaymentUseCase implements IMakePaymentUseCase {
     private _prescriptionRepository: IPrescriptionRepository,
     private _stripePaymentService: IStripePaymentService,
     private _guestRepository: IGuestRepository
-  ) {}
+  ) { }
 
   async execute(
     prescriptionId: string,
@@ -42,7 +42,7 @@ export class MakePaymentUseCase implements IMakePaymentUseCase {
 
     if (prescription.order) {
       const existingOrder = prescription.order;
-      if (existingOrder.paymentStatus === StripePaymentStatus.PAID) {
+      if (existingOrder.paymentStatus === PaymentStatus.SUCCESS) {
         throw new BadRequestError(ErrorMessages.ALREADY_PAID);
       }
 

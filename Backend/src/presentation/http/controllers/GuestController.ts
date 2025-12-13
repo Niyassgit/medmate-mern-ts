@@ -9,6 +9,7 @@ import { IGetAllAddressUseCase } from "../../../application/Guest/interefaces/IG
 import { ICreateAddressUseCase } from "../../../application/Guest/interefaces/ICreateAddressUseCase";
 import { AddressDTO } from "../../../application/Guest/dto/AddressDTO";
 import { IDeleteAddressUseCase } from "../../../application/Guest/interefaces/IDeleteAddressUseCase";
+import { IGetOrdersUseCase } from "../../../application/Guest/interefaces/IGetOrdersUseCase";
 
 export class GuestController {
   constructor(
@@ -17,8 +18,9 @@ export class GuestController {
     private _getAllAddressUseCase: IGetAllAddressUseCase,
     private _createAddressUseCase: ICreateAddressUseCase,
     private _deleteAddressUseCase: IDeleteAddressUseCase,
-    private _makePaymentUseCase: IMakePaymentUseCase
-  ) { }
+    private _makePaymentUseCase: IMakePaymentUseCase,
+    private _getodersUseCase: IGetOrdersUseCase
+  ) {}
 
   createGuest = async (req: Request, res: Response) => {
     const { name, email, phone, password, territoryId } = req.body;
@@ -85,8 +87,14 @@ export class GuestController {
       paymentMethod,
       userId
     );
+    return res.status(HttpStatusCode.OK).json({ success: true, url: response });
+  };
+
+  getOrders = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._getodersUseCase.execute(userId);
     return res
       .status(HttpStatusCode.OK)
-      .json({ success: true, url: response });
+      .json({ success: true, data: response });
   };
 }

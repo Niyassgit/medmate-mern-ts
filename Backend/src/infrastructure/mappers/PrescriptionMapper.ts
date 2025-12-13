@@ -7,7 +7,7 @@ import {
 } from "@prisma/client";
 import { IPrescription } from "../../domain/prescription/entites/IPrescription";
 import { IPrescriptionWithItemsAndProduct } from "../../domain/prescription/entites/IPrescriptionWIthItemsAndProduct";
-import { OrderStatus, StripePaymentStatus } from "../../shared/Enums";
+import { OrderStatus, PaymentStatus } from "../../shared/Enums";
 
 export class PrescriptionMapper {
   static toDomain(data: Prescription): IPrescription {
@@ -111,11 +111,11 @@ export class PrescriptionMapper {
 
       order: data.order
         ? {
-            id: data.order.id,
-            paymentStatus: data.order.paymentStatus as StripePaymentStatus,
-            status: data.order.status as OrderStatus,
-            totalAmount: data.order.totalAmount,
-          }
+          id: data.order.id,
+          paymentStatus: data.order.paymentStatus as PaymentStatus,
+          status: data.order.status as OrderStatus,
+          totalAmount: data.order.totalAmount,
+        }
         : null,
     };
   }
