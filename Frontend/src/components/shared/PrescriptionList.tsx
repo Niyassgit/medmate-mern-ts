@@ -184,12 +184,27 @@ const PrescriptionList: React.FC<Props> = ({
                           {prescription.status}
                         </span>
                         <div className="flex flex-col">
-                          <span className="text-sm font-medium text-black">
-                            Dr. {prescription.doctor?.name}
-                          </span>
-                          <span className="text-xs text-gray-500">
-                            {prescription.doctor?.hospital}
-                          </span>
+                          {mode === "guest" ? (
+                            <>
+                              <span className="text-sm font-medium text-black">
+                                Dr. {prescription.doctor?.name}
+                              </span>
+                              <span className="text-xs text-gray-500">
+                                {prescription.doctor?.hospital}
+                              </span>
+                            </>
+                          ) : (
+                            <>
+                              <span className="text-sm font-medium text-black">
+                                {prescription.guest?.name ?? "Guest"}
+                              </span>
+                              <span className="text-xs text-gray-500">
+                                {prescription.guest?.phone ??
+                                  prescription.guest?.email ??
+                                  "-"}
+                              </span>
+                            </>
+                          )}
                         </div>
                       </div>
 

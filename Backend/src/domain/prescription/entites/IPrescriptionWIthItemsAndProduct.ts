@@ -7,9 +7,10 @@ export type IPrescriptionWithItemsAndProduct =
   IPrescription & {
     items: (IPrescriptionItem & { product: IProduct })[];
     order?: IOrderMinimal | null,
-    doctor: {
+    guest: {
       name: string;
-      hospital: string;
+      email?: string | null;
+      phone?: string | null;
     };
   };
 

@@ -26,4 +26,9 @@ export interface PrescriptionDTO {
     name: string;
     hospital: string;
   };
+  guest?: {
+    name: string;
+    email?: string | null;
+    phone?: string | null;
+  };
 }
