@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Search,
   Filter,
@@ -33,6 +34,7 @@ interface Order {
 }
 
 export default function OrderListingPage() {
+  const navigate = useNavigate();
   const { data, loading, error } = useFetchItem<Order[]>(getOrders);
   const orders = data || [];
 
@@ -220,7 +222,8 @@ export default function OrderListingPage() {
           {filteredAndSortedOrders.map((order) => (
             <div
               key={order.id}
-              className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
+              onClick={() => navigate(order.id)}
+              className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer"
             >
               <div className="p-6">
                 {/* Order Header */}

@@ -79,10 +79,10 @@ export class OrderApplicationMapper {
             },
             prescription: {
                 id: data.prescription?.id || "",
-                caretedAt: data.prescription?.createdAt.toISOString() || "",
+                createdAt: data.prescription?.createdAt.toISOString() || "",
                 doctor: {
-                    name: data.prescription?.doctor.user.name || "",
-                    specialization: data.prescription?.doctor.specialization || "",
+                    name: data.prescription?.doctor.name || "",
+                    specialization: data.prescription?.doctor.department?.name || "",
                     hospital: data.prescription?.doctor.hospital || undefined,
                 },
             },

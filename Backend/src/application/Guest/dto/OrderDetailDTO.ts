@@ -21,7 +21,7 @@ export interface OrderDetailDTO {
     };
     prescription: {
         id: string;
-        caretedAt: string;
+        createdAt: string;
         doctor: {
             name: string;
             specialization: string;

@@ -7,6 +7,7 @@ import OrderSuccessPage from "@/features/Guest/pages/OrderSuccessPage";
 import OrderCancelPage from "@/features/Guest/pages/OrderCancelPage";
 import { Role } from "@/types/Role";
 import OrderListingPage from "@/features/Guest/pages/OrdersListPage";
+import OrderDetailPage from "@/features/Guest/pages/OrderDetailPage";
 
 export const GuestRoutes = {
   path: "/guest",
@@ -22,5 +23,6 @@ export const GuestRoutes = {
     { path: "order-success", element: <OrderSuccessPage /> },
     { path: "order-cancel", element: <OrderCancelPage /> },
     { path: "orders", element: <OrderListingPage /> },
+    { path: "orders/:orderId", element: <OrderDetailPage /> },
   ],
 };

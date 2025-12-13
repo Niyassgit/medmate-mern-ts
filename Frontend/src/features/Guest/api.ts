@@ -38,3 +38,8 @@ export const getOrders = async () => {
   const res = await api.get(GuestEndpoints.GET_ORDERS);
   return res.data.data;
 };
+
+export const getOrderDetails = async (orderId: string) => {
+  const res = await api.get(`${GuestEndpoints.GET_ORDERS}/${orderId}`);
+  return res.data.data;
+};

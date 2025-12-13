@@ -59,7 +59,7 @@ export class OrderRepository
                     include: {
                         doctor: {
                             include: {
-                                user: true
+                                department: true
                             }
                         },
                         items: {

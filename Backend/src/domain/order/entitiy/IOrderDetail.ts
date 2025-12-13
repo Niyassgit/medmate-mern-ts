@@ -24,11 +24,11 @@ export interface IOrderDetail {
         id: string;
         createdAt: Date;
         doctor: {
-            specialization: string;
+            name: string;
             hospital: string | null;
-            user: {
+            department: {
                 name: string;
-            };
+            } | null;
         };
         items: {
             quantity: number;
