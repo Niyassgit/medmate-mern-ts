@@ -14,8 +14,7 @@ export class TerritoryRepository
     Prisma.TerritoryCreateInput,
     "territory"
   >
-  implements ITerritoryRepository
-{
+  implements ITerritoryRepository {
   constructor() {
     super(prisma.territory, (territory) => TerritoryMapper.toDomain(territory));
   }
@@ -27,8 +26,8 @@ export class TerritoryRepository
     const skip = (page - 1) * limit;
     const where: Prisma.TerritoryWhereInput = search
       ? {
-          OR: [{ name: { contains: search, mode: "insensitive" } }],
-        }
+        OR: [{ name: { contains: search, mode: "insensitive" } }],
+      }
       : {};
     const [territories, total] = await Promise.all([
       prisma.territory.findMany({
@@ -68,7 +67,11 @@ export class TerritoryRepository
     return territory?.name ?? null;
   }
 
-  async territoryUsers(territoryId: string): Promise<ITerritoryUsersMinimal> {
+  async territoryUsers(
+    territoryId: string,
+    page: number,
+    limit: number
+  ): Promise<ITerritoryUsersMinimal> {
     const territory = await prisma.territory.findUnique({
       where: { id: territoryId },
       include: {
@@ -105,6 +108,7 @@ export class TerritoryRepository
         },
       },
     });
+
     if (!territory) {
       return {
         territoryId,
@@ -112,6 +116,19 @@ export class TerritoryRepository
       };
     }
 
-    return TerritoryMapper.toTerritoryUserToDomain(territory);
+    const domainData = TerritoryMapper.toTerritoryUserToDomain(territory);
+
+    // Apply pagination in memory
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+    const paginatedUsers = domainData.users.slice(startIndex, endIndex);
+
+    return {
+      ...domainData,
+      users: paginatedUsers,
+      totalCount: domainData.users.length, // Add totalCount to interface if needed, or rely on frontend to know?
+      // Wait, ITerritoryUsersMinimal needs to support totalCount?
+      // Let's check ITerritoryUsersMinimal.ts
+    };
   }
 }

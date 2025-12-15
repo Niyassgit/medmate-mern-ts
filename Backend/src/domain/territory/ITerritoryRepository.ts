@@ -15,6 +15,10 @@ export interface ITerritoryRepository {
     territoryId: string,
     data: CreateTerritoryDTO
   ): Promise<ITerritory | null>;
-  getTerritoryName(terrId:string):Promise<string | null>;
-  territoryUsers(territoryId:string):Promise<ITerritoryUsersMinimal>
+  getTerritoryName(terrId: string): Promise<string | null>;
+  territoryUsers(
+    territoryId: string,
+    page: number,
+    limit: number
+  ): Promise<ITerritoryUsersMinimal>;
 }

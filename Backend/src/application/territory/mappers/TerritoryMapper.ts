@@ -40,7 +40,7 @@ export class TerritoryMapper {
         department: user.department,
         phone: user.phone,
       })),
-      count: data.users.length,
+      count: data.totalCount || data.users.length,
     };
   }
 }

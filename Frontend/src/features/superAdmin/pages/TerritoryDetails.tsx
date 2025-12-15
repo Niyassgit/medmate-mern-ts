@@ -3,6 +3,7 @@ import React, { useCallback, useState } from "react";
 import { territoryDetails } from "../api/superAdminApi";
 import { useNavigate, useParams } from "react-router-dom";
 import { SpinnerButton } from "@/components/shared/SpinnerButton";
+import AppPagination from "@/components/shared/AppPagination";
 import { Role } from "@/types/Role";
 import { Button } from "@/components/ui/button";
 
@@ -24,8 +25,15 @@ type FilterRole = "all" | "DOCTOR" | "MEDICAL_REP" | "GUEST";
 const TerritoryDetails = () => {
   const { territoryId } = useParams();
   const navigate = useNavigate();
+  const [page, setPage] = useState(1);
   const [currentFilter, setCurrentFilter] = useState<FilterRole>("all");
-  const fetchUsers = useCallback(() => territoryDetails(territoryId!), []);
+  const limit = 20;
+
+  const fetchUsers = useCallback(
+    () => territoryDetails(territoryId!, page, limit),
+    [territoryId, page]
+  );
+
   const {
     data: territoryData,
     error,
@@ -33,6 +41,8 @@ const TerritoryDetails = () => {
   } = useFetchItem<TerritoryResponse>(fetchUsers);
 
   const users = territoryData?.users || [];
+  const totalCount = territoryData?.count || 0;
+  const totalPages = Math.ceil(totalCount / limit);
 
   const filteredUsers =
     currentFilter === "all"
@@ -86,48 +96,44 @@ const TerritoryDetails = () => {
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => setCurrentFilter("all")}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                  currentFilter === "all"
-                    ? "bg-purple-600 text-white shadow-md"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${currentFilter === "all"
+                  ? "bg-purple-600 text-white shadow-md"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
               >
                 All Users
               </button>
               <button
                 onClick={() => setCurrentFilter("DOCTOR")}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                  currentFilter === "DOCTOR"
-                    ? "bg-purple-600 text-white shadow-md"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${currentFilter === "DOCTOR"
+                  ? "bg-purple-600 text-white shadow-md"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
               >
                 Doctors
               </button>
               <button
                 onClick={() => setCurrentFilter("MEDICAL_REP")}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                  currentFilter === "MEDICAL_REP"
-                    ? "bg-purple-600 text-white shadow-md"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${currentFilter === "MEDICAL_REP"
+                  ? "bg-purple-600 text-white shadow-md"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
               >
                 Medical Reps
               </button>
               <button
                 onClick={() => setCurrentFilter("GUEST")}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                  currentFilter === "GUEST"
-                    ? "bg-purple-600 text-white shadow-md"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${currentFilter === "GUEST"
+                  ? "bg-purple-600 text-white shadow-md"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
               >
                 Guests
               </button>
             </div>
             <div className="ml-auto flex gap-3">
               <span className="px-4 py-2 bg-gray-50 rounded-full text-sm font-semibold text-gray-700">
-                Total: {users.length}
+                Total: {totalCount}
               </span>
               <span className="px-4 py-2 bg-gray-50 rounded-full text-sm font-semibold text-gray-700">
                 Showing: {filteredUsers.length}
@@ -137,7 +143,7 @@ const TerritoryDetails = () => {
         </div>
 
         {/* Table */}
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gradient-to-r from-purple-600 to-indigo-600">
@@ -222,6 +228,14 @@ const TerritoryDetails = () => {
               </tbody>
             </table>
           </div>
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <AppPagination
+              page={page}
+              totalPages={totalPages}
+              onPageChange={setPage}
+            />
+          )}
         </div>
       </div>
     </div>

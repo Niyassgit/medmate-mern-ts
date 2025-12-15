@@ -63,7 +63,7 @@ export class SuperAdminController {
     private _getSubscribedListUseCase: IGetSubscribedListUseCase,
     private _getAllGuestsUseCase: IGetAllGuestsUseCase,
     private _getTerritoryDetailsUseCase: ITerritoryDetailsUseCase
-  ) {}
+  ) { }
 
   createSuperAdmin = async (req: Request, res: Response) => {
     const SuperAdmin = await this._createSuperAdminUseCase.execute(
@@ -385,11 +385,17 @@ export class SuperAdminController {
 
   territoryDetails = async (req: Request, res: Response) => {
     const { territoryId } = req.params;
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 20;
+
     const response = await this._getTerritoryDetailsUseCase.execute(
-      territoryId
+      territoryId,
+      page,
+      limit
     );
+
     return res
       .status(HttpStatusCode.OK)
-      .json({ success: true, data: response });
+      .json({ success: true, data: response, page, limit });
   };
 }

@@ -182,7 +182,14 @@ export const getAllGuests = async (
   return res.data.data;
 };
 
-export const territoryDetails = async (territoryId: string) => {
-  const res = await api.get(AdminEndpoints.TERRITORY_DETAILS(territoryId));
+export const territoryDetails = async (
+  territoryId: string,
+  page: number = 1,
+  limit: number = 20
+) => {
+  const res = await api.get(
+    AdminEndpoints.TERRITORY_DETAILS(territoryId) +
+    `?page=${page}&limit=${limit}`
+  );
   return res.data.data;
 };

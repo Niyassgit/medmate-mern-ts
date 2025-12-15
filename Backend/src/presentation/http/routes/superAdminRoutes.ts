@@ -22,7 +22,7 @@ export class SuperAdminRoutes {
       ValidateSchema(SuperAdminRegisterSchema),
       superAdminController.createSuperAdmin
     );
-    // this.router.use(Authenticate, AuthorizeRole([Role.SUPER_ADMIN]));
+    this.router.use(Authenticate, AuthorizeRole([Role.SUPER_ADMIN]));
     this.router.get("/reps", superAdminController.getAllReps);
     this.router.get("/doctors", superAdminController.getAllDoctors);
     this.router.patch("/block/:userId", superAdminController.blockUser);
