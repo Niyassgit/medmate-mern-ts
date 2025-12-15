@@ -3,6 +3,7 @@ import { NotificationMessages } from "../../../shared/Messages";
 import { RegisterResponseDTO } from "../../doctor/dto/RegisterResponseDTO";
 import { RegisterGuestDTO } from "../dto/RegisterPatientDTO";
 import { IGuest } from "../../../domain/Guest/entities/IGuest";
+import { GuestProfileCompleteDTO } from "../dto/ProfileCompleteDTO";
 
 export class GuestMapper {
   static toGuestEntity(
@@ -33,5 +34,17 @@ export class GuestMapper {
       expiredAt,
       otplength: 6,
     };
+  }
+
+  static toEntity(data: GuestProfileCompleteDTO, email: string, userId: string): Omit<IGuest, "id" | "createdAt" | "updatedAt"> {
+    return {
+      name: data.name,
+      isRegistered: true,
+      doctorId: "",
+      phone: data.phone,
+      territoryId: data.territoryId,
+      email: email,
+      userId: userId
+    }
   }
 }

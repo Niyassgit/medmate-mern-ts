@@ -8,6 +8,8 @@ import OrderCancelPage from "@/features/Guest/pages/OrderCancelPage";
 import { Role } from "@/types/Role";
 import OrderListingPage from "@/features/Guest/pages/OrdersListPage";
 import OrderDetailPage from "@/features/Guest/pages/OrderDetailPage";
+import ProfilePage from "@/features/Guest/pages/ProfilePage";
+import CompleteProfilePage from "@/features/Guest/pages/CompleteProfilePage";
 
 export const GuestRoutes = {
   path: "/guest",
@@ -24,5 +26,7 @@ export const GuestRoutes = {
     { path: "order-cancel", element: <OrderCancelPage /> },
     { path: "orders", element: <OrderListingPage /> },
     { path: "orders/:orderId", element: <OrderDetailPage /> },
+    { path: "profile", element: <ProfilePage /> },
+    { path: "complete-profile", element: <CompleteProfilePage /> },
   ],
 };

@@ -18,6 +18,9 @@ import { OrderRepository } from "../repositories/OrderRepository";
 import { StripePaymentService } from "../services/StripePaymentService";
 import { GetOrdersUseCase } from "../../application/Guest/use-cases/GetOrdersUseCase";
 import { GetOrderDetailUseCase } from "../../application/Guest/use-cases/GetOrderDetailUseCase";
+import { GetProfileDetailsUseCase } from "../../application/Guest/use-cases/GetProfileDetailsUseCase";
+import { TerritoryRepository } from "../repositories/TerritoryRepository";
+import { CompleteGuestProfileUseCase } from "../../application/Guest/use-cases/CompleteGuestProfileUseCase";
 
 const userRepository = new UserRepository();
 const guestRepository = new GuestRepository();
@@ -29,6 +32,7 @@ const prescriptionRepository = new PrescriptionRepository();
 const addressRepository = new AddressRepository();
 const orderRepository = new OrderRepository();
 const stripePaymentService = new StripePaymentService();
+const territoryRepository = new TerritoryRepository();
 
 const createGuestUseCase = new CreateGuestUseCase(
   userRepository,
@@ -77,6 +81,18 @@ const getOrderDetailUseCase = new GetOrderDetailUseCase(
   storageService
 );
 
+const getProfileDetailsUseCase = new GetProfileDetailsUseCase(
+  guestRepository,
+  userRepository,
+  territoryRepository,
+  storageService
+);
+
+const completeGuestProfileUseCase = new CompleteGuestProfileUseCase(
+  guestRepository,
+  userRepository,
+  territoryRepository
+);
 export const guestController = new GuestController(
   createGuestUseCase,
   getAllPrescriptionsUseCase,
@@ -85,5 +101,7 @@ export const guestController = new GuestController(
   deleteAddressUseCase,
   makePaymentUseCase,
   getOrdersUseCase,
-  getOrderDetailUseCase
+  getOrderDetailUseCase,
+  getProfileDetailsUseCase,
+  completeGuestProfileUseCase
 );

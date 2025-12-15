@@ -12,6 +12,9 @@ import { IDeleteAddressUseCase } from "../../../application/Guest/interefaces/ID
 import { IGetOrdersUseCase } from "../../../application/Guest/interefaces/IGetOrdersUseCase";
 
 import { IGetOrderDetailUseCase } from "../../../application/Guest/interefaces/IGetOrderDetailUseCase";
+import { IGetProfileDetailsUseCase } from "../../../application/Guest/interefaces/IGetProfileDetailsUseCase";
+import { ICompleteGuestProfileUseCase } from "../../../application/Guest/interefaces/ICompleteGuestProfileUseCase";
+import { GuestProfileCompleteDTO } from "../../../application/Guest/dto/ProfileCompleteDTO";
 
 export class GuestController {
   constructor(
@@ -22,8 +25,10 @@ export class GuestController {
     private _deleteAddressUseCase: IDeleteAddressUseCase,
     private _makePaymentUseCase: IMakePaymentUseCase,
     private _getodersUseCase: IGetOrdersUseCase,
-    private _getOrderDetailUseCase: IGetOrderDetailUseCase
-  ) { }
+    private _getOrderDetailUseCase: IGetOrderDetailUseCase,
+    private _getProfileDetailsUseCase: IGetProfileDetailsUseCase,
+    private _completeGuestProfileUseCase: ICompleteGuestProfileUseCase
+  ) {}
 
   createGuest = async (req: Request, res: Response) => {
     const { name, email, phone, password, territoryId } = req.body;
@@ -107,6 +112,26 @@ export class GuestController {
     const response = await this._getOrderDetailUseCase.execute(orderId, userId);
     return res
       .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  profile = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._getProfileDetailsUseCase.execute(userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  completeProfile = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const dto = req.body as GuestProfileCompleteDTO;
+    const response = await this._completeGuestProfileUseCase.execute(
+      dto,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.CREATED)
       .json({ success: true, data: response });
   };
 }

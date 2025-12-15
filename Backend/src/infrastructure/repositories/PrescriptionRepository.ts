@@ -15,7 +15,8 @@ export class PrescriptionRepository
     Prisma.PrescriptionCreateInput,
     "prescription"
   >
-  implements IPrescriptionRepository {
+  implements IPrescriptionRepository
+{
   constructor() {
     super(prisma.prescription, (p) => PrescriptionMapper.toDomain(p));
   }
@@ -36,6 +37,7 @@ export class PrescriptionRepository
       include: {
         items: { include: { product: true } },
         order: true,
+        doctor: true,
         guest: true,
       },
     });

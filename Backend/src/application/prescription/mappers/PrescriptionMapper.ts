@@ -81,6 +81,10 @@ export class PrescriptionMapper {
           status: data.order.status,
         }
         : null,
+          doctor: {
+        name: data.doctor.name,
+        hospital: data.doctor.hospital,
+      },
       guest: {
         name: data.guest.name,
         email: data.guest.email,

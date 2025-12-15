@@ -43,3 +43,17 @@ export const getOrderDetails = async (orderId: string) => {
   const res = await api.get(`${GuestEndpoints.GET_ORDERS}/${orderId}`);
   return res.data.data;
 };
+
+export const getProfile = async () => {
+  const res = await api.get(GuestEndpoints.PROFILE);
+  return res.data.data;
+};
+
+export const completeUserProfile = async (data: {
+  name: string;
+  phone: string;
+  territoryId: string;
+}) => {
+  const res = await api.post(GuestEndpoints.COMPLETE_PROFILE, data);
+  return res.data.data;
+};
