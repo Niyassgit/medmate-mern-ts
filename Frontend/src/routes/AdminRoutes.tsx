@@ -14,6 +14,7 @@ import CreateDepartment from "@/features/superAdmin/pages/CreateDepartment";
 import SubscriptionManagement from "@/features/superAdmin/pages/SubscriptionManagement";
 import SubscriptionsList from "@/features/superAdmin/pages/SubscriptionsList";
 import Guests from "@/features/superAdmin/pages/Guests";
+import TerritoryDetails from "@/features/superAdmin/pages/TerritoryDetails";
 
 export const AdminRoutes = {
   path: "/admin",
@@ -35,6 +36,7 @@ export const AdminRoutes = {
     { path: "departments/form", element: <CreateDepartment /> },
     { path: "subscription-management", element: <SubscriptionManagement /> },
     {path:"subscription-management/list",element:<SubscriptionsList/>},
-    {path:"guests",element:<Guests />}
+    {path:"guests",element:<Guests />},
+    {path:"territories/:territoryId",element:<TerritoryDetails />}
   ],
 };

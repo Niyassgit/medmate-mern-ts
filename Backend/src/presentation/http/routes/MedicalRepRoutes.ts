@@ -171,5 +171,6 @@ export class MedicalRepRoutes {
       ValidateSchema(productValidateSchema),
       medicalRepController.updateProduct
     );
+    
   }
 }

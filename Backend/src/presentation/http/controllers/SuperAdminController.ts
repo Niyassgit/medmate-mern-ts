@@ -32,6 +32,7 @@ import { IGetRevenueByTierUseCase } from "../../../application/superAdmin/interf
 import { IGetRecentSubscriptionsUseCase } from "../../../application/superAdmin/interfaces/IGetRecentSubscriptionsUseCase";
 import { IGetSubscribedListUseCase } from "../../../application/superAdmin/interfaces/IGetSubscribedListUseCase";
 import { IGetAllGuestsUseCase } from "../../../application/superAdmin/interfaces/IGetAllGuestsUseCase";
+import { ITerritoryDetailsUseCase } from "../../../application/superAdmin/interfaces/ITerritoryDetailsUseCase";
 
 export class SuperAdminController {
   constructor(
@@ -60,7 +61,8 @@ export class SuperAdminController {
     private _getRevenueByTierUseCase: IGetRevenueByTierUseCase,
     private _getRecentSubscriptionsUseCase: IGetRecentSubscriptionsUseCase,
     private _getSubscribedListUseCase: IGetSubscribedListUseCase,
-    private _getAllGuestsUseCase: IGetAllGuestsUseCase
+    private _getAllGuestsUseCase: IGetAllGuestsUseCase,
+    private _getTerritoryDetailsUseCase: ITerritoryDetailsUseCase
   ) {}
 
   createSuperAdmin = async (req: Request, res: Response) => {
@@ -379,5 +381,15 @@ export class SuperAdminController {
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: guests, page, limit });
+  };
+
+  territoryDetails = async (req: Request, res: Response) => {
+    const { territoryId } = req.params;
+    const response = await this._getTerritoryDetailsUseCase.execute(
+      territoryId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
   };
 }

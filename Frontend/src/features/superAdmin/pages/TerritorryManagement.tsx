@@ -48,6 +48,10 @@ const TerritorryManagement: React.FC = () => {
     }
   };
 
+  const handleDetails = (territoryId: string) => {
+    navigate(`/admin/territories/${territoryId}`);
+  };
+
   return (
     <>
       <div className="flex flex-wrap justify-between items-center mb-4 gap-2">
@@ -84,6 +88,7 @@ const TerritorryManagement: React.FC = () => {
         onSearchChange={setSearch}
         onEdit={handleEdit}
         getId={(item) => item.id}
+        onView={handleDetails}
       />
     </>
   );

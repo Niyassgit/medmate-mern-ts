@@ -181,3 +181,8 @@ export const getAllGuests = async (
   );
   return res.data.data;
 };
+
+export const territoryDetails = async (territoryId: string) => {
+  const res = await api.get(AdminEndpoints.TERRITORY_DETAILS(territoryId));
+  return res.data.data;
+};

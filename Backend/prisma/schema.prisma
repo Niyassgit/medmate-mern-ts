@@ -214,7 +214,7 @@ model MedicalRepTerritory {
   repId       String @db.ObjectId
   territoryId String @db.ObjectId
 
-  rep       MedicalRep @relation(fields: [repId], references: [id])
+  rep       MedicalRep? @relation(fields: [repId], references: [id])
   territory Territory  @relation(fields: [territoryId], references: [id])
 }
 
