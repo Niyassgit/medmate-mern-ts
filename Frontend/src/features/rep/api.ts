@@ -1,6 +1,7 @@
 import { api } from "@/services/api";
 import { RepEndpoints } from "@/services/endpoints/RepEndpoints";
 import { MessageType } from "@/types/MessageTypes";
+import { ProductPostListStatus } from "@/types/ProductListStatus";
 import { Role } from "@/types/Role";
 
 export const getProfileRep = async (userId: string) => {
@@ -34,8 +35,13 @@ export const addPost = async (id: string, formData: FormData) => {
     headers: { "Content-Type": "multipart/form-data" },
   });
 };
-export const getPostList = async (id: string) => {
-  const response = await api.get(RepEndpoints.GET_POSTS(id));
+export const getPostList = async (
+  id: string,
+  status: ProductPostListStatus
+) => {
+  const response = await api.get(RepEndpoints.GET_POSTS(id), {
+    params: { status },
+  });
   return response.data?.data;
 };
 export const postDetails = async (id: string) => {

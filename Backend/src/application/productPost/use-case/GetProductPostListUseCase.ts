@@ -7,6 +7,7 @@ import { IGetProductPostListUseCase } from "../interfaces/IGetProductPostListUse
 import { ErrorMessages} from "../../../shared/Messages";
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
 import { IProductPostPresentationService } from "../interfaces/IProductPostPresentationService";
+import { ProductPostListStatus } from "../../../shared/Enums";
 
 export class GetProductPostListUseCase implements IGetProductPostListUseCase {
   constructor(
@@ -17,14 +18,14 @@ export class GetProductPostListUseCase implements IGetProductPostListUseCase {
     
   ) {}
 
-  async execute(userId: string): Promise<ProductListDTO[] | null> {
+  async execute(userId: string,status:ProductPostListStatus): Promise<ProductListDTO[] | null> {
     const user = await this._userRepository.findById(userId);
     if (!user) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
     const repId = await this._medicalRepRepository.findMedicalRepIdByUserId(
       userId
     );
     if (!repId) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
-    const products = await this._productPostRepository.getProducts(repId);
+    const products = await this._productPostRepository.getProducts(repId,status);
     if (!products) return null;
     const dto = ProductPostMapper.toProductList(products);
     const mapped=await this._presentationService.mapWithSignedUrls(dto);

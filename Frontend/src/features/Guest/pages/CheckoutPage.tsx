@@ -9,6 +9,7 @@ import {
   AlertCircle,
   Loader2,
   Trash,
+  IndianRupee,
 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { PrescriptionDTO } from "@/components/Dto/Prescriptions";
@@ -108,7 +109,7 @@ const CheckoutPage = () => {
       toast.dismiss("payment");
 
       if (paymentMethod === "cod") {
-        toast.success("Order placed successfully via Cash on Delivery!");
+        toast.success("Order placed successfully via VPI method!");
         navigate("/guest/order-success");
       } else if (sessionUrl) {
         window.location.href = sessionUrl;
@@ -211,10 +212,11 @@ const CheckoutPage = () => {
                     <div
                       key={address.id}
                       onClick={() => setSelectedAddressId(address.id)}
-                      className={`relative border-2 rounded-xl p-4 cursor-pointer transition-all ${selectedAddressId === address.id
-                        ? "border-blue-500 bg-blue-50"
-                        : "border-gray-200 hover:border-gray-300"
-                        }`}
+                      className={`relative border-2 rounded-xl p-4 cursor-pointer transition-all ${
+                        selectedAddressId === address.id
+                          ? "border-blue-500 bg-blue-50"
+                          : "border-gray-200 hover:border-gray-300"
+                      }`}
                     >
                       {selectedAddressId === address.id && (
                         <div className="absolute top-4 right-4 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
@@ -223,10 +225,11 @@ const CheckoutPage = () => {
                       )}
                       <div className="flex items-start gap-3">
                         <MapPin
-                          className={`w-5 h-5 mt-1 ${selectedAddressId === address.id
-                            ? "text-blue-500"
-                            : "text-gray-400"
-                            }`}
+                          className={`w-5 h-5 mt-1 ${
+                            selectedAddressId === address.id
+                              ? "text-blue-500"
+                              : "text-gray-400"
+                          }`}
                         />
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-1">
@@ -426,24 +429,27 @@ const CheckoutPage = () => {
               <div className="p-6 space-y-4">
                 <div
                   onClick={() => setPaymentMethod("card")}
-                  className={`border-2 rounded-xl p-4 cursor-pointer transition-all ${paymentMethod === "card"
-                    ? "border-purple-500 bg-purple-50"
-                    : "border-gray-200 hover:border-gray-300"
-                    }`}
+                  className={`border-2 rounded-xl p-4 cursor-pointer transition-all ${
+                    paymentMethod === "card"
+                      ? "border-purple-500 bg-purple-50"
+                      : "border-gray-200 hover:border-gray-300"
+                  }`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div
-                        className={`w-10 h-10 rounded-full flex items-center justify-center ${paymentMethod === "card"
-                          ? "bg-purple-500"
-                          : "bg-gray-200"
-                          }`}
+                        className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                          paymentMethod === "card"
+                            ? "bg-purple-500"
+                            : "bg-gray-200"
+                        }`}
                       >
                         <CreditCard
-                          className={`w-5 h-5 ${paymentMethod === "card"
-                            ? "text-white"
-                            : "text-gray-600"
-                            }`}
+                          className={`w-5 h-5 ${
+                            paymentMethod === "card"
+                              ? "text-white"
+                              : "text-gray-600"
+                          }`}
                         />
                       </div>
                       <div>
@@ -465,36 +471,41 @@ const CheckoutPage = () => {
 
                 <div
                   onClick={() => setPaymentMethod("cod")}
-                  className={`border-2 rounded-xl p-4 cursor-pointer transition-all ${paymentMethod === "cod"
-                    ? "border-purple-500 bg-purple-50"
-                    : "border-gray-200 hover:border-gray-300"
-                    }`}
+                  className={`border-2 rounded-xl p-4 cursor-pointer transition-all ${
+                    paymentMethod === "cod"
+                      ? "border-purple-500 bg-purple-50"
+                      : "border-gray-200 hover:border-gray-300"
+                  }`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div
-                        className={`w-10 h-10 rounded-full flex items-center justify-center ${paymentMethod === "cod"
-                          ? "bg-purple-500"
-                          : "bg-gray-200"
-                          }`}
+                        className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                          paymentMethod === "upi"
+                            ? "bg-purple-500"
+                            : "bg-gray-200"
+                        }`}
                       >
-                        <Package
-                          className={`w-5 h-5 ${paymentMethod === "cod"
-                            ? "text-white"
-                            : "text-gray-600"
-                            }`}
+                        <IndianRupee
+                          className={`w-5 h-5 ${
+                            paymentMethod === "upi"
+                              ? "text-white"
+                              : "text-gray-600"
+                          }`}
                         />
                       </div>
+
                       <div>
                         <p className="font-semibold text-gray-900">
-                          Cash on Delivery
+                          UPI Payment
                         </p>
                         <p className="text-sm text-gray-500">
-                          Pay when you receive
+                          Pay using Google Pay, PhonePe, Paytm
                         </p>
                       </div>
                     </div>
-                    {paymentMethod === "cod" && (
+
+                    {paymentMethod === "upi" && (
                       <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
                         <Check className="w-4 h-4 text-white" />
                       </div>

@@ -43,6 +43,7 @@ import { IGetAllProductsUseCase } from "../../../application/product/interfaces/
 import { ICreateProductUseCase } from "../../../application/product/interfaces/ICreateProductUseCase";
 import { ProductDTO } from "../../../application/product/dto/ProdductDTO";
 import { IEditProductUseCase } from "../../../application/product/interfaces/IEditProductUseCase";
+import { ProductPostListStatus } from "../../../shared/Enums";
 
 export class MedicalRepController {
   constructor(
@@ -148,7 +149,11 @@ export class MedicalRepController {
 
   posts = async (req: Request, res: Response) => {
     const { userId } = req.params;
-    const response = await this._getProductsListUseCase.execute(userId);
+    const { status } = req.query;
+    const response = await this._getProductsListUseCase.execute(
+      userId,
+      status as ProductPostListStatus
+    );
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
@@ -473,7 +478,7 @@ export class MedicalRepController {
           .filter((key): key is string => !!key)
       );
     }
-    
+
     dto.imageUrls = [...existingImages, ...newImageKeys];
 
     const response = await this._updateProductUseCase.execute(

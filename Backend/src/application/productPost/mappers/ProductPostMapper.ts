@@ -22,6 +22,7 @@ export class ProductPostMapper {
       useCases: Array.isArray(dto.useCases) ? dto.useCases : [dto.useCases],
       territoryId: dto.territoryId ?? null,
       repId: dto.repId,
+      isArchived: false,
     };
   }
 
@@ -32,6 +33,7 @@ export class ProductPostMapper {
       title: product.title,
       date: product.createdAt,
       description: product.description,
+      isArchived: product.isArchived,
     }));
   }
 
@@ -39,20 +41,20 @@ export class ProductPostMapper {
     entity: IProductPost,
     storageService: IStorageService
   ): Promise<PostDetailsDTO> {
-    let singedUrls: string[] =[];
+    let singedUrls: string[] = [];
     if (entity && entity.imageUrl.length > 0) {
       singedUrls = await Promise.all(
-         entity.imageUrl.map((img) =>storageService.generateSignedUrl(img)
-      )
+        entity.imageUrl.map((img) => storageService.generateSignedUrl(img)
+        )
       );
-     
+
     }
 
     return {
       id: entity.id,
       brand: entity.brand,
       description: entity.description,
-      imageUrl:singedUrls,
+      imageUrl: singedUrls,
       ingredients: entity.ingredients,
       repId: entity.repId,
       termsOfUse: entity.termsOfUse,
@@ -79,8 +81,8 @@ export class ProductPostMapper {
           createdAt: p.createdAt,
           productImage: signedUrl,
           title: p.title,
-          likes:p._count.likes ?? 0,
-          interests:p._count.interests ?? 0,
+          likes: p._count.likes ?? 0,
+          interests: p._count.interests ?? 0,
         };
       })
     );

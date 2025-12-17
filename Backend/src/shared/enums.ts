@@ -67,3 +67,9 @@ export enum PaymentStatus {
   FAILED = "FAILED",
   REFUNDED = "REFUNDED"
 }
+
+export enum ProductPostListStatus{
+  ALL="ALL",
+  PUBLISHED="PUBLISHED",
+  ARCHIVE="ARCHIVE"
+}

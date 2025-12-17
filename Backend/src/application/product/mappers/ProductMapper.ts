@@ -16,7 +16,6 @@ export class ProductMapper {
       );
     }
 
-    // Fetch territory names if repository is provided
     let territoryNames: string[] | undefined;
     if (territoryRepository && data.territoryIds && data.territoryIds.length > 0) {
       territoryNames = await Promise.all(
@@ -38,7 +37,6 @@ export class ProductMapper {
       ptr: data.ptr,
       territoryIds: data.territoryIds || [],
       territoryNames,
-      useCase: data.useCase,
     };
   }
 
@@ -55,7 +53,6 @@ export class ProductMapper {
       ptr: dto.ptr,
       repId: repId,
       territoryIds: dto.territoryIds || [],
-      useCase: dto.useCase,
     };
   }
     static toEditEntity(
@@ -71,7 +68,6 @@ export class ProductMapper {
       ptr: dto.ptr,
       repId: repId,
       territoryIds: dto.territoryIds || [],
-      useCase: dto.useCase,
       updatedAt:new Date(),
     };
   }

@@ -27,13 +27,13 @@ export class GuestRoutes {
       ValidateSchema(GuestRegisterSchema),
       guestController.createGuest
     );
-    this.router.use(Authenticate, AuthorizeRole([Role.GUEST]), validateUser);
+
     this.router.post(
       "/signup/:shareToken",
       ValidateSchema(GuestRegisterSchema),
       guestController.createGuest
     );
-
+    this.router.use(Authenticate, AuthorizeRole([Role.GUEST]), validateUser);
     this.router.get("/prescriptions", guestController.getPrescriptions);
     this.router.get("/address", guestController.getAllAddress);
     this.router.post(

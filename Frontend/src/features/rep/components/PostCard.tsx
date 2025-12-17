@@ -1,4 +1,4 @@
-import { Heart, Share2, Archive } from "lucide-react";
+import { Heart, Share2, Archive, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -14,10 +14,11 @@ interface PostCardProps {
   category: string;
   title: string;
   date: string;
+  isArchived:boolean;
   description: string;
   likes: number;
   onImageError?: () => void;
-  onArchived?: (postId: string) => void; 
+  onArchived?: (postId: string) => void;
 }
 
 const PostCard = ({
@@ -26,6 +27,7 @@ const PostCard = ({
   category,
   title,
   date,
+  isArchived,
   description,
   likes,
   onImageError,
@@ -149,10 +151,23 @@ const PostCard = ({
               onClick={handleArchiveClick}
               variant="outline"
               size="sm"
-              className="text-xs flex items-center gap-1 text-muted-foreground border-gray-300 transition-all hover:text-red-600 hover:border-red-400 hover:bg-red-50"
+              className={`text-xs flex items-center gap-1 border transition-all ${
+                isArchived
+                  ? "text-green-600 border-green-400 hover:bg-green-50"
+                  : "text-muted-foreground border-gray-300 hover:text-red-600 hover:border-red-400 hover:bg-red-50"
+              }`}
             >
-              <Archive className="h-3.5 w-3.5" />
-              Archive
+              {isArchived ? (
+                <>
+                  <RotateCcw className="h-3.5 w-3.5" />
+                  Unarchive
+                </>
+              ) : (
+                <>
+                  <Archive className="h-3.5 w-3.5" />
+                  Archive
+                </>
+              )}
             </Button>
           </div>
         </div>

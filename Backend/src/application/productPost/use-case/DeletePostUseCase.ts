@@ -15,7 +15,8 @@ export class DeletePostUseCase implements IDeletePostUseCase{
         if(!user) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
         const postExists=await this._productPostRepository.findPostById(postId);
         if(!postExists) throw new BadRequestError(ErrorMessages.POST_NOT_FOUND);
-        const isDeleted=await this._productPostRepository.DeletePostUseCase(postId);
+        console.log("post for delete:",postExists)
+        const isDeleted=await this._productPostRepository.DeletePost(postId);
         if(!isDeleted) return ErrorMessages.OPERATION_FAILE;
         return SuccessMessages.POST_DELETE_SUCCESS;
 
