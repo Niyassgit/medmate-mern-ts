@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { FilePenLine } from "lucide-react";
 import { MedicalRepDetails } from "@/components/Dto/MedicalRepDetails";
 import { useSelector } from "react-redux";
 import { getProfileRep, updateProfileImage } from "../api";
@@ -175,7 +176,7 @@ const ProfilePage = () => {
           </div>
 
           {/* Complete Profile Button */}
-          {completion < 100 && (
+          {completion < 100 ? (
             <button
               onClick={() => navigate(`/rep/profile/complete/${id}`)}
               className="mt-4 flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full shadow hover:from-blue-600 hover:to-blue-700 transition"
@@ -195,6 +196,14 @@ const ProfilePage = () => {
                   d="M5 13l4 4L19 7"
                 />
               </svg>
+            </button>
+          ) : (
+            <button
+              onClick={() => navigate(`/rep/profile/complete/${id}`)}
+              className="mt-4 flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-full shadow hover:from-gray-600 hover:to-gray-700 transition"
+            >
+              <span>Edit Profile</span>
+              <FilePenLine className="h-4 w-4" />
             </button>
           )}
         </div>

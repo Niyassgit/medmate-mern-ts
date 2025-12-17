@@ -15,7 +15,7 @@ export class ChangePasswordUseCase implements IChangePasswordUseCase {
     private _guestRespository: IGuestRepository,
     private _userRepository: IUserRepository,
     private _bcryptService: IBcryptService
-  ) {}
+  ) { }
   async execute(
     role: Role,
     newPassword: string,
@@ -53,6 +53,21 @@ export class ChangePasswordUseCase implements IChangePasswordUseCase {
     }
 
     if (!profileId) throw new BadRequestError(ErrorMessages.USER_NOT_FOUND);
+
+    const user = await this._userRepository.findById(userId);
+    if (!user) throw new BadRequestError(ErrorMessages.USER_NOT_FOUND);
+
+    if (user.password) {
+      const isSamePassword = await this._bcryptService.compare(
+        newPassword,
+        user.password
+      );
+
+      if (isSamePassword) {
+        throw new BadRequestError(ErrorMessages.PASSWORD_CANT_SAME);
+      }
+    }
+
     const hashedPassword = await this._bcryptService.hash(newPassword);
     const changed = await this._userRepository.resetPassword(
       userId,

@@ -217,9 +217,28 @@ export const getProducts = async () => {
   return res.data.data;
 };
 
+
 export const editProduct = async (productId: string, formData: FormData) => {
   const res = await api.patch(RepEndpoints.EDIT_PRODUCT(productId), formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
   return res.data.data;
+};
+
+export const verifyPassword = async (password: string) => {
+  const res = await api.get(RepEndpoints.VERIFY_PASSWORD, {
+    params: { password },
+  });
+  return res.data;
+};
+
+export const changePassword = async (password: string, role: string) => {
+  const res = await api.post(
+    RepEndpoints.CHANGE_PASSWORD,
+    {},
+    {
+      params: { newPassword: password, role },
+    }
+  );
+  return res.data;
 };

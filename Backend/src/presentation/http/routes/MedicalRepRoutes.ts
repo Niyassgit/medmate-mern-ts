@@ -172,7 +172,7 @@ export class MedicalRepRoutes {
       medicalRepController.updateProduct
     );
 
-    this.router.post("change-password", medicalRepController.changePassword);
+    this.router.post("/change-password", medicalRepController.changePassword);
     this.router.get("/verify-password", medicalRepController.verifyPassword);
   }
 }
