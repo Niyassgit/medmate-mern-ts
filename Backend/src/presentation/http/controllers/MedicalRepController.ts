@@ -429,7 +429,9 @@ export class MedicalRepController {
 
   getSubscriptionHistory = async (req: Request, res: Response) => {
     const userId = GetOptionalUserId(req.user);
+    console.log("userId:",userId)
     const response = await this._getSubscriptionHistoryUseCase.execute(userId);
+    console.log("response:", response);
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });

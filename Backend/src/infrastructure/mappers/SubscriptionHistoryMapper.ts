@@ -51,4 +51,26 @@ export class SubscriptionHistoryMapper {
       status: data.status,
     };
   }
+
+  static toDomainFromSession(
+    session: any, // Using any for Stripe session to avoid importing Stripe types in Mapper if not present, or use correct Type if available
+    repId: string,
+    planId: string,
+    startDate: Date,
+    endDate: Date
+  ): Omit<ISubscriptionHistory, "id"> {
+    return {
+      repId,
+      planId,
+      sessionId: session.id,
+      paymentIntentId: (session.payment_intent as string) || null,
+      invoiceId: (session.invoice as string) || null,
+      amount: (session.amount_total || 0) / 100,
+      currency: session.currency || "inr",
+      status: session.payment_status,
+      startDate,
+      endDate,
+      createdAt: new Date(),
+    };
+  }
 }

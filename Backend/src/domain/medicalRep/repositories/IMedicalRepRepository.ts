@@ -30,5 +30,11 @@ export interface IMedicalRepRepository {
   getUserIdByRepId(repId: string): Promise<{ repUserId: string | null }>;
   countReps(startDate?: Date, endDate?: Date): Promise<number>;
   getMonthlyRepGrowth(year: number): Promise<{ month: number; count: number }[]>;
-  findByIds(repIds:string[]):Promise<IMedicalRep[]>;
+  findByIds(repIds: string[]): Promise<IMedicalRep[]>;
+  updateSubscriptionStatus(
+    repId: string,
+    planId: string,
+    startDate: Date,
+    endDate: Date
+  ): Promise<void>;
 }

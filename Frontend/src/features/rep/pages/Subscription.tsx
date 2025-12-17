@@ -1,5 +1,9 @@
 import useFetchItem from "@/hooks/useFetchItem";
-import { checkoutSubscription, subcriptionPlans } from "../api";
+import {
+  checkoutSubscription,
+  subcriptionPlans,
+  getSubscriptionStatus,
+} from "../api";
 import { SubscriptionDTO } from "../dto/SubscriptionDTO";
 import { SpinnerButton } from "@/components/shared/SpinnerButton";
 import ReviewMarquee from "../components/ReviewMarquee";
@@ -19,12 +23,15 @@ const Subscription = () => {
   const [open, setOpen] = useState(false);
   const [history, setHistory] = useState<SubHistoryDTO[] | null>(null);
   const [historyLoading, setHistoryLoading] = useState(false);
-  const [historyError, setHistoryError] = useState<string | null>(null);
+
   const {
     data: plans,
     error: plansError,
     loading: plansLoading,
   } = useFetchItem<SubscriptionDTO[]>(subcriptionPlans);
+
+  const { data: subscriptionStatus, loading: statusLoading } =
+    useFetchItem<any>(getSubscriptionStatus);
 
   const {
     data: cardsData,
@@ -33,29 +40,20 @@ const Subscription = () => {
   } = useFetchItem<DoctorCardGuestDTO[]>(doctorsForShow);
 
   const handleViewHistory = async () => {
-    // If already fetched, just toggle the modal
-    if (history !== null) {
-      setOpen(!open);
-      return;
-    }
-
-    // Fetch history on first click
+    setOpen(true);
     setHistoryLoading(true);
-    setHistoryError(null);
+
     try {
       const result = await getSubscriptionHistory();
-      console.log("Subscription history fetched:", result);
       setHistory(result);
-      setOpen(true);
-    } catch (error: any) {
-      setHistoryError(error.message || "Failed to load subscription history");
+    } catch (error) {
       toast.error("Failed to load subscription history");
     } finally {
       setHistoryLoading(false);
     }
   };
 
-  if (plansLoading || cardsLoading) {
+  if (plansLoading || cardsLoading || statusLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <SpinnerButton />
@@ -63,37 +61,53 @@ const Subscription = () => {
     );
   }
 
-  const handlePurchase=async(planId:string)=>{
-    if(!userId) return;
+  const handlePurchase = async (planId: string) => {
+    if (!userId) return;
     try {
-      const url=await checkoutSubscription(userId,planId);
-      window.location.href=url;
+      const url = await checkoutSubscription(userId, planId);
+      window.location.href = url;
     } catch (error) {
       toast.error("Something went wrong, please try again.");
     }
-  }
+  };
 
   if (plansError)
     return <p className="text-center text-red-600">{plansError}</p>;
   if (doctorsError)
     return <p className="text-center text-red-600">{doctorsError}</p>;
 
+  const isSubscribed =
+    subscriptionStatus?.isActive &&
+    subscriptionStatus?.endDate &&
+    new Date(subscriptionStatus.endDate) > new Date();
+
+  const expiryDate = isSubscribed
+    ? new Date(subscriptionStatus.endDate).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : null;
+
   return (
     <div className="bg-gradient-to-b from-[#0A1A3A] to-black w-full text-white py-10">
       <div className="text-center mt-6">
         <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight">
-          Choose the plan that's right for you
+          {isSubscribed
+            ? "Upgrade Your Plan"
+            : "Choose the plan that's right for you"}
         </h2>
         <p className="text-gray-300 text-sm md:text-base mt-2 max-w-xl mx-auto">
-          Unlock features tailored to boost your growth and visibility — upgrade
-          whenever you're ready.
+          {isSubscribed
+            ? `You are currently on an active plan expiring on ${expiryDate}. Upgrading now extends your plan validity.`
+            : "Unlock features tailored to boost your growth and visibility — upgrade whenever you're ready."}
         </p>
         <div className="flex justify-end w-full max-w-5xl mx-auto px-4 mt-6 relative">
-          <AnimeButton 
-            label={historyLoading ? "Loading..." : "View History"} 
+          <AnimeButton
+            label={historyLoading ? "Loading..." : "View History"}
             onClick={handleViewHistory}
           />
-          
+
           {/* Dropdown below button */}
           {open && history && (
             <div className="absolute top-full right-0 mt-2 w-[600px] max-w-[90vw] z-50">
@@ -131,7 +145,8 @@ const Subscription = () => {
                       const plan = plans?.find((p) => p.id === item.planId);
                       const startDate = new Date(item.startDate);
                       const endDate = new Date(item.endDate);
-                      const isActive = new Date() >= startDate && new Date() <= endDate;
+                      const isActive =
+                        new Date() >= startDate && new Date() <= endDate;
 
                       return (
                         <div
@@ -164,13 +179,17 @@ const Subscription = () => {
                                 </span>
                               </div>
                               <div>
-                                <span className="text-gray-400">Plan Credits: </span>
+                                <span className="text-gray-400">
+                                  Plan Credits:{" "}
+                                </span>
                                 <span className="text-white font-medium">
                                   {plan?.tenure || "N/A"}
                                 </span>
                               </div>
                               <div>
-                                <span className="text-gray-400">Start Date: </span>
+                                <span className="text-gray-400">
+                                  Start Date:{" "}
+                                </span>
                                 <span className="text-white text-xs">
                                   {startDate.toLocaleDateString("en-US", {
                                     year: "numeric",
@@ -180,7 +199,9 @@ const Subscription = () => {
                                 </span>
                               </div>
                               <div>
-                                <span className="text-gray-400">End Date: </span>
+                                <span className="text-gray-400">
+                                  End Date:{" "}
+                                </span>
                                 <span className="text-white text-xs">
                                   {endDate.toLocaleDateString("en-US", {
                                     year: "numeric",
@@ -191,20 +212,27 @@ const Subscription = () => {
                               </div>
                               {item.invoiceId && (
                                 <div className="col-span-2">
-                                  <span className="text-gray-400">Invoice ID: </span>
+                                  <span className="text-gray-400">
+                                    Invoice ID:{" "}
+                                  </span>
                                   <span className="text-white font-mono text-xs">
                                     {item.invoiceId.slice(0, 20)}...
                                   </span>
                                 </div>
                               )}
                               <div className="col-span-2">
-                                <span className="text-gray-400">Purchase Date: </span>
+                                <span className="text-gray-400">
+                                  Purchase Date:{" "}
+                                </span>
                                 <span className="text-white text-xs">
-                                  {new Date(item.createdAt).toLocaleDateString("en-US", {
-                                    year: "numeric",
-                                    month: "short",
-                                    day: "numeric",
-                                  })}
+                                  {new Date(item.createdAt).toLocaleDateString(
+                                    "en-US",
+                                    {
+                                      year: "numeric",
+                                      month: "short",
+                                      day: "numeric",
+                                    }
+                                  )}
                                 </span>
                               </div>
                             </div>
@@ -234,9 +262,20 @@ const Subscription = () => {
               plans.map((plan, idx) => (
                 <div
                   key={idx}
-                  className="p-6 bg-black/20 ring ring-indigo-950 mx-auto w-full max-w-sm rounded-lg text-white shadow-lg hover:ring-indigo-500 transition-all duration-400"
+                  className={`p-6 bg-black/20 ring ring-indigo-950 mx-auto w-full max-w-sm rounded-lg text-white shadow-lg hover:ring-indigo-500 transition-all duration-400 ${
+                    isSubscribed && subscriptionStatus?.planId === plan.id
+                      ? "ring-2 ring-green-500 bg-green-900/10"
+                      : ""
+                  }`}
                 >
-                  <h3 className="text-xl font-bold">{plan.name}</h3>
+                  <div className="flex justify-between items-start">
+                    <h3 className="text-xl font-bold">{plan.name}</h3>
+                    {isSubscribed && subscriptionStatus?.planId === plan.id && (
+                      <span className="bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded-full border border-green-500/50">
+                        Current Plan
+                      </span>
+                    )}
+                  </div>
                   <div className="my-2">
                     <span className="text-4xl font-bold">{plan.price}</span>
                     <span className="text-gray-300">
@@ -270,9 +309,13 @@ const Subscription = () => {
                   </ul>
                   <button
                     onClick={() => handlePurchase(plan.id)}
-                    className="w-full py-2 px-4 bg-indigo-500 hover:bg-indigo-600 active:scale-95 text-sm rounded-md transition-all"
+                    className={`w-full py-2 px-4 text-sm rounded-md transition-all ${
+                      isSubscribed
+                        ? "bg-green-600 hover:bg-green-700 active:scale-95"
+                        : "bg-indigo-500 hover:bg-indigo-600 active:scale-95"
+                    }`}
                   >
-                    Buy Now
+                    {isSubscribed ? "+ Upgrade / Extend" : "Buy Now"}
                   </button>
                 </div>
               ))}
