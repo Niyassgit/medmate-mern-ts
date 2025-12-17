@@ -43,7 +43,8 @@ import { IGetAllProductsUseCase } from "../../../application/product/interfaces/
 import { ICreateProductUseCase } from "../../../application/product/interfaces/ICreateProductUseCase";
 import { ProductDTO } from "../../../application/product/dto/ProdductDTO";
 import { IEditProductUseCase } from "../../../application/product/interfaces/IEditProductUseCase";
-import { ProductPostListStatus } from "../../../shared/Enums";
+import { ProductPostListStatus, Role } from "../../../shared/Enums";
+import { IChangePasswordUseCase } from "../../../application/common/interfaces/IChangePasswordUseCase";
 
 export class MedicalRepController {
   constructor(
@@ -82,7 +83,8 @@ export class MedicalRepController {
     private _getConnectionRequestStatsUseCase: IGetConnectionRequestStatsUseCase,
     private _getAllProductsUseCase: IGetAllProductsUseCase,
     private _createProductUseCase: ICreateProductUseCase,
-    private _updateProductUseCase: IEditProductUseCase
+    private _updateProductUseCase: IEditProductUseCase,
+    private _changePasswordUseCase: IChangePasswordUseCase
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -429,7 +431,7 @@ export class MedicalRepController {
 
   getSubscriptionHistory = async (req: Request, res: Response) => {
     const userId = GetOptionalUserId(req.user);
-    console.log("userId:",userId)
+    console.log("userId:", userId);
     const response = await this._getSubscriptionHistoryUseCase.execute(userId);
     console.log("response:", response);
     return res
@@ -486,6 +488,19 @@ export class MedicalRepController {
     const response = await this._updateProductUseCase.execute(
       productId,
       dto as ProductDTO,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, message: response });
+  };
+
+  changePassword = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { role, newPassword } = req.query;
+    const response = await this._changePasswordUseCase.execute(
+      role as Role,
+      newPassword as string,
       userId
     );
     return res

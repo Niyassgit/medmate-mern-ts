@@ -51,5 +51,6 @@ export class GuestRoutes {
       ValidateSchema(CompleteProfileSchema),
       guestController.completeProfile
     );
+    this.router.post("/change-password", guestController.changePassword);
   }
 }

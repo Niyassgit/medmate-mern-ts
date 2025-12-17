@@ -10,11 +10,12 @@ import { ICreateAddressUseCase } from "../../../application/Guest/interefaces/IC
 import { AddressDTO } from "../../../application/Guest/dto/AddressDTO";
 import { IDeleteAddressUseCase } from "../../../application/Guest/interefaces/IDeleteAddressUseCase";
 import { IGetOrdersUseCase } from "../../../application/Guest/interefaces/IGetOrdersUseCase";
-
 import { IGetOrderDetailUseCase } from "../../../application/Guest/interefaces/IGetOrderDetailUseCase";
 import { IGetProfileDetailsUseCase } from "../../../application/Guest/interefaces/IGetProfileDetailsUseCase";
 import { ICompleteGuestProfileUseCase } from "../../../application/Guest/interefaces/ICompleteGuestProfileUseCase";
 import { GuestProfileCompleteDTO } from "../../../application/Guest/dto/ProfileCompleteDTO";
+import { IChangePasswordUseCase } from "../../../application/common/interfaces/IChangePasswordUseCase";
+import { Role } from "../../../shared/Enums";
 
 export class GuestController {
   constructor(
@@ -27,7 +28,8 @@ export class GuestController {
     private _getodersUseCase: IGetOrdersUseCase,
     private _getOrderDetailUseCase: IGetOrderDetailUseCase,
     private _getProfileDetailsUseCase: IGetProfileDetailsUseCase,
-    private _completeGuestProfileUseCase: ICompleteGuestProfileUseCase
+    private _completeGuestProfileUseCase: ICompleteGuestProfileUseCase,
+    private _changePasswordUseCase: IChangePasswordUseCase
   ) {}
 
   createGuest = async (req: Request, res: Response) => {
@@ -133,5 +135,18 @@ export class GuestController {
     return res
       .status(HttpStatusCode.CREATED)
       .json({ success: true, data: response });
+  };
+
+  changePassword = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { role, newPassword } = req.query;
+    const response = await this._changePasswordUseCase.execute(
+      role as Role,
+      newPassword as string,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, message: response });
   };
 }

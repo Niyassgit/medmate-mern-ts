@@ -57,6 +57,8 @@ import { GetAllProductsUseCase } from "../../application/product/use-cases/GetAl
 import { CreateProductUseCase } from "../../application/product/use-cases/CreateProductUseCase";
 import { ProductRepository } from "../repositories/ProductRepository";
 import { EditProductUseCase } from "../../application/product/use-cases/EditProductUseCase";
+import { ChangePasswordUseCase } from "../../application/common/use-cases/ChangePasswordUseCase";
+import { GuestRepository } from "../repositories/GuestRepository";
 
 const medicalRepRepository = new MedicalRepRepository();
 const doctorRepository = new DoctorRepository();
@@ -82,6 +84,7 @@ const stripePaymentService = new StripePaymentService();
 const subscriptionHistoryRepository = new SubscriptionHistoryRepository();
 const connectionRequestLogRepository = new ConnectionRequestLogRepository();
 const productRepository = new ProductRepository();
+const guestRepository = new GuestRepository();
 
 const createMedicalRepUseCase = new CreateMedicalRepUseCase(
   medicalRepRepository,
@@ -286,6 +289,15 @@ const editProductUseCase = new EditProductUseCase(
   productRepository,
   storageService
 );
+
+const changePasswordUseCase = new ChangePasswordUseCase(
+  medicalRepRepository,
+  doctorRepository,
+  guestRepository,
+  userRepository,
+  bcryptServices
+);
+
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
   getRepProfileByIdUseCase,
@@ -322,5 +334,6 @@ export const medicalRepController = new MedicalRepController(
   getConnectionRequestStatsUseCase,
   getAllProductsUseCase,
   createProductUseCase,
-  editProductUseCase
+  editProductUseCase,
+  changePasswordUseCase
 );

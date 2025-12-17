@@ -109,5 +109,6 @@ export class DoctorRoutes {
     this.router.get("/practice/guests", doctorController.getGuests);
     this.router.post("/practice/guests/create", doctorController.createGuest);
     this.router.get("/prescriptions", doctorController.getAllPrescriptions);
+    this.router.post("/change-password", doctorController.changePassword);
   }
 }

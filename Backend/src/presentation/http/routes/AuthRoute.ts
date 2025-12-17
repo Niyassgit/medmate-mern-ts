@@ -32,5 +32,6 @@ export class LoginRoute {
       authController.forgotPasswordResendOtp
     );
     this.router.post("/forgotpassword/reset", authController.resetPassword);
+
   }
 }

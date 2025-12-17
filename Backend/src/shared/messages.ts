@@ -72,7 +72,8 @@ export const ErrorMessages = {
   PRESCRIPTION_NOT_FOUND: "Prescription not found",
   ORDER_NOT_FOUND: "Order not found",
   ALREADY_PAID:"Order already paid for this prescription",
-  GUEST_CREATE:"Unable to create guest!..try again later"
+  GUEST_CREATE:"Unable to create guest!..try again later",
+  PASSWORD_UNABLE_TO_CHANGE:"Password  unable to changhe try again later!"
 } as const;
 
 export const SuccessMessages = {
