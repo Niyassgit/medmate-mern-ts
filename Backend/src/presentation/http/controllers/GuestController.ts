@@ -16,6 +16,7 @@ import { ICompleteGuestProfileUseCase } from "../../../application/Guest/interef
 import { GuestProfileCompleteDTO } from "../../../application/Guest/dto/ProfileCompleteDTO";
 import { IChangePasswordUseCase } from "../../../application/common/interfaces/IChangePasswordUseCase";
 import { Role } from "../../../shared/Enums";
+import { IVerifyOldPasswordUseCase } from "../../../application/common/interfaces/IverifyOldPasswordUsesCase";
 
 export class GuestController {
   constructor(
@@ -29,7 +30,8 @@ export class GuestController {
     private _getOrderDetailUseCase: IGetOrderDetailUseCase,
     private _getProfileDetailsUseCase: IGetProfileDetailsUseCase,
     private _completeGuestProfileUseCase: ICompleteGuestProfileUseCase,
-    private _changePasswordUseCase: IChangePasswordUseCase
+    private _changePasswordUseCase: IChangePasswordUseCase,
+    private _verifyOldPasswordUseCase: IVerifyOldPasswordUseCase
   ) {}
 
   createGuest = async (req: Request, res: Response) => {
@@ -137,6 +139,18 @@ export class GuestController {
       .json({ success: true, data: response });
   };
 
+  verifyPassword = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { password } = req.query;
+    const response = await this._verifyOldPasswordUseCase.execute(
+      password as string,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+  
   changePassword = async (req: Request, res: Response) => {
     const userId = GetOptionalUserId(req.user);
     const { role, newPassword } = req.query;

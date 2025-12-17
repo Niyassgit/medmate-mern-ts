@@ -52,5 +52,6 @@ export class GuestRoutes {
       guestController.completeProfile
     );
     this.router.post("/change-password", guestController.changePassword);
+    this.router.get("/verify-password", guestController.verifyPassword);
   }
 }

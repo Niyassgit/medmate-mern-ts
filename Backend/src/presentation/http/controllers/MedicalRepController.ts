@@ -45,6 +45,7 @@ import { ProductDTO } from "../../../application/product/dto/ProdductDTO";
 import { IEditProductUseCase } from "../../../application/product/interfaces/IEditProductUseCase";
 import { ProductPostListStatus, Role } from "../../../shared/Enums";
 import { IChangePasswordUseCase } from "../../../application/common/interfaces/IChangePasswordUseCase";
+import { IVerifyOldPasswordUseCase } from "../../../application/common/interfaces/IverifyOldPasswordUsesCase";
 
 export class MedicalRepController {
   constructor(
@@ -84,7 +85,8 @@ export class MedicalRepController {
     private _getAllProductsUseCase: IGetAllProductsUseCase,
     private _createProductUseCase: ICreateProductUseCase,
     private _updateProductUseCase: IEditProductUseCase,
-    private _changePasswordUseCase: IChangePasswordUseCase
+    private _changePasswordUseCase: IChangePasswordUseCase,
+    private _verifyOldPasswordUseCase: IVerifyOldPasswordUseCase
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -493,6 +495,17 @@ export class MedicalRepController {
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, message: response });
+  };
+  verifyPassword = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { password } = req.query;
+    const response = await this._verifyOldPasswordUseCase.execute(
+      password as string,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
   };
 
   changePassword = async (req: Request, res: Response) => {

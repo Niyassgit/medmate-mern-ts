@@ -59,6 +59,7 @@ import { ProductRepository } from "../repositories/ProductRepository";
 import { EditProductUseCase } from "../../application/product/use-cases/EditProductUseCase";
 import { ChangePasswordUseCase } from "../../application/common/use-cases/ChangePasswordUseCase";
 import { GuestRepository } from "../repositories/GuestRepository";
+import { VerifyOldPasswordUseCase } from "../../application/common/use-cases/VerifyOldPasswordUseCase";
 
 const medicalRepRepository = new MedicalRepRepository();
 const doctorRepository = new DoctorRepository();
@@ -298,6 +299,10 @@ const changePasswordUseCase = new ChangePasswordUseCase(
   bcryptServices
 );
 
+const verifyOldPasswordUseCase = new VerifyOldPasswordUseCase(
+  userRepository,
+  bcryptServices
+);
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
   getRepProfileByIdUseCase,
@@ -335,5 +340,6 @@ export const medicalRepController = new MedicalRepController(
   getAllProductsUseCase,
   createProductUseCase,
   editProductUseCase,
-  changePasswordUseCase
+  changePasswordUseCase,
+  verifyOldPasswordUseCase
 );

@@ -173,5 +173,6 @@ export class MedicalRepRoutes {
     );
 
     this.router.post("change-password", medicalRepController.changePassword);
+    this.router.get("/verify-password", medicalRepController.verifyPassword);
   }
 }

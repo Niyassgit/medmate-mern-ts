@@ -24,6 +24,7 @@ import { CompleteGuestProfileUseCase } from "../../application/Guest/use-cases/C
 import { ChangePasswordUseCase } from "../../application/common/use-cases/ChangePasswordUseCase";
 import { DoctorRepository } from "../repositories/DoctorRepository";
 import { MedicalRepRepository } from "../repositories/MedicalRepRepository";
+import { VerifyOldPasswordUseCase } from "../../application/common/use-cases/VerifyOldPasswordUseCase";
 
 const userRepository = new UserRepository();
 const guestRepository = new GuestRepository();
@@ -38,7 +39,6 @@ const stripePaymentService = new StripePaymentService();
 const territoryRepository = new TerritoryRepository();
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
-const bycryptServices = new BcryptServices();
 
 const createGuestUseCase = new CreateGuestUseCase(
   userRepository,
@@ -105,7 +105,12 @@ const changePasswordUseCase = new ChangePasswordUseCase(
   doctorRepository,
   guestRepository,
   userRepository,
-  bycryptServices
+  bcryptServices
+);
+
+const verifyOldPasswordUseCase = new VerifyOldPasswordUseCase(
+  userRepository,
+  bcryptServices
 );
 
 export const guestController = new GuestController(
@@ -119,5 +124,6 @@ export const guestController = new GuestController(
   getOrderDetailUseCase,
   getProfileDetailsUseCase,
   completeGuestProfileUseCase,
-  changePasswordUseCase
+  changePasswordUseCase,
+  verifyOldPasswordUseCase
 );

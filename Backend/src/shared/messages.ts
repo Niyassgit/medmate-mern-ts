@@ -73,7 +73,8 @@ export const ErrorMessages = {
   ORDER_NOT_FOUND: "Order not found",
   ALREADY_PAID:"Order already paid for this prescription",
   GUEST_CREATE:"Unable to create guest!..try again later",
-  PASSWORD_UNABLE_TO_CHANGE:"Password  unable to changhe try again later!"
+  PASSWORD_UNABLE_TO_CHANGE:"Password  unable to changhe try again later!",
+  PASSWORD_NOT_MATCHED:"Password not matched,insert correct password"
 } as const;
 
 export const SuccessMessages = {
@@ -111,7 +112,8 @@ export const SuccessMessages = {
   ADDRESS_SUCCESS: "Address created successfully",
   ADDRESS_DELETE: "Address deleted successfully",
   GUEST_CREATE:"New Guest added successfully",
-  UNARCHIVE_SUCCESS:"Post unarchived successfully"
+  UNARCHIVE_SUCCESS:"Post unarchived successfully",
+  PASSWORD_MATCHED:"Password has been succssfuly verified"
 } as const;
 
 export const NotificationMessages = {
