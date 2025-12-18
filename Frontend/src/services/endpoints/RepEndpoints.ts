@@ -48,4 +48,5 @@ export const RepEndpoints = {
   VERIFY_PASSWORD: "/rep/verify-password",
   CHANGE_PASSWORD: "/rep/change-password",
   GET_ALL_ORDERS: "/rep/orders",
+  GET_ORDER_DETAILS: (orderId: string) => `/rep/orders/${orderId}`,
 };

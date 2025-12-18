@@ -174,6 +174,10 @@ export class MedicalRepRoutes {
 
     this.router.post("/change-password", medicalRepController.changePassword);
     this.router.get("/verify-password", medicalRepController.verifyPassword);
-    this.router.get("/orders",medicalRepController.getAllOrders);
+    this.router.get("/orders", medicalRepController.getAllOrders);
+    this.router.get(
+      "/orders/:orderId",
+      medicalRepController.getOrderDetails
+    );
   }
 }

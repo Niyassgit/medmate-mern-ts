@@ -22,6 +22,7 @@ import EditProductPage from "@/features/rep/components/EditProductPage";
 import VerifyPassword from "@/components/shared/VerifyPassword";
 import ChangePassword from "@/components/shared/ChangePassword";
 import { changePassword, verifyPassword } from "@/features/rep/api";
+import OrderDetailsPage from "@/features/rep/pages/OrderDetailsPage";
 export const RepRoutes = {
   path: "/rep",
   element: (
@@ -46,6 +47,7 @@ export const RepRoutes = {
     { path: "subscription-success", element: <SubscriptionSuccess /> },
     { path: "subscription-cancel", element: <SubscriptionCancel /> },
     { path: "business/orders", element: <Orders /> },
+    { path: "business/orders/:orderId", element: <OrderDetailsPage /> },
     { path: "business/products", element: <Product /> },
     { path: "business/product/upload", element: <ProductAddForm /> },
     { path: "business/product/edit-product", element: <EditProductPage /> },

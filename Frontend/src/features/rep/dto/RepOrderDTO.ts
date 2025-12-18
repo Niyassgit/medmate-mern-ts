@@ -1,9 +1,11 @@
+import { OrderStatus } from "@/types/PaymentTypes";
+
 export interface IRepOrder {
     id: string;
     prescriptionId: string;
     doctorName: string;
     hospital: string;
-    status: string; // OrderStatus
+    status: OrderStatus;
     totalAmount: string;
     totalUnits: number;
     createdAt: string; // Received as string from JSON

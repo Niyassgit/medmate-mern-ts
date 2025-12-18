@@ -248,3 +248,8 @@ export const getAllOrders = async () => {
   return res.data.res;
 };
 
+export const getOrderDetails = async (orderId: string) => {
+  const res = await api.get(RepEndpoints.GET_ORDER_DETAILS(orderId));
+  return res.data.data;
+};
+

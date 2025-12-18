@@ -36,8 +36,6 @@ export enum MessageType {
   FILE = "FILE",
 }
 
-
-
 export enum PrescriptionStatus {
   PENDING = "PENDING",
   APPROVED = "APPROVED",

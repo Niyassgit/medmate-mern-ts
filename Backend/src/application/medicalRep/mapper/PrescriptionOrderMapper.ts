@@ -9,7 +9,7 @@ export class PrescriptionOrderMapper {
     storageService: IStorageService
   ): Promise<RepOrderDTO> {
     const repProducts =
-      data.items?.filter((item) => item.repId === repId) || [];
+      data.items?.filter((item) => String(item.repId) === String(repId)) || [];
     const totalAmount = repProducts.reduce(
       (sum, item) => sum + (item.ptr || 0) * item.quantity,
       0

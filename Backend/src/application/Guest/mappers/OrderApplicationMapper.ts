@@ -45,15 +45,22 @@ export class OrderApplicationMapper {
             items: itemsWithSignedUrls,
         };
     }
-    static async toDetailDomain(data: IOrderDetail, storageService: IStorageService): Promise<OrderDetailDTO> {
-        const itemsWithSignedUrls = data.prescription?.items
+    static async toDetailDomain(data: IOrderDetail, storageService: IStorageService, repId?: string): Promise<OrderDetailDTO> {
+        let items = data.prescription?.items || [];
+
+        if (repId) {
+            items = items.filter((item: any) => String(item.product.repId) === String(repId));
+        }
+
+        const itemsWithSignedUrls = items.length > 0
             ? await Promise.all(
-                data.prescription.items.map(async (item: any) => ({
+                items.map(async (item: any) => ({
                     name: item.product.name,
                     quantity: item.quantity,
-                    image: item.product.imageUrl[0]
+                    image: item.product.imageUrl && item.product.imageUrl[0]
                         ? await storageService.generateSignedUrl(item.product.imageUrl[0])
                         : undefined,
+                    price: item.product.price // Assuming price is available or needs to be mapped
                 }))
             )
             : [];

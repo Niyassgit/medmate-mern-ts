@@ -35,6 +35,7 @@ export interface IOrderDetail {
             product: {
                 name: string;
                 imageUrl: string[];
+                repId: string;
             };
         }[];
     } | null;
