@@ -5,11 +5,18 @@ import { OrderStatus, PaymentStatus } from "../../shared/Enums";
 export class OrderMapper {
     static toDomain(data: Order & {
         prescription?: {
+            doctor?: {
+                name: string;
+                hospital: string;
+            };
             items: {
                 quantity: number;
                 product: {
+                    id: string;
                     name: string;
                     imageUrl: string[];
+                    ptr: number;
+                    repId: string;
                 }
             }[]
         } | null
@@ -26,10 +33,15 @@ export class OrderMapper {
             paymentId: data.paymentId || "",
             createdAt: data.createdAt,
             updatedAt: data.updatedAt,
+            doctorName: data.prescription?.doctor?.name,
+            hospital: data.prescription?.doctor?.hospital,
             items: data.prescription?.items.map(item => ({
+                productId: item.product.id,
                 name: item.product.name,
                 quantity: item.quantity,
-                image: item.product.imageUrl[0]
+                image: item.product.imageUrl[0],
+                ptr: item.product.ptr,
+                repId: item.product.repId
             }))
         };
     }

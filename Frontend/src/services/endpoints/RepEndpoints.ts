@@ -47,4 +47,5 @@ export const RepEndpoints = {
   EDIT_PRODUCT: (productId: string) => `/rep/product/edit-product/${productId}`,
   VERIFY_PASSWORD: "/rep/verify-password",
   CHANGE_PASSWORD: "/rep/change-password",
+  GET_ALL_ORDERS: "/rep/orders",
 };

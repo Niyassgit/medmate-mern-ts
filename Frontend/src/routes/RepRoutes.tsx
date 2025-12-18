@@ -15,7 +15,7 @@ import DoctorProfile from "@/features/rep/pages/DoctorProfile";
 import RepChatPage from "@/features/rep/pages/RepChatPage";
 import SubscriptionSuccess from "@/features/rep/components/SubscriptionSuccess";
 import SubscriptionCancel from "@/features/rep/components/SubscriptionCancel";
-import Order from "@/features/rep/pages/Order";
+import Orders from "@/features/rep/pages/Orders";
 import Product from "@/features/rep/pages/Product";
 import ProductAddForm from "@/features/rep/components/ProductAddForm";
 import EditProductPage from "@/features/rep/components/EditProductPage";
@@ -45,7 +45,7 @@ export const RepRoutes = {
     { path: "notifications/post-details/:id", element: <PostDetailsPage /> },
     { path: "subscription-success", element: <SubscriptionSuccess /> },
     { path: "subscription-cancel", element: <SubscriptionCancel /> },
-    { path: "business/orders", element: <Order /> },
+    { path: "business/orders", element: <Orders /> },
     { path: "business/products", element: <Product /> },
     { path: "business/product/upload", element: <ProductAddForm /> },
     { path: "business/product/edit-product", element: <EditProductPage /> },

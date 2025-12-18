@@ -87,4 +87,40 @@ export class OrderRepository
         });
         return OrderMapper.toDomain(updated);
     }
+    async findOrdersByRepId(repId: string): Promise<IOrder[]> {
+        const orders = await prisma.order.findMany({
+            where: {
+                prescription: {
+                    items: {
+                        some: {
+                            product: {
+                                repId: repId
+                            }
+                        }
+                    }
+                }
+            },
+            include: {
+                prescription: {
+                    include: {
+                        doctor: {
+                            include: {
+                                department: true
+                            }
+                        },
+                        items: {
+                            include: {
+                                product: true
+                            }
+                        }
+                    }
+                },
+                guest: true
+            },
+            orderBy: {
+                createdAt: 'desc'
+            }
+        });
+        return orders.map((o) => OrderMapper.toDomain(o));
+    }
 }

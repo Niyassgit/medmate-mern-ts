@@ -46,6 +46,7 @@ import { IEditProductUseCase } from "../../../application/product/interfaces/IEd
 import { ProductPostListStatus, Role } from "../../../shared/Enums";
 import { IChangePasswordUseCase } from "../../../application/common/interfaces/IChangePasswordUseCase";
 import { IVerifyOldPasswordUseCase } from "../../../application/common/interfaces/IverifyOldPasswordUsesCase";
+import { IGetAllOrdersUseCase } from "../../../application/medicalRep/interfaces/IGetAllOrdersUseCase";
 
 export class MedicalRepController {
   constructor(
@@ -86,7 +87,8 @@ export class MedicalRepController {
     private _createProductUseCase: ICreateProductUseCase,
     private _updateProductUseCase: IEditProductUseCase,
     private _changePasswordUseCase: IChangePasswordUseCase,
-    private _verifyOldPasswordUseCase: IVerifyOldPasswordUseCase
+    private _verifyOldPasswordUseCase: IVerifyOldPasswordUseCase,
+    private _getAllOrdersUseCase: IGetAllOrdersUseCase
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -519,5 +521,11 @@ export class MedicalRepController {
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, message: response });
+  };
+
+  getAllOrders = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._getAllOrdersUseCase.execute(userId);
+    return res.status(HttpStatusCode.OK).json({ success: true, res: response });
   };
 }

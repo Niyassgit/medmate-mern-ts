@@ -242,3 +242,9 @@ export const changePassword = async (password: string, role: string) => {
   );
   return res.data;
 };
+
+export const getAllOrders = async () => {
+  const res = await api.get(RepEndpoints.GET_ALL_ORDERS);
+  return res.data.res;
+};
+

@@ -12,9 +12,14 @@ export interface IOrder {
   paymentId: string;
   createdAt: Date;
   updatedAt: Date;
+  doctorName?: string;
+  hospital?: string;
   items?: {
+    productId?: string;
     name: string;
     quantity: number;
     image?: string;
+    ptr?: number;
+    repId?: string;
   }[];
 }

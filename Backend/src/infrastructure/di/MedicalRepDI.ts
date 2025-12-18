@@ -60,6 +60,8 @@ import { EditProductUseCase } from "../../application/product/use-cases/EditProd
 import { ChangePasswordUseCase } from "../../application/common/use-cases/ChangePasswordUseCase";
 import { GuestRepository } from "../repositories/GuestRepository";
 import { VerifyOldPasswordUseCase } from "../../application/common/use-cases/VerifyOldPasswordUseCase";
+import { GetAllOrdersUseCase } from "../../application/medicalRep/use-cases/GetAllOrdersUseCase";
+import { OrderRepository } from "../repositories/OrderRepository";
 
 const medicalRepRepository = new MedicalRepRepository();
 const doctorRepository = new DoctorRepository();
@@ -86,6 +88,7 @@ const subscriptionHistoryRepository = new SubscriptionHistoryRepository();
 const connectionRequestLogRepository = new ConnectionRequestLogRepository();
 const productRepository = new ProductRepository();
 const guestRepository = new GuestRepository();
+const orderRepository = new OrderRepository();
 
 const createMedicalRepUseCase = new CreateMedicalRepUseCase(
   medicalRepRepository,
@@ -303,6 +306,12 @@ const verifyOldPasswordUseCase = new VerifyOldPasswordUseCase(
   userRepository,
   bcryptServices
 );
+
+const getAllOrdersUseCase = new GetAllOrdersUseCase(
+  medicalRepRepository,
+  orderRepository,
+  storageService
+);
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
   getRepProfileByIdUseCase,
@@ -341,5 +350,6 @@ export const medicalRepController = new MedicalRepController(
   createProductUseCase,
   editProductUseCase,
   changePasswordUseCase,
-  verifyOldPasswordUseCase
+  verifyOldPasswordUseCase,
+  getAllOrdersUseCase
 );

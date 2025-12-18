@@ -11,5 +11,6 @@ export interface IPrescriptionItemRepository {
     prescriptionId: string
   ): Promise<IPrescriptionItem[]>;
   deletePrescriptionItem(itemId: string): Promise<boolean>;
+  
 }
 

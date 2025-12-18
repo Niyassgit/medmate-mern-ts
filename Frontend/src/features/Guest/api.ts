@@ -78,3 +78,4 @@ export const changePassword = async (newPassword: string) => {
   );
   return res.data;
 };
+

@@ -12,4 +12,5 @@ export interface IOrderRepository {
     data: Omit<IOrder, "id" | "createdAt" | "updatedAt">
   ): Promise<IOrder>;
   findOrderDetailsById(orderId: string): Promise<IOrderDetail | null>;
+  findOrdersByRepId(repId: string): Promise<IOrder[]>;
 }
