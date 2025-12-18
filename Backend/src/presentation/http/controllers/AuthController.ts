@@ -22,6 +22,7 @@ import {
   resendOtpBody,
   ForgotPasswordBody,
 } from "../../types/auth";
+import { GetOptionalUserId } from "../utils/GetOptionalUserId";
 
 export class AuthController {
   constructor(
@@ -156,7 +157,6 @@ export class AuthController {
   forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email } = req.body as ForgotPasswordBody;
-      console.log("email:",email);
       const response = await this._forgotPasswordUseCase.execute(email);
       res.status(HttpStatusCode.OK).json({ success: true, ...response });
     } catch (error) {
@@ -207,6 +207,8 @@ export class AuthController {
       next(error);
     }
   };
+
+ 
 
   logoutUser = (req: Request, res: Response) => {
     res.clearCookie("refreshtoken", {

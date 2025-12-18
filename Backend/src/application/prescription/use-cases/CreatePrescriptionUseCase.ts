@@ -62,7 +62,7 @@ export class CreatePrescriptionUseCase implements ICreatePrescriptionUseCase {
       prescriptionItems
     );
     if (!guest.isRegistered && guest.email && shareToken) {
-      const registrationLink = `${this._configService.getOrigin()}/guest/register/${shareToken}`;
+      const registrationLink = `${this._configService.getOrigin()}/register/guest/${shareToken}`;
 
       await this._notificationService.sendEmail(
         guest.email,

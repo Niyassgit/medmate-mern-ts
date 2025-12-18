@@ -35,11 +35,10 @@ export class PrescriptionRepository
       where: { doctorId },
       orderBy: { createdAt: "desc" },
       include: {
-        items: {
-          include: {
-            product: true,
-          },
-        },
+        items: { include: { product: true } },
+        order: true,
+        doctor: true,
+        guest: true,
       },
     });
 
@@ -53,11 +52,10 @@ export class PrescriptionRepository
       where: { guestId },
       orderBy: { createdAt: "desc" },
       include: {
-        items: {
-          include: {
-            product: true,
-          },
-        },
+        items: { include: { product: true } },
+        order: true,
+        doctor: true,
+        guest: true,
       },
     });
 
@@ -97,5 +95,22 @@ export class PrescriptionRepository
       return null;
     }
     return PrescriptionMapper.toDomain(prescription);
+  }
+
+  async findPrescriptionByIdWithItems(
+    id: string
+  ): Promise<IPrescriptionWithItemsAndProduct | null> {
+    const prescription = await prisma.prescription.findUnique({
+      where: { id },
+      include: {
+        items: { include: { product: true } },
+        order: true,
+        doctor: true,
+        guest: true,
+      },
+    });
+
+    if (!prescription) return null;
+    return PrescriptionMapper.toDomainWithItems(prescription);
   }
 }

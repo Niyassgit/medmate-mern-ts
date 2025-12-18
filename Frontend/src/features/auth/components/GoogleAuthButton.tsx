@@ -42,6 +42,9 @@ const GoogleAuthButton = () => {
         if (response.data.user.role === Role.SUPER_ADMIN) {
           navigate("/admin/dashboard");
         }
+        if(response.data.user.role === Role.GUEST){
+             navigate("/guest/dashboard");
+        }
       } else {
         navigate(`selectrole?idToken=${idToken}`);
       }

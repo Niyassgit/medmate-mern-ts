@@ -220,7 +220,7 @@ const SubscriptionSuccess: React.FC = () => {
             Go to Dashboard
           </Link>
           <Link
-            to="/rep/subscriptions"
+            to="/rep/subscription"
             className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
           >
             View Subscriptions

@@ -10,7 +10,7 @@ import { UnautharizedError } from "../../errors";
 import { FeedDTO } from "../dto/FeedDTO";
 import { IGetFeedUseCase } from "../interfaces/IGetFeedUseCase";
 import { FeedMapper } from "../mapper/FeedMapper";
-import { SortPostBySubscription } from "../utils/sortPostBySubscription";
+import { SortPostBySubscription } from "../utils/SortPostBySubscription";
 
 export class GetFeedUseCase implements IGetFeedUseCase {
   constructor(

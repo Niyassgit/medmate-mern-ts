@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { getGuests, createGuest, createPrescription, getAllReps, getRepProducts } from "../api";
 import { ProductDTO } from "../dto/ProductDTO";
 import { RepDTO } from "../dto/RepDTO";
+import { useNavigate } from "react-router-dom";
 
 interface Guest {
   id: string;
@@ -24,7 +25,7 @@ export default function PrescriptionPage() {
   const [showCreateGuestModal, setShowCreateGuestModal] = useState(false);
   const [newGuest, setNewGuest] = useState({ name: "", email: "", phone: "", territoryId: "" });
   const [creatingGuest, setCreatingGuest] = useState(false);
-
+ const navigate=useNavigate();
   const [prescription, setPrescription] = useState({
     notes: "",
     status: "PENDING",
@@ -232,21 +233,21 @@ export default function PrescriptionPage() {
 
       await createPrescription(selectedGuest.id, prescriptionData);
       toast.success("Prescription created successfully!");
-      
-      // Reset form
-      setSelectedGuest(null);
-      setGuestSearchQuery("");
-      setPrescription({
-        notes: "",
-        status: "PENDING",
-        expiresAt: "",
-        shareToken: "",
-        linkExpiresAt: "",
-        items: [],
-      });
-      setCurrentItem({ productId: "", productName: "", dosage: "", quantity: 1 });
-      setSelectedRep(null);
-      setProducts([]);
+      navigate(`/doctor/commission`)
+      // // Reset form
+      // setSelectedGuest(null);
+      // setGuestSearchQuery("");
+      // setPrescription({
+      //   notes: "",
+      //   status: "PENDING",
+      //   expiresAt: "",
+      //   shareToken: "",
+      //   linkExpiresAt: "",
+      //   items: [],
+      // });
+      // setCurrentItem({ productId: "", productName: "", dosage: "", quantity: 1 });
+      // setSelectedRep(null);
+      // setProducts([]);
     } catch (error: any) {
       console.error("Error creating prescription:", error);
       toast.error(error.response?.data?.message || "Failed to create prescription");

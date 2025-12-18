@@ -15,6 +15,9 @@ import ProductPage from "@/features/doctor/pages/ProductPage";
 import PrescriptionPage from "@/features/doctor/pages/PrescriptionPage";
 import ProductDetails from "@/features/doctor/pages/ProductDetails";
 import CommissionCatalogue from "@/features/doctor/pages/CommissionCatalogue";
+import VerifyPassword from "@/components/shared/VerifyPassword";
+import ChangePassword from "@/components/shared/ChangePassword";
+import { verifyPassword, changePassword } from "@/features/doctor/api";
 
 export const DoctorRoutes = {
   path: "/doctor",
@@ -38,5 +41,25 @@ export const DoctorRoutes = {
     { path: "prescription", element: <PrescriptionPage /> },
     { path: "commission", element: <CommissionCatalogue /> },
     { path: "practice/product/details", element: <ProductDetails /> },
+    {
+      path: "verify-password",
+      element: (
+        <VerifyPassword
+          onVerify={verifyPassword}
+          onSuccessRedirect="/doctor/change-password"
+        />
+      ),
+    },
+    {
+      path: "change-password",
+      element: (
+        <ChangePassword
+          onChangePassword={(password: string) =>
+            changePassword({ role: "doctor", newPassword: password })
+          }
+          onSuccessRedirect="/doctor/profile"
+        />
+      ),
+    },
   ],
 };

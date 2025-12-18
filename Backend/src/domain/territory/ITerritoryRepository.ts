@@ -1,5 +1,6 @@
 import { CreateTerritoryDTO } from "../../application/superAdmin/dto/CreateTerritoryDTO";
 import { ITerritory } from "./entity/ITerritories";
+import { ITerritoryUsersMinimal } from "./entity/ITerritoryUsersMinimal";
 
 export interface ITerritoryRepository {
   findById(territoryId: string): Promise<ITerritory | null>;
@@ -14,5 +15,10 @@ export interface ITerritoryRepository {
     territoryId: string,
     data: CreateTerritoryDTO
   ): Promise<ITerritory | null>;
-  getTerritoryName(terrId:string):Promise<string | null>;
+  getTerritoryName(terrId: string): Promise<string | null>;
+  territoryUsers(
+    territoryId: string,
+    page: number,
+    limit: number
+  ): Promise<ITerritoryUsersMinimal>;
 }

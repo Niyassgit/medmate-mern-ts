@@ -1,6 +1,7 @@
 import { api } from "@/services/api";
 import { RepEndpoints } from "@/services/endpoints/RepEndpoints";
 import { MessageType } from "@/types/MessageTypes";
+import { ProductPostListStatus } from "@/types/ProductListStatus";
 import { Role } from "@/types/Role";
 
 export const getProfileRep = async (userId: string) => {
@@ -34,8 +35,13 @@ export const addPost = async (id: string, formData: FormData) => {
     headers: { "Content-Type": "multipart/form-data" },
   });
 };
-export const getPostList = async (id: string) => {
-  const response = await api.get(RepEndpoints.GET_POSTS(id));
+export const getPostList = async (
+  id: string,
+  status: ProductPostListStatus
+) => {
+  const response = await api.get(RepEndpoints.GET_POSTS(id), {
+    params: { status },
+  });
   return response.data?.data;
 };
 export const postDetails = async (id: string) => {
@@ -211,9 +217,34 @@ export const getProducts = async () => {
   return res.data.data;
 };
 
+
 export const editProduct = async (productId: string, formData: FormData) => {
   const res = await api.patch(RepEndpoints.EDIT_PRODUCT(productId), formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
   return res.data.data;
 };
+
+export const verifyPassword = async (password: string) => {
+  const res = await api.get(RepEndpoints.VERIFY_PASSWORD, {
+    params: { password },
+  });
+  return res.data;
+};
+
+export const changePassword = async (password: string, role: string) => {
+  const res = await api.post(
+    RepEndpoints.CHANGE_PASSWORD,
+    {},
+    {
+      params: { newPassword: password, role },
+    }
+  );
+  return res.data;
+};
+
+export const getAllOrders = async () => {
+  const res = await api.get(RepEndpoints.GET_ALL_ORDERS);
+  return res.data.res;
+};
+

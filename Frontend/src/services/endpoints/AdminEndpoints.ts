@@ -65,4 +65,5 @@ export const AdminEndpoints = {
     `/admin/guests?page=${page}&limit=${limit}&search=${search}${
       territory ? `&territory=${territory}` : ""
     }`,
+    TERRITORY_DETAILS:(territoryId:string)=>`/admin/territory/${territoryId}`,
 };

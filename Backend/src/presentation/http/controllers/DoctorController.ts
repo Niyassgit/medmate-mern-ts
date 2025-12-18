@@ -37,6 +37,9 @@ import { IGetGuestsByDoctorUseCase } from "../../../application/doctor/interface
 import { ICreateGuestByDoctorUseCase } from "../../../application/doctor/interfaces/ICreateGuestByDoctorUseCase";
 import { CreateGuestByDoctorDTO } from "../../../application/doctor/dto/CreateGuestByDoctorDTO";
 import { IGetAllPrescriptionsMadeUseCase } from "../../../application/doctor/interfaces/IGetAllPrescriptionsMadeUseCase";
+import { IChangePasswordUseCase } from "../../../application/common/interfaces/IChangePasswordUseCase";
+import { Role } from "../../../shared/Enums";
+import { IVerifyOldPasswordUseCase } from "../../../application/common/interfaces/IverifyOldPasswordUsesCase";
 
 export class DoctorController {
   constructor(
@@ -70,7 +73,9 @@ export class DoctorController {
     private _createPrescriptionUseCase: ICreatePrescriptionUseCase,
     private _getGuestsByDoctorUseCase: IGetGuestsByDoctorUseCase,
     private _createGuestByDoctorUseCase: ICreateGuestByDoctorUseCase,
-    private _getAllPrescriptionsMadeUseCase: IGetAllPrescriptionsMadeUseCase
+    private _getAllPrescriptionsMadeUseCase: IGetAllPrescriptionsMadeUseCase,
+    private _changePasswordUseCase: IChangePasswordUseCase,
+    private _verifyOldPasswordUseCase: IVerifyOldPasswordUseCase
   ) {}
 
   createDoctor = async (req: Request, res: Response) => {
@@ -398,5 +403,30 @@ export class DoctorController {
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
+  };
+
+  verifyPassword = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { password } = req.query;
+    const response = await this._verifyOldPasswordUseCase.execute(
+      password as string,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  changePassword = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { role, newPassword } = req.query;
+    const response = await this._changePasswordUseCase.execute(
+      role as Role,
+      newPassword as string,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, message: response });
   };
 }

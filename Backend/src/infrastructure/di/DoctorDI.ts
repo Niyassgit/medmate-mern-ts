@@ -55,10 +55,12 @@ import { GuestRepository } from "../repositories/GuestRepository";
 import { TokenService } from "../services/TokenService";
 import { ConfigService } from "../services/ConfigService";
 import { GetAllPresscriptionsMadeUseCase } from "../../application/doctor/use-cases/GetAllPrescriptionsMadeUseCase";
+import { ChangePasswordUseCase } from "../../application/common/use-cases/ChangePasswordUseCase";
+import { VerifyOldPasswordUseCase } from "../../application/common/use-cases/VerifyOldPasswordUseCase";
 
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
-const bycryptServices = new BcryptServices();
+const bcryptServices = new BcryptServices();
 const userRepository = new UserRepository();
 const otpService = new OtpService();
 const notificationService = new NotificationService();
@@ -78,7 +80,7 @@ const tokenService = new TokenService();
 
 const createDoctorUseCase = new CreateDoctorUseCase(
   doctorRepository,
-  bycryptServices,
+  bcryptServices,
   userRepository,
   otpService,
   notificationService
@@ -288,6 +290,19 @@ const getAllPrescriptionsMadeUseCase = new GetAllPresscriptionsMadeUseCase(
   storageService
 );
 
+const changePasswordUseCase = new ChangePasswordUseCase(
+  medicalRepRepository,
+  doctorRepository,
+  guestRepository,
+  userRepository,
+  bcryptServices
+);
+
+const verifyOldPasswordUseCase = new VerifyOldPasswordUseCase(
+  userRepository,
+  bcryptServices
+);
+
 export const doctorController = new DoctorController(
   createDoctorUseCase,
   getDoctorprofileById,
@@ -319,5 +334,7 @@ export const doctorController = new DoctorController(
   createPrescriptionUseCase,
   getGuestsByDoctorUseCase,
   createGuestByDoctorUseCase,
-  getAllPrescriptionsMadeUseCase
+  getAllPrescriptionsMadeUseCase,
+  changePasswordUseCase,
+  verifyOldPasswordUseCase
 );

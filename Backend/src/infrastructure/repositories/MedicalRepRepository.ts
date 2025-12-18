@@ -194,9 +194,7 @@ export class MedicalRepRepository
     return reps.map((rep) => MedicalRepWithUserMapper.toDomain(rep));
   }
 
-  async findByDepartment(
-    departmentId: string
-  ): Promise<IMedicalRepWithUser[]> {
+  async findByDepartment(departmentId: string): Promise<IMedicalRepWithUser[]> {
     const reps = await prisma.medicalRep.findMany({
       where: {
         departmentId: departmentId,
@@ -298,5 +296,23 @@ export class MedicalRepRepository
       },
     });
     return reps.map((rep) => MedicalRepMapper.toDomain(rep));
+  }
+
+  async updateSubscriptionStatus(
+    repId: string,
+    planId: string,
+    startDate: Date,
+    endDate: Date
+  ): Promise<void> {
+    const updateData = MedicalRepMapper.toSubscriptionUpdatePersistence(
+      planId,
+      startDate,
+      endDate
+    );
+
+    await prisma.medicalRep.update({
+      where: { id: repId },
+      data: updateData,
+    });
   }
 }

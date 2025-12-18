@@ -5,7 +5,7 @@ import { Prisma, SubscriptionHistory } from "@prisma/client";
 import { SubscriptionHistoryMapper } from "../mappers/SubscriptionHistoryMapper";
 import { prisma } from "../config/db";
 import { IRecentsubscription } from "../../domain/subscription/entities/IRecentSubscription";
-import { SubscribedListResponse} from "../../application/superAdmin/dto/SubscribedListDTO";
+import { SubscribedListResponse } from "../../application/superAdmin/dto/SubscribedListDTO";
 
 export class SubscriptionHistoryRepository
   extends BaseRepository<
@@ -14,8 +14,7 @@ export class SubscriptionHistoryRepository
     Prisma.SubscriptionHistoryCreateInput,
     "subscriptionHistory"
   >
-  implements ISubscriptionHistoryRepository
-{
+  implements ISubscriptionHistoryRepository {
   constructor() {
     super(prisma.subscriptionHistory, (sub) =>
       SubscriptionHistoryMapper.toDomain(sub)
@@ -128,7 +127,7 @@ export class SubscriptionHistoryRepository
     limit: number
   ): Promise<SubscribedListResponse> {
     const skip = (page - 1) * limit;
-    
+
     const total = await prisma.subscriptionHistory.count({
       where: {
         status: "paid",

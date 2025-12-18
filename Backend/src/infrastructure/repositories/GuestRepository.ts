@@ -168,4 +168,10 @@ export class GuestRepository
 
     return { guestId: guest?.id ?? null };
   }
+
+  async findGuestByuserId(userId: string): Promise<IGuest | null> {
+    const result = await prisma.guest.findFirst({ where: { loginId: userId } });
+    if (!result) return null;
+    return GuestMapper.toDomain(result);
+  }
 }

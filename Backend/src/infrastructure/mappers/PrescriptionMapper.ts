@@ -3,9 +3,11 @@ import {
   Prescription,
   PrescriptionItem,
   Product,
+  Order,
 } from "@prisma/client";
 import { IPrescription } from "../../domain/prescription/entites/IPrescription";
 import { IPrescriptionWithItemsAndProduct } from "../../domain/prescription/entites/IPrescriptionWIthItemsAndProduct";
+import { OrderStatus, PaymentStatus } from "../../shared/Enums";
 
 export class PrescriptionMapper {
   static toDomain(data: Prescription): IPrescription {
@@ -69,9 +71,13 @@ export class PrescriptionMapper {
 
   static toDomainWithItems(
     data: Prescription & {
-      items: (PrescriptionItem & {
-        product: Product;
-      })[];
+      items: (PrescriptionItem & { product: Product })[];
+      order?: Order | null;
+      doctor: {
+        name: string;
+        hospital: string;
+      };
+      guest: { name: string; email: string | null; phone: string | null };
     }
   ): IPrescriptionWithItemsAndProduct {
     return {
@@ -98,8 +104,8 @@ export class PrescriptionMapper {
           repId: item.product.repId,
           name: item.product.name,
           brand: item.product.brand,
-          imageUrl: item.product.imageUrl, 
-          ingredients: item.product.ingredients, 
+          imageUrl: item.product.imageUrl,
+          ingredients: item.product.ingredients,
           mrp: item.product.mrp,
           ptr: item.product.ptr,
           territoryIds: item.product.territoryIds,
@@ -107,6 +113,24 @@ export class PrescriptionMapper {
           updatedAt: item.product.updatedAt,
         },
       })),
+
+      order: data.order
+        ? {
+            id: data.order.id,
+            paymentStatus: data.order.paymentStatus as PaymentStatus,
+            status: data.order.status as OrderStatus,
+            totalAmount: data.order.totalAmount,
+          }
+        : null,
+      doctor: {
+        name: data.doctor.name,
+        hospital: data.doctor.hospital,
+      },
+      guest: {
+        name: data.guest.name,
+        email: data.guest.email,
+        phone: data.guest.phone,
+      },
     };
   }
 }

@@ -4,7 +4,7 @@ export interface ProductDTO {
   brand: string;
   imageUrls: string[] | null;
   ingredients: string[];
-  useCase: string[];
+  // useCase: string[];
   mrp: number;
   ptr: number;
   territoryIds: string[];

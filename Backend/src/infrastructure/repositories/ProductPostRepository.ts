@@ -7,6 +7,7 @@ import { Prisma, ProductPost } from "@prisma/client";
 import { IProductPostForFeed } from "../../domain/productPost/entity/IProductPostForFeed";
 import { IMedicalRepWithUser } from "../../domain/medicalRep/entities/IMedicalRepWithUser";
 import { MedicalRepWithUserMapper } from "../mappers/MedicalRepWithUserMapper";
+import { ProductPostListStatus } from "../../shared/Enums";
 
 export class ProductPostRepository
   extends BaseRepository<
@@ -35,13 +36,27 @@ export class ProductPostRepository
     const formatedData = ProductPostMapper.toPartialPersistance(data);
     return this.update(postId, formatedData as Partial<ProductPost>);
   }
+
   async findPostById(postId: string): Promise<IProductPost | null> {
     const post = await this.findById(postId);
     return post ? post : null;
   }
-  async getProducts(userId: string): Promise<IProductPostForFeed[] | null> {
+
+  async getProducts(
+    repId: string,
+    status: ProductPostListStatus
+  ): Promise<IProductPostForFeed[] | null> {
+    const where: Prisma.ProductPostWhereInput = {
+      repId,
+    };
+    if (status === ProductPostListStatus.PUBLISHED) {
+      where.isArchived = false;
+    }
+    if (status === ProductPostListStatus.ARCHIVE) {
+      where.isArchived = true;
+    }
     const products = await prisma.productPost.findMany({
-      where: { repId: userId, isArchived: false },
+      where,
       include: {
         rep: {
           include: {
@@ -109,7 +124,21 @@ export class ProductPostRepository
     });
     return !!res;
   }
-  async DeletePostUseCase(postId: string): Promise<boolean> {
+
+  async unArchive(postId: string): Promise<boolean> {
+    const res = await prisma.productPost.update({
+      where: { id: postId },
+      data: { isArchived: false },
+    });
+    return !!res;
+  }
+  async DeletePost(postId: string): Promise<boolean> {
+    await prisma.like.deleteMany({
+      where: { productId: postId },
+    });
+    await prisma.interest.deleteMany({
+      where: { productId: postId },
+    });
     await prisma.productPost.delete({
       where: { id: postId },
     });
@@ -158,9 +187,9 @@ export class ProductPostRepository
   }
 
   async findPostInADay(repId: string): Promise<IProductPost[]> {
-    const day=new Date();
-    const posts=await prisma.productPost.findMany({
-      where:{repId,createdAt:day},
+    const day = new Date();
+    const posts = await prisma.productPost.findMany({
+      where: { repId, createdAt: day },
     });
     return ProductPostMapper.toDomainList(posts);
   }

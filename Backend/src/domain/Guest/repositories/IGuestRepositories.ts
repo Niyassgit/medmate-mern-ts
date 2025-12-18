@@ -5,4 +5,5 @@ export interface IGuestRepository{
     findGuestById(guestId:string):Promise<IGuest | null>;
     updateGuest(guestId:string,data:Omit<IGuest,"id" | "createdAt">):Promise<IGuest>;
     findByEmailId(email:string):Promise<IGuest | null>;
+    findGuestIdByUserId(userId:string):Promise<{guestId:string | null}>;
 } 

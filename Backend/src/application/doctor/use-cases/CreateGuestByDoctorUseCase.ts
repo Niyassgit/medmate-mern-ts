@@ -1,6 +1,6 @@
 import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRepository";
 import { IGuestRepository } from "../../../domain/Patient/repositories/IGuestRepositories";
-import { ErrorMessages } from "../../../shared/Messages";
+import { ErrorMessages, SuccessMessages } from "../../../shared/Messages";
 import {
   BadRequestError,
   ConflictError,
@@ -16,7 +16,7 @@ export class CreateGuestByDoctorUseCase implements ICreateGuestByDoctorUseCase {
     private _guestRepository: IGuestRepository
   ) {}
 
-  async execute(dto: CreateGuestByDoctorDTO, userId?: string): Promise<any> {
+  async execute(dto: CreateGuestByDoctorDTO, userId?: string): Promise<string> {
     if (!userId) throw new UnautharizedError(ErrorMessages.UNAUTHORIZED);
 
     const { doctorId } = await this._doctorRepository.getDoctorIdByUserId(
@@ -35,6 +35,7 @@ export class CreateGuestByDoctorUseCase implements ICreateGuestByDoctorUseCase {
 
     const guestEntity = GuestMapper.toGuestEntityByDoctor(dto, doctorId);
     const guest = await this._guestRepository.createGuest(guestEntity);
-    return guest;
+    if (!guest) throw new BadRequestError(ErrorMessages.GUEST_CREATE);
+    return SuccessMessages.GUEST_CREATE;
   }
 }

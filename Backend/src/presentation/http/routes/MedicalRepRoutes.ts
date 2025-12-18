@@ -171,5 +171,9 @@ export class MedicalRepRoutes {
       ValidateSchema(productValidateSchema),
       medicalRepController.updateProduct
     );
+
+    this.router.post("/change-password", medicalRepController.changePassword);
+    this.router.get("/verify-password", medicalRepController.verifyPassword);
+    this.router.get("/orders",medicalRepController.getAllOrders);
   }
 }

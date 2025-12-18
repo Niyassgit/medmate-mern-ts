@@ -38,6 +38,7 @@ import { GetRecentSubscriptionsUseCase } from "../../application/superAdmin/useC
 import { GetSubscribedListUseCase } from "../../application/superAdmin/useCases/GetSubscribedListUseCase";
 import { GetAllGuestsUseCase } from "../../application/superAdmin/useCases/GetAllGuestsUseCase";
 import { GuestRepository } from "../repositories/GuestRepository";
+import { TerritoryDetailsUseCase } from "../../application/superAdmin/useCases/TerritoryDetailsUseCase";
 
 const superAdminRepositories = new SuperAdminRepository();
 const userRepository = new UserRepository();
@@ -138,6 +139,9 @@ const getSubscribedListUseCase = new GetSubscribedListUseCase(
 );
 
 const getAllGuestsUseCase = new GetAllGuestsUseCase(guestRepository);
+const territoryDetailsUseCase = new TerritoryDetailsUseCase(
+  terrritoryRepository
+);
 
 export const superAdminController = new SuperAdminController(
   createSuperAdminUseCase,
@@ -165,5 +169,6 @@ export const superAdminController = new SuperAdminController(
   getRevenueByTierUseCase,
   getRecentSubscriptionsUseCase,
   getSubscribedListUseCase,
-  getAllGuestsUseCase
+  getAllGuestsUseCase,
+  territoryDetailsUseCase
 );

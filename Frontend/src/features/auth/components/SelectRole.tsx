@@ -8,6 +8,7 @@ enum Role {
   DOCTOR = "DOCTOR",
   MEDICAL_REP = "MEDICAL_REP",
   SUPER_ADMIN = "SUPER_ADMIN",
+  GUEST = "GUEST",
 }
 
 export default function SelectRolePage() {
@@ -25,16 +26,16 @@ export default function SelectRolePage() {
     setSelectedRole(role);
 
     try {
-  
       const response = await googleLogin(idToken, role);
-  
 
       if (response.data.user.role === Role.DOCTOR) {
-        navigate("/doctor/feed");
+        navigate("/doctor/feed", { replace: true });
       } else if (response.data.user.role === Role.MEDICAL_REP) {
-        navigate("/rep/dashboard");
+        navigate("/rep/dashboard", { replace: true });
       } else if (response.data.user.role === Role.SUPER_ADMIN) {
-        navigate("/admin/dashboard");
+        navigate("/admin/dashboard", { replace: true });
+      } else if (response.data.user.role === Role.GUEST) {
+        navigate("/guest/dashboard", { replace: true });
       }
     } catch (err) {
       const errorMessage =
@@ -47,7 +48,7 @@ export default function SelectRolePage() {
 
   const handleClose = () => {
     toast.error("Navigate back to previous page");
-     navigate("/auth/login");
+    navigate("/auth/login");
   };
 
   const roles = [
@@ -68,6 +69,15 @@ export default function SelectRolePage() {
       icon: Briefcase,
       color: "from-green-500 to-emerald-500",
       hoverColor: "hover:from-green-600 hover:to-emerald-600",
+    },
+    {
+      type: Role.GUEST,
+      title: "Guest",
+      description:
+        "Browse products, view prescriptions, and explore the platform before registration",
+      icon: UserCheck,
+      color: "from-purple-500 to-pink-500",
+      hoverColor: "hover:from-purple-600 hover:to-pink-600",
     },
   ];
 

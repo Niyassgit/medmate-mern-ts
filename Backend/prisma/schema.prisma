@@ -214,7 +214,7 @@ model MedicalRepTerritory {
   repId       String @db.ObjectId
   territoryId String @db.ObjectId
 
-  rep       MedicalRep @relation(fields: [repId], references: [id])
+  rep       MedicalRep? @relation(fields: [repId], references: [id])
   territory Territory  @relation(fields: [territoryId], references: [id])
 }
 
@@ -236,7 +236,6 @@ model ProductPost {
   territory         Territory?         @relation(fields: [territoryId], references: [id])
   likes             Like[]
   interests         Interest[]
-  prescriptionItems PrescriptionItem[]
   commissions       Commission[]
 }
 
@@ -517,8 +516,6 @@ model PrescriptionItem {
 
   prescription  Prescription @relation(fields: [prescriptionId], references: [id])
   product       Product      @relation(fields: [productId], references: [id])
-  productPost   ProductPost? @relation(fields: [productPostId], references: [id])
-  productPostId String?      @db.ObjectId
 }
 
 enum PrescriptionStatus {

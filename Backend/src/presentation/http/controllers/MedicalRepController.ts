@@ -43,6 +43,10 @@ import { IGetAllProductsUseCase } from "../../../application/product/interfaces/
 import { ICreateProductUseCase } from "../../../application/product/interfaces/ICreateProductUseCase";
 import { ProductDTO } from "../../../application/product/dto/ProdductDTO";
 import { IEditProductUseCase } from "../../../application/product/interfaces/IEditProductUseCase";
+import { ProductPostListStatus, Role } from "../../../shared/Enums";
+import { IChangePasswordUseCase } from "../../../application/common/interfaces/IChangePasswordUseCase";
+import { IVerifyOldPasswordUseCase } from "../../../application/common/interfaces/IverifyOldPasswordUsesCase";
+import { IGetAllOrdersUseCase } from "../../../application/medicalRep/interfaces/IGetAllOrdersUseCase";
 
 export class MedicalRepController {
   constructor(
@@ -81,7 +85,10 @@ export class MedicalRepController {
     private _getConnectionRequestStatsUseCase: IGetConnectionRequestStatsUseCase,
     private _getAllProductsUseCase: IGetAllProductsUseCase,
     private _createProductUseCase: ICreateProductUseCase,
-    private _updateProductUseCase: IEditProductUseCase
+    private _updateProductUseCase: IEditProductUseCase,
+    private _changePasswordUseCase: IChangePasswordUseCase,
+    private _verifyOldPasswordUseCase: IVerifyOldPasswordUseCase,
+    private _getAllOrdersUseCase: IGetAllOrdersUseCase
   ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -148,7 +155,11 @@ export class MedicalRepController {
 
   posts = async (req: Request, res: Response) => {
     const { userId } = req.params;
-    const response = await this._getProductsListUseCase.execute(userId);
+    const { status } = req.query;
+    const response = await this._getProductsListUseCase.execute(
+      userId,
+      status as ProductPostListStatus
+    );
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
@@ -424,7 +435,9 @@ export class MedicalRepController {
 
   getSubscriptionHistory = async (req: Request, res: Response) => {
     const userId = GetOptionalUserId(req.user);
+    console.log("userId:", userId);
     const response = await this._getSubscriptionHistoryUseCase.execute(userId);
+    console.log("response:", response);
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
@@ -473,7 +486,7 @@ export class MedicalRepController {
           .filter((key): key is string => !!key)
       );
     }
-    
+
     dto.imageUrls = [...existingImages, ...newImageKeys];
 
     const response = await this._updateProductUseCase.execute(
@@ -484,5 +497,35 @@ export class MedicalRepController {
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, message: response });
+  };
+  verifyPassword = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { password } = req.query;
+    const response = await this._verifyOldPasswordUseCase.execute(
+      password as string,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  changePassword = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { role, newPassword } = req.query;
+    const response = await this._changePasswordUseCase.execute(
+      role as Role,
+      newPassword as string,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, message: response });
+  };
+
+  getAllOrders = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._getAllOrdersUseCase.execute(userId);
+    return res.status(HttpStatusCode.OK).json({ success: true, res: response });
   };
 }

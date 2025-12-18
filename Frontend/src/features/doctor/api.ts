@@ -234,3 +234,20 @@ export const getAllDoctorPrescriptions = async () => {
   const res = await api.get(DoctorEndpoints.GET_ALL_PRESCRIPTIONS);
   return res.data.data;
 };
+
+export const verifyPassword = async (password: string) => {
+  const res = await api.get(DoctorEndpoints.VERIFY_PASSWORD, {
+    params: { password },
+  });
+  return res.data;
+};
+
+export const changePassword = async (data: {
+  role: string;
+  newPassword: string;
+}) => {
+  const res = await api.patch(DoctorEndpoints.CHANGE_PASSWORD, null, {
+    params: data,
+  });
+  return res.data;
+};

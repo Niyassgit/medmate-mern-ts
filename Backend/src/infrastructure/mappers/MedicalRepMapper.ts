@@ -15,7 +15,7 @@ export class MedicalRepMapper {
       educations?: Education[];
       certificates?: Certificate[];
       territories?: { territory: { id: string; name: string } }[];
-    department?: { id: string; name: string } | null;
+      department?: { id: string; name: string } | null;
     }
   ): IMedicalRep {
     return {
@@ -34,8 +34,8 @@ export class MedicalRepMapper {
       loginId: rep.loginId,
       createdAt: rep.createdAt,
       updatedAt: rep.updatedAt,
-      departmentId:rep.departmentId,
-      territories:rep.territories?.map((t)=>t.territory.id) ?? [],
+      departmentId: rep.departmentId,
+      territories: rep.territories?.map((t) => t.territory.id) ?? [],
       departmentName: rep.department?.name,
       territoryNames: rep.territories?.map((t) => t.territory.name) ?? [],
 
@@ -55,7 +55,7 @@ export class MedicalRepMapper {
     };
   }
   static toListMedicalRep(
-    rep: MedicalRep & { 
+    rep: MedicalRep & {
       user: User | null;
       territories?: { territory: { id: string; name: string } }[];
     }
@@ -101,36 +101,36 @@ export class MedicalRepMapper {
 
       ...(domain.educations
         ? {
-            educations: {
-              create: domain.educations.map((edu) => ({
-                degree: edu.degree,
-                institute: edu.institute,
-                year: edu.year ?? null,
-              })),
-            },
-          }
+          educations: {
+            create: domain.educations.map((edu) => ({
+              degree: edu.degree,
+              institute: edu.institute,
+              year: edu.year ?? null,
+            })),
+          },
+        }
         : {}),
 
       ...(domain.certificates
         ? {
-            certificates: {
-              create: domain.certificates.map((cert) => ({
-                name: cert.name,
-                issuedBy: cert.issuedBy ?? null,
-                year: cert.year ?? null,
-              })),
-            },
-          }
+          certificates: {
+            create: domain.certificates.map((cert) => ({
+              name: cert.name,
+              issuedBy: cert.issuedBy ?? null,
+              year: cert.year ?? null,
+            })),
+          },
+        }
         : {}),
 
       ...(domain.territories && domain.territories.length > 0
         ? {
-            territories: {
-              create: domain.territories.map((tId) => ({
-                territory: { connect: { id: tId } },
-              })),
-            },
-          }
+          territories: {
+            create: domain.territories.map((tId) => ({
+              territory: { connect: { id: tId } },
+            })),
+          },
+        }
         : {}),
     };
 
@@ -212,20 +212,32 @@ export class MedicalRepMapper {
     return persistence;
   }
 
-  static toListOnDoctor( 
-    persistence: MedicalRep & { 
+  static toListOnDoctor(
+    persistence: MedicalRep & {
       user: User | null;
       department?: { name: string } | null;
-    } 
-  ):IMedicalRepListOnDoc{
-    return{
-      id:persistence.id,
-      name:persistence.name,
-      company:persistence.companyName,
-      departmentId:persistence.departmentId,
-      phone:persistence.phone,
-      image:persistence.user?.profileImage ??null,
+    }
+  ): IMedicalRepListOnDoc {
+    return {
+      id: persistence.id,
+      name: persistence.name,
+      company: persistence.companyName,
+      departmentId: persistence.departmentId,
+      phone: persistence.phone,
+      image: persistence.user?.profileImage ?? null,
       departmentName: persistence.department?.name,
     }
+  }
+  static toSubscriptionUpdatePersistence(
+    planId: string,
+    startDate: Date,
+    endDate: Date
+  ): Prisma.MedicalRepUpdateInput {
+    return {
+      subscriptionPlan: { connect: { id: planId } },
+      subscriptionStatus: true,
+      subscriptionStart: startDate,
+      subscriptionEnd: endDate,
+    };
   }
 }

@@ -16,15 +16,16 @@ export class ProductPostMapper {
       ingredients: domain.ingredients,
       termsOfUse: domain.termsOfUse,
       useCases: domain.useCases,
+      isArchived: domain.isArchived,
       rep: {
         connect: { id: medicalRepId },
       },
       ...(domain.territoryId
         ? {
-            territory: {
-              connect: { id: domain.territoryId },
-            },
-          }
+          territory: {
+            connect: { id: domain.territoryId },
+          },
+        }
         : {}),
     };
   }
@@ -72,6 +73,7 @@ export class ProductPostMapper {
       updatedAt: product.updatedAt,
       createdAt: product.createdAt,
       territoryId: product.territoryId,
+      isArchived: product.isArchived,
     }));
   }
   static toDomain(product: ProductPost): IProductPost {
@@ -88,16 +90,17 @@ export class ProductPostMapper {
       updatedAt: product.updatedAt,
       createdAt: product.createdAt,
       territoryId: product.territoryId,
+      isArchived: product.isArchived,
     };
   }
   static toFeedList(posts: ProductPostWithRelations[]): IProductPostForFeed[] {
     return posts.map((p) => {
 
-      const isSubscribedRep = 
-        p.rep.subscriptionStatus && 
-        p.rep.subscriptionEnd && 
+      const isSubscribedRep =
+        p.rep.subscriptionStatus &&
+        p.rep.subscriptionEnd &&
         new Date(p.rep.subscriptionEnd) > new Date();
-      
+
       return {
         id: p.id,
         repId: p.repId,
@@ -109,6 +112,7 @@ export class ProductPostMapper {
         ingredients: p.ingredients,
         termsOfUse: p.termsOfUse,
         territoryId: p.territoryId,
+        isArchived: p.isArchived,
         createdAt: p.createdAt,
         updatedAt: p.updatedAt,
         rep: {

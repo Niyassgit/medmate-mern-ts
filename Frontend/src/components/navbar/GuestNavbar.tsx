@@ -73,6 +73,7 @@ const GuestNavbar = () => {
               { name: "Home", to: "/guest/dashboard" },
               { name: "Prescriptions", to: "/guest/prescriptions" },
               { name: "Orders", to: "/guest/orders" },
+              { name: "profile", to: "/guest/profile" },
             ].map((item) => (
               <NavLink
                 key={item.to}
