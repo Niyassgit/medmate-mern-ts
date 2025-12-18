@@ -7,4 +7,6 @@ export const GuestEndpoints = {
   GET_ORDERS: `guest/orders`,
   PROFILE: `/guest/profile`,
   COMPLETE_PROFILE: `/guest/complete-profile`,
+  VERIFY_PASSWORD: `/guest/verify-password`,
+  CHANGE_PASSWORD: `/guest/change-password`,
 };

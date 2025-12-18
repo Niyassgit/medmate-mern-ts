@@ -10,8 +10,12 @@ import OrderListingPage from "@/features/Guest/pages/OrdersListPage";
 import OrderDetailPage from "@/features/Guest/pages/OrderDetailPage";
 import ProfilePage from "@/features/Guest/pages/ProfilePage";
 import CompleteProfilePage from "@/features/Guest/pages/CompleteProfilePage";
+import { changePassword, verifyPassword } from "@/features/Guest/api";
+import ChangePassword from "@/components/shared/ChangePassword";
+import VerifyPassword from "@/components/shared/VerifyPassword";
 
 export const GuestRoutes = {
+
   path: "/guest",
   element: (
     <PrivateRoute role={Role.GUEST}>
@@ -28,5 +32,23 @@ export const GuestRoutes = {
     { path: "orders/:orderId", element: <OrderDetailPage /> },
     { path: "profile", element: <ProfilePage /> },
     { path: "complete-profile", element: <CompleteProfilePage /> },
+    {
+      path: "verify-password",
+      element: (
+        <VerifyPassword
+          onVerify={verifyPassword}
+          onSuccessRedirect="/guest/change-password"
+        />
+      ),
+    },
+    {
+      path: "change-password",
+      element: (
+        <ChangePassword
+          onSuccessRedirect="/guest/profile"
+          onChangePassword={changePassword}
+        />
+      ),
+    },
   ],
 };

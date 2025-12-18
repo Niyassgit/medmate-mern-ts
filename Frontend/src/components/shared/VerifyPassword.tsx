@@ -83,7 +83,7 @@ export default function VerifyPassword({
                     <Input
                       type="password"
                       placeholder="Enter your password"
-                      className="h-11"
+                      className="h-11 text-black"
                       {...field}
                     />
                   </FormControl>
@@ -97,7 +97,7 @@ export default function VerifyPassword({
               <Button
                 type="button"
                 variant="outline"
-                className="flex-1 h-11"
+                className="flex-1 h-11 text-black hover:text-black"
                 onClick={() => navigate(-1)}
               >
                 Cancel

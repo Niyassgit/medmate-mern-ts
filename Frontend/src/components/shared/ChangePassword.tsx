@@ -103,7 +103,7 @@ export default function ChangePassword({
                       <Input
                         type={showPassword ? "text" : "password"}
                         placeholder="Enter new password"
-                        className="h-11 pr-10"
+                        className="h-11 pr-10 text-black"
                         {...field}
                       />
                       <button
@@ -135,7 +135,7 @@ export default function ChangePassword({
                       <Input
                         type={showConfirmPassword ? "text" : "password"}
                         placeholder="Confirm new password"
-                        className="h-11 pr-10"
+                        className="h-11 pr-10 text-black"
                         {...field}
                       />
                       <button
@@ -161,7 +161,7 @@ export default function ChangePassword({
               <Button
                 type="button"
                 variant="outline"
-                className="flex-1 h-11"
+                className="flex-1 h-11 text-black hover:text-black"
                 onClick={() => navigate(-1)}
               >
                 Cancel

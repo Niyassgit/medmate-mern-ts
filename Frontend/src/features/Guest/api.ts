@@ -57,3 +57,24 @@ export const completeUserProfile = async (data: {
   const res = await api.post(GuestEndpoints.COMPLETE_PROFILE, data);
   return res.data.data;
 };
+
+export const verifyPassword = async (password: string) => {
+  const res = await api.get(GuestEndpoints.VERIFY_PASSWORD, {
+    params: { password },
+  });
+  return res.data;
+};
+
+export const changePassword = async (newPassword: string) => {
+  const res = await api.post(
+    GuestEndpoints.CHANGE_PASSWORD,
+    {},
+    {
+      params: {
+        role: "GUEST",
+        newPassword,
+      },
+    }
+  );
+  return res.data;
+};

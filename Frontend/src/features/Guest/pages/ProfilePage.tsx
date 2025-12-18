@@ -1,23 +1,17 @@
 import ProfileAvatar from "@/components/shared/ProfileAvatar";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getProfile } from "../api";
 import toast from "react-hot-toast";
 import LogoutButton from "@/components/shared/LogoutButton";
-
-interface GuestProfile {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  territoryName: string;
-  isRegistered: boolean;
-  profileImage?: string;
-}
+import { Button } from "@/components/ui/button";
+import { Edit } from "lucide-react";
+import { GuestProfile } from "../dto/GuestProfileDTO";
+import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
   const [profile, setProfile] = useState<GuestProfile | null>(null);
   const [loading, setLoading] = useState(true);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -55,6 +49,13 @@ const ProfilePage = () => {
         <div className="mb-4">
           <ProfileAvatar name={profile.name} className="w-24 h-24 text-2xl" />
         </div>
+        <Button
+          className="bg-gray-300"
+          onClick={() => navigate(`/guest/complete-profile`, { state: { isEdit: true } })}
+        >
+          <Edit />
+          Edit
+        </Button>
         <h1 className="text-2xl font-bold mb-2">{profile.name}</h1>
         <p className="text-gray-600 mb-6">{profile.email}</p>
 
@@ -70,9 +71,8 @@ const ProfilePage = () => {
           <div className="p-4 bg-gray-50 rounded-md">
             <h3 className="font-semibold text-gray-700">Status</h3>
             <p
-              className={`font-medium ${
-                profile.isRegistered ? "text-green-600" : "text-yellow-600"
-              }`}
+              className={`font-medium ${profile.isRegistered ? "text-green-600" : "text-yellow-600"
+                }`}
             >
               {profile.isRegistered ? "Registered" : "Guest"}
             </p>

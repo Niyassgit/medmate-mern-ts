@@ -1,43 +1,56 @@
 import { useForm, Controller } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { completeUserProfile, getProfile } from "../api";
 import { getTerritories } from "@/features/shared/api/SharedApi";
 import Select from "react-select";
-import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
+import {
+  IFormInput,
+  profileSchema,
+} from "../schemas/GuestProfileCompleteSchema";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { User, Phone, MapPin, Loader2, Lock, Save } from "lucide-react";
 
 interface TerritoryOption {
   value: string;
   label: string;
 }
 
-const profileSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  phone: z
-    .string()
-    .regex(/^[0-9]+$/, "Phone number must be digits")
-    .min(10, "Phone number must be at least 10 digits"),
-  territoryId: z.string().min(1, "Territory is required"),
-});
-
-type IFormInput = z.infer<typeof profileSchema>;
-
 const CompleteProfilePage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [territories, setTerritories] = useState<TerritoryOption[]>([]);
   const [loading, setLoading] = useState(true);
+  const isEdit = location.state?.isEdit || false;
+
+  const form = useForm<IFormInput>({
+    resolver: zodResolver(profileSchema),
+  });
 
   const {
-    register,
     handleSubmit,
     control,
     setValue,
-    formState: { errors, isSubmitting },
-  } = useForm<IFormInput>({
-    resolver: zodResolver(profileSchema),
-  });
+    formState: { isSubmitting },
+  } = form;
 
   useEffect(() => {
     const init = async () => {
@@ -55,11 +68,24 @@ const CompleteProfilePage = () => {
         }
 
         const profile = await getProfile();
-        console.log("profile details:",profile);
         if (profile) {
           if (profile.name) setValue("name", profile.name);
           if (profile.phone) setValue("phone", profile.phone);
-          if (profile.isRegistered && profile.territoryName !== "Unknown") {
+
+          if (profile.territoryName && profile.territoryName !== "Unknown") {
+            const matched = terrData?.data?.data?.find(
+              (t: any) => t.name === profile.territoryName
+            );
+            if (matched) {
+              setValue("territoryId", matched.id);
+            }
+          }
+
+          if (
+            !isEdit &&
+            profile.isRegistered &&
+            profile.territoryName !== "Unknown"
+          ) {
             navigate("/guest/profile");
           }
         }
@@ -71,13 +97,15 @@ const CompleteProfilePage = () => {
       }
     };
     init();
-  }, [navigate, setValue]);
+  }, [navigate, setValue, isEdit]);
 
   const onSubmit = async (data: IFormInput) => {
     try {
       await completeUserProfile(data);
-      toast.success("Profile completed successfully!");
-      navigate("/guest/dashboard");
+      toast.success(
+        isEdit ? "Profile updated successfully!" : "Profile completed successfully!"
+      );
+      navigate(isEdit ? "/guest/profile" : "/guest/dashboard");
     } catch (error: any) {
       toast.error(error.message || "Failed to complete profile");
     }
@@ -85,116 +113,172 @@ const CompleteProfilePage = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        Loading...
+      <div className="flex justify-center items-center h-screen bg-gray-50">
+        <div className="flex flex-col items-center gap-2">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-gray-500">Loading profile...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
-          Complete Your Profile
-        </h2>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Name
-            </label>
-            <input
-              {...register("name")}
-              type="text"
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm 
-             focus:outline-none focus:ring-blue-500 focus:border-blue-500 
-             text-black"
-              placeholder="Enter your name"
-            />
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center p-4">
+      <Card className="w-full max-w-lg shadow-xl border-t-4 border-t-primary">
+        <CardHeader className="text-center space-y-2">
+          <CardTitle className="text-3xl font-bold text-gray-900">
+            {isEdit ? "Edit Profile" : "Complete Profile"}
+          </CardTitle>
+          <CardDescription className="text-base">
+            {isEdit
+              ? "Update your personal information below"
+              : "Please provide your details to continue"}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <FormField
+                control={control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-700 font-medium">Full Name</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                        <Input
+                          placeholder="John Doe"
+                          className="pl-10 text-black"
+                          {...field}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            {errors.name && (
-              <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
-            )}
-          </div>
+              <FormField
+                control={control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-700 font-medium">Phone Number</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                        <Input
+                          placeholder="+1 234 567 890"
+                          type="tel"
+                          className="pl-10 text-black"
+                          {...field}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Phone
-            </label>
-            <input
-              {...register("phone")}
-              type="tel"
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm 
-             focus:outline-none focus:ring-blue-500 focus:border-blue-500 
-             text-black"
-              placeholder="Enter your phone"
-            />
+              <FormField
+                control={control}
+                name="territoryId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-700 font-medium">Territory</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        {/* Wrapper to align with other inputs better if needed, or just use as is */}
+                        <div className="relative">
+                          <div className="absolute left-3 top-3 z-10 pointer-events-none">
+                            <MapPin className="h-4 w-4 text-gray-400" />
+                          </div>
+                          <Select
+                            {...field}
+                            options={territories}
+                            value={territories.find(
+                              (c) => c.value === field.value
+                            )}
+                            onChange={(val) => field.onChange(val?.value)}
+                            placeholder="Select your territory"
+                            className="react-select-container"
+                            classNamePrefix="react-select"
+                            styles={{
+                              control: (base, state) => ({
+                                ...base,
+                                paddingLeft: "2rem", // Make space for icon
+                                borderColor: state.isFocused ? "var(--primary)" : "#e2e8f0",
+                                boxShadow: state.isFocused ? "0 0 0 1px var(--primary)" : "none",
+                                "&:hover": {
+                                  borderColor: state.isFocused ? "var(--primary)" : "#cbd5e1",
+                                },
+                                borderRadius: "var(--radius)",
+                                minHeight: "2.5rem",
+                              }),
+                              input: (base) => ({
+                                ...base,
+                                color: "#000000",
+                                "input:focus": {
+                                  boxShadow: "none",
+                                },
+                              }),
+                              singleValue: (base) => ({
+                                ...base,
+                                color: "#000000",
+                              }),
+                              option: (base, state) => ({
+                                ...base,
+                                backgroundColor: state.isFocused
+                                  ? "#e2e8f0"
+                                  : "#ffffff",
+                                color: "#000000",
+                              }),
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            {errors.phone && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.phone.message}
-              </p>
-            )}
-          </div>
+              <div className="pt-4 space-y-3">
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full h-11 text-base font-semibold"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="mr-2 h-4 w-4" />
+                      {isEdit ? "Update Profile" : "Save & Continue"}
+                    </>
+                  )}
+                </Button>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Territory
-            </label>
-            <Controller
-              name="territoryId"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  options={territories}
-                  value={territories.find((c) => c.value === field.value)}
-                  onChange={(val) => field.onChange(val?.value)}
-                  placeholder="Select Territory"
-                  className="mt-1"
-                  styles={{
-                    control: (base) => ({
-                      ...base,
-                      backgroundColor: "#ffffff",
-                      color: "#000000",
-                    }),
-                    singleValue: (base) => ({
-                      ...base,
-                      color: "#000000",
-                    }),
-                    input: (base) => ({
-                      ...base,
-                      color: "#000000",
-                    }),
-                    option: (base, state) => ({
-                      ...base,
-                      backgroundColor: state.isFocused ? "#E5E7EB" : "#ffffff",
-                      color: "#000000",
-                    }),
-                    placeholder: (base) => ({
-                      ...base,
-                      color: "#6B7280", // gray
-                    }),
-                  }}
-                />
-              )}
-            />
-
-            {errors.territoryId && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.territoryId.message}
-              </p>
-            )}
-          </div>
-
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-300"
-          >
-            {isSubmitting ? "Saving..." : "Save & Continue"}
-          </button>
-        </form>
-      </div>
+                {isEdit && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => navigate("/guest/verify-password")}
+                    className="w-full h-11 text-base"
+                  >
+                    <Lock className="mr-2 h-4 w-4" />
+                    Change Password
+                  </Button>
+                )}
+              </div>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
     </div>
   );
 };
