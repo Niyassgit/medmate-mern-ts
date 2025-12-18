@@ -110,6 +110,6 @@ export class DoctorRoutes {
     this.router.post("/practice/guests/create", doctorController.createGuest);
     this.router.get("/prescriptions", doctorController.getAllPrescriptions);
     this.router.get("/verify-password", doctorController.verifyPassword);
-    this.router.post("/change-password", doctorController.changePassword);
+    this.router.patch("/change-password", doctorController.changePassword);
   }
 }
