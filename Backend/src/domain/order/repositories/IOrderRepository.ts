@@ -13,4 +13,9 @@ export interface IOrderRepository {
   ): Promise<IOrder>;
   findOrderDetailsById(orderId: string): Promise<IOrderDetail | null>;
   findOrdersByRepId(repId: string): Promise<IOrder[]>;
+  getRepAnalytics(
+    repId: string,
+    startDate?: Date,
+    endDate?: Date
+  ): Promise<IOrder[]>;
 }

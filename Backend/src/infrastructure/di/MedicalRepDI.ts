@@ -63,6 +63,7 @@ import { VerifyOldPasswordUseCase } from "../../application/common/use-cases/Ver
 import { GetAllOrdersUseCase } from "../../application/medicalRep/use-cases/GetAllOrdersUseCase";
 import { OrderRepository } from "../repositories/OrderRepository";
 import { GetOrderDetailsUseCase } from "../../application/medicalRep/use-cases/GetOrderDetailsUseCase";
+import { RepBusinessAnalyticsUseCase } from "../../application/medicalRep/use-cases/RepBusinessAnalyticsUseCase";
 
 const medicalRepRepository = new MedicalRepRepository();
 const doctorRepository = new DoctorRepository();
@@ -318,6 +319,12 @@ const getOrderDetailsUseCase = new GetOrderDetailsUseCase(
   orderRepository,
   storageService
 );
+
+const repBusinessAnalyticsUseCase = new RepBusinessAnalyticsUseCase(
+  medicalRepRepository,
+  orderRepository,
+  storageService
+);
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
   getRepProfileByIdUseCase,
@@ -358,5 +365,6 @@ export const medicalRepController = new MedicalRepController(
   changePasswordUseCase,
   verifyOldPasswordUseCase,
   getAllOrdersUseCase,
-  getOrderDetailsUseCase
+  getOrderDetailsUseCase,
+  repBusinessAnalyticsUseCase
 );

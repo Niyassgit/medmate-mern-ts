@@ -179,5 +179,6 @@ export class MedicalRepRoutes {
       "/orders/:orderId",
       medicalRepController.getOrderDetails
     );
+    this.router.get("/business/analytics",medicalRepController.BusinessAnalytics)
   }
 }

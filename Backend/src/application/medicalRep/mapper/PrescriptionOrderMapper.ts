@@ -1,6 +1,7 @@
 import { RepOrderDTO } from "../dto/RepOrderDTO";
 import { IOrder } from "../../../domain/order/entitiy/IOrder";
 import { IStorageService } from "../../../domain/common/services/IStorageService";
+import { RepBusinessStatDTO } from "../dto/RepBusinessStatDTO";
 
 export class PrescriptionOrderMapper {
   static async toDomain(
@@ -47,6 +48,78 @@ export class PrescriptionOrderMapper {
       totalUnits,
       createdAt: data.createdAt,
       products,
+    };
+  }
+
+  static async toBusinessStat(
+    data: IOrder[],
+    repId: string,
+    storageService: IStorageService
+  ): Promise<RepBusinessStatDTO> {
+    let totalRevenue = 0;
+    let totalUnits = 0;
+    let totalOrders = 0;
+
+    const productMap = new Map<
+      string,
+      { name: string; image: string; revenue: number }
+    >();
+
+    for (const order of data) {
+      let isOrderCounted = false;
+
+      if (order.items) {
+        for (const item of order.items) {
+          if (String(item.repId) === String(repId)) {
+            if (!isOrderCounted) {
+              totalOrders++;
+              isOrderCounted = true;
+            }
+
+            const revenue = (item.ptr || 0) * item.quantity;
+            totalRevenue += revenue;
+            totalUnits += item.quantity;
+
+            const productId = String(item.productId);
+            if (!productMap.has(productId)) {
+              productMap.set(productId, {
+                name: item.name,
+                image: item.image || "",
+                revenue: 0,
+              });
+            }
+
+            const productStat = productMap.get(productId)!;
+            productStat.revenue += revenue;
+          }
+        }
+      }
+    }
+
+    const topProducts = Array.from(productMap.entries())
+      .sort((a, b) => b[1].revenue - a[1].revenue)
+      .slice(0, 5);
+
+    const TopProducts = await Promise.all(
+      topProducts.map(async ([id, stat]) => {
+        let signedUrl = "";
+        if (stat.image) {
+          signedUrl = await storageService.generateSignedUrl(stat.image);
+        }
+        return {
+          id,
+          name: stat.name,
+          imageUrl: signedUrl,
+        };
+      })
+    );
+
+    return {
+      totalRevenue,
+      totalUnits,
+      totalOrders,
+      monthlyRevenue: totalRevenue,
+      TopProducts,
     };
   }
 }

@@ -217,7 +217,6 @@ export const getProducts = async () => {
   return res.data.data;
 };
 
-
 export const editProduct = async (productId: string, formData: FormData) => {
   const res = await api.patch(RepEndpoints.EDIT_PRODUCT(productId), formData, {
     headers: { "Content-Type": "multipart/form-data" },
@@ -253,3 +252,12 @@ export const getOrderDetails = async (orderId: string) => {
   return res.data.data;
 };
 
+export const getBusinessAnalytics = async (
+  startDate?: string,
+  endDate?: string
+) => {
+  const res = await api.get(RepEndpoints.REP_BUSINESS_STAT, {
+    params: { startDate, endDate },
+  });
+  return res.data.data;
+};

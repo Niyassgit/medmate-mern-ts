@@ -9,118 +9,166 @@ import { ErrorMessages } from "../../shared/Messages";
 import { IOrderDetail } from "../../domain/order/entitiy/IOrderDetail";
 
 export class OrderRepository
-    extends BaseRepository<
-        IOrder,
-        Order,
-        Prisma.OrderCreateInput,
-        "order"
-    >
-    implements IOrderRepository {
-    constructor() {
-        super(prisma.order, (o: Order) => OrderMapper.toDomain(o));
-    }
+  extends BaseRepository<IOrder, Order, Prisma.OrderCreateInput, "order">
+  implements IOrderRepository {
+  constructor() {
+    super(prisma.order, (o: Order) => OrderMapper.toDomain(o));
+  }
 
-    async createOrder(
-        data: Omit<IOrder, "id" | "createdAt" | "updatedAt">
-    ): Promise<IOrder> {
-        const mappedData = OrderMapper.toPersistance(data);
-        return await this.create(mappedData);
-    }
+  async createOrder(
+    data: Omit<IOrder, "id" | "createdAt" | "updatedAt">
+  ): Promise<IOrder> {
+    const mappedData = OrderMapper.toPersistance(data);
+    return await this.create(mappedData);
+  }
 
-    async findOrderById(orderId: string): Promise<IOrder | null> {
-        return await this.findById(orderId);
-    }
+  async findOrderById(orderId: string): Promise<IOrder | null> {
+    return await this.findById(orderId);
+  }
 
-    async findAllOrders(guestId: string): Promise<IOrder[]> {
-        const orders = await prisma.order.findMany({
-            where: { guestId },
-            include: {
-                prescription: {
-                    include: {
-                        items: {
-                            include: {
-                                product: true
-                            }
-                        }
-                    }
-                }
-            }
-        });
-        return orders.map((o) => OrderMapper.toDomain(o));
-    }
-
-    async findOrderDetailsById(orderId: string): Promise<IOrderDetail | null> {
-        return await prisma.order.findUnique({
-            where: { id: orderId },
-            include: {
-                address: true,
-                guest: true,
-                prescription: {
-                    include: {
-                        doctor: {
-                            include: {
-                                department: true
-                            }
-                        },
-                        items: {
-                            include: {
-                                product: true
-                            }
-                        }
-                    }
-                }
-            }
-        }) as unknown as IOrderDetail | null;
-    }
-
-    async updateOrder(
-        orderId: string,
-        data: Partial<Omit<IOrder, "id" | "createdAt" | "updatedAt">>
-    ): Promise<IOrder> {
-        const exist = await this.findById(orderId);
-        if (!exist) throw new NotFoundError(ErrorMessages.ORDER_NOT_FOUND || "Order not found"); // Need to check if message exists
-
-        const mappedData = OrderMapper.toUpdatePersistance(data);
-        const updated = await prisma.order.update({
-            where: { id: orderId },
-            data: mappedData,
-        });
-        return OrderMapper.toDomain(updated);
-    }
-    async findOrdersByRepId(repId: string): Promise<IOrder[]> {
-        const orders = await prisma.order.findMany({
-            where: {
-                prescription: {
-                    items: {
-                        some: {
-                            product: {
-                                repId: repId
-                            }
-                        }
-                    }
-                }
+  async findAllOrders(guestId: string): Promise<IOrder[]> {
+    const orders = await prisma.order.findMany({
+      where: { guestId },
+      include: {
+        prescription: {
+          include: {
+            items: {
+              include: {
+                product: true,
+              },
             },
-            include: {
-                prescription: {
-                    include: {
-                        doctor: {
-                            include: {
-                                department: true
-                            }
-                        },
-                        items: {
-                            include: {
-                                product: true
-                            }
-                        }
-                    }
-                },
-                guest: true
+          },
+        },
+      },
+    });
+    return orders.map((o) => OrderMapper.toDomain(o));
+  }
+
+  async findOrderDetailsById(orderId: string): Promise<IOrderDetail | null> {
+    return (await prisma.order.findUnique({
+      where: { id: orderId },
+      include: {
+        address: true,
+        guest: true,
+        prescription: {
+          include: {
+            doctor: {
+              include: {
+                department: true,
+              },
             },
-            orderBy: {
-                createdAt: 'desc'
-            }
-        });
-        return orders.map((o) => OrderMapper.toDomain(o));
+            items: {
+              include: {
+                product: true,
+              },
+            },
+          },
+        },
+      },
+    })) as unknown as IOrderDetail | null;
+  }
+
+  async updateOrder(
+    orderId: string,
+    data: Partial<Omit<IOrder, "id" | "createdAt" | "updatedAt">>
+  ): Promise<IOrder> {
+    const exist = await this.findById(orderId);
+    if (!exist)
+      throw new NotFoundError(
+        ErrorMessages.ORDER_NOT_FOUND || "Order not found"
+      );
+
+    const mappedData = OrderMapper.toUpdatePersistance(data);
+    const updated = await prisma.order.update({
+      where: { id: orderId },
+      data: mappedData,
+    });
+    return OrderMapper.toDomain(updated);
+  }
+  async findOrdersByRepId(repId: string): Promise<IOrder[]> {
+    const orders = await prisma.order.findMany({
+      where: {
+        prescription: {
+          items: {
+            some: {
+              product: {
+                repId: repId,
+              },
+            },
+          },
+        },
+      },
+      include: {
+        prescription: {
+          include: {
+            doctor: {
+              include: {
+                department: true,
+              },
+            },
+            items: {
+              include: {
+                product: true,
+              },
+            },
+          },
+        },
+        guest: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return orders.map((o) => OrderMapper.toDomain(o));
+  }
+
+  async getRepAnalytics(
+    repId: string,
+    startDate?: Date,
+    endDate?: Date
+  ): Promise<IOrder[]> {
+    const whereClause: Prisma.OrderWhereInput = {
+      prescription: {
+        items: {
+          some: {
+            product: {
+              repId: repId,
+            },
+          },
+        },
+      },
+    };
+
+    if (startDate && endDate) {
+      whereClause.createdAt = {
+        gte: startDate,
+        lte: endDate,
+      };
     }
+
+    const orders = await prisma.order.findMany({
+      where: whereClause,
+      include: {
+        prescription: {
+          include: {
+            doctor: {
+              include: {
+                department: true,
+              },
+            },
+            items: {
+              include: {
+                product: true,
+              },
+            },
+          },
+        },
+        guest: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return orders.map((o) => OrderMapper.toDomain(o));
+  }
 }

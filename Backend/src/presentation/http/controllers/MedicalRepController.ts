@@ -48,6 +48,7 @@ import { IChangePasswordUseCase } from "../../../application/common/interfaces/I
 import { IVerifyOldPasswordUseCase } from "../../../application/common/interfaces/IverifyOldPasswordUsesCase";
 import { IGetAllOrdersUseCase } from "../../../application/medicalRep/interfaces/IGetAllOrdersUseCase";
 import { IGetOrderDetailsUseCase } from "../../../application/medicalRep/interfaces/IGetOrderDetailsUseCase";
+import { IRepBusinessAnalyticsUseCase } from "../../../application/medicalRep/interfaces/IRepBusinessAnalyticsUseCase";
 
 export class MedicalRepController {
   constructor(
@@ -90,7 +91,8 @@ export class MedicalRepController {
     private _changePasswordUseCase: IChangePasswordUseCase,
     private _verifyOldPasswordUseCase: IVerifyOldPasswordUseCase,
     private _getAllOrdersUseCase: IGetAllOrdersUseCase,
-    private _getOrderDetailsUseCase: IGetOrderDetailsUseCase
+    private _getOrderDetailsUseCase: IGetOrderDetailsUseCase,
+    private _repBusinessAnalyticsUseCase: IRepBusinessAnalyticsUseCase
   ) { }
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -534,7 +536,23 @@ export class MedicalRepController {
   getOrderDetails = async (req: Request, res: Response) => {
     const { orderId } = req.params;
     const userId = GetOptionalUserId(req.user);
-    const response = await this._getOrderDetailsUseCase.execute(orderId, userId);
+    const response = await this._getOrderDetailsUseCase.execute(
+      orderId,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  BusinessAnalytics = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { startDate, endDate } = req.query;
+    const response = await this._repBusinessAnalyticsUseCase.execute(
+      userId,
+      startDate as string | undefined,
+      endDate as string | undefined
+    );
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
