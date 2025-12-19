@@ -65,6 +65,8 @@ import { OrderRepository } from "../repositories/OrderRepository";
 import { GetOrderDetailsUseCase } from "../../application/medicalRep/use-cases/GetOrderDetailsUseCase";
 import { RepBusinessAnalyticsUseCase } from "../../application/medicalRep/use-cases/RepBusinessAnalyticsUseCase";
 import { RecentOrdersUseCase } from "../../application/medicalRep/use-cases/RecentOrdersUseCase";
+import { ExportRepOrdersUseCase } from "../../application/medicalRep/use-cases/ExportRepOrdersUseCase";
+import { ExcelService } from "../services/ExcelService";
 
 const medicalRepRepository = new MedicalRepRepository();
 const doctorRepository = new DoctorRepository();
@@ -91,7 +93,9 @@ const subscriptionHistoryRepository = new SubscriptionHistoryRepository();
 const connectionRequestLogRepository = new ConnectionRequestLogRepository();
 const productRepository = new ProductRepository();
 const guestRepository = new GuestRepository();
+
 const orderRepository = new OrderRepository();
+const excelService = new ExcelService();
 
 const createMedicalRepUseCase = new CreateMedicalRepUseCase(
   medicalRepRepository,
@@ -327,6 +331,12 @@ const repBusinessAnalyticsUseCase = new RepBusinessAnalyticsUseCase(
   storageService
 );
 
+const exportRepOrdersUseCase = new ExportRepOrdersUseCase(
+  medicalRepRepository,
+  orderRepository,
+  excelService
+);
+
 
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
@@ -370,4 +380,5 @@ export const medicalRepController = new MedicalRepController(
   getAllOrdersUseCase,
   getOrderDetailsUseCase,
   repBusinessAnalyticsUseCase,
+  exportRepOrdersUseCase
 );

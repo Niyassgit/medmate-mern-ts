@@ -5,8 +5,9 @@ import {
   ShoppingCart,
   DollarSign,
   Calendar,
+  FileSpreadsheet,
 } from "lucide-react";
-import { getBusinessAnalytics } from "../api";
+import { getBusinessAnalytics, exportOrders } from "../api";
 import { SpinnerButton } from "@/components/shared/SpinnerButton";
 import { StatCard } from "../components/RepStatCard";
 import { RepStatAnalyticsDTO } from "../dto/RepStatAnalyticsDTO";
@@ -23,6 +24,8 @@ const BusinessStat = () => {
       .split("T")[0],
     endDate: new Date().toISOString().split("T")[0],
   });
+
+  const [isDownloading, setIsDownloading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,6 +50,25 @@ const BusinessStat = () => {
     setDateRange((prev) => ({ ...prev, [field]: value }));
   };
 
+  const dawnloadExcel = async () => {
+    if (isDownloading) return;
+    setIsDownloading(true);
+    try {
+      const blob = await exportOrders(dateRange.startDate, dateRange.endDate);
+      const url = window.URL.createObjectURL(new Blob([blob]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `orders_${dateRange.startDate}_${dateRange.endDate}.xlsx`);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode?.removeChild(link);
+    } catch (error) {
+      toast.error("Failed to download report");
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   if (loading && !analyticsData) return <SpinnerButton />;
 
   return (
@@ -63,40 +85,60 @@ const BusinessStat = () => {
         </div>
 
         {/* Date Range Selector */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <div className="flex items-center gap-4 flex-wrap">
-            <div className="flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-gray-500" />
-              <span className="text-sm font-medium text-gray-700">
-                Date Range:
-              </span>
-            </div>
-            <div className="flex gap-4 flex-wrap">
-              <div>
-                <label className="text-xs text-gray-600 block mb-1">
-                  Start Date
-                </label>
-                <input
-                  type="date"
-                  value={dateRange.startDate}
-                  onChange={(e) =>
-                    handleDateChange("startDate", e.target.value)
-                  }
-                  className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+        <div className="flex items-start justify-between gap-4">
+          {/* Left: Date Range Card */}
+          <div className="bg-white rounded-lg shadow-md p-6 mb-6 flex-1">
+            <div className="flex items-center gap-4 flex-wrap">
+              <div className="flex items-center gap-2">
+                <Calendar className="w-5 h-5 text-gray-500" />
+                <span className="text-sm font-medium text-gray-700">
+                  Date Range:
+                </span>
               </div>
-              <div>
-                <label className="text-xs text-gray-600 block mb-1">
-                  End Date
-                </label>
-                <input
-                  type="date"
-                  value={dateRange.endDate}
-                  onChange={(e) => handleDateChange("endDate", e.target.value)}
-                  className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+
+              <div className="flex gap-4 flex-wrap">
+                <div>
+                  <label className="text-xs text-gray-600 block mb-1">
+                    Start Date
+                  </label>
+                  <input
+                    type="date"
+                    value={dateRange.startDate}
+                    onChange={(e) =>
+                      handleDateChange("startDate", e.target.value)
+                    }
+                    className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs text-gray-600 block mb-1">
+                    End Date
+                  </label>
+                  <input
+                    type="date"
+                    value={dateRange.endDate}
+                    onChange={(e) =>
+                      handleDateChange("endDate", e.target.value)
+                    }
+                    className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
               </div>
             </div>
+          </div>
+
+          {/* Right: Export Icon */}
+          <div
+            className={`bg-white rounded-lg shadow-md p-4 h-fit transition-all ${isDownloading ? 'cursor-not-allowed opacity-70' : 'cursor-pointer'}`}
+            onClick={dawnloadExcel}
+            title="Download Excel Report"
+          >
+            {isDownloading ? (
+              <div className="w-6 h-6 border-2 border-green-600 border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+              <FileSpreadsheet className="w-6 h-6 text-green-600 hover:scale-105 transition-transform" />
+            )}
           </div>
         </div>
 
@@ -178,8 +220,8 @@ const BusinessStat = () => {
                 ₹
                 {analyticsData && analyticsData.totalOrders > 0
                   ? (
-                      analyticsData.totalRevenue / analyticsData.totalOrders
-                    ).toFixed(2)
+                    analyticsData.totalRevenue / analyticsData.totalOrders
+                  ).toFixed(2)
                   : "0.00"}
               </p>
             </div>
@@ -188,8 +230,8 @@ const BusinessStat = () => {
               <p className="text-2xl font-bold">
                 {analyticsData && analyticsData.totalOrders > 0
                   ? (
-                      analyticsData.totalUnits / analyticsData.totalOrders
-                    ).toFixed(1)
+                    analyticsData.totalUnits / analyticsData.totalOrders
+                  ).toFixed(1)
                   : "0.0"}
               </p>
             </div>

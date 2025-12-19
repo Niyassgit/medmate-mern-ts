@@ -3,6 +3,7 @@ import { IOrder } from "../../../domain/order/entitiy/IOrder";
 import { IStorageService } from "../../../domain/common/services/IStorageService";
 import { RepBusinessStatDTO } from "../dto/RepBusinessStatDTO";
 import { OrderTableDTO } from "../dto/OrderTableDTO";
+import { OrderExportDTO } from "../dto/OrderExportDTO";
 
 export class PrescriptionOrderMapper {
   static async toDomain(
@@ -116,7 +117,7 @@ export class PrescriptionOrderMapper {
     );
 
 
- 
+
     const sortedData = data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     const limitedData = sortedData.slice(0, 20);
     const ordersList = this.toListOrderTable(limitedData);
@@ -149,5 +150,26 @@ export class PrescriptionOrderMapper {
     });
 
     return result;
+  }
+  static toExcelData(orders: IOrder[], repId: string): OrderExportDTO[] {
+    const rows: OrderExportDTO[] = [];
+    orders.forEach((order) => {
+      if (order.items) {
+        order.items.forEach((item) => {
+          if (String(item.repId) === String(repId)) {
+            rows.push({
+              id: order.id,
+              date: order.createdAt.toISOString().split("T")[0],
+              product: item.name,
+              quantity: item.quantity,
+              ptr: item.ptr || 0,
+              total: (item.ptr || 0) * item.quantity,
+              status: order.status,
+            });
+          }
+        });
+      }
+    });
+    return rows;
   }
 }

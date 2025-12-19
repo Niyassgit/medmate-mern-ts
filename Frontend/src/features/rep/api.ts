@@ -263,3 +263,11 @@ export const getBusinessAnalytics = async (
 };
 
 
+
+export const exportOrders = async (startDate?: string, endDate?: string) => {
+  const res = await api.get(RepEndpoints.REP_BUSINESS_STAT + "/export", {
+    params: { startDate, endDate },
+    responseType: "blob",
+  });
+  return res.data;
+};

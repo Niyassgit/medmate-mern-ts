@@ -180,6 +180,9 @@ export class MedicalRepRoutes {
       "/business/analytics",
       medicalRepController.BusinessAnalytics
     );
-
+    this.router.get(
+      "/business/analytics/export",
+      medicalRepController.exportOrders
+    );
   }
 }

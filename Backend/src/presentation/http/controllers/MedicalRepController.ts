@@ -49,6 +49,7 @@ import { IVerifyOldPasswordUseCase } from "../../../application/common/interface
 import { IGetAllOrdersUseCase } from "../../../application/medicalRep/interfaces/IGetAllOrdersUseCase";
 import { IGetOrderDetailsUseCase } from "../../../application/medicalRep/interfaces/IGetOrderDetailsUseCase";
 import { IRepBusinessAnalyticsUseCase } from "../../../application/medicalRep/interfaces/IRepBusinessAnalyticsUseCase";
+import { IExportRepOrdersUseCase } from "../../../application/medicalRep/interfaces/IExportRepOrdersUseCase";
 
 
 export class MedicalRepController {
@@ -93,7 +94,8 @@ export class MedicalRepController {
     private _verifyOldPasswordUseCase: IVerifyOldPasswordUseCase,
     private _getAllOrdersUseCase: IGetAllOrdersUseCase,
     private _getOrderDetailsUseCase: IGetOrderDetailsUseCase,
-    private _repBusinessAnalyticsUseCase: IRepBusinessAnalyticsUseCase
+    private _repBusinessAnalyticsUseCase: IRepBusinessAnalyticsUseCase,
+    private _exportRepOrdersUseCase: IExportRepOrdersUseCase
   ) { }
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -559,5 +561,25 @@ export class MedicalRepController {
       .json({ success: true, data: response });
   };
 
+  exportOrders = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { startDate, endDate } = req.query;
 
+    const buffer = await this._exportRepOrdersUseCase.execute(
+      userId,
+      startDate as string | undefined,
+      endDate as string | undefined
+    );
+
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=" + "orders_report.xlsx"
+    );
+
+    return res.end(buffer);
+  };
 }
