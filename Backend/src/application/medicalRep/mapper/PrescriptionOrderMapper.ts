@@ -2,6 +2,7 @@ import { RepOrderDTO } from "../dto/RepOrderDTO";
 import { IOrder } from "../../../domain/order/entitiy/IOrder";
 import { IStorageService } from "../../../domain/common/services/IStorageService";
 import { RepBusinessStatDTO } from "../dto/RepBusinessStatDTO";
+import { OrderTableDTO } from "../dto/OrderTableDTO";
 
 export class PrescriptionOrderMapper {
   static async toDomain(
@@ -114,12 +115,39 @@ export class PrescriptionOrderMapper {
       })
     );
 
+
+ 
+    const sortedData = data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    const limitedData = sortedData.slice(0, 20);
+    const ordersList = this.toListOrderTable(limitedData);
+
     return {
       totalRevenue,
       totalUnits,
       totalOrders,
       monthlyRevenue: totalRevenue,
       TopProducts,
+      ordersList,
     };
+  }
+
+  static toListOrderTable(data: IOrder[]): OrderTableDTO[] {
+    const result: OrderTableDTO[] = [];
+
+    data.forEach((order) => {
+      if (order.items && order.items.length > 0) {
+        order.items.forEach((item) => {
+          result.push({
+            id: order.id,
+            name: item.name,
+            units: item.quantity.toString(),
+            ptr: item.ptr || 0,
+            orderStatus: order.status,
+          });
+        });
+      }
+    });
+
+    return result;
   }
 }

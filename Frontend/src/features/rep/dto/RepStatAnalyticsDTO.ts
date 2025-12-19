@@ -1,3 +1,5 @@
+import { OrderTableDTO } from "./OrderTableDTO";
+
 export interface RepStatAnalyticsDTO {
     totalRevenue: number;
     totalUnits: number;
@@ -8,4 +10,5 @@ export interface RepStatAnalyticsDTO {
         name: string;
         imageUrl: string;
     }[] | null;
+    ordersList: OrderTableDTO[];
 }

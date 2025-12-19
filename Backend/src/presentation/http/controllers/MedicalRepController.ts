@@ -50,6 +50,7 @@ import { IGetAllOrdersUseCase } from "../../../application/medicalRep/interfaces
 import { IGetOrderDetailsUseCase } from "../../../application/medicalRep/interfaces/IGetOrderDetailsUseCase";
 import { IRepBusinessAnalyticsUseCase } from "../../../application/medicalRep/interfaces/IRepBusinessAnalyticsUseCase";
 
+
 export class MedicalRepController {
   constructor(
     private _createMedicalRepUseCase: ICreateMedicalRepUseCase,
@@ -557,4 +558,6 @@ export class MedicalRepController {
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
   };
+
+
 }

@@ -10,6 +10,8 @@ import { getBusinessAnalytics } from "../api";
 import { SpinnerButton } from "@/components/shared/SpinnerButton";
 import { StatCard } from "../components/RepStatCard";
 import { RepStatAnalyticsDTO } from "../dto/RepStatAnalyticsDTO";
+import OrderTable from "../components/orderTable";
+import toast from "react-hot-toast";
 
 const BusinessStat = () => {
   const [analyticsData, setAnalyticsData] =
@@ -25,25 +27,27 @@ const BusinessStat = () => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const data = await getBusinessAnalytics(
-        dateRange.startDate,
-        dateRange.endDate
-      );
-      setTimeout(() => {
+      try {
+        const data = await getBusinessAnalytics(
+          dateRange.startDate,
+          dateRange.endDate
+        );
         setAnalyticsData(data);
+      } catch (error: any) {
+        toast.error(error.message || "Failed to fetch analytics");
+      } finally {
         setLoading(false);
-      }, 500);
+      }
     };
 
     fetchData();
   }, [dateRange]);
 
-
   const handleDateChange = (field: string, value: string) => {
     setDateRange((prev) => ({ ...prev, [field]: value }));
   };
 
-  if (loading || !analyticsData) return <SpinnerButton />;
+  if (loading && !analyticsData) return <SpinnerButton />;
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -101,25 +105,25 @@ const BusinessStat = () => {
           <StatCard
             icon={DollarSign}
             title="Total Revenue"
-            value={analyticsData.totalRevenue}
+            value={analyticsData?.totalRevenue || 0}
             color="bg-green-500"
           />
           <StatCard
             icon={TrendingUp}
             title="Monthly Revenue"
-            value={analyticsData.monthlyRevenue}
+            value={analyticsData?.monthlyRevenue || 0}
             color="bg-blue-500"
           />
           <StatCard
             icon={ShoppingCart}
             title="Total Orders"
-            value={analyticsData.totalOrders}
+            value={analyticsData?.totalOrders || 0}
             color="bg-purple-500"
           />
           <StatCard
             icon={Package}
             title="Units Sold"
-            value={analyticsData.totalUnits}
+            value={analyticsData?.totalUnits || 0}
             color="bg-orange-500"
           />
         </div>
@@ -127,8 +131,8 @@ const BusinessStat = () => {
         {/* Top Products */}
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-6">Top Products</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {analyticsData.TopProducts?.length ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {analyticsData?.TopProducts?.length ? (
               analyticsData.TopProducts.map((product, index) => (
                 <div
                   key={product.id}
@@ -150,7 +154,7 @@ const BusinessStat = () => {
                       <span className="inline-block px-2 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded">
                         #{index + 1} Best Seller
                       </span>
-                      <h3 className="text-sm font-medium text-gray-900 line-clamp-3">
+                      <h3 className="text-sm font-medium text-gray-900 line-clamp-3 mt-1">
                         {product.name}
                       </h3>
                     </div>
@@ -172,25 +176,29 @@ const BusinessStat = () => {
               </h3>
               <p className="text-3xl font-bold">
                 ₹
-                {analyticsData.totalOrders > 0
+                {analyticsData && analyticsData.totalOrders > 0
                   ? (
-                    analyticsData.totalRevenue / analyticsData.totalOrders
-                  ).toFixed(2)
+                      analyticsData.totalRevenue / analyticsData.totalOrders
+                    ).toFixed(2)
                   : "0.00"}
               </p>
             </div>
             <div className="text-right">
               <p className="text-sm opacity-90">Units per Order</p>
               <p className="text-2xl font-bold">
-                {analyticsData.totalOrders > 0
+                {analyticsData && analyticsData.totalOrders > 0
                   ? (
-                    analyticsData.totalUnits / analyticsData.totalOrders
-                  ).toFixed(1)
+                      analyticsData.totalUnits / analyticsData.totalOrders
+                    ).toFixed(1)
                   : "0.0"}
               </p>
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="w-full lg:w-[70%] mx-auto">
+        <OrderTable orders={analyticsData?.ordersList} loading={loading} />
       </div>
     </div>
   );
