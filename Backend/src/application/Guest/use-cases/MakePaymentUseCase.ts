@@ -68,7 +68,7 @@ export class MakePaymentUseCase implements IMakePaymentUseCase {
 
     const order = await this._orderRepository.createOrder(orderData);
 
-    if (paymentMethod === "cod") {
+    if (paymentMethod === "upi") {
       // Handle COD logic - return simple success URL or order ID
       // For now returning null as specific requirement was for payment integration
       return null;

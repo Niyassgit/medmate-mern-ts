@@ -169,6 +169,7 @@ export class OrderRepository
         createdAt: "desc",
       },
     });
+    console.log("orders in the repo:",orders)
     return orders.map((o) => OrderMapper.toDomain(o));
   }
 }

@@ -25,7 +25,7 @@ export default function PrescriptionPage() {
   const [showCreateGuestModal, setShowCreateGuestModal] = useState(false);
   const [newGuest, setNewGuest] = useState({ name: "", email: "", phone: "", territoryId: "" });
   const [creatingGuest, setCreatingGuest] = useState(false);
- const navigate=useNavigate();
+  const navigate = useNavigate();
   const [prescription, setPrescription] = useState({
     notes: "",
     status: "PENDING",
@@ -71,7 +71,7 @@ export default function PrescriptionPage() {
 
     return () => clearTimeout(delayDebounce);
   }, [guestSearchQuery]);
- 
+
   useEffect(() => {
     if (selectedRep) {
       loadProducts(selectedRep.id);
@@ -329,7 +329,7 @@ export default function PrescriptionPage() {
                         key={guest.id}
                         onClick={() => {
                           setSelectedGuest(guest);
-                          setGuestSearchQuery(guest.name);
+                          setGuestSearchQuery("");
                           setShowGuestDropdown(false);
                         }}
                         className="p-3 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors"
@@ -505,11 +505,10 @@ export default function PrescriptionPage() {
                     key={rep.id}
                     type="button"
                     onClick={() => setSelectedRep(rep)}
-                    className={`p-3 rounded-lg border-2 transition-colors ${
-                      selectedRep?.id === rep.id
+                    className={`p-3 rounded-lg border-2 transition-colors ${selectedRep?.id === rep.id
                         ? "border-green-600 bg-green-100"
                         : "border-gray-200 bg-white hover:border-green-300"
-                    }`}
+                      }`}
                   >
                     <div className="font-semibold text-sm">{rep.name}</div>
                     <div className="text-xs text-gray-600">{rep.company}</div>

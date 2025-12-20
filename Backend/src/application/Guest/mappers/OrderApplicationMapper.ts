@@ -47,9 +47,12 @@ export class OrderApplicationMapper {
     }
     static async toDetailDomain(data: IOrderDetail, storageService: IStorageService, repId?: string): Promise<OrderDetailDTO> {
         let items = data.prescription?.items || [];
+        let totalAmount = data.totalAmount;
 
         if (repId) {
             items = items.filter((item: any) => String(item.product.repId) === String(repId));
+            // Recalculate total for Rep view based on their items only
+            totalAmount = items.reduce((sum: number, item: any) => sum + ((item.product.ptr || 0) * item.quantity), 0);
         }
 
         const itemsWithSignedUrls = items.length > 0
@@ -60,7 +63,7 @@ export class OrderApplicationMapper {
                     image: item.product.imageUrl && item.product.imageUrl[0]
                         ? await storageService.generateSignedUrl(item.product.imageUrl[0])
                         : undefined,
-                    price: item.product.price // Assuming price is available or needs to be mapped
+                    price: item.product.ptr // Correctly mapped to PTR
                 }))
             )
             : [];
@@ -70,7 +73,7 @@ export class OrderApplicationMapper {
             createdAt: data.createdAt.toISOString(),
             status: data.status,
             paymentStatus: data.paymentStatus,
-            totalAmount: data.totalAmount,
+            totalAmount: totalAmount,
             paymentId: data.paymentId || "",
             guest: {
                 name: data.guest.name,
@@ -78,6 +81,7 @@ export class OrderApplicationMapper {
                 phone: data.guest.phone,
             },
             address: {
+                id: data.address.id || "",
                 street: data.address.street,
                 city: data.address.city,
                 state: data.address.state,

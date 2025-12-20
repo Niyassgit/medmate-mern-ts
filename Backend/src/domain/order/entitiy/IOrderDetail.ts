@@ -14,6 +14,7 @@ export interface IOrderDetail {
         phone: string;
     };
     address: {
+        id: string;
         street: string;
         city: string;
         state: string;
@@ -24,6 +25,7 @@ export interface IOrderDetail {
         id: string;
         createdAt: Date;
         doctor: {
+            id: string;
             name: string;
             hospital: string | null;
             department: {
@@ -33,9 +35,12 @@ export interface IOrderDetail {
         items: {
             quantity: number;
             product: {
+                id: string;
                 name: string;
                 imageUrl: string[];
                 repId: string;
+                ptr: number;
+                mrp: number;
             };
         }[];
     } | null;

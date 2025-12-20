@@ -11,7 +11,7 @@ import { getBusinessAnalytics, exportOrders } from "../api";
 import { SpinnerButton } from "@/components/shared/SpinnerButton";
 import { StatCard } from "../components/RepStatCard";
 import { RepStatAnalyticsDTO } from "../dto/RepStatAnalyticsDTO";
-import OrderTable from "../components/orderTable";
+import OrderTable from "../components/OrderTable";
 import toast from "react-hot-toast";
 
 const BusinessStat = () => {
@@ -72,7 +72,7 @@ const BusinessStat = () => {
   if (loading && !analyticsData) return <SpinnerButton />;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-amber-50 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">

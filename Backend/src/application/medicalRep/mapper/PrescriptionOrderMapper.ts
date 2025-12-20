@@ -120,7 +120,7 @@ export class PrescriptionOrderMapper {
 
     const sortedData = data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     const limitedData = sortedData.slice(0, 20);
-    const ordersList = this.toListOrderTable(limitedData);
+    const ordersList = this.toListOrderTable(limitedData, repId);
 
     return {
       totalRevenue,
@@ -132,19 +132,21 @@ export class PrescriptionOrderMapper {
     };
   }
 
-  static toListOrderTable(data: IOrder[]): OrderTableDTO[] {
+  static toListOrderTable(data: IOrder[], repId: string): OrderTableDTO[] {
     const result: OrderTableDTO[] = [];
 
     data.forEach((order) => {
       if (order.items && order.items.length > 0) {
         order.items.forEach((item) => {
-          result.push({
-            id: order.id,
-            name: item.name,
-            units: item.quantity.toString(),
-            ptr: item.ptr || 0,
-            orderStatus: order.status,
-          });
+          if (String(item.repId) === String(repId)) {
+            result.push({
+              id: order.id,
+              name: item.name,
+              units: item.quantity.toString(),
+              ptr: item.ptr || 0,
+              orderStatus: order.status,
+            });
+          }
         });
       }
     });

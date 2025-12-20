@@ -20,21 +20,6 @@ export class GuestMapper {
     };
   }
 
-  static toDomain(data: Guest): IGuest {
-    return {
-      id: data.id,
-      name: data.name,
-      isRegistered: data.isRegistered,
-      email: data.email,
-      phone: data.phone ?? "",
-      userId: data.loginId ?? null,
-      doctorId: data.doctorId,
-      territoryId: data.territoryId,
-      createdAt: data.createdAt,
-      updatedAt: data.updatedAt,
-    };
-  }
-
   static toListItem(
     guest: Guest & { user?: User | null; territory?: Territory | null }
   ): IGuestListItem {
@@ -48,6 +33,21 @@ export class GuestMapper {
       createdAt: guest.createdAt,
       loginId: guest.user?.id ?? null,
       territoryName: guest.territory?.name ?? null,
+    };
+  }
+
+  static toDomain(data: Guest): IGuest {
+    return {
+      id: data.id,
+      name: data.name,
+      isRegistered: data.isRegistered,
+      email: data.email,
+      phone: data.phone ?? "",
+      userId: data.loginId ?? null,
+      doctorId: data.doctorId,
+      territoryId: data.territoryId,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt,
     };
   }
 
@@ -65,6 +65,8 @@ export class GuestMapper {
       isRegistered: false,
     };
   }
+
+
 
   static toPersistenceUpdate(
     data: Partial<Omit<IGuest, "id" | "createdAt" | "updatedAt">>
