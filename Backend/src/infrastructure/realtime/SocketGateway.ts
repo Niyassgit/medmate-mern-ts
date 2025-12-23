@@ -7,6 +7,11 @@ import { ErrorMessages } from "../../shared/Messages";
 import { AuthenticatedSocket, AuthenticatedUser } from "../types/SocketTypes";
 import { JwtPayload } from "../../domain/common/types/JwtPayload";
 import logger from "../logger/Logger";
+import {
+  acceptDoctorVideoCallUseCase,
+  videoCallEventPublisher,
+  acceptRepVideoCallUseCase,
+} from "../di/VideoCallDi";
 
 export let io: Server;
 
@@ -97,6 +102,34 @@ export function initSocket(server: HttpServer) {
           .emit("user:stopped_typing", { userId, conversationId });
       }
     );
+
+    socket.on("call:accepted", async ({ toUserId, answer }) => {
+      try {
+        if (user.role === "doctor") {
+          await acceptRepVideoCallUseCase.execute(toUserId, answer, user.id);
+        } else if (user.role === "rep") {
+          await acceptDoctorVideoCallUseCase.execute(toUserId, answer, user.id);
+        }
+      } catch (error) {
+        logger.error(error);
+      }
+    });
+
+    socket.on("call:ice-candidate", ({ toUserId, candidate }) => {
+      io.to(`user:${toUserId}`).emit("call:ice-candidate", {
+        fromUserId: user.id,
+        candidate,
+      });
+    });
+
+    socket.on("call:offer",({toUserId,offer})=>{
+      io.to(`user:${toUserId}`).emit("call:offer",{
+        fromUserId:user.id,
+        offer
+      })
+    })
+
+   
   });
 
   return io;

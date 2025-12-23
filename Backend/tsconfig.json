@@ -11,6 +11,6 @@
     "isolatedModules": true,                   
     "resolveJsonModule": true                   
   },
-  "include": ["src", "src/index.ts"],                           
+  "include": ["src", "src/index.ts", "../Frontend/src/services/videocall/WebRTCAdapter.ts"],                           
   "exclude": ["node_modules", "dist"]        
 }

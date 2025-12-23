@@ -64,9 +64,11 @@ import { GetAllOrdersUseCase } from "../../application/medicalRep/use-cases/GetA
 import { OrderRepository } from "../repositories/OrderRepository";
 import { GetOrderDetailsUseCase } from "../../application/medicalRep/use-cases/GetOrderDetailsUseCase";
 import { RepBusinessAnalyticsUseCase } from "../../application/medicalRep/use-cases/RepBusinessAnalyticsUseCase";
-import { RecentOrdersUseCase } from "../../application/medicalRep/use-cases/RecentOrdersUseCase";
 import { ExportRepOrdersUseCase } from "../../application/medicalRep/use-cases/ExportRepOrdersUseCase";
 import { ExcelService } from "../services/ExcelService";
+import { VideoCallEventPublisher } from "../realtime/publishers/VideoCallEventPublisher";
+import { MakeVideoCallWithDoctorUseCase } from "../../application/medicalRep/use-cases/MakeVideoCallWithDoctorUseCase";
+import { AccepDoctorVideoCallRequestUseCase } from "../../application/medicalRep/use-cases/AcceptDoctorVideoCallRequestUseCase";
 
 const medicalRepRepository = new MedicalRepRepository();
 const doctorRepository = new DoctorRepository();
@@ -96,6 +98,7 @@ const guestRepository = new GuestRepository();
 
 const orderRepository = new OrderRepository();
 const excelService = new ExcelService();
+const videoCallEventPublisher = new VideoCallEventPublisher();
 
 const createMedicalRepUseCase = new CreateMedicalRepUseCase(
   medicalRepRepository,
@@ -337,6 +340,17 @@ const exportRepOrdersUseCase = new ExportRepOrdersUseCase(
   excelService
 );
 
+const makeVideoCallWithDoctorUseCase = new MakeVideoCallWithDoctorUseCase(
+  doctorRepository,
+  videoCallEventPublisher
+);
+
+
+
+const acceptDoctorVideoCallRequestUseCase = new AccepDoctorVideoCallRequestUseCase(
+  doctorRepository,
+  videoCallEventPublisher
+);
 
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
@@ -380,5 +394,7 @@ export const medicalRepController = new MedicalRepController(
   getAllOrdersUseCase,
   getOrderDetailsUseCase,
   repBusinessAnalyticsUseCase,
-  exportRepOrdersUseCase
+  exportRepOrdersUseCase,
+  makeVideoCallWithDoctorUseCase,
 );
+
