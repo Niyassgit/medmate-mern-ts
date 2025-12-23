@@ -36,44 +36,25 @@ const VideoCallScreen: React.FC<VideoCallScreenProps> = ({
     return () => clearInterval(interval);
   }, [isOpen]);
 
-  // Callback ref for local video
-  const setLocalVideoRef = (node: HTMLVideoElement | null) => {
+  // Callback ref for local video - Handles mounting and stream changes reliably
+  // Callback ref for local video - Handles mounting and stream changes reliably
+  const setLocalVideoRef = useCallback((node: HTMLVideoElement | null) => {
     localVideoRef.current = node;
 
     if (node && localStream) {
       node.srcObject = localStream;
       node.muted = true;
-      node.play().catch(console.error);
-    }
-  };
-
-  // Re-attach if stream changes
-  useEffect(() => {
-    const node = localVideoRef.current;
-    if (node && localStream) {
-      node.srcObject = localStream;
-      node.play().catch(console.error);
+      node.play().catch(() => { }); // Silenced error
     }
   }, [localStream]);
 
-  // Callback ref for remote video to handle dynamic mounting
-  const setRemoteVideoRef = (node: HTMLVideoElement | null) => {
+  // Callback ref for remote video - Handles mounting and stream changes reliably
+  const setRemoteVideoRef = useCallback((node: HTMLVideoElement | null) => {
     remoteVideoRef.current = node;
 
     if (node && remoteStream) {
-      console.log("🎬 Video Node Mounted. Attaching stream:", remoteStream.id);
       node.srcObject = remoteStream;
-      node.play().catch(e => console.error("❌ Play failed:", e));
-    }
-  };
-
-  // Re-attach if stream changes while node keeps existing
-  useEffect(() => {
-    const node = remoteVideoRef.current;
-    if (node && remoteStream) {
-      console.log("🔄 Stream updated. Re-attaching to existing node.");
-      node.srcObject = remoteStream;
-      node.play().catch(console.error);
+      node.play().catch(() => { }); // Silenced error
     }
   }, [remoteStream]);
 
