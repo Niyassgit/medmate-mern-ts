@@ -50,7 +50,6 @@ export function initSocket(server: HttpServer) {
     }
 
     void socket.join(`user:${user.id}`);
-
     void socket.on(
       "room:join:product",
       ({ productId }: { productId: string }) => {
@@ -103,16 +102,12 @@ export function initSocket(server: HttpServer) {
       }
     );
 
-    socket.on("call:accepted", async ({ toUserId, answer }) => {
-      try {
-        if (user.role === "doctor") {
-          await acceptRepVideoCallUseCase.execute(toUserId, answer, user.id);
-        } else if (user.role === "rep") {
-          await acceptDoctorVideoCallUseCase.execute(toUserId, answer, user.id);
-        }
-      } catch (error) {
-        logger.error(error);
-      }
+    socket.on("call:accepted", ({ toUserId, answer }) => {
+      console.log(`SocketGateway: Relaying call:accepted from ${user.id} to ${toUserId}`);
+      io.to(`user:${toUserId}`).emit("call:accepted", {
+        fromUserId: user.id,
+        answer
+      });
     });
 
     socket.on("call:ice-candidate", ({ toUserId, candidate }) => {
@@ -122,15 +117,20 @@ export function initSocket(server: HttpServer) {
       });
     });
 
-    socket.on("call:offer",({toUserId,offer})=>{
-      io.to(`user:${toUserId}`).emit("call:offer",{
-        fromUserId:user.id,
+    socket.on("call:offer", ({ toUserId, offer }) => {
+      io.to(`user:${toUserId}`).emit("call:offer", {
+        fromUserId: user.id,
         offer
       })
     })
 
-   
+    socket.on("call:ended", ({ toUserId }) => {
+      io.to(`user:${toUserId}`).emit("call:ended", { fromUserId: user.id });
+    });
+
+
   });
 
   return io;
 }
+
