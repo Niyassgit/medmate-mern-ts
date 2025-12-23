@@ -16,17 +16,24 @@ export function useWebRTC(remoteUserId: string) {
     const targetUser = userIdOverride || remoteUserId;
 
     const peer = new RTCPeerConnection({
-      iceServers: [{ urls: "stun:stun.l.google.com:1930" }],
+      iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
     });
 
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: true,
-    });
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
 
-    setLocalStream(stream);
+      setLocalStream(stream);
 
-    stream.getTracks().forEach((track) => peer.addTrack(track, stream));
+      stream.getTracks().forEach((track) => {
+        peer.addTrack(track, stream);
+      });
+    } catch (err) {
+      console.error("Error getting user media:", err);
+      throw err;
+    }
 
     peer.ontrack = (event) => {
       if (event.streams && event.streams[0]) {
@@ -35,7 +42,7 @@ export function useWebRTC(remoteUserId: string) {
     };
 
     peer.oniceconnectionstatechange = () => {
-      // Monitor connection state if needed
+      // ICE connection state change
     };
 
     peer.onicecandidate = (event) => {
@@ -50,6 +57,7 @@ export function useWebRTC(remoteUserId: string) {
         }
       }
     };
+
     peerRef.current = peer;
     return peer;
   };
@@ -71,7 +79,8 @@ export function useWebRTC(remoteUserId: string) {
 
   // In useWebRTC.ts
   const handleOffer = async (offer: any) => {
-    const peer = await createPeer(); // This already waits for getUserMedia
+    const peer = await createPeer();
+
     await peer.setRemoteDescription(offer);
 
     const answer = await peer.createAnswer();
@@ -89,14 +98,11 @@ export function useWebRTC(remoteUserId: string) {
         try {
           await peer.addIceCandidate(candidate);
         } catch (e) {
-          console.error("useWebRTC: Error adding buffered ICE candidate", e);
+          console.error("Error adding buffered ICE candidate", e);
         }
       }
       pendingCandidates.current = [];
     }
-
-    // Return true to indicate success
-    return true;
   };
 
   const pendingCandidates = useRef<RTCIceCandidate[]>([]);

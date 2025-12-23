@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 interface VideoCallScreenProps {
   isOpen: boolean;
@@ -36,21 +36,46 @@ const VideoCallScreen: React.FC<VideoCallScreenProps> = ({
     return () => clearInterval(interval);
   }, [isOpen]);
 
-  // Handle local video stream
+  // Callback ref for local video
+  const setLocalVideoRef = (node: HTMLVideoElement | null) => {
+    localVideoRef.current = node;
+
+    if (node && localStream) {
+      node.srcObject = localStream;
+      node.muted = true;
+      node.play().catch(console.error);
+    }
+  };
+
+  // Re-attach if stream changes
   useEffect(() => {
-    if (localVideoRef.current && localStream) {
-      localVideoRef.current.srcObject = localStream;
+    const node = localVideoRef.current;
+    if (node && localStream) {
+      node.srcObject = localStream;
+      node.play().catch(console.error);
     }
   }, [localStream]);
 
-  // Handle remote video stream
-  useEffect(() => {
-    if (remoteVideoRef.current && remoteStream) {
-      remoteVideoRef.current.srcObject = remoteStream;
-      // Ensure video plays (some browsers/policies require explicit play)
-      remoteVideoRef.current.play().catch(console.error);
+  // Callback ref for remote video to handle dynamic mounting
+  const setRemoteVideoRef = (node: HTMLVideoElement | null) => {
+    remoteVideoRef.current = node;
+
+    if (node && remoteStream) {
+      console.log("🎬 Video Node Mounted. Attaching stream:", remoteStream.id);
+      node.srcObject = remoteStream;
+      node.play().catch(e => console.error("❌ Play failed:", e));
     }
-  }, [remoteStream, remoteStream?.id]);
+  };
+
+  // Re-attach if stream changes while node keeps existing
+  useEffect(() => {
+    const node = remoteVideoRef.current;
+    if (node && remoteStream) {
+      console.log("🔄 Stream updated. Re-attaching to existing node.");
+      node.srcObject = remoteStream;
+      node.play().catch(console.error);
+    }
+  }, [remoteStream]);
 
   // Format call duration
   const formatDuration = (seconds: number) => {
@@ -90,14 +115,6 @@ const VideoCallScreen: React.FC<VideoCallScreenProps> = ({
 
   if (!isOpen) return null;
 
-  
-  if (!localStream) {
-    return (
-      <div className="fixed inset-0 z-50 bg-gray-900 flex items-center justify-center">
-        <div className="text-white">Setting up camera...</div>
-      </div>
-    );
-  }
   return (
     <div className="fixed inset-0 z-50 bg-gray-900">
       {/* Main Video Container */}
@@ -107,7 +124,7 @@ const VideoCallScreen: React.FC<VideoCallScreenProps> = ({
           {remoteStream ? (
             <video
               key={remoteStream.id}
-              ref={remoteVideoRef}
+              ref={setRemoteVideoRef}
               autoPlay
               playsInline
               className="w-full h-full object-cover"
@@ -127,20 +144,41 @@ const VideoCallScreen: React.FC<VideoCallScreenProps> = ({
               </div>
               <p className="text-white text-xl font-medium">{remoteUserName}</p>
               <p className="text-gray-400 text-sm mt-2">Connecting...</p>
+              {/* Spinner */}
+              <div className="mt-4">
+                <svg
+                  className="animate-spin h-8 w-8 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+              </div>
             </div>
           )}
         </div>
 
         {/* Local Video (Picture-in-Picture) */}
         <div
-          className={`absolute ${
-            isMinimized ? "bottom-24 right-4" : "top-4 right-4"
-          } transition-all duration-300`}
+          className={`absolute ${isMinimized ? "bottom-24 right-4" : "top-4 right-4"
+            } transition-all duration-300`}
         >
           <div
-            className={`${
-              isMinimized ? "w-24 h-32" : "w-40 h-52"
-            } rounded-2xl overflow-hidden shadow-2xl border-2 border-white/20 bg-gray-800 relative group`}
+            className={`${isMinimized ? "w-24 h-32" : "w-40 h-52"
+              } rounded-2xl overflow-hidden shadow-2xl border-2 border-white/20 bg-gray-800 relative group`}
           >
             {isVideoOff ? (
               <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-700 to-gray-800">
@@ -172,14 +210,19 @@ const VideoCallScreen: React.FC<VideoCallScreenProps> = ({
                   />
                 </svg>
               </div>
-            ) : (
+            ) : localStream ? (
               <video
-                ref={localVideoRef}
+                key={localStream.id}
+                ref={setLocalVideoRef}
                 autoPlay
                 playsInline
                 muted
                 className="w-full h-full object-cover mirror"
               />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-700 to-gray-800">
+                <div className="animate-spin h-6 w-6 border-2 border-white border-t-transparent rounded-full"></div>
+              </div>
             )}
             <button
               onClick={() => setIsMinimized(!isMinimized)}
@@ -248,11 +291,10 @@ const VideoCallScreen: React.FC<VideoCallScreenProps> = ({
             {/* Toggle Microphone */}
             <button
               onClick={handleToggleMute}
-              className={`group relative w-14 h-14 rounded-full flex items-center justify-center transition-all duration-200 shadow-lg ${
-                isMuted
-                  ? "bg-red-500 hover:bg-red-600"
-                  : "bg-white/20 hover:bg-white/30 backdrop-blur-md"
-              }`}
+              className={`group relative w-14 h-14 rounded-full flex items-center justify-center transition-all duration-200 shadow-lg ${isMuted
+                ? "bg-red-500 hover:bg-red-600"
+                : "bg-white/20 hover:bg-white/30 backdrop-blur-md"
+                }`}
               aria-label={isMuted ? "Unmute" : "Mute"}
             >
               {isMuted ? (
@@ -319,11 +361,10 @@ const VideoCallScreen: React.FC<VideoCallScreenProps> = ({
             {/* Toggle Video */}
             <button
               onClick={handleToggleVideo}
-              className={`group relative w-14 h-14 rounded-full flex items-center justify-center transition-all duration-200 shadow-lg ${
-                isVideoOff
-                  ? "bg-red-500 hover:bg-red-600"
-                  : "bg-white/20 hover:bg-white/30 backdrop-blur-md"
-              }`}
+              className={`group relative w-14 h-14 rounded-full flex items-center justify-center transition-all duration-200 shadow-lg ${isVideoOff
+                ? "bg-red-500 hover:bg-red-600"
+                : "bg-white/20 hover:bg-white/30 backdrop-blur-md"
+                }`}
               aria-label={isVideoOff ? "Turn on camera" : "Turn off camera"}
             >
               {isVideoOff ? (
