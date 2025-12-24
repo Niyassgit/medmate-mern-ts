@@ -317,14 +317,20 @@ export const ChatView = ({ conversation, owner }: ChatViewProps) => {
             className="h-9 w-9"
             onClick={(e) => {
               e.stopPropagation();
-              // For doctors, the recipient is the repo (owner)
-              // For reps, it's the conversation partner
+              // For doctors, the recipient is the rep (owner)
+              // For reps, it's the conversation partner (doctor)
               const recipientId = owner === Role.DOCTOR
                 ? conversation.repUserId
                 : conversation.doctorUserId;
 
               if (recipientId) {
-                startCall(recipientId, conversation.name, conversation.profilImage);
+                startCall(
+                  recipientId,
+                  conversation.name,
+                  conversation.profilImage,
+                  conversation.repId,
+                  conversation.doctorId
+                );
               } else {
                 console.error("Recipient ID not found", conversation);
               }

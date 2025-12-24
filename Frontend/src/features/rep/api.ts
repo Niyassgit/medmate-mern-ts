@@ -271,3 +271,8 @@ export const exportOrders = async (startDate?: string, endDate?: string) => {
   });
   return res.data;
 };
+
+export const callDoctor = async (doctorId: string) => {
+  const res = await api.post(RepEndpoints.CALL_DOCTOR(doctorId));
+  return res.data;
+};

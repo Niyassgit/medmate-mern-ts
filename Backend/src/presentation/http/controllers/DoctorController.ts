@@ -435,7 +435,12 @@ export class DoctorController {
   makeCall = async (req: Request, res: Response) => {
     const userId = GetOptionalUserId(req.user);
     const { repId } = req.params;
-    await this._makeVideoCallWithRepUseCase.execute(repId, userId);
+    const error = await this._makeVideoCallWithRepUseCase.execute(repId, userId);
+    if (error) {
+      return res
+        .status(HttpStatusCode.BAD_REQUEST)
+        .json({ success: false, message: error });
+    }
     return res.sendStatus(HttpStatusCode.OK);
   };
 

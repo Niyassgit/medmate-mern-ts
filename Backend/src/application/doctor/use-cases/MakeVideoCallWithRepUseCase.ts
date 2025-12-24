@@ -8,19 +8,27 @@ import { ErrorMessages } from "../../../shared/Messages";
 import { IMakeVideoCallWithRepUseCase } from "../interfaces/IMakeVideoCallWithrepUseCase";
 
 export class MakeVideoCallWithRepUseCase
-  implements IMakeVideoCallWithRepUseCase
-{
+  implements IMakeVideoCallWithRepUseCase {
   constructor(
     private _videoCallEventPubnlisher: IVideoCallEventPublisher,
     private _medicalRepRepository: IMedicalRepRepository
-  ) {}
-  async execute(repId: string, userId?: string): Promise<void> {
+  ) { }
+  async execute(repId: string, userId?: string): Promise<string | void> {
     if (!userId) throw new UnautharizedError(ErrorMessages.UNAUTHORIZED);
     const { repUserId } = await this._medicalRepRepository.getUserIdByRepId(
       repId
     );
+    const medicalRep = await this._medicalRepRepository.getMedicalRepById(
+      repId
+    );
+    if (
+      !medicalRep?.subscriptionStatus ||
+      !medicalRep?.subscriptionEnd ||
+      new Date() > new Date(medicalRep.subscriptionEnd)
+    )
+      return ErrorMessages.REP_SUBSCRIPTION_NEEDED;
+
     if (!repUserId) throw new BadRequestError(ErrorMessages.USER_NOT_FOUND);
     await this._videoCallEventPubnlisher.publishIncomingCall(repUserId, userId);
-    
   }
 }

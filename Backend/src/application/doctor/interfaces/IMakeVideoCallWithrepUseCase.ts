@@ -1,3 +1,3 @@
-export interface IMakeVideoCallWithRepUseCase{
-    execute(repId:string,userId?:string):Promise<void>;
+export interface IMakeVideoCallWithRepUseCase {
+    execute(repId: string, userId?: string): Promise<string | void>;
 }

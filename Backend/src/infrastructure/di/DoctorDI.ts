@@ -59,7 +59,7 @@ import { ChangePasswordUseCase } from "../../application/common/use-cases/Change
 import { VerifyOldPasswordUseCase } from "../../application/common/use-cases/VerifyOldPasswordUseCase";
 import { MakeVideoCallWithRepUseCase } from "../../application/doctor/use-cases/MakeVideoCallWithRepUseCase";
 import { VideoCallEventPublisher } from "../realtime/publishers/VideoCallEventPublisher";
-import { AcceptRepVideoCallRequestUseCase } from "../../application/doctor/use-cases/AcceptRepVideoCallRequestUseCase";
+
 
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
@@ -312,10 +312,6 @@ const makeVideoCallWithRepUseCase = new MakeVideoCallWithRepUseCase(
   medicalRepRepository
 );
 
-const acceptRepVideoCallRequestUseCase = new AcceptRepVideoCallRequestUseCase(
-  medicalRepRepository,
-  videoCallEventPublisher
-);
 
 export const doctorController = new DoctorController(
   createDoctorUseCase,

@@ -7,11 +7,7 @@ import { ErrorMessages } from "../../shared/Messages";
 import { AuthenticatedSocket, AuthenticatedUser } from "../types/SocketTypes";
 import { JwtPayload } from "../../domain/common/types/JwtPayload";
 import logger from "../logger/Logger";
-import {
-  acceptDoctorVideoCallUseCase,
-  videoCallEventPublisher,
-  acceptRepVideoCallUseCase,
-} from "../di/VideoCallDi";
+
 
 export let io: Server;
 
@@ -126,6 +122,10 @@ export function initSocket(server: HttpServer) {
 
     socket.on("call:ended", ({ toUserId }) => {
       io.to(`user:${toUserId}`).emit("call:ended", { fromUserId: user.id });
+    });
+
+    socket.on("call:rejected", ({ toUserId }) => {
+      io.to(`user:${toUserId}`).emit("call:rejected", { fromUserId: user.id });
     });
 
 

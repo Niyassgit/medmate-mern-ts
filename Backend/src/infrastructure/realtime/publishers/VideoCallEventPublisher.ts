@@ -43,6 +43,11 @@ export class VideoCallEventPublisher implements IVideoCallEventPublisher {
     io.to(room).emit("call:ended", { fromUserId });
   }
 
+  async publishCallRejected(toUserId: string, fromUserId: string): Promise<void> {
+    const room = `user:${toUserId}`;
+    io.to(room).emit("call:rejected", { fromUserId });
+  }
+
   async publishOffer(
     toUserId: string,
     fromUserId: string,

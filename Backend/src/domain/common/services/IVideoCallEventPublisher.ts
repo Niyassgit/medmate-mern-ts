@@ -23,4 +23,6 @@ export interface IVideoCallEventPublisher {
   ): Promise<void>;
 
   publishCallEnded(toUserId: string, fromUserId: string): Promise<void>;
+
+  publishCallRejected(toUserId: string, fromUserId: string): Promise<void>;
 }

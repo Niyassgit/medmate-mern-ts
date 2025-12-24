@@ -68,7 +68,6 @@ import { ExportRepOrdersUseCase } from "../../application/medicalRep/use-cases/E
 import { ExcelService } from "../services/ExcelService";
 import { VideoCallEventPublisher } from "../realtime/publishers/VideoCallEventPublisher";
 import { MakeVideoCallWithDoctorUseCase } from "../../application/medicalRep/use-cases/MakeVideoCallWithDoctorUseCase";
-import { AccepDoctorVideoCallRequestUseCase } from "../../application/medicalRep/use-cases/AcceptDoctorVideoCallRequestUseCase";
 
 const medicalRepRepository = new MedicalRepRepository();
 const doctorRepository = new DoctorRepository();
@@ -341,15 +340,9 @@ const exportRepOrdersUseCase = new ExportRepOrdersUseCase(
 );
 
 const makeVideoCallWithDoctorUseCase = new MakeVideoCallWithDoctorUseCase(
-  doctorRepository,
-  videoCallEventPublisher
-);
-
-
-
-const acceptDoctorVideoCallRequestUseCase = new AccepDoctorVideoCallRequestUseCase(
-  doctorRepository,
-  videoCallEventPublisher
+  doctorRepository, 
+  videoCallEventPublisher,
+  medicalRepRepository
 );
 
 export const medicalRepController = new MedicalRepController(
@@ -395,6 +388,5 @@ export const medicalRepController = new MedicalRepController(
   getOrderDetailsUseCase,
   repBusinessAnalyticsUseCase,
   exportRepOrdersUseCase,
-  makeVideoCallWithDoctorUseCase,
+  makeVideoCallWithDoctorUseCase
 );
-
