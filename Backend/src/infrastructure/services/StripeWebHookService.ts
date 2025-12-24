@@ -8,13 +8,18 @@ import { PaymentStatus, OrderStatus } from "@prisma/client";
 import { IMedicalRepRepository } from "../../domain/medicalRep/repositories/IMedicalRepRepository";
 import { ISubscriptionHistoryRepository } from "../../domain/subscription/repositories/ISubscriptionHistoryRepository";
 import { ISubscriptionRepositoy } from "../../domain/subscription/repositories/ISubscriptionRepository";
-import { SubscriptionHistoryMapper } from "../mappers/SubscriptionHistoryMapper";
+import { ICommissionRepository } from "../../domain/Commission/repositories/ICommissionRepository";
+import { IOrderRepository } from "../../domain/order/repositories/IOrderRepository";
+import { ICommission } from "../../domain/Commission/entities/ICommission";
+import { CommissionStatus } from "../../shared/Enums";
 
 export class stripeWebhookService implements IStripeWebhookService {
   constructor(
     private _medicalRepRepository: IMedicalRepRepository,
     private _subscriptionHistoryRepository: ISubscriptionHistoryRepository,
-    private _subscriptionRepository: ISubscriptionRepositoy
+    private _subscriptionRepository: ISubscriptionRepositoy,
+    private _orderRepository: IOrderRepository,
+    private _commissionRepository: ICommissionRepository
   ) { }
 
   async handleCheckoutCompleted(event: StripeWebhookEvent): Promise<void> {
@@ -37,6 +42,33 @@ export class stripeWebhookService implements IStripeWebhookService {
           paymentId: paymentId,
         },
       });
+
+      const orderDetails = await this._orderRepository.findOrderDetailsById(
+        orderId
+      );
+      if (!orderDetails || !orderDetails.prescription) {
+        throw new BadRequestError(ErrorMessages.ORDER_NOT_FOUND);
+      }
+
+      const commissions = orderDetails.prescription.items.map((item) => {
+        const mrp = item.product.mrp;
+        const ptr = item.product.ptr;
+
+        const profit = mrp - ptr;
+        const adminCut = +(profit * 0.05).toFixed(2);
+        const doctorCut = +(profit - adminCut).toFixed(2);
+        return {
+          orderId,
+          productId: item.product.id,
+          doctorId: orderDetails.prescription!.doctor.id,
+          mrp,
+          ptr,
+          adminCut,
+          doctorCut,
+          status: CommissionStatus.PENDING,
+        };
+      });
+      await this._commissionRepository.createCommission(commissions);
       return;
     }
 
@@ -64,8 +96,9 @@ export class stripeWebhookService implements IStripeWebhookService {
 
     const end = new Date(baseDate);
 
-
-    const plan = await this._subscriptionRepository.findSubscriptionById(planId);
+    const plan = await this._subscriptionRepository.findSubscriptionById(
+      planId
+    );
 
     if (!plan) {
       throw new BadRequestError(ErrorMessages.SUB_NOT_FOUND);
@@ -91,7 +124,6 @@ export class stripeWebhookService implements IStripeWebhookService {
       start,
       end
     );
-
 
     await this._subscriptionHistoryRepository.createHistory({
       repId,

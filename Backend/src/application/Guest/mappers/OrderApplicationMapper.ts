@@ -45,15 +45,25 @@ export class OrderApplicationMapper {
             items: itemsWithSignedUrls,
         };
     }
-    static async toDetailDomain(data: IOrderDetail, storageService: IStorageService): Promise<OrderDetailDTO> {
-        const itemsWithSignedUrls = data.prescription?.items
+    static async toDetailDomain(data: IOrderDetail, storageService: IStorageService, repId?: string): Promise<OrderDetailDTO> {
+        let items = data.prescription?.items || [];
+        let totalAmount = data.totalAmount;
+
+        if (repId) {
+            items = items.filter((item: any) => String(item.product.repId) === String(repId));
+            // Recalculate total for Rep view based on their items only
+            totalAmount = items.reduce((sum: number, item: any) => sum + ((item.product.ptr || 0) * item.quantity), 0);
+        }
+
+        const itemsWithSignedUrls = items.length > 0
             ? await Promise.all(
-                data.prescription.items.map(async (item: any) => ({
+                items.map(async (item: any) => ({
                     name: item.product.name,
                     quantity: item.quantity,
-                    image: item.product.imageUrl[0]
+                    image: item.product.imageUrl && item.product.imageUrl[0]
                         ? await storageService.generateSignedUrl(item.product.imageUrl[0])
                         : undefined,
+                    price: item.product.ptr // Correctly mapped to PTR
                 }))
             )
             : [];
@@ -63,7 +73,7 @@ export class OrderApplicationMapper {
             createdAt: data.createdAt.toISOString(),
             status: data.status,
             paymentStatus: data.paymentStatus,
-            totalAmount: data.totalAmount,
+            totalAmount: totalAmount,
             paymentId: data.paymentId || "",
             guest: {
                 name: data.guest.name,
@@ -71,6 +81,7 @@ export class OrderApplicationMapper {
                 phone: data.guest.phone,
             },
             address: {
+                id: data.address.id || "",
                 street: data.address.street,
                 city: data.address.city,
                 state: data.address.state,

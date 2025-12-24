@@ -35,7 +35,7 @@ const OrderCancelPage = () => {
                         onClick={() => navigate("/guest/prescriptions")}
                         className="w-full bg-gray-100 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors"
                     >
-                        Back to Payment
+                        Back to Prescriptions
                     </button>
                 </div>
             </motion.div>

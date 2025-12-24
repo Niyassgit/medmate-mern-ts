@@ -51,7 +51,7 @@ model User {
   superAdmin       SuperAdmin?
   doctor           Doctor?
   medicalRep       MedicalRep?
-  guest            Guest?  
+  guest            Guest?
   otpVerifications otpVerification[]
 }
 
@@ -215,28 +215,27 @@ model MedicalRepTerritory {
   territoryId String @db.ObjectId
 
   rep       MedicalRep? @relation(fields: [repId], references: [id])
-  territory Territory  @relation(fields: [territoryId], references: [id])
+  territory Territory   @relation(fields: [territoryId], references: [id])
 }
 
 model ProductPost {
-  id                String             @id @default(auto()) @map("_id") @db.ObjectId
-  repId             String             @db.ObjectId
-  title             String
-  description       String
-  isArchived        Boolean            @default(false)
-  imageUrl          String[]
-  brand             String
-  territoryId       String?            @db.ObjectId
-  useCases          String[]
-  ingredients       String[]
-  termsOfUse        String
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
-  rep               MedicalRep         @relation(fields: [repId], references: [id])
-  territory         Territory?         @relation(fields: [territoryId], references: [id])
-  likes             Like[]
-  interests         Interest[]
-  commissions       Commission[]
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  repId       String     @db.ObjectId
+  title       String
+  description String
+  isArchived  Boolean    @default(false)
+  imageUrl    String[]
+  brand       String
+  territoryId String?    @db.ObjectId
+  useCases    String[]
+  ingredients String[]
+  termsOfUse  String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  rep         MedicalRep @relation(fields: [repId], references: [id])
+  territory   Territory? @relation(fields: [territoryId], references: [id])
+  likes       Like[]
+  interests   Interest[]
 }
 
 model Like {
@@ -438,13 +437,13 @@ model SubscriptionHistory {
 
 model Guest {
   id           String  @id @default(auto()) @map("_id") @db.ObjectId
-  loginId      String? @unique @db.ObjectId  
+  loginId      String? @unique @db.ObjectId
   doctorId     String? @db.ObjectId
   territoryId  String? @db.ObjectId
   name         String
   phone        String?
   email        String?
-  isRegistered Boolean @default(false)  
+  isRegistered Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -456,12 +455,11 @@ model Guest {
   orders        Order[]
   addresses     Address[]
 
-
+  @@unique([email, doctorId], name: "unique_guest_per_doctor")
   @@index([doctorId])
   @@index([email])
   @@index([isRegistered])
   @@index([territoryId])
-  @@unique([email, doctorId], name: "unique_guest_per_doctor")
 }
 
 model Address {
@@ -481,7 +479,7 @@ model Address {
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
 
-  guest  Guest  @relation(fields: [guestId], references: [id])
+  guest  Guest   @relation(fields: [guestId], references: [id])
   orders Order[]
 
   @@index([guestId])
@@ -501,10 +499,10 @@ model Prescription {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  doctor  Doctor             @relation(fields: [doctorId], references: [id])
-  guest   Guest              @relation(fields: [guestId], references: [id])
-  items   PrescriptionItem[]
-  order   Order?
+  doctor Doctor             @relation(fields: [doctorId], references: [id])
+  guest  Guest              @relation(fields: [guestId], references: [id])
+  items  PrescriptionItem[]
+  order  Order?
 }
 
 model PrescriptionItem {
@@ -514,8 +512,8 @@ model PrescriptionItem {
   dosage         String?
   quantity       Int     @default(1)
 
-  prescription  Prescription @relation(fields: [prescriptionId], references: [id])
-  product       Product      @relation(fields: [productId], references: [id])
+  prescription Prescription @relation(fields: [prescriptionId], references: [id])
+  product      Product      @relation(fields: [productId], references: [id])
 }
 
 enum PrescriptionStatus {
@@ -545,10 +543,10 @@ model Order {
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
-  guest         Guest         @relation(fields: [guestId], references: [id])
-  prescription  Prescription  @relation(fields: [prescriptionId], references: [id])
-  address       Address       @relation(fields: [addressId], references: [id])
-  commission    Commission[]
+  guest        Guest        @relation(fields: [guestId], references: [id])
+  prescription Prescription @relation(fields: [prescriptionId], references: [id])
+  address      Address      @relation(fields: [addressId], references: [id])
+  commission   Commission[]
 }
 
 enum OrderStatus {
@@ -581,9 +579,9 @@ model Commission {
   createdAt DateTime         @default(now())
   updatedAt DateTime         @updatedAt
 
-  order   Order       @relation(fields: [orderId], references: [id])
-  doctor  Doctor      @relation(fields: [doctorId], references: [id])
-  product ProductPost @relation(fields: [productId], references: [id])
+  order   Order   @relation(fields: [orderId], references: [id])
+  doctor  Doctor  @relation(fields: [doctorId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
 }
 
 enum CommissionStatus {
@@ -606,7 +604,7 @@ model Product {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  rep MedicalRep @relation("RepCatalogProducts", fields: [repId], references: [id])
-
+  rep               MedicalRep         @relation("RepCatalogProducts", fields: [repId], references: [id])
+  commission        Commission[]
   prescriptionItems PrescriptionItem[]
 }

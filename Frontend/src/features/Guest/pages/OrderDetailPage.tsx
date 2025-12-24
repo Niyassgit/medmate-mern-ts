@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Calendar, Package, User, CreditCard, MapPin, Building2, Stethoscope, Mail, Phone } from 'lucide-react';
-import { getOrderDetails } from '../api';
+import { getOrderDetails, makePayment } from '../api';
 import { OrderStatus, PaymentStatus } from '@/types/PaymentTypes';
 import { SpinnerButton } from '@/components/shared/SpinnerButton';
+import toast from 'react-hot-toast';
+import { Loader2 } from 'lucide-react';
 
 interface OrderDetail {
     id: string;
@@ -18,6 +20,7 @@ interface OrderDetail {
         phone: string;
     };
     address: {
+        id: string;
         street: string;
         city: string;
         state: string;
@@ -46,6 +49,7 @@ export default function OrderDetailPage() {
     const [order, setOrder] = useState<OrderDetail | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [processingPayment, setProcessingPayment] = useState(false);
 
     useEffect(() => {
         const fetchOrder = async () => {
@@ -99,6 +103,24 @@ export default function OrderDetailPage() {
             case PaymentStatus.FAILED: return 'bg-red-100 text-red-800';
             case PaymentStatus.REFUNDED: return 'bg-orange-100 text-orange-800';
             default: return 'bg-gray-100 text-gray-800';
+        }
+    };
+
+    const handlePayment = async () => {
+        if (!order) return;
+        try {
+            setProcessingPayment(true);
+            const sessionUrl = await makePayment(order.prescription.id, order.address.id, 'card');
+            if (sessionUrl) {
+                window.location.href = sessionUrl;
+            } else {
+                toast.error("Failed to initiate payment");
+            }
+        } catch (error) {
+            console.error("Payment failed", error);
+            toast.error("Payment failed. Please try again.");
+        } finally {
+            setProcessingPayment(false);
         }
     };
 
@@ -256,6 +278,25 @@ export default function OrderDetailPage() {
                                     </div>
                                 </div>
 
+                                {order.paymentStatus === PaymentStatus.PENDING && (
+                                    <button
+                                        onClick={handlePayment}
+                                        disabled={processingPayment}
+                                        className="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+                                    >
+                                        {processingPayment ? (
+                                            <>
+                                                <Loader2 className="w-4 h-4 animate-spin" />
+                                                Processing...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <CreditCard className="w-4 h-4" />
+                                                Pay Now
+                                            </>
+                                        )}
+                                    </button>
+                                )}
                             </div>
                         </div>
 

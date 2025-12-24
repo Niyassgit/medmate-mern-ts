@@ -42,4 +42,5 @@ export const DoctorEndpoints = {
   GET_ALL_PRESCRIPTIONS: `/doctor/prescriptions`,
   VERIFY_PASSWORD: `/doctor/verify-password`,
   CHANGE_PASSWORD: `/doctor/change-password`,
+  CALL_REP: (repId: string) => `/doctor/call-rep/${repId}`,
 };

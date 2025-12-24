@@ -40,6 +40,7 @@ import { IGetAllPrescriptionsMadeUseCase } from "../../../application/doctor/int
 import { IChangePasswordUseCase } from "../../../application/common/interfaces/IChangePasswordUseCase";
 import { Role } from "../../../shared/Enums";
 import { IVerifyOldPasswordUseCase } from "../../../application/common/interfaces/IverifyOldPasswordUsesCase";
+import { IMakeVideoCallWithRepUseCase } from "../../../application/doctor/interfaces/IMakeVideoCallWithrepUseCase";
 
 export class DoctorController {
   constructor(
@@ -75,8 +76,9 @@ export class DoctorController {
     private _createGuestByDoctorUseCase: ICreateGuestByDoctorUseCase,
     private _getAllPrescriptionsMadeUseCase: IGetAllPrescriptionsMadeUseCase,
     private _changePasswordUseCase: IChangePasswordUseCase,
-    private _verifyOldPasswordUseCase: IVerifyOldPasswordUseCase
-  ) {}
+    private _verifyOldPasswordUseCase: IVerifyOldPasswordUseCase,
+    private _makeVideoCallWithRepUseCase: IMakeVideoCallWithRepUseCase,
+  ) { }
 
   createDoctor = async (req: Request, res: Response) => {
     const licenseImageUrl = req.file
@@ -429,4 +431,17 @@ export class DoctorController {
       .status(HttpStatusCode.OK)
       .json({ success: true, message: response });
   };
+
+  makeCall = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { repId } = req.params;
+    const error = await this._makeVideoCallWithRepUseCase.execute(repId, userId);
+    if (error) {
+      return res
+        .status(HttpStatusCode.BAD_REQUEST)
+        .json({ success: false, message: error });
+    }
+    return res.sendStatus(HttpStatusCode.OK);
+  };
+
 }

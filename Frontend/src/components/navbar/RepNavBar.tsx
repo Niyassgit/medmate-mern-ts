@@ -155,6 +155,21 @@ const RepNavbar = () => {
                     </div>
                   )}
                 </NavLink>
+
+                <NavLink
+                  to="/rep/business/stat"
+                  onClick={() => setBusinessOpen(false)}
+                >
+                  {({ isActive }) => (
+                    <div
+                      className={`px-4 py-2 hover:bg-gray-100 cursor-pointer ${
+                        isActive ? "text-blue-600 font-medium" : ""
+                      }`}
+                    >
+                      Business Log
+                    </div>
+                  )}
+                </NavLink>
               </div>
             )}
           </div>
@@ -253,6 +268,13 @@ const RepNavbar = () => {
             className="ml-4 block text-black hover:text-blue-500"
           >
             Orders
+          </NavLink>
+          <NavLink
+            to="/rep/business/stat"
+            onClick={() => setMobileOpen(false)}
+            className="ml-4 block text-black hover:text-blue-500"
+          >
+            Business Log
           </NavLink>
 
           <NavLink

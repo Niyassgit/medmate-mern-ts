@@ -71,10 +71,14 @@ export const ErrorMessages = {
   ADDRESS_NOT_FOUND: "Address Not Found!",
   PRESCRIPTION_NOT_FOUND: "Prescription not found",
   ORDER_NOT_FOUND: "Order not found",
-  ALREADY_PAID:"Order already paid for this prescription",
-  GUEST_CREATE:"Unable to create guest!..try again later",
-  PASSWORD_UNABLE_TO_CHANGE:"Password  unable to changhe try again later!",
-  PASSWORD_NOT_MATCHED:"Password not matched,insert correct password"
+  ALREADY_PAID: "Order already paid for this prescription",
+  GUEST_CREATE: "Unable to create guest!..try again later",
+  PASSWORD_UNABLE_TO_CHANGE: "Password  unable to changhe try again later!",
+  PASSWORD_NOT_MATCHED: "Password not matched,insert correct password",
+  SUBSCRIPTION_PLAN_NEEDED:
+    "Subscription plan needed to make the video call with doctor",
+  REP_SUBSCRIPTION_NEEDED:
+    "Medical Rep doesnt contains a valid Subscription plan to make this call",
 } as const;
 
 export const SuccessMessages = {
@@ -111,9 +115,9 @@ export const SuccessMessages = {
   PRESCRIPTION_CREATED: "Prescription created successfuly",
   ADDRESS_SUCCESS: "Address created successfully",
   ADDRESS_DELETE: "Address deleted successfully",
-  GUEST_CREATE:"New Guest added successfully",
-  UNARCHIVE_SUCCESS:"Post unarchived successfully",
-  PASSWORD_MATCHED:"Password has been succssfuly verified"
+  GUEST_CREATE: "New Guest added successfully",
+  UNARCHIVE_SUCCESS: "Post unarchived successfully",
+  PASSWORD_MATCHED: "Password has been succssfuly verified",
 } as const;
 
 export const NotificationMessages = {

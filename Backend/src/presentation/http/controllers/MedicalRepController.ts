@@ -47,6 +47,10 @@ import { ProductPostListStatus, Role } from "../../../shared/Enums";
 import { IChangePasswordUseCase } from "../../../application/common/interfaces/IChangePasswordUseCase";
 import { IVerifyOldPasswordUseCase } from "../../../application/common/interfaces/IverifyOldPasswordUsesCase";
 import { IGetAllOrdersUseCase } from "../../../application/medicalRep/interfaces/IGetAllOrdersUseCase";
+import { IGetOrderDetailsUseCase } from "../../../application/medicalRep/interfaces/IGetOrderDetailsUseCase";
+import { IRepBusinessAnalyticsUseCase } from "../../../application/medicalRep/interfaces/IRepBusinessAnalyticsUseCase";
+import { IExportRepOrdersUseCase } from "../../../application/medicalRep/interfaces/IExportRepOrdersUseCase";
+import { IMakeVideoCallWithDoctorUseCase } from "../../../application/medicalRep/interfaces/IMakeVideoCallWithDoctorUseCase";
 
 export class MedicalRepController {
   constructor(
@@ -88,8 +92,12 @@ export class MedicalRepController {
     private _updateProductUseCase: IEditProductUseCase,
     private _changePasswordUseCase: IChangePasswordUseCase,
     private _verifyOldPasswordUseCase: IVerifyOldPasswordUseCase,
-    private _getAllOrdersUseCase: IGetAllOrdersUseCase
-  ) {}
+    private _getAllOrdersUseCase: IGetAllOrdersUseCase,
+    private _getOrderDetailsUseCase: IGetOrderDetailsUseCase,
+    private _repBusinessAnalyticsUseCase: IRepBusinessAnalyticsUseCase,
+    private _exportRepOrdersUseCase: IExportRepOrdersUseCase,
+    private _videoCallWithDoctorUseCase: IMakeVideoCallWithDoctorUseCase,
+  ) { }
 
   createMedicalRep = async (req: Request, res: Response) => {
     const companyLogoUrl = req.file
@@ -527,5 +535,64 @@ export class MedicalRepController {
     const userId = GetOptionalUserId(req.user);
     const response = await this._getAllOrdersUseCase.execute(userId);
     return res.status(HttpStatusCode.OK).json({ success: true, res: response });
+  };
+
+  getOrderDetails = async (req: Request, res: Response) => {
+    const { orderId } = req.params;
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._getOrderDetailsUseCase.execute(
+      orderId,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  BusinessAnalytics = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { startDate, endDate } = req.query;
+    const response = await this._repBusinessAnalyticsUseCase.execute(
+      userId,
+      startDate as string | undefined,
+      endDate as string | undefined
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  exportOrders = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { startDate, endDate } = req.query;
+
+    const buffer = await this._exportRepOrdersUseCase.execute(
+      userId,
+      startDate as string | undefined,
+      endDate as string | undefined
+    );
+
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=" + "orders_report.xlsx"
+    );
+
+    return res.end(buffer);
+  };
+
+  callDoctor = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { doctorId } = req.params;
+    const error = await this._videoCallWithDoctorUseCase.execute(doctorId, userId);
+    if (error) {
+      return res
+        .status(HttpStatusCode.BAD_REQUEST)
+        .json({ success: false, message: error });
+    }
+    return res.sendStatus(HttpStatusCode.OK);
   };
 }

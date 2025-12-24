@@ -8,6 +8,7 @@ import { AuthenticatedSocket, AuthenticatedUser } from "../types/SocketTypes";
 import { JwtPayload } from "../../domain/common/types/JwtPayload";
 import logger from "../logger/Logger";
 
+
 export let io: Server;
 
 export function initSocket(server: HttpServer) {
@@ -45,7 +46,6 @@ export function initSocket(server: HttpServer) {
     }
 
     void socket.join(`user:${user.id}`);
-
     void socket.on(
       "room:join:product",
       ({ productId }: { productId: string }) => {
@@ -97,7 +97,40 @@ export function initSocket(server: HttpServer) {
           .emit("user:stopped_typing", { userId, conversationId });
       }
     );
+
+    socket.on("call:accepted", ({ toUserId, answer }) => {
+      console.log(`SocketGateway: Relaying call:accepted from ${user.id} to ${toUserId}`);
+      io.to(`user:${toUserId}`).emit("call:accepted", {
+        fromUserId: user.id,
+        answer
+      });
+    });
+
+    socket.on("call:ice-candidate", ({ toUserId, candidate }) => {
+      io.to(`user:${toUserId}`).emit("call:ice-candidate", {
+        fromUserId: user.id,
+        candidate,
+      });
+    });
+
+    socket.on("call:offer", ({ toUserId, offer }) => {
+      io.to(`user:${toUserId}`).emit("call:offer", {
+        fromUserId: user.id,
+        offer
+      })
+    })
+
+    socket.on("call:ended", ({ toUserId }) => {
+      io.to(`user:${toUserId}`).emit("call:ended", { fromUserId: user.id });
+    });
+
+    socket.on("call:rejected", ({ toUserId }) => {
+      io.to(`user:${toUserId}`).emit("call:rejected", { fromUserId: user.id });
+    });
+
+
   });
 
   return io;
 }
+

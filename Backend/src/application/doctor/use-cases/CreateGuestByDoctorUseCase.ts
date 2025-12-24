@@ -1,14 +1,15 @@
 import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRepository";
 import { IGuestRepository } from "../../../domain/Patient/repositories/IGuestRepositories";
-import { ErrorMessages, SuccessMessages } from "../../../shared/Messages";
+import { ErrorMessages } from "../../../shared/Messages";
 import {
   BadRequestError,
   ConflictError,
   UnautharizedError,
-} from "../../errors";
+} from "../../../domain/common/errors";
 import { ICreateGuestByDoctorUseCase } from "../interfaces/ICreateGuestByDoctorUseCase";
 import { CreateGuestByDoctorDTO } from "../dto/CreateGuestByDoctorDTO";
 import { GuestMapper } from "../../../infrastructure/mappers/GuestMapper";
+import { IGuest } from "../../../domain/Guest/entities/IGuest";
 
 export class CreateGuestByDoctorUseCase implements ICreateGuestByDoctorUseCase {
   constructor(
@@ -16,7 +17,7 @@ export class CreateGuestByDoctorUseCase implements ICreateGuestByDoctorUseCase {
     private _guestRepository: IGuestRepository
   ) {}
 
-  async execute(dto: CreateGuestByDoctorDTO, userId?: string): Promise<string> {
+  async execute(dto: CreateGuestByDoctorDTO, userId?: string): Promise<IGuest> {
     if (!userId) throw new UnautharizedError(ErrorMessages.UNAUTHORIZED);
 
     const { doctorId } = await this._doctorRepository.getDoctorIdByUserId(
@@ -36,6 +37,6 @@ export class CreateGuestByDoctorUseCase implements ICreateGuestByDoctorUseCase {
     const guestEntity = GuestMapper.toGuestEntityByDoctor(dto, doctorId);
     const guest = await this._guestRepository.createGuest(guestEntity);
     if (!guest) throw new BadRequestError(ErrorMessages.GUEST_CREATE);
-    return SuccessMessages.GUEST_CREATE;
+    return guest;
   }
 }

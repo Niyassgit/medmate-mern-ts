@@ -41,7 +41,7 @@ export class OrderMapper {
                 quantity: item.quantity,
                 image: item.product.imageUrl[0],
                 ptr: item.product.ptr,
-                repId: item.product.repId
+                repId: String(item.product.repId)
             }))
         };
     }

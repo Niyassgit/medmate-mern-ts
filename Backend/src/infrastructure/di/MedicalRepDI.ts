@@ -62,6 +62,12 @@ import { GuestRepository } from "../repositories/GuestRepository";
 import { VerifyOldPasswordUseCase } from "../../application/common/use-cases/VerifyOldPasswordUseCase";
 import { GetAllOrdersUseCase } from "../../application/medicalRep/use-cases/GetAllOrdersUseCase";
 import { OrderRepository } from "../repositories/OrderRepository";
+import { GetOrderDetailsUseCase } from "../../application/medicalRep/use-cases/GetOrderDetailsUseCase";
+import { RepBusinessAnalyticsUseCase } from "../../application/medicalRep/use-cases/RepBusinessAnalyticsUseCase";
+import { ExportRepOrdersUseCase } from "../../application/medicalRep/use-cases/ExportRepOrdersUseCase";
+import { ExcelService } from "../services/ExcelService";
+import { VideoCallEventPublisher } from "../realtime/publishers/VideoCallEventPublisher";
+import { MakeVideoCallWithDoctorUseCase } from "../../application/medicalRep/use-cases/MakeVideoCallWithDoctorUseCase";
 
 const medicalRepRepository = new MedicalRepRepository();
 const doctorRepository = new DoctorRepository();
@@ -88,7 +94,10 @@ const subscriptionHistoryRepository = new SubscriptionHistoryRepository();
 const connectionRequestLogRepository = new ConnectionRequestLogRepository();
 const productRepository = new ProductRepository();
 const guestRepository = new GuestRepository();
+
 const orderRepository = new OrderRepository();
+const excelService = new ExcelService();
+const videoCallEventPublisher = new VideoCallEventPublisher();
 
 const createMedicalRepUseCase = new CreateMedicalRepUseCase(
   medicalRepRepository,
@@ -312,6 +321,30 @@ const getAllOrdersUseCase = new GetAllOrdersUseCase(
   orderRepository,
   storageService
 );
+const getOrderDetailsUseCase = new GetOrderDetailsUseCase(
+  medicalRepRepository,
+  orderRepository,
+  storageService
+);
+
+const repBusinessAnalyticsUseCase = new RepBusinessAnalyticsUseCase(
+  medicalRepRepository,
+  orderRepository,
+  storageService
+);
+
+const exportRepOrdersUseCase = new ExportRepOrdersUseCase(
+  medicalRepRepository,
+  orderRepository,
+  excelService
+);
+
+const makeVideoCallWithDoctorUseCase = new MakeVideoCallWithDoctorUseCase(
+  doctorRepository, 
+  videoCallEventPublisher,
+  medicalRepRepository
+);
+
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
   getRepProfileByIdUseCase,
@@ -351,5 +384,9 @@ export const medicalRepController = new MedicalRepController(
   editProductUseCase,
   changePasswordUseCase,
   verifyOldPasswordUseCase,
-  getAllOrdersUseCase
+  getAllOrdersUseCase,
+  getOrderDetailsUseCase,
+  repBusinessAnalyticsUseCase,
+  exportRepOrdersUseCase,
+  makeVideoCallWithDoctorUseCase
 );
