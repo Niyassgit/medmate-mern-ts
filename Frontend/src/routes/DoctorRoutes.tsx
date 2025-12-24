@@ -18,6 +18,7 @@ import CommissionCatalogue from "@/features/doctor/pages/CommissionCatalogue";
 import VerifyPassword from "@/components/shared/VerifyPassword";
 import ChangePassword from "@/components/shared/ChangePassword";
 import { verifyPassword, changePassword } from "@/features/doctor/api";
+import Prescriptions from "@/features/doctor/pages/Prescriptions";
 
 export const DoctorRoutes = {
   path: "/doctor",
@@ -39,6 +40,7 @@ export const DoctorRoutes = {
     { path: "messages", element: <ChatPage /> },
     { path: "practice/reps-products", element: <ProductPage /> },
     { path: "prescription", element: <PrescriptionPage /> },
+    { path: "prescriptions", element: <Prescriptions /> },
     { path: "commission", element: <CommissionCatalogue /> },
     { path: "practice/product/details", element: <ProductDetails /> },
     {

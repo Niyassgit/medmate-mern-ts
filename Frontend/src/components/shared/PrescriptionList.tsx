@@ -41,11 +41,9 @@ const PrescriptionList: React.FC<Props> = ({
 
   const rawPrescriptions = data ?? [];
 
-  // Filter Logic
   const prescriptions = rawPrescriptions.filter((prescription) => {
     if (filterStatus === "ALL") return true;
 
-    // Check if order exists and its payment status
     const hasOrder = !!prescription.order;
     const paymentStatus = prescription.order?.paymentStatus;
 
@@ -54,7 +52,6 @@ const PrescriptionList: React.FC<Props> = ({
     }
 
     if (filterStatus === "PENDING") {
-      // Pending includes: No order yet OR Order exists but payment is PENDING/FAILED
       return !hasOrder || paymentStatus === PaymentStatus.PENDING || paymentStatus === PaymentStatus.FAILED || paymentStatus === PaymentStatus.REFUNDED;
     }
 

@@ -1,4 +1,4 @@
-import { IGuest } from "../../Guest/entities/IGuest";
+import { IGuest } from "../../guest/entities/IGuest";
 import { IGuestListItem } from "../entities/IGuestListItem";
 
 export interface IGuestRepository{

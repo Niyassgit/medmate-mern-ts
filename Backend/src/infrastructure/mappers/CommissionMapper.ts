@@ -1,6 +1,8 @@
-import { Commission, Prisma } from "@prisma/client";
-import { ICommission } from "../../domain/Commission/entities/ICommission";
+import { Commission, Prisma, Product } from "@prisma/client";
+import { ICommission } from "../../domain/commission/entities/ICommission";
+import { ICommissionWithProduct } from "../../domain/commission/entities/ICommissionWithProduct";
 import { CommissionStatus } from "../../shared/Enums";
+import { ProductMapper } from "./ProductMapper";
 
 export class CommissionMapper {
   static toDomain(data: Commission): ICommission {
@@ -31,6 +33,17 @@ export class CommissionMapper {
       adminCut: data.adminCut,
       doctorCut: data.doctorCut,
       status: data.status,
+    };
+  }
+
+  static toDomainWithProduct(
+    data: Commission & { product: Product | null }
+  ): ICommissionWithProduct {
+    const commission = this.toDomain(data);
+    const product = data.product as Product | null;
+    return {
+      ...commission,
+      product: product ? ProductMapper.toDomain(product) : null,
     };
   }
 }

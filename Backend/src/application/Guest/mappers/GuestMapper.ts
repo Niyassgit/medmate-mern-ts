@@ -2,7 +2,7 @@ import { IUser } from "../../../domain/common/entities/IUser";
 import { NotificationMessages } from "../../../shared/Messages";
 import { RegisterResponseDTO } from "../../doctor/dto/RegisterResponseDTO";
 import { RegisterGuestDTO } from "../dto/RegisterPatientDTO";
-import { IGuest } from "../../../domain/Guest/entities/IGuest";
+import { IGuest } from "../../../domain/guest/entities/IGuest";
 import { GuestProfileCompleteDTO } from "../dto/ProfileCompleteDTO";
 import { GuestListDTO } from "../../superAdmin/dto/GuestListDTO";
 import { CreateGuestByDoctorDTO } from "../../doctor/dto/CreateGuestByDoctorDTO";

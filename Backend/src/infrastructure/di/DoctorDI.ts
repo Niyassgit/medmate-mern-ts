@@ -59,7 +59,8 @@ import { ChangePasswordUseCase } from "../../application/common/use-cases/Change
 import { VerifyOldPasswordUseCase } from "../../application/common/use-cases/VerifyOldPasswordUseCase";
 import { MakeVideoCallWithRepUseCase } from "../../application/doctor/use-cases/MakeVideoCallWithRepUseCase";
 import { VideoCallEventPublisher } from "../realtime/publishers/VideoCallEventPublisher";
-
+import { DoctorCommissionsUseCase } from "../../application/doctor/use-cases/DoctorCommissionsUseCase";
+import { CommissionRepository } from "../repositories/CommissionRepository";
 
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
@@ -81,6 +82,7 @@ const messageRepository = new MessageRepository();
 const chatEventPublisher = new ChatEventPublisher();
 const tokenService = new TokenService();
 const videoCallEventPublisher = new VideoCallEventPublisher();
+const commissionRepository = new CommissionRepository();
 
 const createDoctorUseCase = new CreateDoctorUseCase(
   doctorRepository,
@@ -312,7 +314,10 @@ const makeVideoCallWithRepUseCase = new MakeVideoCallWithRepUseCase(
   medicalRepRepository
 );
 
-
+const doctorCommissionUseCase = new DoctorCommissionsUseCase(
+  doctorRepository,
+  commissionRepository
+);
 export const doctorController = new DoctorController(
   createDoctorUseCase,
   getDoctorprofileById,
@@ -348,5 +353,5 @@ export const doctorController = new DoctorController(
   changePasswordUseCase,
   verifyOldPasswordUseCase,
   makeVideoCallWithRepUseCase,
+  doctorCommissionUseCase
 );
-

@@ -256,3 +256,15 @@ export const callRep = async (repId: string) => {
   const res = await api.post(DoctorEndpoints.CALL_REP(repId));
   return res.data;
 };
+
+export const doctorCommissions = async (
+  startDate?: string,
+  endDate?: string,
+  period?: "weekly" | "monthly" | "yearly" | "custom",
+  cursor?: string
+) => {
+  const res = await api.get(DoctorEndpoints.COMMISION_PAGE, {
+    params: { startDate, endDate, period, cursor },
+  });
+  return res.data.data;
+};

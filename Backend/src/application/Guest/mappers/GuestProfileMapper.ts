@@ -1,5 +1,5 @@
 
-import { IGuest } from "../../../domain/Guest/entities/IGuest";
+import { IGuest } from "../../../domain/guest/entities/IGuest";
 import { IUser } from "../../../domain/common/entities/IUser";
 import { ProfileDTO } from "../dto/ProfileDTO";
 

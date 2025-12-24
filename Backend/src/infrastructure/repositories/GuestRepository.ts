@@ -1,5 +1,5 @@
 import { Guest, Prisma, User, Territory } from "@prisma/client";
-import { IGuest } from "../../domain/Guest/entities/IGuest";
+import { IGuest } from "../../domain/guest/entities/IGuest";
 import { IGuestListItem } from "../../domain/Patient/entities/IGuestListItem";
 import { IGuestRepository } from "../../domain/Patient/repositories/IGuestRepositories";
 import { BaseRepository } from "../database/BaseRepository";
