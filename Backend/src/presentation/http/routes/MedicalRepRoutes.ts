@@ -184,5 +184,6 @@ export class MedicalRepRoutes {
       "/business/analytics/export",
       medicalRepController.exportOrders
     );
+    this.router.post("/call-doctor/:doctorId", medicalRepController.callDoctor);
   }
 }

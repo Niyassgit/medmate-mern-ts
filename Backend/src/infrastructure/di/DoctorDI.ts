@@ -57,6 +57,9 @@ import { ConfigService } from "../services/ConfigService";
 import { GetAllPresscriptionsMadeUseCase } from "../../application/doctor/use-cases/GetAllPrescriptionsMadeUseCase";
 import { ChangePasswordUseCase } from "../../application/common/use-cases/ChangePasswordUseCase";
 import { VerifyOldPasswordUseCase } from "../../application/common/use-cases/VerifyOldPasswordUseCase";
+import { MakeVideoCallWithRepUseCase } from "../../application/doctor/use-cases/MakeVideoCallWithRepUseCase";
+import { VideoCallEventPublisher } from "../realtime/publishers/VideoCallEventPublisher";
+
 
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
@@ -77,6 +80,7 @@ const conversationRepository = new ConversationRepository();
 const messageRepository = new MessageRepository();
 const chatEventPublisher = new ChatEventPublisher();
 const tokenService = new TokenService();
+const videoCallEventPublisher = new VideoCallEventPublisher();
 
 const createDoctorUseCase = new CreateDoctorUseCase(
   doctorRepository,
@@ -303,6 +307,12 @@ const verifyOldPasswordUseCase = new VerifyOldPasswordUseCase(
   bcryptServices
 );
 
+const makeVideoCallWithRepUseCase = new MakeVideoCallWithRepUseCase(
+  videoCallEventPublisher,
+  medicalRepRepository
+);
+
+
 export const doctorController = new DoctorController(
   createDoctorUseCase,
   getDoctorprofileById,
@@ -336,5 +346,7 @@ export const doctorController = new DoctorController(
   createGuestByDoctorUseCase,
   getAllPrescriptionsMadeUseCase,
   changePasswordUseCase,
-  verifyOldPasswordUseCase
+  verifyOldPasswordUseCase,
+  makeVideoCallWithRepUseCase,
 );
+

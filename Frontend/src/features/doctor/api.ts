@@ -251,3 +251,8 @@ export const changePassword = async (data: {
   });
   return res.data;
 };
+
+export const callRep = async (repId: string) => {
+  const res = await api.post(DoctorEndpoints.CALL_REP(repId));
+  return res.data;
+};

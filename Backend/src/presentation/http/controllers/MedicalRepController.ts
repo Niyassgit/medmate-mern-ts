@@ -50,7 +50,7 @@ import { IGetAllOrdersUseCase } from "../../../application/medicalRep/interfaces
 import { IGetOrderDetailsUseCase } from "../../../application/medicalRep/interfaces/IGetOrderDetailsUseCase";
 import { IRepBusinessAnalyticsUseCase } from "../../../application/medicalRep/interfaces/IRepBusinessAnalyticsUseCase";
 import { IExportRepOrdersUseCase } from "../../../application/medicalRep/interfaces/IExportRepOrdersUseCase";
-
+import { IMakeVideoCallWithDoctorUseCase } from "../../../application/medicalRep/interfaces/IMakeVideoCallWithDoctorUseCase";
 
 export class MedicalRepController {
   constructor(
@@ -95,7 +95,8 @@ export class MedicalRepController {
     private _getAllOrdersUseCase: IGetAllOrdersUseCase,
     private _getOrderDetailsUseCase: IGetOrderDetailsUseCase,
     private _repBusinessAnalyticsUseCase: IRepBusinessAnalyticsUseCase,
-    private _exportRepOrdersUseCase: IExportRepOrdersUseCase
+    private _exportRepOrdersUseCase: IExportRepOrdersUseCase,
+    private _videoCallWithDoctorUseCase: IMakeVideoCallWithDoctorUseCase,
   ) { }
 
   createMedicalRep = async (req: Request, res: Response) => {
@@ -581,5 +582,17 @@ export class MedicalRepController {
     );
 
     return res.end(buffer);
+  };
+
+  callDoctor = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { doctorId } = req.params;
+    const error = await this._videoCallWithDoctorUseCase.execute(doctorId, userId);
+    if (error) {
+      return res
+        .status(HttpStatusCode.BAD_REQUEST)
+        .json({ success: false, message: error });
+    }
+    return res.sendStatus(HttpStatusCode.OK);
   };
 }

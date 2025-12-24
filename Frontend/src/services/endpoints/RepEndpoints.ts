@@ -50,5 +50,6 @@ export const RepEndpoints = {
   GET_ALL_ORDERS: "/rep/orders",
   GET_ORDER_DETAILS: (orderId: string) => `/rep/orders/${orderId}`,
   REP_BUSINESS_STAT:`/rep/business/analytics`,
-  RECENT_ORDERS:`/rep/business/recent-orders`
+  RECENT_ORDERS:`/rep/business/recent-orders`,
+  CALL_DOCTOR: (doctorId: string) => `/rep/call-doctor/${doctorId}`
 };

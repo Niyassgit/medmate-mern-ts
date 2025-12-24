@@ -111,5 +111,6 @@ export class DoctorRoutes {
     this.router.get("/prescriptions", doctorController.getAllPrescriptions);
     this.router.get("/verify-password", doctorController.verifyPassword);
     this.router.patch("/change-password", doctorController.changePassword);
+    this.router.post("/call-rep/:repId", doctorController.makeCall);
   }
 }

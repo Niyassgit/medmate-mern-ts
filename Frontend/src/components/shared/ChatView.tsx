@@ -17,6 +17,7 @@ import { Role } from "@/types/Role";
 import { getSocket } from "@/lib/socket";
 import { ChatResponseDTO } from "../Dto/ChatResponseDTO";
 import TypingIndicator from "./TypingIndicator";
+import { useVideoCallContext } from "@/context/VideoCallContext";
 
 interface ChatViewProps {
   conversation: Conversation | null;
@@ -24,6 +25,7 @@ interface ChatViewProps {
 }
 
 export const ChatView = ({ conversation, owner }: ChatViewProps) => {
+  const { startCall } = useVideoCallContext();
   const [localMessages, setLocalMessages] = useState<MessageDTO[]>([]);
   const [isOtherUserTyping, setIsOtherUserTyping] = useState(false);
   const hasMarkedAsReadRef = useRef(false);
@@ -195,14 +197,14 @@ export const ChatView = ({ conversation, owner }: ChatViewProps) => {
       if (eventConvId !== conversation.id) {
         return;
       }
-      
+
       if (!otherUserId) {
         return;
       }
-      
+
       const normalizedReceivedId = String(userId).trim();
       const normalizedOtherId = String(otherUserId).trim();
-      
+
       if (normalizedReceivedId === normalizedOtherId) {
         setIsOtherUserTyping(true);
       }
@@ -216,7 +218,7 @@ export const ChatView = ({ conversation, owner }: ChatViewProps) => {
     }) => {
       const otherUserId =
         owner === Role.DOCTOR ? conversation.repUserId : conversation.doctorUserId;
-      
+
       if (eventConvId !== conversation.id || !otherUserId) {
         return;
       }
@@ -307,9 +309,33 @@ export const ChatView = ({ conversation, owner }: ChatViewProps) => {
             <p className="text-xs text-online">Online</p>
           </div>
         </div>
-
+        ```
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="h-9 w-9">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-9 w-9"
+            onClick={(e) => {
+              e.stopPropagation();
+              // For doctors, the recipient is the rep (owner)
+              // For reps, it's the conversation partner (doctor)
+              const recipientId = owner === Role.DOCTOR
+                ? conversation.repUserId
+                : conversation.doctorUserId;
+
+              if (recipientId) {
+                startCall(
+                  recipientId,
+                  conversation.name,
+                  conversation.profilImage,
+                  conversation.repId,
+                  conversation.doctorId
+                );
+              } else {
+                console.error("Recipient ID not found", conversation);
+              }
+            }}
+          >
             <Video className="h-5 w-5" />
           </Button>
           <Button variant="ghost" size="icon" className="h-9 w-9">
