@@ -3,7 +3,6 @@ import { AdminEndpoints } from "@/services/endpoints/AdminEndpoints";
 import { TerritorySchemaDTO } from "../Schemas/TerritorySchema";
 import { DepartmentSchemaDTO } from "../Schemas/DepartmentSchema";
 import {
-  SubscriptionPlan,
   SubscriptionPlanPayload,
 } from "../dto/SubscriptionPlan";
 
@@ -189,7 +188,7 @@ export const territoryDetails = async (
 ) => {
   const res = await api.get(
     AdminEndpoints.TERRITORY_DETAILS(territoryId) +
-      `?page=${page}&limit=${limit}`
+    `?page=${page}&limit=${limit}`
   );
   return res.data.data;
 };
@@ -203,4 +202,16 @@ export const orderAnalytics = async (startDate?: string, endDate?: string) => {
   });
 
   return res.data.data;
+};
+
+export const getDoctorEarningsList = async (
+  page: number,
+  limit: number,
+  startDate?: string,
+  endDate?: string
+) => {
+  const res = await api.get(
+    AdminEndpoints.DOCTOR_EARNINGS(page, limit, startDate, endDate)
+  );
+  return res.data;
 };

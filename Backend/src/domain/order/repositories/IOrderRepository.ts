@@ -1,7 +1,16 @@
 import { IOrder } from "../entitiy/IOrder";
 import { IOrderDetail } from "../entitiy/IOrderDetail";
 
+import { DoctorEarningsDTO } from "../../../application/superAdmin/dto/DoctorEarningsDTO";
+
 export interface IOrderRepository {
+  getDoctorEarningsList(
+    page: number,
+    limit: number,
+    startDate?: Date,
+    endDate?: Date
+  ): Promise<DoctorEarningsDTO[]>;
+
   createOrder(
     data: Omit<IOrder, "id" | "createdAt" | "updatedAt">
   ): Promise<IOrder>;
@@ -18,15 +27,11 @@ export interface IOrderRepository {
     startDate?: Date,
     endDate?: Date
   ): Promise<IOrder[]>;
-  // Orders
   countPaidOrders(start?: Date, end?: Date): Promise<number>;
   sumGrossAmount(start?: Date, end?: Date): Promise<number>;
 
-  // Commission
   sumDoctorEarnings(start?: Date, end?: Date): Promise<number>;
   sumAdminEarnings(start?: Date, end?: Date): Promise<number>;
-
-  // Charts
   revenueTimeline(
     start?: Date,
     end?: Date

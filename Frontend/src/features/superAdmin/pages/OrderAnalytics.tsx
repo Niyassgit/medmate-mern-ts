@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   FileText,
   CheckCircle,
@@ -25,6 +26,7 @@ import { getCurrentMonthRange } from "@/lib/utils";
 import { OrderAnalyticsResponse } from "../dto/OrderAnalyticsResponse";
 
 const OrderAnalyticsPage = () => {
+  const navigate = useNavigate();
   const { startDate: defaultStart, endDate: defaultEnd } =
     getCurrentMonthRange();
 
@@ -139,6 +141,11 @@ const OrderAnalyticsPage = () => {
           description="Gross payout"
           icon={Stethoscope}
           iconColor="bg-emerald-100 text-emerald-700"
+          onClick={() =>
+            navigate(
+              `/admin/order-analytics/doctor-earnings?startDate=${startDate}&endDate=${endDate}`
+            )
+          }
         />
 
         <StatsCard
@@ -149,7 +156,6 @@ const OrderAnalyticsPage = () => {
           iconColor="bg-orange-100 text-orange-700"
         />
       </div>
-
 
       <Card className="p-6">
         <h2 className="text-lg font-semibold mb-2">Revenue Over Time</h2>

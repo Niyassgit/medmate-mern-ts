@@ -91,6 +91,10 @@ export class SuperAdminRoutes {
     this.router.get("/guests", superAdminController.getAllGuests);
     this.router.get("/order-analytics", superAdminController.orderAnalytics);
     this.router.get(
+      "/stats/doctor-earnings",
+      superAdminController.doctorEarnings
+    );
+    this.router.get(
       "/territory/:territoryId",
       superAdminController.territoryDetails
     );
