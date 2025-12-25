@@ -2,7 +2,7 @@ import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRe
 import { IPrescriptionRepository } from "../../../domain/prescription/repositories/IPrescriptionRepository";
 import { IPrescriptionItemRepository } from "../../../domain/prescription/repositories/IPrescriptionItemRepository";
 import { ErrorMessages, NotificationMessages, SuccessMessages } from "../../../shared/Messages";
-import { BadRequestError, UnautharizedError } from "../../errors";
+import { BadRequestError,UnautharizedError } from "../../../domain/common/errors";
 import { PrescriptionDTO } from "../dto/PrescriptionDTO";
 import { ICreatePrescriptionUseCase } from "../interfaces/ICreatePrescriptionUseCase";
 import { PrescriptionMapper } from "../mappers/PrescriptionMapper";
