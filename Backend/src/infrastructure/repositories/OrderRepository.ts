@@ -194,32 +194,6 @@ export class OrderRepository
     });
   }
 
-  async countPrescriptions(start?: Date, end?: Date): Promise<number> {
-    const whereClause: Prisma.OrderWhereInput = {};
-
-    if (start || end) {
-      whereClause.createdAt = {};
-      if (start) {
-        whereClause.createdAt.gte = start;
-      }
-      if (end) {
-        whereClause.createdAt.lte = end;
-      }
-    }
-
-    const orders = await prisma.order.findMany({
-      where: whereClause,
-      select: {
-        prescriptionId: true,
-      },
-    });
-
-    // Count distinct prescriptions
-    const uniquePrescriptionIds = new Set(
-      orders.map((order) => order.prescriptionId)
-    );
-    return uniquePrescriptionIds.size;
-  }
 
   async revenueTimeline(
     start?: Date,

@@ -9,9 +9,13 @@ import {
   CommissionPeriod,
 } from "../../doctor/utils/CommissionPeriodUtil";
 import { RevenuePeriodUtil } from "../utils/RevenuePeriodUtil";
+import { IPrescriptionRepository } from "../../../domain/prescription/repositories/IPrescriptionRepository";
 
 export class AdminOrderAnalyticsUseCase implements IAdminOrderAnalyticsUseCase {
-  constructor(private _orderRepository: IOrderRepository) {}
+  constructor(
+    private _orderRepository: IOrderRepository,
+    private _prescriptionRepository: IPrescriptionRepository
+  ) {}
   async execute(
     startDate?: string,
     endDate?: string,
@@ -31,14 +35,12 @@ export class AdminOrderAnalyticsUseCase implements IAdminOrderAnalyticsUseCase {
     endDateObj.setHours(23, 59, 59, 999);
 
     const [
-      totalPrescriptions,
       paidOrders,
       grossAmount,
       doctorEarnings,
       adminEarnings,
       revenueData,
     ] = await Promise.all([
-      this._orderRepository.countPrescriptions(startDateObj, endDateObj),
       this._orderRepository.countPaidOrders(startDateObj, endDateObj),
       this._orderRepository.sumGrossAmount(startDateObj, endDateObj),
       this._orderRepository.sumDoctorEarnings(startDateObj, endDateObj),
@@ -57,6 +59,11 @@ export class AdminOrderAnalyticsUseCase implements IAdminOrderAnalyticsUseCase {
       endDateObj
     );
 
+    const totalPrescriptions =
+      await this._prescriptionRepository.findCountOfAllPrescriptions(
+        startDateObj,
+        endDateObj
+      );
     const unpaidPrescriptions = Math.max(totalPrescriptions - paidOrders, 0);
     const mappedData = OrderAnalyticsMapper.todomain(
       totalPrescriptions,
@@ -64,7 +71,7 @@ export class AdminOrderAnalyticsUseCase implements IAdminOrderAnalyticsUseCase {
       grossAmount,
       doctorEarnings,
       unpaidPrescriptions,
-      adminEarnings, 
+      adminEarnings,
       revenueTimeline
     );
 

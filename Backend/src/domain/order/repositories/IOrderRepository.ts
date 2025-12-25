@@ -18,8 +18,6 @@ export interface IOrderRepository {
     startDate?: Date,
     endDate?: Date
   ): Promise<IOrder[]>;
-
-  countPrescriptions(start?: Date, end?: Date): Promise<number>;
   // Orders
   countPaidOrders(start?: Date, end?: Date): Promise<number>;
   sumGrossAmount(start?: Date, end?: Date): Promise<number>;

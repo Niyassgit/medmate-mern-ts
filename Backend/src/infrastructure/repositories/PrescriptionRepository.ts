@@ -113,4 +113,17 @@ export class PrescriptionRepository
     if (!prescription) return null;
     return PrescriptionMapper.toDomainWithItems(prescription);
   }
+  async findCountOfAllPrescriptions(start?: Date, end?: Date): Promise<number> {
+    const whereClause: Prisma.PrescriptionWhereInput = {};
+
+    if (start || end) {
+      whereClause.createdAt = {};
+      if (start) whereClause.createdAt.gte = start;
+      if (end) whereClause.createdAt.lte = end;
+    }
+
+    return prisma.prescription.count({
+      where: whereClause,
+    });
+  }
 }
