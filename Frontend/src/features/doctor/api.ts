@@ -68,8 +68,10 @@ export const doctorAnltyics = async (id: string) => {
   return res.data;
 };
 
-export const getAllFeed = async (id: string) => {
-  const res = await api.get(DoctorEndpoints.REP_FEED(id));
+export const getAllFeed = async (id: string, page: number = 1, limit: number = 10) => {
+  const res = await api.get(DoctorEndpoints.REP_FEED(id), {
+    params: { page, limit },
+  });
   return res.data;
 };
 

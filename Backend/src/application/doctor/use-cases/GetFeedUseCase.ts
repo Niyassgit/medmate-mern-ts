@@ -21,8 +21,8 @@ export class GetFeedUseCase implements IGetFeedUseCase {
     private _interestRepository: IInterestRepository,
     private _storageService: IStorageService,
     private _medicalRepRepository: IMedicalRepRepository
-  ) {}
-  async execute(userId: string): Promise<FeedDTO[]> {
+  ) { }
+  async execute(userId: string, page: number, limit: number): Promise<FeedDTO[]> {
     const { doctorId } = await this._doctorRepository.getDoctorIdByUserId(
       userId
     );
@@ -40,10 +40,16 @@ export class GetFeedUseCase implements IGetFeedUseCase {
       excludedIds
     );
     if (!posts.length) return [];
+
     const sortedPosts = await SortPostBySubscription.sorted(
       posts,
       this._medicalRepRepository
     );
-    return FeedMapper.toListFeeds(sortedPosts, this._storageService);
+
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const paginatedPosts = sortedPosts.slice(startIndex, endIndex);
+
+    return FeedMapper.toListFeeds(paginatedPosts, this._storageService);
   }
 }

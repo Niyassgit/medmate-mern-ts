@@ -80,7 +80,7 @@ export class DoctorController {
     private _verifyOldPasswordUseCase: IVerifyOldPasswordUseCase,
     private _makeVideoCallWithRepUseCase: IMakeVideoCallWithRepUseCase,
     private _doctorCommissionUseCase: IDoctorCommissionsUseCase
-  ) {}
+  ) { }
 
   createDoctor = async (req: Request, res: Response) => {
     const licenseImageUrl = req.file
@@ -170,7 +170,10 @@ export class DoctorController {
 
   getFeed = async (req: Request, res: Response) => {
     const { userId } = req.params;
-    const response = await this._getFeedUseCase.execute(userId);
+    const page = req.query.page ? parseInt(req.query.page as string) : 1;
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
+
+    const response = await this._getFeedUseCase.execute(userId, page, limit);
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
