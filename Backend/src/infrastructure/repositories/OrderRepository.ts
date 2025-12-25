@@ -330,7 +330,26 @@ export class OrderRepository
       }
     }
 
+    const doctorWhere: Prisma.DoctorWhereInput = {};
+
+    if (startDate || endDate) {
+      const dateFilter: Prisma.DateTimeFilter = {};
+      if (startDate) dateFilter.gte = startDate;
+      if (endDate) dateFilter.lte = endDate;
+
+      doctorWhere.OR = [
+        { prescriptions: { some: { createdAt: dateFilter } } },
+        { commissions: { some: { createdAt: dateFilter } } },
+      ];
+    } else {
+      doctorWhere.OR = [
+        { prescriptions: { some: {} } },
+        { commissions: { some: {} } },
+      ];
+    }
+
     const doctors = await prisma.doctor.findMany({
+      where: doctorWhere,
       include: {
         user: {
           select: {
