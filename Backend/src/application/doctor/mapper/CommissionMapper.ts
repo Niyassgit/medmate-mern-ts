@@ -55,9 +55,7 @@ export class CommissionMapper {
     };
   }
 
-  /**
-   * Maps commission entities to DTO format
-   */
+  
   static mapCommissionsToDTO(
     commissions: ICommissionWithProduct[]
   ): DoctorCommissionItemDTO[] {

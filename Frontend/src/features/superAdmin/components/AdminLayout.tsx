@@ -5,10 +5,10 @@ import {
   ClipboardPlus,
   Handshake,
   MapPin,
-  FilePen,
   Building2, 
   BanknoteArrowDown,
   ShoppingCart,
+  ChartArea,
 } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import AdminNavbar from "@/components/navbar/AdminNavbar";
@@ -42,6 +42,21 @@ const AdminLayout = () => {
               >
                 <LayoutDashboard className="w-5 h-5" />
                 <span>Dashboard</span>
+              </NavLink>
+            </li>
+             <li>
+              <NavLink
+                to={"order-analytics"}
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
+                    isActive
+                      ? "bg-gray-200 text-black font-semibold"
+                      : "text-white hover:bg-[#a81519]"
+                  }`
+                }
+              >
+                <ChartArea className="w-5 h-5" />
+                <span>Order Analytics</span>
               </NavLink>
             </li>
 

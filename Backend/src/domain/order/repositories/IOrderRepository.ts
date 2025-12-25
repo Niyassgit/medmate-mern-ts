@@ -18,4 +18,19 @@ export interface IOrderRepository {
     startDate?: Date,
     endDate?: Date
   ): Promise<IOrder[]>;
+
+  countPrescriptions(start?: Date, end?: Date): Promise<number>;
+  // Orders
+  countPaidOrders(start?: Date, end?: Date): Promise<number>;
+  sumGrossAmount(start?: Date, end?: Date): Promise<number>;
+
+  // Commission
+  sumDoctorEarnings(start?: Date, end?: Date): Promise<number>;
+  sumAdminEarnings(start?: Date, end?: Date): Promise<number>;
+
+  // Charts
+  revenueTimeline(
+    start?: Date,
+    end?: Date
+  ): Promise<{ createdAt: Date; totalAmount: number }[]>;
 }

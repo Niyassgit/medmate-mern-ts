@@ -7,10 +7,12 @@ import { OrderMapper } from "../mappers/OrderMapper";
 import { NotFoundError } from "../../domain/common/errors";
 import { ErrorMessages } from "../../shared/Messages";
 import { IOrderDetail } from "../../domain/order/entitiy/IOrderDetail";
+import { PaymentStatus } from "../../shared/Enums";
 
 export class OrderRepository
   extends BaseRepository<IOrder, Order, Prisma.OrderCreateInput, "order">
-  implements IOrderRepository {
+  implements IOrderRepository
+{
   constructor() {
     super(prisma.order, (o: Order) => OrderMapper.toDomain(o));
   }
@@ -170,5 +172,167 @@ export class OrderRepository
       },
     });
     return orders.map((o) => OrderMapper.toDomain(o));
+  }
+
+  async countPaidOrders(start?: Date, end?: Date): Promise<number> {
+    const whereClause: Prisma.OrderWhereInput = {
+      paymentStatus: PaymentStatus.SUCCESS,
+    };
+
+    if (start || end) {
+      whereClause.createdAt = {};
+      if (start) {
+        whereClause.createdAt.gte = start;
+      }
+      if (end) {
+        whereClause.createdAt.lte = end;
+      }
+    }
+
+    return await prisma.order.count({
+      where: whereClause,
+    });
+  }
+
+  async countPrescriptions(start?: Date, end?: Date): Promise<number> {
+    const whereClause: Prisma.OrderWhereInput = {};
+
+    if (start || end) {
+      whereClause.createdAt = {};
+      if (start) {
+        whereClause.createdAt.gte = start;
+      }
+      if (end) {
+        whereClause.createdAt.lte = end;
+      }
+    }
+
+    const orders = await prisma.order.findMany({
+      where: whereClause,
+      select: {
+        prescriptionId: true,
+      },
+    });
+
+    // Count distinct prescriptions
+    const uniquePrescriptionIds = new Set(
+      orders.map((order) => order.prescriptionId)
+    );
+    return uniquePrescriptionIds.size;
+  }
+
+  async revenueTimeline(
+    start?: Date,
+    end?: Date
+  ): Promise<{ createdAt: Date; totalAmount: number }[]> {
+    const whereClause: Prisma.OrderWhereInput = {
+      paymentStatus: PaymentStatus.SUCCESS,
+    };
+
+    if (start || end) {
+      whereClause.createdAt = {};
+      if (start) {
+        whereClause.createdAt.gte = start;
+      }
+      if (end) {
+        whereClause.createdAt.lte = end;
+      }
+    }
+
+    const orders = await prisma.order.findMany({
+      where: whereClause,
+      select: {
+        totalAmount: true,
+        createdAt: true,
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+
+    return orders.map((order) => ({
+      createdAt: order.createdAt,
+      totalAmount: order.totalAmount,
+    }));
+  }
+
+  async sumAdminEarnings(start?: Date, end?: Date): Promise<number> {
+    const whereClause: Prisma.CommissionWhereInput = {};
+
+    if (start || end) {
+      whereClause.createdAt = {};
+      if (start) {
+        const startDate = new Date(start);
+        startDate.setHours(0, 0, 0, 0);
+        whereClause.createdAt.gte = startDate;
+      }
+      if (end) {
+        const endDate = new Date(end);
+        endDate.setHours(23, 59, 59, 999);
+        whereClause.createdAt.lte = endDate;
+      }
+    }
+
+    const result = await prisma.commission.aggregate({
+      where: whereClause,
+      _sum: {
+        adminCut: true,
+      },
+    });
+
+    return Number((result._sum.adminCut || 0).toFixed(2));
+  }
+
+  async sumDoctorEarnings(start?: Date, end?: Date): Promise<number> {
+    const whereClause: Prisma.CommissionWhereInput = {};
+
+    if (start || end) {
+      whereClause.createdAt = {};
+      if (start) {
+        const startDate = new Date(start);
+        startDate.setHours(0, 0, 0, 0);
+        whereClause.createdAt.gte = startDate;
+      }
+      if (end) {
+
+        const endDate = new Date(end);
+        endDate.setHours(23, 59, 59, 999);
+        whereClause.createdAt.lte = endDate;
+      }
+    }
+
+    const result = await prisma.commission.aggregate({
+      where: whereClause,
+      _sum: {
+        doctorCut: true,
+      },
+    });
+
+    return Number((result._sum.doctorCut || 0).toFixed(2));
+  }
+
+  async sumGrossAmount(start?: Date, end?: Date): Promise<number> {
+    const whereClause: Prisma.OrderWhereInput = {
+      paymentStatus: PaymentStatus.SUCCESS,
+    };
+
+    if (start || end) {
+      whereClause.createdAt = {};
+      if (start) {
+        whereClause.createdAt.gte = start;
+      }
+      if (end) {
+        whereClause.createdAt.lte = end;
+      }
+    }
+
+    const result = await prisma.order.aggregate({
+      where: whereClause,
+      _sum: {
+        totalAmount: true,
+      },
+    });
+
+    return Number((result._sum.totalAmount || 0).toFixed(2));
   }
 }

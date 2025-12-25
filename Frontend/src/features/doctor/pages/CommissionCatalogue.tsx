@@ -43,25 +43,20 @@ const CommissionCatalogue = () => {
         startDate = new Date(customStartDate);
         endDate = new Date(customEndDate);
       } else {
-        // Default to current month if custom dates not set
         startDate = new Date(now.getFullYear(), now.getMonth(), 1);
         endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
       }
     } else if (filter === "weekly") {
-      // Last 7 days
       startDate.setDate(now.getDate() - 6);
       endDate = now;
     } else if (filter === "monthly") {
-      // Current Month
       startDate = new Date(now.getFullYear(), now.getMonth(), 1);
       endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
     } else if (filter === "yearly") {
-      // Current Year
       startDate = new Date(now.getFullYear(), 0, 1);
       endDate = new Date(now.getFullYear(), 11, 31);
     }
 
-    // Set time to boundaries
     startDate.setHours(0, 0, 0, 0);
     endDate.setHours(23, 59, 59, 999);
 
@@ -79,7 +74,6 @@ const CommissionCatalogue = () => {
   const { data, error, loading } =
     useFetchItem<DoctorCommissionDashboardDTO>(fetchCommissions);
 
-  // Update local commissions when data changes
   useEffect(() => {
     if (data) {
       setLocalCommissions(data.commissions || []);
@@ -88,7 +82,6 @@ const CommissionCatalogue = () => {
     }
   }, [data]);
 
-  // Load more commissions on scroll
   const loadMoreCommissions = useCallback(async () => {
     if (!hasMore || loadingMore || !nextCursor) return;
 
@@ -109,14 +102,12 @@ const CommissionCatalogue = () => {
     }
   }, [hasMore, loadingMore, nextCursor, filter, getDateRange]);
 
-  // Handle scroll for infinite loading
   useEffect(() => {
     const container = tableContainerRef.current;
     if (!container) return;
 
     const handleScroll = () => {
       const { scrollTop, scrollHeight, clientHeight } = container;
-      // Load more when user is 200px from bottom
       if (scrollHeight - scrollTop - clientHeight < 200 && hasMore && !loadingMore) {
         loadMoreCommissions();
       }
@@ -153,9 +144,9 @@ const CommissionCatalogue = () => {
   const { summary, timeline } = data;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8  bg-amber-50 p-5">
       {/* ================= HEADER ================= */}
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 ">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">My Earnings</h1>
           <p className="text-sm text-muted-foreground">

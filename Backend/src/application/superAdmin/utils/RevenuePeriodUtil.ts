@@ -1,82 +1,42 @@
-import { ICommissionWithProduct } from "../../../domain/commission/entities/ICommissionWithProduct";
+import {
+  CommissionPeriodUtil,
+  CommissionPeriod,
+} from "../../doctor/utils/CommissionPeriodUtil";
 
-export type CommissionPeriod = "weekly" | "monthly" | "yearly" | "custom";
-
-export interface DateRange {
-  start: Date;
-  end: Date;
-}
-
-export interface TimelineEntry {
+export interface RevenueTimelineEntry {
   period: string;
-  earnings: number;
-  ordersCount: number;
+  amount: number;
 }
 
-export class CommissionPeriodUtil {
-  static determinePeriod(start: Date, end: Date): CommissionPeriod {
-    const diffTime = Math.abs(end.getTime() - start.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    if (diffDays <= 7) return "weekly";
-    if (diffDays <= 31) return "monthly";
-    if (diffDays <= 365) return "yearly";
-    return "custom";
-  }
+interface RevenueData {
+  createdAt: Date;
+  totalAmount: number;
+}
 
- 
-  static calculateDateRange(
-    startDate?: string,
-    endDate?: string
-  ): DateRange {
-    const now = new Date();
-    let start: Date;
-    let end: Date;
-
-    if (!startDate && !endDate) {
-      start = new Date(now.getFullYear(), now.getMonth(), 1);
-      end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-      end.setHours(23, 59, 59, 999);
-    } else {
-      start = startDate
-        ? new Date(startDate)
-        : new Date(now.getFullYear(), now.getMonth(), 1);
-      end = endDate
-        ? new Date(endDate)
-        : new Date(now.getFullYear(), now.getMonth() + 1, 0);
-      end.setHours(23, 59, 59, 999);
-    }
-
-    return { start, end };
-  }
-
-
-  static groupCommissionsByPeriod(
-    commissions: ICommissionWithProduct[],
+export class RevenuePeriodUtil {
+  static groupRevenueByPeriod(
+    revenueData: RevenueData[],
     period: CommissionPeriod,
     startDate?: Date,
     endDate?: Date
-  ): TimelineEntry[] {
+  ): RevenueTimelineEntry[] {
     const timelineMap = new Map<
       string,
-      { earnings: number; orders: Set<string>; sortKey: string }
+      { amount: number; sortKey: string }
     >();
 
-    commissions.forEach((c) => {
-      const date = c.createdAt;
-      const { key, sortKey } = this._getPeriodKey(date, period);
+    revenueData.forEach((data) => {
+      const { key, sortKey } = this._getPeriodKey(data.createdAt, period);
 
       if (!timelineMap.has(key)) {
         timelineMap.set(key, {
-          earnings: 0,
-          orders: new Set(),
+          amount: 0,
           sortKey,
         });
       }
 
       const entry = timelineMap.get(key)!;
-      entry.earnings += c.doctorCut;
-      entry.orders.add(c.orderId);
+      entry.amount += data.totalAmount;
     });
 
     const filledTimeline = this._fillMissingPeriods(
@@ -139,13 +99,12 @@ export class CommissionPeriodUtil {
     }
   }
 
-  
   private static _fillMissingPeriods(
-    timelineMap: Map<string, { earnings: number; orders: Set<string>; sortKey: string }>,
+    timelineMap: Map<string, { amount: number; sortKey: string }>,
     period: CommissionPeriod,
     startDate?: Date,
     endDate?: Date
-  ): Map<string, { earnings: number; orders: Set<string>; sortKey: string }> {
+  ): Map<string, { amount: number; sortKey: string }> {
     if (!startDate || !endDate) {
       return timelineMap;
     }
@@ -176,8 +135,7 @@ export class CommissionPeriodUtil {
 
         if (!filledMap.has(key)) {
           filledMap.set(key, {
-            earnings: 0,
-            orders: new Set(),
+            amount: 0,
             sortKey,
           });
         }
@@ -194,8 +152,7 @@ export class CommissionPeriodUtil {
 
         if (!filledMap.has(key)) {
           filledMap.set(key, {
-            earnings: 0,
-            orders: new Set(),
+            amount: 0,
             sortKey,
           });
         }
@@ -224,8 +181,7 @@ export class CommissionPeriodUtil {
         const sortKey = `${String(dayOrder[dayName]).padStart(2, "0")}`;
         if (!filledMap.has(dayName)) {
           filledMap.set(dayName, {
-            earnings: 0,
-            orders: new Set(),
+            amount: 0,
             sortKey,
           });
         }
@@ -248,8 +204,7 @@ export class CommissionPeriodUtil {
 
         if (!filledMap.has(key)) {
           filledMap.set(key, {
-            earnings: 0,
-            orders: new Set(),
+            amount: 0,
             sortKey,
           });
         }
@@ -262,14 +217,13 @@ export class CommissionPeriodUtil {
   }
 
   private static _sortTimeline(
-    filledTimeline: Map<string, { earnings: number; orders: Set<string>; sortKey: string }>,
+    filledTimeline: Map<string, { amount: number; sortKey: string }>,
     period: CommissionPeriod
-  ): TimelineEntry[] {
+  ): RevenueTimelineEntry[] {
     let sortedTimeline = Array.from(filledTimeline.entries()).map(
       ([period, value]) => ({
         period,
-        earnings: value.earnings,
-        ordersCount: value.orders.size,
+        amount: value.amount,
         sortKey: value.sortKey,
       })
     );
@@ -304,5 +258,4 @@ export class CommissionPeriodUtil {
     return sortedTimeline.map(({ sortKey, ...rest }) => rest);
   }
 }
-
 
