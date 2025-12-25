@@ -215,3 +215,15 @@ export const getDoctorEarningsList = async (
   );
   return res.data;
 };
+
+export const getAdminEarningsList = async (
+  page: number,
+  limit: number,
+  startDate?: string,
+  endDate?: string
+) => {
+  const res = await api.get(
+    AdminEndpoints.ADMIN_EARNINGS(page, limit, startDate, endDate)
+  );
+  return res.data;
+};

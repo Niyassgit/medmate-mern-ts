@@ -43,6 +43,7 @@ import { AdminOrderAnalyticsUseCase } from "../../application/superAdmin/useCase
 import { OrderRepository } from "../repositories/OrderRepository";
 import { PrescriptionRepository } from "../repositories/PrescriptionRepository";
 import { GetDoctorEarningsUseCase } from "../../application/superAdmin/useCases/GetDoctorEarningsUseCase";
+import { GetAdminEarningsUseCase } from "../../application/superAdmin/useCases/GetAdminEarningsUseCase";
 
 const superAdminRepositories = new SuperAdminRepository();
 const userRepository = new UserRepository();
@@ -154,7 +155,9 @@ const adminOrderAnalytics = new AdminOrderAnalyticsUseCase(
   prescriptionRepository
 );
 
+
 const getDoctorEarningsUseCase = new GetDoctorEarningsUseCase(orderRepository);
+const getAdminEarningsUseCase = new GetAdminEarningsUseCase(orderRepository);
 
 export const superAdminController = new SuperAdminController(
   createSuperAdminUseCase,
@@ -185,5 +188,6 @@ export const superAdminController = new SuperAdminController(
   getAllGuestsUseCase,
   territoryDetailsUseCase,
   adminOrderAnalytics,
-  getDoctorEarningsUseCase
+  getDoctorEarningsUseCase,
+  getAdminEarningsUseCase
 );

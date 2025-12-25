@@ -95,6 +95,11 @@ export class SuperAdminRoutes {
       superAdminController.doctorEarnings
     );
     this.router.get(
+      "/stats/admin-earnings",
+      superAdminController.adminEarnings
+    );
+
+    this.router.get(
       "/territory/:territoryId",
       superAdminController.territoryDetails
     );

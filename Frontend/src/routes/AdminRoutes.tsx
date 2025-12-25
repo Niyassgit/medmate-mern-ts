@@ -17,6 +17,7 @@ import Guests from "@/features/superAdmin/pages/Guests";
 import TerritoryDetails from "@/features/superAdmin/pages/TerritoryDetails";
 import OrderAnalytics from "@/features/superAdmin/pages/OrderAnalytics";
 import DoctorEarningsList from "@/features/superAdmin/pages/DoctorEarningsList";
+import AdminEarningsList from "@/features/superAdmin/pages/AdminEarningsList";
 
 export const AdminRoutes = {
   path: "/admin",
@@ -44,6 +45,10 @@ export const AdminRoutes = {
     {
       path: "order-analytics/doctor-earnings",
       element: <DoctorEarningsList />,
+    },
+    {
+      path: "order-analytics/admin-earnings",
+      element: <AdminEarningsList />,
     },
   ],
 };

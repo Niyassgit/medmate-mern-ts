@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   Table,
   TableBody,
@@ -12,6 +12,8 @@ import {
 import { Card } from "@/components/ui/card";
 import { getDoctorEarningsList } from "../api/superAdminApi";
 import { getCurrentMonthRange } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { MoveLeft } from "lucide-react";
 
 interface DoctorEarnings {
   doctorId: string;
@@ -25,6 +27,7 @@ interface DoctorEarnings {
 }
 
 const DoctorEarningsList = () => {
+    const navigate=useNavigate();
   const { startDate: defaultStart, endDate: defaultEnd } =
     getCurrentMonthRange();
   const [searchParams] = useSearchParams();
@@ -62,6 +65,8 @@ const DoctorEarningsList = () => {
 
   return (
     <div className="p-6 space-y-6">
+
+        <Button onClick={()=>navigate(-1)}><MoveLeft /></Button>
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold">Doctor Earnings</h1>

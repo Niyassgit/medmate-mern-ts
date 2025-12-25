@@ -154,6 +154,11 @@ const OrderAnalyticsPage = () => {
           description="Platform commission"
           icon={ShieldCheck}
           iconColor="bg-orange-100 text-orange-700"
+          onClick={() =>
+            navigate(
+              `/admin/order-analytics/admin-earnings?startDate=${startDate}&endDate=${endDate}`
+            )
+          }
         />
       </div>
 
