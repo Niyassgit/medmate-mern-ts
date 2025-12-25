@@ -9,7 +9,8 @@ export class CommissionMapper {
     commissions: ICommissionWithProduct[],
     period: CommissionPeriod = "monthly",
     startDate?: Date,
-    endDate?: Date
+    endDate?: Date,
+    totalPrescriptions: number = 0
   ): DoctorCommissionDashboardDTO {
 
 
@@ -49,13 +50,14 @@ export class CommissionMapper {
         pendingEarnings,
         totalOrders,
         totalProducts,
+        totalPrescriptions,
       },
       timeline,
       commissions: commissionItems,
     };
   }
 
-  
+
   static mapCommissionsToDTO(
     commissions: ICommissionWithProduct[]
   ): DoctorCommissionItemDTO[] {

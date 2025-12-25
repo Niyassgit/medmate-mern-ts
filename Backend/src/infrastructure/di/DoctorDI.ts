@@ -316,7 +316,8 @@ const makeVideoCallWithRepUseCase = new MakeVideoCallWithRepUseCase(
 
 const doctorCommissionUseCase = new DoctorCommissionsUseCase(
   doctorRepository,
-  commissionRepository
+  commissionRepository,
+  prescriptionRepository
 );
 export const doctorController = new DoctorController(
   createDoctorUseCase,

@@ -5,6 +5,7 @@ import {
   ShoppingCart,
   Package,
   Calendar,
+  ClipboardList,
 } from "lucide-react";
 import {
   BarChart,
@@ -89,7 +90,7 @@ const CommissionCatalogue = () => {
     try {
       const { startDate, endDate } = getDateRange();
       const moreData = await doctorCommissions(startDate, endDate, filter, nextCursor);
-      
+
       if (moreData.commissions) {
         setLocalCommissions((prev) => [...prev, ...moreData.commissions]);
         setNextCursor(moreData.nextCursor || null);
@@ -161,11 +162,10 @@ const CommissionCatalogue = () => {
               <button
                 key={f}
                 onClick={() => setFilter(f)}
-                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
-                  filter === f
+                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${filter === f
                     ? "bg-white text-gray-900 shadow-sm"
                     : "text-gray-500 hover:text-gray-900"
-                }`}
+                  }`}
               >
                 {f.charAt(0).toUpperCase() + f.slice(1)}
               </button>
@@ -201,7 +201,7 @@ const CommissionCatalogue = () => {
       </div>
 
       {/* ================= SUMMARY CARDS ================= */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatsCard
           title="Total Earnings"
           value={`₹${summary.totalEarnings.toFixed(2)}`}
@@ -210,20 +210,28 @@ const CommissionCatalogue = () => {
           iconColor="bg-green-100 text-green-600"
         />
 
-        <StatsCard
+        {/* <StatsCard
           title="Settled"
           value={`₹${summary.settledEarnings.toFixed(2)}`}
           description="Credited amount"
           icon={CheckCircle}
           iconColor="bg-emerald-100 text-emerald-600"
-        />
+        /> */}
 
-        <StatsCard
+        {/* <StatsCard
           title="Pending"
           value={`₹${summary.pendingEarnings.toFixed(2)}`}
           description="Yet to be settled"
           icon={Clock}
           iconColor="bg-yellow-100 text-yellow-600"
+        /> */}
+
+        <StatsCard
+          title="Total Prescriptions"
+          value={summary.totalPrescriptions.toString()}
+          description="Total prescriptions issued"
+          icon={ClipboardList}
+          iconColor="bg-orange-100 text-orange-600"
         />
 
         <StatsCard
@@ -256,11 +264,11 @@ const CommissionCatalogue = () => {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={timeline}
-                margin={{ 
-                  top: 20, 
-                  right: 30, 
-                  left: 20, 
-                  bottom: filter === "yearly" ? 40 : filter === "monthly" ? 50 : 60 
+                margin={{
+                  top: 20,
+                  right: 30,
+                  left: 20,
+                  bottom: filter === "yearly" ? 40 : filter === "monthly" ? 50 : 60
                 }}
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -307,7 +315,7 @@ const CommissionCatalogue = () => {
             No commission data available for this period
           </div>
         ) : (
-          <div 
+          <div
             ref={tableContainerRef}
             className="overflow-x-auto max-h-[600px] overflow-y-auto"
           >
@@ -349,11 +357,10 @@ const CommissionCatalogue = () => {
                     </td>
                     <td className="px-6 py-4 text-center">
                       <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          c.status === "SETTLED"
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${c.status === "SETTLED"
                             ? "bg-green-100 text-green-700"
                             : "bg-yellow-100 text-yellow-700"
-                        }`}
+                          }`}
                       >
                         {c.status}
                       </span>

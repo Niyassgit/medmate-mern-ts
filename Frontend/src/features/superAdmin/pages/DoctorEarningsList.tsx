@@ -7,6 +7,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  TableFooter,
 } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
 import { getDoctorEarningsList } from "../api/superAdminApi";
@@ -115,7 +116,7 @@ const DoctorEarningsList = () => {
                 <TableHead>Prescriptions</TableHead>
                 <TableHead>Paid Orders</TableHead>
                 <TableHead>Gross Sales</TableHead>
-                <TableHead>Commission</TableHead>
+                <TableHead>Total Earnings</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -145,6 +146,25 @@ const DoctorEarningsList = () => {
                 ))
               )}
             </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TableCell colSpan={4} className="font-bold text-right">
+                  Total
+                </TableCell>
+                <TableCell className="font-bold">
+                  ₹
+                  {doctors
+                    .reduce((acc, curr) => acc + curr.grossSales, 0)
+                    .toFixed(2)}
+                </TableCell>
+                <TableCell className="font-bold text-green-600">
+                  ₹
+                  {doctors
+                    .reduce((acc, curr) => acc + curr.totalCommission, 0)
+                    .toFixed(2)}
+                </TableCell>
+              </TableRow>
+            </TableFooter>
           </Table>
         )}
 
@@ -167,7 +187,7 @@ const DoctorEarningsList = () => {
           </button>
         </div>
       </Card>
-    </div>
+    </div >
   );
 };
 

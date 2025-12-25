@@ -17,4 +17,9 @@ export interface IPrescriptionRepository {
   ): Promise<IPrescription | null>;
   findPrescriptionByIdWithItems(id: string): Promise<IPrescriptionWithItemsAndProduct | null>;
   findCountOfAllPrescriptions(start?: Date, end?: Date): Promise<number>;
+  countPrescriptionsByDoctor(
+    doctorId: string,
+    start?: Date,
+    end?: Date
+  ): Promise<number>;
 }

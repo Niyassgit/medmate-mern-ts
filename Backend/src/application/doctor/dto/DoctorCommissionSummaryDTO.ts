@@ -6,4 +6,5 @@ export interface DoctorCommissionSummaryDTO {
 
   totalOrders: number;
   totalProducts: number;
+  totalPrescriptions: number;
 }

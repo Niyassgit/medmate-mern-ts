@@ -1,4 +1,5 @@
 import { ICommissionRepository } from "../../../domain/commission/repositories/ICommissionRepository";
+import { IPrescriptionRepository } from "../../../domain/prescription/repositories/IPrescriptionRepository";
 import {
   BadRequestError,
   UnautharizedError,
@@ -13,8 +14,9 @@ import { CommissionPeriodUtil, CommissionPeriod } from "../utils/CommissionPerio
 export class DoctorCommissionsUseCase implements IDoctorCommissionsUseCase {
   constructor(
     private _doctorRepository: IDoctorRepository,
-    private _commissionRepository: ICommissionRepository
-  ) {}
+    private _commissionRepository: ICommissionRepository,
+    private _prescriptionRepository: IPrescriptionRepository
+  ) { }
 
   async execute(
     startDate?: string,
@@ -60,7 +62,14 @@ export class DoctorCommissionsUseCase implements IDoctorCommissionsUseCase {
       );
 
       const periodType = period || CommissionPeriodUtil.determinePeriod(start, end);
-      const dashboard = CommissionMapper.toDomain(allCommissions, periodType, start, end);
+
+      const totalPrescriptions = await this._prescriptionRepository.countPrescriptionsByDoctor(
+        doctorId,
+        start,
+        end
+      );
+
+      const dashboard = CommissionMapper.toDomain(allCommissions, periodType, start, end, totalPrescriptions);
 
       const commissionItems = CommissionMapper.mapCommissionsToDTO(
         cursorResult.commissions
@@ -81,6 +90,13 @@ export class DoctorCommissionsUseCase implements IDoctorCommissionsUseCase {
     );
 
     const periodType = period || CommissionPeriodUtil.determinePeriod(start, end);
-    return CommissionMapper.toDomain(commissions, periodType, start, end);
+
+    const totalPrescriptions = await this._prescriptionRepository.countPrescriptionsByDoctor(
+      doctorId,
+      start,
+      end
+    );
+
+    return CommissionMapper.toDomain(commissions, periodType, start, end, totalPrescriptions);
   }
 }
