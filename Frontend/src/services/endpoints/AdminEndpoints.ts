@@ -66,4 +66,5 @@ export const AdminEndpoints = {
       territory ? `&territory=${territory}` : ""
     }`,
     TERRITORY_DETAILS:(territoryId:string)=>`/admin/territory/${territoryId}`,
+    ORDER_ANALYTICS:`/admin/order-analytics`
 };

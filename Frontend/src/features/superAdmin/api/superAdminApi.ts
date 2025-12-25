@@ -189,7 +189,18 @@ export const territoryDetails = async (
 ) => {
   const res = await api.get(
     AdminEndpoints.TERRITORY_DETAILS(territoryId) +
-    `?page=${page}&limit=${limit}`
+      `?page=${page}&limit=${limit}`
   );
+  return res.data.data;
+};
+
+export const orderAnalytics = async (startDate?: string, endDate?: string) => {
+  const res = await api.get(AdminEndpoints.ORDER_ANALYTICS, {
+    params: {
+      startDate,
+      endDate,
+    },
+  });
+
   return res.data.data;
 };
