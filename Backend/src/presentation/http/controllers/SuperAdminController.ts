@@ -36,6 +36,7 @@ import { ITerritoryDetailsUseCase } from "../../../application/superAdmin/interf
 import { IAdminOrderAnalyticsUseCase } from "../../../application/superAdmin/interfaces/IAdminOrderAnalyticsUseCase";
 import { IGetDoctorEarningsUseCase } from "../../../application/superAdmin/interfaces/IGetDoctorEarningsUseCase";
 import { IGetAdminEarningsUseCase } from "../../../application/superAdmin/interfaces/IGetAdminEarningsUseCase";
+import { IGetAllOrdersUseCase } from "../../../application/superAdmin/interfaces/IGetAllOrdersUseCase";
 
 export class SuperAdminController {
   constructor(
@@ -68,8 +69,9 @@ export class SuperAdminController {
     private _getTerritoryDetailsUseCase: ITerritoryDetailsUseCase,
     private _adminOrderAnalyticsUseCase: IAdminOrderAnalyticsUseCase,
     private _getDoctorEarningsUseCase: IGetDoctorEarningsUseCase,
-    private _getAdminEarningsUseCase: IGetAdminEarningsUseCase
-  ) { }
+    private _getAdminEarningsUseCase: IGetAdminEarningsUseCase,
+    private _getAllOrdersUseCase: IGetAllOrdersUseCase
+  ) {}
 
   createSuperAdmin = async (req: Request, res: Response) => {
     const SuperAdmin = await this._createSuperAdminUseCase.execute(
@@ -453,5 +455,23 @@ export class SuperAdminController {
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response, page, limit });
+  };
+
+  getAllOrders = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const { startDate, endDate } = req.query;
+
+    const response = await this._getAllOrdersUseCase.execute(
+      page,
+      limit,
+      startDate as string,
+      endDate as string,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
   };
 }

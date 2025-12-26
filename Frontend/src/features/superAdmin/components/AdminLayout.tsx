@@ -10,6 +10,7 @@ import {
   ShoppingCart,
   ChartArea,
   LogOut,
+  ShieldUser,
 } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { logout } from "@/features/auth/authSlice";
@@ -54,9 +55,10 @@ const AdminLayout = () => {
               <NavLink
                 to={"dashboard"}
                 className={({ isActive }) =>
-                  `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${isActive
-                    ? "bg-gray-200 text-black font-semibold"
-                    : "text-white hover:bg-[#a81519]"
+                  `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
+                    isActive
+                      ? "bg-gray-200 text-black font-semibold"
+                      : "text-white hover:bg-[#a81519]"
                   }`
                 }
               >
@@ -68,9 +70,10 @@ const AdminLayout = () => {
               <NavLink
                 to={"order-analytics"}
                 className={({ isActive }) =>
-                  `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${isActive
-                    ? "bg-gray-200 text-black font-semibold"
-                    : "text-white hover:bg-[#a81519]"
+                  `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
+                    isActive
+                      ? "bg-gray-200 text-black font-semibold"
+                      : "text-white hover:bg-[#a81519]"
                   }`
                 }
               >
@@ -83,9 +86,10 @@ const AdminLayout = () => {
               <NavLink
                 to={"doctors"}
                 className={({ isActive }) =>
-                  `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${isActive
-                    ? "bg-gray-200 text-black font-semibold"
-                    : "text-white hover:bg-[#a81519]"
+                  `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
+                    isActive
+                      ? "bg-gray-200 text-black font-semibold"
+                      : "text-white hover:bg-[#a81519]"
                   }`
                 }
               >
@@ -98,9 +102,10 @@ const AdminLayout = () => {
               <NavLink
                 to={"reps"}
                 className={({ isActive }) =>
-                  `flex items-center gap-2 px-3 py-2 ${isActive
-                    ? "bg-gray-200 text-black font-semibold"
-                    : "text-white hover:bg-[#a81519]"
+                  `flex items-center gap-2 px-3 py-2 ${
+                    isActive
+                      ? "bg-gray-200 text-black font-semibold"
+                      : "text-white hover:bg-[#a81519]"
                   }`
                 }
               >
@@ -112,26 +117,43 @@ const AdminLayout = () => {
               <NavLink
                 to={"guests"}
                 className={({ isActive }) =>
-                  `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${isActive
-                    ? "bg-gray-200 text-black font-semibold"
-                    : "text-white hover:bg-[#a81519]"
+                  `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
+                    isActive
+                      ? "bg-gray-200 text-black font-semibold"
+                      : "text-white hover:bg-[#a81519]"
                   }`
                 }
               >
-                <ShoppingCart className="w-5 h-5" />
+                <ShieldUser className="w-5 h-5" />
                 <span>Guests</span>
               </NavLink>
             </li>
 
+            <li className="space-y-2">
+              <NavLink
+                to={"orders"}
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
+                    isActive
+                      ? "bg-gray-200 text-black font-semibold"
+                      : "text-white hover:bg-[#a81519]"
+                  }`
+                }
+              >
+                <ShoppingCart className="w-5 h-5" />
+                <span>Orders</span>
+              </NavLink>
+            </li>
 
             <li>
               <NavLink
                 to={"territories"}
                 className={({ isActive }) => `
-               flex items-center gap-2 px-3 py-2 rounded-md ${isActive
-                    ? "bg-gray-200 text-black font-semibold"
-                    : "text-white hover:bg-[#a81519]"
-                  }`}
+               flex items-center gap-2 px-3 py-2 rounded-md ${
+                 isActive
+                   ? "bg-gray-200 text-black font-semibold"
+                   : "text-white hover:bg-[#a81519]"
+               }`}
               >
                 <MapPin className="w-5 h-5" />
                 <span>Territory Management</span>
@@ -142,38 +164,25 @@ const AdminLayout = () => {
               <NavLink
                 to={"departments"}
                 className={({ isActive }) => `
-               flex items-center gap-2 px-3 py-2 rounded-md ${isActive
-                    ? "bg-gray-200 text-black font-semibold"
-                    : "text-white hover:bg-[#a81519]"
-                  }`}
+               flex items-center gap-2 px-3 py-2 rounded-md ${
+                 isActive
+                   ? "bg-gray-200 text-black font-semibold"
+                   : "text-white hover:bg-[#a81519]"
+               }`}
               >
                 <Building2 className="w-5 h-5" />
                 <span>Department </span>
               </NavLink>
             </li>
-
-            {/* <li>
-              <NavLink
-                to={"content-moderation"}
-                className={({ isActive }) => `
-              flex items-center gap-2 px-3 py-2 rounded-md ${
-               isActive
-               ? "bg-gray-200 text-black font-semibold"
-           : "text-white hover:bg-[#a81519]"
-              }`}
-              >
-                <FilePen className="w-5 h-5" />
-                <span>Content Moderation</span>
-              </NavLink>
-            </li> */}
             <li>
               <NavLink
                 to={"subscription-management"}
                 className={({ isActive }) => `
-              flex items-center gap-2 px-3 py-2 rounded-md ${isActive
-                    ? "bg-gray-200 text-black font-semibold"
-                    : "text-white hover:bg-[#a81519]"
-                  }`}
+              flex items-center gap-2 px-3 py-2 rounded-md ${
+                isActive
+                  ? "bg-gray-200 text-black font-semibold"
+                  : "text-white hover:bg-[#a81519]"
+              }`}
               >
                 <BanknoteArrowDown className="w-5 h-5" />
                 <span>Subscription Management</span>
@@ -197,10 +206,18 @@ const AdminLayout = () => {
                 <p className="text-sm text-gray-200">Admin</p>
               </div>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="start" side="right" sideOffset={10}>
+            <DropdownMenuContent
+              className="w-56"
+              align="start"
+              side="right"
+              sideOffset={10}
+            >
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50">
+              <DropdownMenuItem
+                onClick={handleLogout}
+                className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
+              >
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>Log out</span>
               </DropdownMenuItem>

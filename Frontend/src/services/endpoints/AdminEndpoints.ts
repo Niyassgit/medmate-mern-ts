@@ -76,4 +76,15 @@ export const AdminEndpoints = {
     if (endDate) url += `&endDate=${endDate}`;
     return url;
   },
+  GET_ALL_ORDERS: (
+    page: number,
+    limit: number,
+    startDate?: string,
+    endDate?: string
+  ) => {
+    let url = `/admin/orders?page=${page}&limit=${limit}`;
+    if (startDate) url += `&startDate=${startDate}`;
+    if (endDate) url += `&endDate=${endDate}`;
+    return url;
+  },
 };

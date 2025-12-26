@@ -227,3 +227,15 @@ export const getAdminEarningsList = async (
   );
   return res.data;
 };
+
+export const getAllOrders = async (
+  page: number,
+  limit: number,
+  startDate?: string,
+  endDate?: string
+) => {
+  const res = await api.get(
+    AdminEndpoints.GET_ALL_ORDERS(page, limit, startDate, endDate)
+  );
+  return res.data;
+};

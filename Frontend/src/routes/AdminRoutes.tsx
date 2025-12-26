@@ -18,6 +18,8 @@ import TerritoryDetails from "@/features/superAdmin/pages/TerritoryDetails";
 import OrderAnalytics from "@/features/superAdmin/pages/OrderAnalytics";
 import DoctorEarningsList from "@/features/superAdmin/pages/DoctorEarningsList";
 import AdminEarningsList from "@/features/superAdmin/pages/AdminEarningsList";
+import Orders from "@/features/rep/pages/Orders";
+import OrderManagment from "@/features/superAdmin/pages/OrderManagment";
 
 export const AdminRoutes = {
   path: "/admin",
@@ -42,6 +44,7 @@ export const AdminRoutes = {
     { path: "guests", element: <Guests /> },
     { path: "territories/:territoryId", element: <TerritoryDetails /> },
     { path: "order-analytics", element: <OrderAnalytics /> },
+    {path: "orders",element:<OrderManagment />},
     {
       path: "order-analytics/doctor-earnings",
       element: <DoctorEarningsList />,

@@ -99,6 +99,8 @@ export class SuperAdminRoutes {
       superAdminController.adminEarnings
     );
 
+    this.router.get("/orders", superAdminController.getAllOrders);
+
     this.router.get(
       "/territory/:territoryId",
       superAdminController.territoryDetails

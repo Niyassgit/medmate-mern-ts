@@ -44,4 +44,11 @@ export interface IOrderRepository {
     start?: Date,
     end?: Date
   ): Promise<{ createdAt: Date; totalAmount: number }[]>;
+
+  getAllOrders(
+    page: number,
+    limit: number,
+    startDate?: Date,
+    endDate?: Date
+  ): Promise<{ orders: IOrder[]; total: number }>;
 }

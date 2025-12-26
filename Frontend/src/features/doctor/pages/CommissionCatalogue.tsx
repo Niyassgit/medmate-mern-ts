@@ -45,17 +45,17 @@ const CommissionCatalogue = () => {
         endDate = new Date(customEndDate);
       } else {
         startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-        endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+        endDate = now;
       }
     } else if (filter === "weekly") {
       startDate.setDate(now.getDate() - 6);
       endDate = now;
     } else if (filter === "monthly") {
       startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-      endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+      endDate = now;
     } else if (filter === "yearly") {
       startDate = new Date(now.getFullYear(), 0, 1);
-      endDate = new Date(now.getFullYear(), 11, 31);
+      endDate = now;
     }
 
     startDate.setHours(0, 0, 0, 0);
@@ -163,8 +163,8 @@ const CommissionCatalogue = () => {
                 key={f}
                 onClick={() => setFilter(f)}
                 className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${filter === f
-                    ? "bg-white text-gray-900 shadow-sm"
-                    : "text-gray-500 hover:text-gray-900"
+                  ? "bg-white text-gray-900 shadow-sm"
+                  : "text-gray-500 hover:text-gray-900"
                   }`}
               >
                 {f.charAt(0).toUpperCase() + f.slice(1)}
@@ -358,8 +358,8 @@ const CommissionCatalogue = () => {
                     <td className="px-6 py-4 text-center">
                       <span
                         className={`px-2 py-1 rounded-full text-xs font-medium ${c.status === "SETTLED"
-                            ? "bg-green-100 text-green-700"
-                            : "bg-yellow-100 text-yellow-700"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-yellow-100 text-yellow-700"
                           }`}
                       >
                         {c.status}
