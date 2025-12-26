@@ -239,3 +239,13 @@ export const getAllOrders = async (
   );
   return res.data;
 };
+
+export const getOrderDetails = async (orderId: string) => {
+  const res = await api.get(`/admin/orders/${orderId}`);
+  return res.data;
+};
+
+export const updateOrderStatus = async (orderId: string, status: string) => {
+  const res = await api.patch(`/admin/orders/${orderId}/status`, { status });
+  return res.data;
+};

@@ -1,3 +1,4 @@
+
 import AdminLayout from "@/features/superAdmin/components/AdminLayout";
 import AdminDashboard from "@/features/superAdmin/pages/AdminDashboard";
 import RepsList from "@/features/superAdmin/pages/RepsList";
@@ -20,6 +21,11 @@ import DoctorEarningsList from "@/features/superAdmin/pages/DoctorEarningsList";
 import AdminEarningsList from "@/features/superAdmin/pages/AdminEarningsList";
 import Orders from "@/features/rep/pages/Orders";
 import OrderManagment from "@/features/superAdmin/pages/OrderManagment";
+import { lazy } from "react";
+
+const AdminOrderDetails = lazy(
+  () => import("../features/superAdmin/pages/AdminOrderDetails")
+);
 
 export const AdminRoutes = {
   path: "/admin",
@@ -44,7 +50,8 @@ export const AdminRoutes = {
     { path: "guests", element: <Guests /> },
     { path: "territories/:territoryId", element: <TerritoryDetails /> },
     { path: "order-analytics", element: <OrderAnalytics /> },
-    {path: "orders",element:<OrderManagment />},
+    { path: "orders", element: <OrderManagment /> },
+    { path: "orders/:orderId", element: <AdminOrderDetails /> },
     {
       path: "order-analytics/doctor-earnings",
       element: <DoctorEarningsList />,

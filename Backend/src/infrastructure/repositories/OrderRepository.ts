@@ -13,7 +13,8 @@ import { AdminEarningsDTO } from "../../application/superAdmin/dto/AdminEarnings
 
 export class OrderRepository
   extends BaseRepository<IOrder, Order, Prisma.OrderCreateInput, "order">
-  implements IOrderRepository {
+  implements IOrderRepository
+{
   constructor() {
     super(prisma.order, (o: Order) => OrderMapper.toDomain(o));
   }
@@ -76,10 +77,7 @@ export class OrderRepository
     data: Partial<Omit<IOrder, "id" | "createdAt" | "updatedAt">>
   ): Promise<IOrder> {
     const exist = await this.findById(orderId);
-    if (!exist)
-      throw new NotFoundError(
-        ErrorMessages.ORDER_NOT_FOUND || "Order not found"
-      );
+    if (!exist) throw new NotFoundError(ErrorMessages.ORDER_NOT_FOUND);
 
     const mappedData = OrderMapper.toUpdatePersistance(data);
     const updated = await prisma.order.update({
@@ -195,7 +193,6 @@ export class OrderRepository
     });
   }
 
-
   async revenueTimeline(
     start?: Date,
     end?: Date
@@ -269,7 +266,6 @@ export class OrderRepository
         whereClause.createdAt.gte = startDate;
       }
       if (end) {
-
         const endDate = new Date(end);
         endDate.setHours(23, 59, 59, 999);
         whereClause.createdAt.lte = endDate;
@@ -398,14 +394,13 @@ export class OrderRepository
           }
         }
 
-
         const commission = await prisma.commission.aggregate({
           where: commissionWhere,
           _sum: { doctorCut: true },
         });
 
         const prescriptionWhere: Prisma.PrescriptionWhereInput = {
-          doctorId: doctor.id
+          doctorId: doctor.id,
         };
         if (startDate || endDate) {
           prescriptionWhere.createdAt = {};
@@ -416,7 +411,6 @@ export class OrderRepository
             prescriptionWhere.createdAt.lte = endDate;
           }
         }
-
 
         const totalPrescriptions = await prisma.prescription.count({
           where: prescriptionWhere,
@@ -532,7 +526,7 @@ export class OrderRepository
         });
 
         const prescriptionWhere: Prisma.PrescriptionWhereInput = {
-          doctorId: doctor.id
+          doctorId: doctor.id,
         };
         if (startDate || endDate) {
           prescriptionWhere.createdAt = {};

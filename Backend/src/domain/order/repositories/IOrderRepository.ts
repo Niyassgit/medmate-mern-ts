@@ -25,8 +25,8 @@ export interface IOrderRepository {
   findOrderById(orderId: string): Promise<IOrder | null>;
   findAllOrders(guestId: string): Promise<IOrder[]>;
   updateOrder(
-    guestId: string,
-    data: Omit<IOrder, "id" | "createdAt" | "updatedAt">
+    orderId: string, 
+    data: Partial<Omit<IOrder, "id" | "createdAt" | "updatedAt">>
   ): Promise<IOrder>;
   findOrderDetailsById(orderId: string): Promise<IOrderDetail | null>;
   findOrdersByRepId(repId: string): Promise<IOrder[]>;

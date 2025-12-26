@@ -1,7 +1,6 @@
-
-import { IOrder } from "../../../domain/order/entitiy/IOrder";
-import { OrderStatus } from "@prisma/client";
+import { OrderStatus } from "../../../shared/Enums";
+import { UpdateOrderStatusResponseDTO } from "../dto/UpdateOrderStatusResponseDTO";
 
 export interface IUpdateOrderStatusUseCase {
-    execute(orderId: string, status: OrderStatus): Promise<IOrder>;
+    execute(orderId: string, status: OrderStatus): Promise<UpdateOrderStatusResponseDTO>;
 }

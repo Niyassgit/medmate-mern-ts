@@ -1,6 +1,5 @@
-
-import { IOrderDetail } from "../../../domain/order/entitiy/IOrderDetail";
+import { OrderDetailsResponseDTO } from "../dto/OrderDetailsResponseDTO";
 
 export interface IGetOrderDetailsUseCase {
-    execute(orderId: string): Promise<IOrderDetail | null>;
+    execute(orderId: string): Promise<OrderDetailsResponseDTO | null>;
 }

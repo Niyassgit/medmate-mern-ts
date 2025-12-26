@@ -40,7 +40,7 @@ import { IGetAllOrdersUseCase } from "../../../application/superAdmin/interfaces
 
 import { IGetOrderDetailsUseCase } from "../../../application/superAdmin/interfaces/IGetOrderDetailsUseCase";
 import { IUpdateOrderStatusUseCase } from "../../../application/superAdmin/interfaces/IUpdateOrderStatusUseCase";
-import { OrderStatus } from "@prisma/client";
+import { OrderStatus } from "../../../shared/Enums";
 
 export class SuperAdminController {
   constructor(

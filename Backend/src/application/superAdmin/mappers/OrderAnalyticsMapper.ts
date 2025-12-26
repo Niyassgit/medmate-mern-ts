@@ -1,4 +1,6 @@
+import { IOrder } from "../../../domain/order/entitiy/IOrder";
 import { OrderAnalyticsDTO } from "../dto/OrderAnalyticsDTO";
+import { UpdateOrderStatusResponseDTO } from "../dto/UpdateOrderStatusResponseDTO";
 import { RevenueTimelineEntry } from "../utils/RevenuePeriodUtil";
 
 export class OrderAnalyticsMapper {
@@ -33,6 +35,16 @@ export class OrderAnalyticsMapper {
           admin: adminEarnings,
         },
       },
+    };
+  }
+
+  static toOrderUpdate(data: IOrder): UpdateOrderStatusResponseDTO {
+    return {
+      id: data.id,
+      orderId: data.id,
+      status: data.status,
+      paymentStatus: data.paymentStatus,
+      updatedAt: data.updatedAt,
     };
   }
 }

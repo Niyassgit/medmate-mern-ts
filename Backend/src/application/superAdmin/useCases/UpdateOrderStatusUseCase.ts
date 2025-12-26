@@ -1,14 +1,20 @@
-
 import { IOrderRepository } from "../../../domain/order/repositories/IOrderRepository";
-import { IOrder } from "../../../domain/order/entitiy/IOrder";
 import { IUpdateOrderStatusUseCase } from "../interfaces/IUpdateOrderStatusUseCase";
-import { OrderStatus } from "@prisma/client";
+import { OrderStatus } from "../../../shared/Enums";
+import { UpdateOrderStatusResponseDTO } from "../dto/UpdateOrderStatusResponseDTO";
+import { OrderAnalyticsMapper } from "../mappers/OrderAnalyticsMapper";
 
 export class UpdateOrderStatusUseCase implements IUpdateOrderStatusUseCase {
-    constructor(private _orderRepository: IOrderRepository) { }
+  constructor(private _orderRepository: IOrderRepository) {}
 
-    async execute(orderId: string, status: OrderStatus): Promise<IOrder> {
-        // cast status to any to bypass the enum mismatch or ensure Repository expects Prisma OrderStatus
-        return await this._orderRepository.updateOrder(orderId, { status } as any);
-    }
+  async execute(
+    orderId: string,
+    status: OrderStatus
+  ): Promise<UpdateOrderStatusResponseDTO> {
+    const updatedOrder = await this._orderRepository.updateOrder(orderId, {
+      status,
+    });
+
+    return OrderAnalyticsMapper.toOrderUpdate(updatedOrder);
+  }
 }
