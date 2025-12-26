@@ -9,7 +9,7 @@ import {
 import { ICreateGuestByDoctorUseCase } from "../interfaces/ICreateGuestByDoctorUseCase";
 import { CreateGuestByDoctorDTO } from "../dto/CreateGuestByDoctorDTO";
 import { GuestMapper } from "../../../infrastructure/mappers/GuestMapper";
-import { IGuest } from "../../../domain/Guest/entities/IGuest";
+import { IGuest } from "../../../domain/guest/entities/IGuest";
 
 export class CreateGuestByDoctorUseCase implements ICreateGuestByDoctorUseCase {
   constructor(

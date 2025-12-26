@@ -7,6 +7,9 @@ import { OrderMapper } from "../mappers/OrderMapper";
 import { NotFoundError } from "../../domain/common/errors";
 import { ErrorMessages } from "../../shared/Messages";
 import { IOrderDetail } from "../../domain/order/entitiy/IOrderDetail";
+import { PaymentStatus } from "../../shared/Enums";
+import { DoctorEarningsDTO } from "../../application/superAdmin/dto/DoctorEarningsDTO";
+import { AdminEarningsDTO } from "../../application/superAdmin/dto/AdminEarningsDTO";
 
 export class OrderRepository
   extends BaseRepository<IOrder, Order, Prisma.OrderCreateInput, "order">
@@ -170,5 +173,397 @@ export class OrderRepository
       },
     });
     return orders.map((o) => OrderMapper.toDomain(o));
+  }
+
+  async countPaidOrders(start?: Date, end?: Date): Promise<number> {
+    const whereClause: Prisma.OrderWhereInput = {
+      paymentStatus: PaymentStatus.SUCCESS,
+    };
+
+    if (start || end) {
+      whereClause.createdAt = {};
+      if (start) {
+        whereClause.createdAt.gte = start;
+      }
+      if (end) {
+        whereClause.createdAt.lte = end;
+      }
+    }
+
+    return await prisma.order.count({
+      where: whereClause,
+    });
+  }
+
+
+  async revenueTimeline(
+    start?: Date,
+    end?: Date
+  ): Promise<{ createdAt: Date; totalAmount: number }[]> {
+    const whereClause: Prisma.OrderWhereInput = {
+      paymentStatus: PaymentStatus.SUCCESS,
+    };
+
+    if (start || end) {
+      whereClause.createdAt = {};
+      if (start) {
+        whereClause.createdAt.gte = start;
+      }
+      if (end) {
+        whereClause.createdAt.lte = end;
+      }
+    }
+
+    const orders = await prisma.order.findMany({
+      where: whereClause,
+      select: {
+        totalAmount: true,
+        createdAt: true,
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+
+    return orders.map((order) => ({
+      createdAt: order.createdAt,
+      totalAmount: order.totalAmount,
+    }));
+  }
+
+  async sumAdminEarnings(start?: Date, end?: Date): Promise<number> {
+    const whereClause: Prisma.CommissionWhereInput = {};
+
+    if (start || end) {
+      whereClause.createdAt = {};
+      if (start) {
+        const startDate = new Date(start);
+        startDate.setHours(0, 0, 0, 0);
+        whereClause.createdAt.gte = startDate;
+      }
+      if (end) {
+        const endDate = new Date(end);
+        endDate.setHours(23, 59, 59, 999);
+        whereClause.createdAt.lte = endDate;
+      }
+    }
+
+    const result = await prisma.commission.aggregate({
+      where: whereClause,
+      _sum: {
+        adminCut: true,
+      },
+    });
+
+    return Number((result._sum.adminCut || 0).toFixed(2));
+  }
+
+  async sumDoctorEarnings(start?: Date, end?: Date): Promise<number> {
+    const whereClause: Prisma.CommissionWhereInput = {};
+
+    if (start || end) {
+      whereClause.createdAt = {};
+      if (start) {
+        const startDate = new Date(start);
+        startDate.setHours(0, 0, 0, 0);
+        whereClause.createdAt.gte = startDate;
+      }
+      if (end) {
+
+        const endDate = new Date(end);
+        endDate.setHours(23, 59, 59, 999);
+        whereClause.createdAt.lte = endDate;
+      }
+    }
+
+    const result = await prisma.commission.aggregate({
+      where: whereClause,
+      _sum: {
+        doctorCut: true,
+      },
+    });
+
+    return Number((result._sum.doctorCut || 0).toFixed(2));
+  }
+
+  async sumGrossAmount(start?: Date, end?: Date): Promise<number> {
+    const whereClause: Prisma.OrderWhereInput = {
+      paymentStatus: PaymentStatus.SUCCESS,
+    };
+
+    if (start || end) {
+      whereClause.createdAt = {};
+      if (start) {
+        whereClause.createdAt.gte = start;
+      }
+      if (end) {
+        whereClause.createdAt.lte = end;
+      }
+    }
+
+    const result = await prisma.order.aggregate({
+      where: whereClause,
+      _sum: {
+        totalAmount: true,
+      },
+    });
+
+    return Number((result._sum.totalAmount || 0).toFixed(2));
+  }
+
+  async getDoctorEarningsList(
+    page: number,
+    limit: number,
+    startDate?: Date,
+    endDate?: Date
+  ): Promise<DoctorEarningsDTO[]> {
+    const whereClause: Prisma.OrderWhereInput = {
+      paymentStatus: PaymentStatus.SUCCESS,
+    };
+
+    if (startDate || endDate) {
+      whereClause.createdAt = {};
+      if (startDate) {
+        whereClause.createdAt.gte = startDate;
+      }
+      if (endDate) {
+        whereClause.createdAt.lte = endDate;
+      }
+    }
+
+    const doctorWhere: Prisma.DoctorWhereInput = {};
+
+    if (startDate || endDate) {
+      const dateFilter: Prisma.DateTimeFilter = {};
+      if (startDate) dateFilter.gte = startDate;
+      if (endDate) dateFilter.lte = endDate;
+
+      doctorWhere.OR = [
+        { prescriptions: { some: { createdAt: dateFilter } } },
+        { commissions: { some: { createdAt: dateFilter } } },
+      ];
+    } else {
+      doctorWhere.OR = [
+        { prescriptions: { some: {} } },
+        { commissions: { some: {} } },
+      ];
+    }
+
+    const doctors = await prisma.doctor.findMany({
+      where: doctorWhere,
+      include: {
+        user: {
+          select: {
+            email: true,
+          },
+        },
+        department: {
+          select: {
+            name: true,
+          },
+        },
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+
+    const results = await Promise.all(
+      doctors.map(async (doctor) => {
+        const orderWhere: Prisma.OrderWhereInput = {
+          ...whereClause,
+          prescription: {
+            doctorId: doctor.id,
+          },
+        };
+
+        const [paidOrders, grossSales] = await Promise.all([
+          prisma.order.count({ where: orderWhere }),
+          prisma.order.aggregate({
+            where: orderWhere,
+            _sum: { totalAmount: true },
+          }),
+        ]);
+
+        const commissionWhere: Prisma.CommissionWhereInput = {
+          doctor: { id: doctor.id },
+        };
+
+        if (startDate || endDate) {
+          commissionWhere.createdAt = {};
+          if (startDate) {
+            commissionWhere.createdAt.gte = startDate;
+          }
+          if (endDate) {
+            commissionWhere.createdAt.lte = endDate;
+          }
+        }
+
+
+        const commission = await prisma.commission.aggregate({
+          where: commissionWhere,
+          _sum: { doctorCut: true },
+        });
+
+        const prescriptionWhere: Prisma.PrescriptionWhereInput = {
+          doctorId: doctor.id
+        };
+        if (startDate || endDate) {
+          prescriptionWhere.createdAt = {};
+          if (startDate) {
+            prescriptionWhere.createdAt.gte = startDate;
+          }
+          if (endDate) {
+            prescriptionWhere.createdAt.lte = endDate;
+          }
+        }
+
+
+        const totalPrescriptions = await prisma.prescription.count({
+          where: prescriptionWhere,
+        });
+
+        return {
+          doctorId: doctor.id,
+          doctorName: doctor.name,
+          email: doctor.user?.email || "N/A",
+          department: doctor.department?.name || "N/A",
+          totalPrescriptions,
+          paidOrders,
+          grossSales: grossSales._sum.totalAmount || 0,
+          totalCommission: commission._sum.doctorCut || 0,
+        };
+      })
+    );
+
+    return results;
+  }
+
+  async getAdminEarningsList(
+    page: number,
+    limit: number,
+    startDate?: Date,
+    endDate?: Date
+  ): Promise<AdminEarningsDTO[]> {
+    const whereClause: any = {};
+
+    if (startDate || endDate) {
+      whereClause.createdAt = {};
+      if (startDate) whereClause.createdAt.gte = startDate;
+      if (endDate) whereClause.createdAt.lte = endDate;
+    }
+
+    const doctorsWithActivity = await prisma.doctor.findMany({
+      where: {
+        OR: [
+          {
+            prescriptions: {
+              some: {
+                createdAt: whereClause.createdAt,
+              },
+            },
+          },
+          {
+            commissions: {
+              some: {
+                createdAt: whereClause.createdAt,
+              },
+            },
+          },
+        ],
+      },
+      select: { id: true },
+    });
+
+    const activeDoctorIds = doctorsWithActivity.map((d) => d.id);
+
+    const doctorWhere: Prisma.DoctorWhereInput = {
+      id: { in: activeDoctorIds },
+    };
+
+    const doctors = await prisma.doctor.findMany({
+      where: doctorWhere,
+      include: {
+        user: {
+          select: {
+            email: true,
+          },
+        },
+        department: {
+          select: {
+            name: true,
+          },
+        },
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+
+    const results = await Promise.all(
+      doctors.map(async (doctor) => {
+        const orderWhere: Prisma.OrderWhereInput = {
+          ...whereClause,
+          prescription: {
+            doctorId: doctor.id,
+          },
+        };
+
+        const [paidOrders, grossSales] = await Promise.all([
+          prisma.order.count({ where: orderWhere }),
+          prisma.order.aggregate({
+            where: orderWhere,
+            _sum: { totalAmount: true },
+          }),
+        ]);
+
+        const commissionWhere: Prisma.CommissionWhereInput = {
+          doctor: { id: doctor.id },
+        };
+
+        if (startDate || endDate) {
+          commissionWhere.createdAt = {};
+          if (startDate) {
+            commissionWhere.createdAt.gte = startDate;
+          }
+          if (endDate) {
+            commissionWhere.createdAt.lte = endDate;
+          }
+        }
+
+        const commission = await prisma.commission.aggregate({
+          where: commissionWhere,
+          _sum: { adminCut: true }, 
+        });
+
+        const prescriptionWhere: Prisma.PrescriptionWhereInput = {
+          doctorId: doctor.id
+        };
+        if (startDate || endDate) {
+          prescriptionWhere.createdAt = {};
+          if (startDate) {
+            prescriptionWhere.createdAt.gte = startDate;
+          }
+          if (endDate) {
+            prescriptionWhere.createdAt.lte = endDate;
+          }
+        }
+
+        const totalPrescriptions = await prisma.prescription.count({
+          where: prescriptionWhere,
+        });
+
+        return {
+          doctorId: doctor.id,
+          doctorName: doctor.name,
+          email: doctor.user?.email || "N/A",
+          department: doctor.department?.name || "N/A",
+          totalPrescriptions,
+          paidOrders,
+          grossSales: grossSales._sum.totalAmount || 0,
+          adminEarnings: commission._sum.adminCut || 0, 
+        };
+      })
+    );
+
+    return results;
   }
 }

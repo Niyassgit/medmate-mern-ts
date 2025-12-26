@@ -68,8 +68,10 @@ export const doctorAnltyics = async (id: string) => {
   return res.data;
 };
 
-export const getAllFeed = async (id: string) => {
-  const res = await api.get(DoctorEndpoints.REP_FEED(id));
+export const getAllFeed = async (id: string, page: number = 1, limit: number = 10) => {
+  const res = await api.get(DoctorEndpoints.REP_FEED(id), {
+    params: { page, limit },
+  });
   return res.data;
 };
 
@@ -255,4 +257,16 @@ export const changePassword = async (data: {
 export const callRep = async (repId: string) => {
   const res = await api.post(DoctorEndpoints.CALL_REP(repId));
   return res.data;
+};
+
+export const doctorCommissions = async (
+  startDate?: string,
+  endDate?: string,
+  period?: "weekly" | "monthly" | "yearly" | "custom",
+  cursor?: string
+) => {
+  const res = await api.get(DoctorEndpoints.COMMISION_PAGE, {
+    params: { startDate, endDate, period, cursor },
+  });
+  return res.data.data;
 };

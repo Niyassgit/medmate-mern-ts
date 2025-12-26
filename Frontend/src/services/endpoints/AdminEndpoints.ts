@@ -5,8 +5,7 @@ export const AdminEndpoints = {
     search: string = "",
     territory: string = ""
   ) =>
-    `/admin/doctors?page=${page}&limit=${limit}&search=${search}${
-      territory ? `&territory=${territory}` : ""
+    `/admin/doctors?page=${page}&limit=${limit}&search=${search}${territory ? `&territory=${territory}` : ""
     }`,
   GET_REPS: (
     page: number,
@@ -14,8 +13,7 @@ export const AdminEndpoints = {
     search: string = "",
     territory: string = ""
   ) =>
-    `/admin/reps?page=${page}&limit=${limit}&search=${search}${
-      territory ? `&territory=${territory}` : ""
+    `/admin/reps?page=${page}&limit=${limit}&search=${search}${territory ? `&territory=${territory}` : ""
     }`,
   BLOCK_USER: (userId: string) => `/admin/block/${userId}`,
   UNBLOCK_USER: (userId: string) => `/admin/unblock/${userId}`,
@@ -62,8 +60,20 @@ export const AdminEndpoints = {
     search: string = "",
     territory: string = ""
   ) =>
-    `/admin/guests?page=${page}&limit=${limit}&search=${search}${
-      territory ? `&territory=${territory}` : ""
+    `/admin/guests?page=${page}&limit=${limit}&search=${search}${territory ? `&territory=${territory}` : ""
     }`,
-    TERRITORY_DETAILS:(territoryId:string)=>`/admin/territory/${territoryId}`,
+  TERRITORY_DETAILS: (territoryId: string) => `/admin/territory/${territoryId}`,
+  ORDER_ANALYTICS: `/admin/order-analytics`,
+  DOCTOR_EARNINGS: (page: number, limit: number, startDate?: string, endDate?: string) => {
+    let url = `/admin/stats/doctor-earnings?page=${page}&limit=${limit}`;
+    if (startDate) url += `&startDate=${startDate}`;
+    if (endDate) url += `&endDate=${endDate}`;
+    return url;
+  },
+  ADMIN_EARNINGS: (page: number, limit: number, startDate?: string, endDate?: string) => {
+    let url = `/admin/stats/admin-earnings?page=${page}&limit=${limit}`;
+    if (startDate) url += `&startDate=${startDate}`;
+    if (endDate) url += `&endDate=${endDate}`;
+    return url;
+  },
 };

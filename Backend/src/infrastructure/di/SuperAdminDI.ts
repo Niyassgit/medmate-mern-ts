@@ -39,6 +39,11 @@ import { GetSubscribedListUseCase } from "../../application/superAdmin/useCases/
 import { GetAllGuestsUseCase } from "../../application/superAdmin/useCases/GetAllGuestsUseCase";
 import { GuestRepository } from "../repositories/GuestRepository";
 import { TerritoryDetailsUseCase } from "../../application/superAdmin/useCases/TerritoryDetailsUseCase";
+import { AdminOrderAnalyticsUseCase } from "../../application/superAdmin/useCases/AdminOrderAnalyticsUseCase";
+import { OrderRepository } from "../repositories/OrderRepository";
+import { PrescriptionRepository } from "../repositories/PrescriptionRepository";
+import { GetDoctorEarningsUseCase } from "../../application/superAdmin/useCases/GetDoctorEarningsUseCase";
+import { GetAdminEarningsUseCase } from "../../application/superAdmin/useCases/GetAdminEarningsUseCase";
 
 const superAdminRepositories = new SuperAdminRepository();
 const userRepository = new UserRepository();
@@ -53,6 +58,8 @@ const subscriptionHistoryRepository = new SubscriptionHistoryRepository();
 const productPostRepository = new ProductPostRepository();
 const connectionRepository = new ConnectionRepository();
 const guestRepository = new GuestRepository();
+const orderRepository = new OrderRepository();
+const prescriptionRepository = new PrescriptionRepository();
 
 const createSuperAdminUseCase = new CreateSuperAdminUseCase(
   superAdminRepositories,
@@ -143,6 +150,15 @@ const territoryDetailsUseCase = new TerritoryDetailsUseCase(
   terrritoryRepository
 );
 
+const adminOrderAnalytics = new AdminOrderAnalyticsUseCase(
+  orderRepository,
+  prescriptionRepository
+);
+
+
+const getDoctorEarningsUseCase = new GetDoctorEarningsUseCase(orderRepository);
+const getAdminEarningsUseCase = new GetAdminEarningsUseCase(orderRepository);
+
 export const superAdminController = new SuperAdminController(
   createSuperAdminUseCase,
   getSuperAdminByEmailIdUseCase,
@@ -170,5 +186,8 @@ export const superAdminController = new SuperAdminController(
   getRecentSubscriptionsUseCase,
   getSubscribedListUseCase,
   getAllGuestsUseCase,
-  territoryDetailsUseCase
+  territoryDetailsUseCase,
+  adminOrderAnalytics,
+  getDoctorEarningsUseCase,
+  getAdminEarningsUseCase
 );

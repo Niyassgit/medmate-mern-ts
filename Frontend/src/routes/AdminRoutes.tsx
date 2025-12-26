@@ -15,6 +15,9 @@ import SubscriptionManagement from "@/features/superAdmin/pages/SubscriptionMana
 import SubscriptionsList from "@/features/superAdmin/pages/SubscriptionsList";
 import Guests from "@/features/superAdmin/pages/Guests";
 import TerritoryDetails from "@/features/superAdmin/pages/TerritoryDetails";
+import OrderAnalytics from "@/features/superAdmin/pages/OrderAnalytics";
+import DoctorEarningsList from "@/features/superAdmin/pages/DoctorEarningsList";
+import AdminEarningsList from "@/features/superAdmin/pages/AdminEarningsList";
 
 export const AdminRoutes = {
   path: "/admin",
@@ -35,8 +38,17 @@ export const AdminRoutes = {
     { path: "departments", element: <DepartmentManagement /> },
     { path: "departments/form", element: <CreateDepartment /> },
     { path: "subscription-management", element: <SubscriptionManagement /> },
-    {path:"subscription-management/list",element:<SubscriptionsList/>},
-    {path:"guests",element:<Guests />},
-    {path:"territories/:territoryId",element:<TerritoryDetails />}
+    { path: "subscription-management/list", element: <SubscriptionsList /> },
+    { path: "guests", element: <Guests /> },
+    { path: "territories/:territoryId", element: <TerritoryDetails /> },
+    { path: "order-analytics", element: <OrderAnalytics /> },
+    {
+      path: "order-analytics/doctor-earnings",
+      element: <DoctorEarningsList />,
+    },
+    {
+      path: "order-analytics/admin-earnings",
+      element: <AdminEarningsList />,
+    },
   ],
 };

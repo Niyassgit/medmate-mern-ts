@@ -3,7 +3,7 @@ import {
   BadRequestError,
   UnautharizedError,
 } from "../../../domain/common/errors";
-import { IGuestRepository } from "../../../domain/Guest/repositories/IGuestRepositories";
+import { IGuestRepository } from "../../../domain/guest/repositories/IGuestRepositories";
 import { ErrorMessages, SuccessMessages } from "../../../shared/Messages";
 import { AddressDTO } from "../dto/AddressDTO";
 import { ICreateAddressUseCase } from "../interefaces/ICreateAddressUseCase";

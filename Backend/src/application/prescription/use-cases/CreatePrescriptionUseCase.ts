@@ -2,7 +2,7 @@ import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRe
 import { IPrescriptionRepository } from "../../../domain/prescription/repositories/IPrescriptionRepository";
 import { IPrescriptionItemRepository } from "../../../domain/prescription/repositories/IPrescriptionItemRepository";
 import { ErrorMessages, NotificationMessages, SuccessMessages } from "../../../shared/Messages";
-import { BadRequestError, UnautharizedError } from "../../errors";
+import { BadRequestError,UnautharizedError } from "../../../domain/common/errors";
 import { PrescriptionDTO } from "../dto/PrescriptionDTO";
 import { ICreatePrescriptionUseCase } from "../interfaces/ICreatePrescriptionUseCase";
 import { PrescriptionMapper } from "../mappers/PrescriptionMapper";
@@ -21,7 +21,7 @@ export class CreatePrescriptionUseCase implements ICreatePrescriptionUseCase {
     private _notificationService: INotificationService,
     private _tokenService: ITokenService,
     private _configService: IConfigService
-  ) {}
+  ) { }
   async execute(
     guestId: string,
     dto: PrescriptionDTO,
@@ -31,6 +31,14 @@ export class CreatePrescriptionUseCase implements ICreatePrescriptionUseCase {
 
     if (!dto.items || dto.items.length === 0) {
       throw new BadRequestError(ErrorMessages.PRESCRIPTION_ITEM_NEEDED);
+    }
+
+    if (dto.expiresAt && new Date(dto.expiresAt) < new Date()) {
+      throw new BadRequestError(ErrorMessages.INVALID_DATE);
+    }
+
+    if (dto.linkExpiresAt && new Date(dto.linkExpiresAt) < new Date()) {
+      throw new BadRequestError(ErrorMessages.INVALID_DATE);
     }
 
     const { doctorId } = await this._doctorRepository.getDoctorIdByUserId(
@@ -66,7 +74,7 @@ export class CreatePrescriptionUseCase implements ICreatePrescriptionUseCase {
 
       await this._notificationService.sendEmail(
         guest.email,
-        NotificationMessages.PRESCRIPTION_INVITATION_SUBJECT,      
+        NotificationMessages.PRESCRIPTION_INVITATION_SUBJECT,
         NotificationMessages.PRESCRIPTION_INVITATION_BODY(
           guest.name,
           registrationLink

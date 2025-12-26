@@ -89,10 +89,20 @@ export class SuperAdminRoutes {
     );
     this.router.get("/subscibed/list", superAdminController.subscribedList);
     this.router.get("/guests", superAdminController.getAllGuests);
-    this.router.get("/:id", superAdminController.getSuperAdminByEmail);
+    this.router.get("/order-analytics", superAdminController.orderAnalytics);
+    this.router.get(
+      "/stats/doctor-earnings",
+      superAdminController.doctorEarnings
+    );
+    this.router.get(
+      "/stats/admin-earnings",
+      superAdminController.adminEarnings
+    );
+
     this.router.get(
       "/territory/:territoryId",
       superAdminController.territoryDetails
     );
+    this.router.get("/:id", superAdminController.getSuperAdminByEmail);
   }
 }

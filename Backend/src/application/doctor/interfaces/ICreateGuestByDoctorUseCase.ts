@@ -1,4 +1,4 @@
-import { IGuest } from "../../../domain/Guest/entities/IGuest";
+import { IGuest } from "../../../domain/guest/entities/IGuest";
 import { CreateGuestByDoctorDTO } from "../dto/CreateGuestByDoctorDTO";
 
 export interface ICreateGuestByDoctorUseCase {

@@ -10,7 +10,7 @@ import { connectDB } from "./infrastructure/config/db";
 import { LoginRoute } from "./presentation/http/routes/AuthRoute";
 import { MedicalRepRoutes } from "./presentation/http/routes/MedicalRepRoutes";
 import { DoctorRoutes } from "./presentation/http/routes/doctorRoutes";
-import { SuperAdminRoutes } from "./presentation/http/routes/superAdminRoutes";
+import { SuperAdminRoutes } from "./presentation/http/routes/SuperAdminRoutes";
 import { ErrorHandler } from "./presentation/http/middlewares/ErrorHandler";
 import { CommonRoutes } from "./presentation/http/routes/CommonRoutes";
 import { WebhookRoutes } from "./presentation/http/routes/WebhookRoutes";

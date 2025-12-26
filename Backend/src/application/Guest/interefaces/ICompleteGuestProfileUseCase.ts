@@ -1,4 +1,4 @@
-import { IGuest } from "../../../domain/Guest/entities/IGuest";
+import { IGuest } from "../../../domain/guest/entities/IGuest";
 import { GuestProfileCompleteDTO } from "../dto/ProfileCompleteDTO";
 
 export interface ICompleteGuestProfileUseCase {

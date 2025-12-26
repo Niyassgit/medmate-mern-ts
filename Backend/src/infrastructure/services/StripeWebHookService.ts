@@ -8,9 +8,9 @@ import { PaymentStatus, OrderStatus } from "@prisma/client";
 import { IMedicalRepRepository } from "../../domain/medicalRep/repositories/IMedicalRepRepository";
 import { ISubscriptionHistoryRepository } from "../../domain/subscription/repositories/ISubscriptionHistoryRepository";
 import { ISubscriptionRepositoy } from "../../domain/subscription/repositories/ISubscriptionRepository";
-import { ICommissionRepository } from "../../domain/Commission/repositories/ICommissionRepository";
+import { ICommissionRepository } from "../../domain/commission/repositories/ICommissionRepository";
 import { IOrderRepository } from "../../domain/order/repositories/IOrderRepository";
-import { ICommission } from "../../domain/Commission/entities/ICommission";
+import { ICommission } from "../../domain/commission/entities/ICommission";
 import { CommissionStatus } from "../../shared/Enums";
 
 export class stripeWebhookService implements IStripeWebhookService {

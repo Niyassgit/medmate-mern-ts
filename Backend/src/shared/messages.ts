@@ -79,6 +79,8 @@ export const ErrorMessages = {
     "Subscription plan needed to make the video call with doctor",
   REP_SUBSCRIPTION_NEEDED:
     "Medical Rep doesnt contains a valid Subscription plan to make this call",
+  FILTER_DATE_WRONG: "Start date must be before or equal to end date",
+  INVALID_DATE: "The date provided is invalid. Please ensure it is a future date.",
 } as const;
 
 export const SuccessMessages = {

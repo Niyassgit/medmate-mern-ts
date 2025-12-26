@@ -41,6 +41,7 @@ import { IChangePasswordUseCase } from "../../../application/common/interfaces/I
 import { Role } from "../../../shared/Enums";
 import { IVerifyOldPasswordUseCase } from "../../../application/common/interfaces/IverifyOldPasswordUsesCase";
 import { IMakeVideoCallWithRepUseCase } from "../../../application/doctor/interfaces/IMakeVideoCallWithrepUseCase";
+import { IDoctorCommissionsUseCase } from "../../../application/doctor/interfaces/IDoctorCommissionsUseCase";
 
 export class DoctorController {
   constructor(
@@ -78,6 +79,7 @@ export class DoctorController {
     private _changePasswordUseCase: IChangePasswordUseCase,
     private _verifyOldPasswordUseCase: IVerifyOldPasswordUseCase,
     private _makeVideoCallWithRepUseCase: IMakeVideoCallWithRepUseCase,
+    private _doctorCommissionUseCase: IDoctorCommissionsUseCase
   ) { }
 
   createDoctor = async (req: Request, res: Response) => {
@@ -168,7 +170,10 @@ export class DoctorController {
 
   getFeed = async (req: Request, res: Response) => {
     const { userId } = req.params;
-    const response = await this._getFeedUseCase.execute(userId);
+    const page = req.query.page ? parseInt(req.query.page as string) : 1;
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
+
+    const response = await this._getFeedUseCase.execute(userId, page, limit);
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
@@ -435,7 +440,10 @@ export class DoctorController {
   makeCall = async (req: Request, res: Response) => {
     const userId = GetOptionalUserId(req.user);
     const { repId } = req.params;
-    const error = await this._makeVideoCallWithRepUseCase.execute(repId, userId);
+    const error = await this._makeVideoCallWithRepUseCase.execute(
+      repId,
+      userId
+    );
     if (error) {
       return res
         .status(HttpStatusCode.BAD_REQUEST)
@@ -444,4 +452,18 @@ export class DoctorController {
     return res.sendStatus(HttpStatusCode.OK);
   };
 
+  doctorCommissions = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { startDate, endDate, period, cursor } = req.query;
+    const response = await this._doctorCommissionUseCase.execute(
+      startDate as string | undefined,
+      endDate as string | undefined,
+      userId,
+      period as "weekly" | "monthly" | "yearly" | "custom" | undefined,
+      cursor as string | undefined
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
 }

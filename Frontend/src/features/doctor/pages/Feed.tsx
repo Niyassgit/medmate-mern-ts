@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import FeedCard from "@/features/doctor/components/FeedCard";
 import { useSelector } from "react-redux";
 import { getAllFeed, handleInterestToggle, handleLikeToggle } from "../api";
 import toast from "react-hot-toast";
-import useFetchItem from "@/hooks/useFetchItem";
 import { FeedPostDTO } from "../dto/FeedPostDTO";
 import { SpinnerButton } from "@/components/shared/SpinnerButton";
 import { getSocket } from "@/lib/socket";
@@ -18,28 +17,50 @@ const Feed = () => {
   const token = useMemo(() => localStorage.getItem("accessToken"), []);
 
   const [localFeed, setLocalFeed] = useState<FeedPostDTO[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
   const navigate = useNavigate();
 
-  const fetchPosts = useCallback(async () => {
-    if (!id) return [];
-    try {
-      const data = await getAllFeed(id);
-      return data.data as FeedPostDTO[];
-    } catch (error: any) {
-      toast.error(error.message || "Failed to fetch feed");
-      return [];
-    }
-  }, [id]);
+  const observer = useRef<IntersectionObserver | null>(null);
 
-  const {
-    data: feedData = [],
-    loading,
-    error,
-  } = useFetchItem<FeedPostDTO[]>(fetchPosts);
+  const lastPostElementRef = useCallback(
+    (node: HTMLDivElement) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [loading, hasMore]
+  );
 
   useEffect(() => {
-    setLocalFeed(feedData ?? []);
-  }, [feedData]);
+    const fetchPosts = async () => {
+      if (!id) return;
+      setLoading(true);
+      try {
+        const data = await getAllFeed(id, page, 5);
+        const newPosts = data.data as FeedPostDTO[];
+
+        setLocalFeed((prev) => {
+          const existingIds = new Set(prev.map(p => p.id));
+          const uniqueNewPosts = newPosts.filter(p => !existingIds.has(p.id));
+          return page === 1 ? newPosts : [...prev, ...uniqueNewPosts];
+        });
+
+        setHasMore(newPosts.length === 5);
+      } catch (error: any) {
+        toast.error(error.message || "Failed to fetch feed");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPosts();
+  }, [id, page]);
 
   useEffect(() => {
     if (!token || !id) return;
@@ -60,7 +81,6 @@ const Feed = () => {
             };
 
             if (payload.liked !== undefined) {
-              // For now, just update the count - the API response handles user state
             }
             return updatedPost;
           }
@@ -81,7 +101,7 @@ const Feed = () => {
             return {
               ...p,
               interests: payload.counts?.interests ?? p.interests,
-              // Only update interested state if we have it - API response handles user state
+            
             };
           }
           return p;
@@ -132,10 +152,10 @@ const Feed = () => {
         prev.map((p) =>
           p.id === postId
             ? {
-                ...p,
-                likes: p.liked ? p.likes - 1 : p.likes + 1,
-                liked: !p.liked,
-              }
+              ...p,
+              likes: p.liked ? p.likes - 1 : p.likes + 1,
+              liked: !p.liked,
+            }
             : p
         )
       );
@@ -156,10 +176,10 @@ const Feed = () => {
         prev.map((p) =>
           p.id === postId
             ? {
-                ...p,
-                likes: p.liked ? p.likes + 1 : p.likes - 1,
-                liked: !p.liked,
-              }
+              ...p,
+              likes: p.liked ? p.likes + 1 : p.likes - 1,
+              liked: !p.liked,
+            }
             : p
         )
       );
@@ -172,10 +192,10 @@ const Feed = () => {
         prev.map((p) =>
           p.id === postId
             ? {
-                ...p,
-                interests: p.interested ? p.interests - 1 : p.interests + 1,
-                interested: !p.interested,
-              }
+              ...p,
+              interests: p.interested ? p.interests - 1 : p.interests + 1,
+              interested: !p.interested,
+            }
             : p
         )
       );
@@ -187,10 +207,10 @@ const Feed = () => {
         prev.map((p) =>
           p.id === postId
             ? {
-                ...p,
-                interests: res.data.totalInterests ?? p.interests,
-                interested: res.data.interested,
-              }
+              ...p,
+              interests: res.data.totalInterests ?? p.interests,
+              interested: res.data.interested,
+            }
             : p
         )
       );
@@ -200,28 +220,19 @@ const Feed = () => {
         prev.map((p) =>
           p.id === postId
             ? {
-                ...p,
-                interests: p.interested ? p.interests + 1 : p.interests - 1,
-                interested: !p.interested,
-              }
+              ...p,
+              interests: p.interested ? p.interests + 1 : p.interests - 1,
+              interested: !p.interested,
+            }
             : p
         )
       );
     }
   };
 
-  if (loading) return <SpinnerButton />;
-
-  if (error)
-    return (
-      <div className="flex justify-center items-center min-h-screen text-red-500">
-        Something went wrong
-      </div>
-    );
-
   return (
     <div className="p-6 space-y-6">
-      {!localFeed.length ? (
+      {!loading && !localFeed.length ? (
         <div className="flex flex-col justify-center items-center py-16 text-center space-y-4">
           <img
             src={noResult}
@@ -247,17 +258,35 @@ const Feed = () => {
         </div>
       ) : (
         <div className="max-w-4xl w-full mx-auto space-y-6">
-          {localFeed.map((post) => (
-            <FeedCard
-              key={post.id}
-              post={post}
-              hasLiked={post.liked}
-              hasInterested={post.interested}
-              isSubscribedRep={post.rep.isSubscribedRep}
-              onLike={() => handleLike(post.id)}
-              onInterest={() => handleInterest(post.id)}
-            />
-          ))}
+          {localFeed.map((post, index) => {
+            if (localFeed.length === index + 1) {
+              return (
+                <div ref={lastPostElementRef} key={post.id}>
+                  <FeedCard
+                    post={post}
+                    hasLiked={post.liked}
+                    hasInterested={post.interested}
+                    isSubscribedRep={post.rep.isSubscribedRep}
+                    onLike={() => handleLike(post.id)}
+                    onInterest={() => handleInterest(post.id)}
+                  />
+                </div>
+              );
+            } else {
+              return (
+                <FeedCard
+                  key={post.id}
+                  post={post}
+                  hasLiked={post.liked}
+                  hasInterested={post.interested}
+                  isSubscribedRep={post.rep.isSubscribedRep}
+                  onLike={() => handleLike(post.id)}
+                  onInterest={() => handleInterest(post.id)}
+                />
+              );
+            }
+          })}
+          {loading && <SpinnerButton />}
         </div>
       )}
     </div>

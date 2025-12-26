@@ -35,12 +35,15 @@ export const DoctorEndpoints = {
     `/doctor/chat/message/read/${conversationId}`,
   REPS: `/doctor/practice/reps`,
   REP_PRODUCTS: (repId: string) => `/doctor/practice/reps/${repId}/products`,
-  PRODUCT_DETAILS: (productId: string) => `/doctor/practice/product/details/${productId}`,
+  PRODUCT_DETAILS: (productId: string) =>
+    `/doctor/practice/product/details/${productId}`,
   GET_GUESTS: `/doctor/practice/guests`,
   CREATE_GUEST: `/doctor/practice/guests/create`,
-  CREATE_PRESCRIPTION: (guestId: string) => `/doctor/practice/prescription/create/${guestId}`,
+  CREATE_PRESCRIPTION: (guestId: string) =>
+    `/doctor/practice/prescription/create/${guestId}`,
   GET_ALL_PRESCRIPTIONS: `/doctor/prescriptions`,
   VERIFY_PASSWORD: `/doctor/verify-password`,
   CHANGE_PASSWORD: `/doctor/change-password`,
   CALL_REP: (repId: string) => `/doctor/call-rep/${repId}`,
+  COMMISION_PAGE: `/doctor/practice/commissions`,
 };

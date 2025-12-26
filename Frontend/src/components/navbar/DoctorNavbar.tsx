@@ -156,7 +156,7 @@ const DoctorNavbar = () => {
               className="text-white hover:text-gray-200"
               onClick={() => setPracticeOpen((prev) => !prev)}
             >
-             <Hospital className="h-4 w-3" /> Practice ▾
+              <Hospital className="h-4 w-3" /> Practice ▾
             </Button>
 
             {practiceOpen && (
@@ -176,6 +176,15 @@ const DoctorNavbar = () => {
                 >
                   <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                     Create Prescription
+                  </div>
+                </NavLink>
+
+                <NavLink
+                  to="/doctor/prescriptions"
+                  onClick={() => setPracticeOpen(false)}
+                >
+                  <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                    Prescriptions
                   </div>
                 </NavLink>
 
@@ -263,6 +272,12 @@ const DoctorNavbar = () => {
                 onClick={() => setMobileOpen(false)}
               >
                 Create Prescription
+              </NavLink>
+              <NavLink
+                to="/doctor/prescriptions"
+                onClick={() => setMobileOpen(false)}
+              >
+                Prescriptions
               </NavLink>
               <NavLink
                 to="/doctor/commission"

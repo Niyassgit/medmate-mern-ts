@@ -233,21 +233,7 @@ export default function PrescriptionPage() {
 
       await createPrescription(selectedGuest.id, prescriptionData);
       toast.success("Prescription created successfully!");
-      navigate(`/doctor/commission`)
-      // // Reset form
-      // setSelectedGuest(null);
-      // setGuestSearchQuery("");
-      // setPrescription({
-      //   notes: "",
-      //   status: "PENDING",
-      //   expiresAt: "",
-      //   shareToken: "",
-      //   linkExpiresAt: "",
-      //   items: [],
-      // });
-      // setCurrentItem({ productId: "", productName: "", dosage: "", quantity: 1 });
-      // setSelectedRep(null);
-      // setProducts([]);
+      navigate(`/doctor/prescriptions`)
     } catch (error: any) {
       console.error("Error creating prescription:", error);
       toast.error(error.response?.data?.message || "Failed to create prescription");

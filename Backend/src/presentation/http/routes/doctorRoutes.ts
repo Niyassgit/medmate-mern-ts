@@ -106,6 +106,10 @@ export class DoctorRoutes {
       ValidateSchema(PrescriptionSchema),
       doctorController.createPrescription
     );
+    this.router.get(
+      "/practice/commissions",
+      doctorController.doctorCommissions
+    );
     this.router.get("/practice/guests", doctorController.getGuests);
     this.router.post("/practice/guests/create", doctorController.createGuest);
     this.router.get("/prescriptions", doctorController.getAllPrescriptions);

@@ -33,6 +33,9 @@ import { IGetRecentSubscriptionsUseCase } from "../../../application/superAdmin/
 import { IGetSubscribedListUseCase } from "../../../application/superAdmin/interfaces/IGetSubscribedListUseCase";
 import { IGetAllGuestsUseCase } from "../../../application/superAdmin/interfaces/IGetAllGuestsUseCase";
 import { ITerritoryDetailsUseCase } from "../../../application/superAdmin/interfaces/ITerritoryDetailsUseCase";
+import { IAdminOrderAnalyticsUseCase } from "../../../application/superAdmin/interfaces/IAdminOrderAnalyticsUseCase";
+import { IGetDoctorEarningsUseCase } from "../../../application/superAdmin/interfaces/IGetDoctorEarningsUseCase";
+import { IGetAdminEarningsUseCase } from "../../../application/superAdmin/interfaces/IGetAdminEarningsUseCase";
 
 export class SuperAdminController {
   constructor(
@@ -62,7 +65,10 @@ export class SuperAdminController {
     private _getRecentSubscriptionsUseCase: IGetRecentSubscriptionsUseCase,
     private _getSubscribedListUseCase: IGetSubscribedListUseCase,
     private _getAllGuestsUseCase: IGetAllGuestsUseCase,
-    private _getTerritoryDetailsUseCase: ITerritoryDetailsUseCase
+    private _getTerritoryDetailsUseCase: ITerritoryDetailsUseCase,
+    private _adminOrderAnalyticsUseCase: IAdminOrderAnalyticsUseCase,
+    private _getDoctorEarningsUseCase: IGetDoctorEarningsUseCase,
+    private _getAdminEarningsUseCase: IGetAdminEarningsUseCase
   ) { }
 
   createSuperAdmin = async (req: Request, res: Response) => {
@@ -392,6 +398,56 @@ export class SuperAdminController {
       territoryId,
       page,
       limit
+    );
+
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response, page, limit });
+  };
+
+  orderAnalytics = async (req: Request, res: Response) => {
+    const userId = "68cd786319d4bed25bc01763";
+
+    // GetOptionalUserId(req.user);
+    const { startDate, endDate } = req.query;
+    const response = await this._adminOrderAnalyticsUseCase.execute(
+      startDate as string,
+      endDate as string,
+      userId
+    );
+
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  doctorEarnings = async (req: Request, res: Response) => {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const { startDate, endDate } = req.query;
+
+    const response = await this._getDoctorEarningsUseCase.execute(
+      page,
+      limit,
+      startDate as string,
+      endDate as string
+    );
+
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response, page, limit });
+  };
+
+  adminEarnings = async (req: Request, res: Response) => {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const { startDate, endDate } = req.query;
+
+    const response = await this._getAdminEarningsUseCase.execute(
+      page,
+      limit,
+      startDate as string,
+      endDate as string
     );
 
     return res

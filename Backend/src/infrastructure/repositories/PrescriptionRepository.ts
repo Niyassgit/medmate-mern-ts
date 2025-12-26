@@ -15,8 +15,7 @@ export class PrescriptionRepository
     Prisma.PrescriptionCreateInput,
     "prescription"
   >
-  implements IPrescriptionRepository
-{
+  implements IPrescriptionRepository {
   constructor() {
     super(prisma.prescription, (p) => PrescriptionMapper.toDomain(p));
   }
@@ -112,5 +111,42 @@ export class PrescriptionRepository
 
     if (!prescription) return null;
     return PrescriptionMapper.toDomainWithItems(prescription);
+  }
+  async findCountOfAllPrescriptions(start?: Date, end?: Date): Promise<number> {
+    const whereClause: Prisma.PrescriptionWhereInput = {};
+
+    if (start || end) {
+      whereClause.createdAt = {};
+      if (start) whereClause.createdAt.gte = start;
+      if (end) whereClause.createdAt.lte = end;
+    }
+
+    return prisma.prescription.count({
+      where: whereClause,
+    });
+  }
+
+  async countPrescriptionsByDoctor(
+    doctorId: string,
+    start?: Date,
+    end?: Date
+  ): Promise<number> {
+    const whereClause: Prisma.PrescriptionWhereInput = {
+      doctorId,
+    };
+
+    if (start || end) {
+      whereClause.createdAt = {};
+      if (start) {
+        whereClause.createdAt.gte = start;
+      }
+      if (end) {
+        whereClause.createdAt.lte = end;
+      }
+    }
+
+    return await prisma.prescription.count({
+      where: whereClause,
+    });
   }
 }
