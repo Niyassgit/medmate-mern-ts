@@ -100,6 +100,11 @@ export class SuperAdminRoutes {
     );
 
     this.router.get("/orders", superAdminController.getAllOrders);
+    this.router.get("/orders/:orderId", superAdminController.getOrderDetails);
+    this.router.patch(
+      "/orders/:orderId/status",
+      superAdminController.updateOrderStatus
+    );
 
     this.router.get(
       "/territory/:territoryId",

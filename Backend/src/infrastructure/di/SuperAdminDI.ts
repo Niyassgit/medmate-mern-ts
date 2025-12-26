@@ -20,6 +20,8 @@ import { CreateDepartmentUseCase } from "../../application/department/use-cases/
 import { DepartmentRepository } from "../repositories/DepatmentRepository";
 import { GetAllDepartmentsUseCase } from "../../application/superAdmin/useCases/GetAllDepartmentsUseCase";
 import { EditDepartmentUseCase } from "../../application/department/use-cases/EditDepartmentUseCase";
+import { GetOrderDetailsUseCase } from "../../application/superAdmin/useCases/GetOrderDetailsUseCase";
+import { UpdateOrderStatusUseCase } from "../../application/superAdmin/useCases/UpdateOrderStatusUseCase";
 import { s3StorageService } from "../services/S3StorageService";
 import { GetAllSubscriptionsUseCase } from "../../application/subscription/use-cases/GetAllSubscriptionsUseCase";
 import { SubscriptionRepository } from "../repositories/SubscriptionRepository";
@@ -161,6 +163,8 @@ const getDoctorEarningsUseCase = new GetDoctorEarningsUseCase(orderRepository);
 const getAdminEarningsUseCase = new GetAdminEarningsUseCase(orderRepository);
 
 const getAllOrdersUseCase = new GetAllOrdersUseCase(orderRepository);
+const getOrderDetailsUseCase = new GetOrderDetailsUseCase(orderRepository);
+const updateOrderStatusUseCase = new UpdateOrderStatusUseCase(orderRepository);
 
 export const superAdminController = new SuperAdminController(
   createSuperAdminUseCase,
@@ -193,5 +197,7 @@ export const superAdminController = new SuperAdminController(
   adminOrderAnalytics,
   getDoctorEarningsUseCase,
   getAdminEarningsUseCase,
-  getAllOrdersUseCase
+  getAllOrdersUseCase,
+  getOrderDetailsUseCase,
+  updateOrderStatusUseCase
 );

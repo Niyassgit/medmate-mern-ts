@@ -38,6 +38,10 @@ import { IGetDoctorEarningsUseCase } from "../../../application/superAdmin/inter
 import { IGetAdminEarningsUseCase } from "../../../application/superAdmin/interfaces/IGetAdminEarningsUseCase";
 import { IGetAllOrdersUseCase } from "../../../application/superAdmin/interfaces/IGetAllOrdersUseCase";
 
+import { IGetOrderDetailsUseCase } from "../../../application/superAdmin/interfaces/IGetOrderDetailsUseCase";
+import { IUpdateOrderStatusUseCase } from "../../../application/superAdmin/interfaces/IUpdateOrderStatusUseCase";
+import { OrderStatus } from "@prisma/client";
+
 export class SuperAdminController {
   constructor(
     private _createSuperAdminUseCase: ICreateSuperAdminUseCase,
@@ -70,8 +74,10 @@ export class SuperAdminController {
     private _adminOrderAnalyticsUseCase: IAdminOrderAnalyticsUseCase,
     private _getDoctorEarningsUseCase: IGetDoctorEarningsUseCase,
     private _getAdminEarningsUseCase: IGetAdminEarningsUseCase,
-    private _getAllOrdersUseCase: IGetAllOrdersUseCase
-  ) {}
+    private _getAllOrdersUseCase: IGetAllOrdersUseCase,
+    private _getOrderDetailsUseCase: IGetOrderDetailsUseCase,
+    private _updateOrderStatusUseCase: IUpdateOrderStatusUseCase
+  ) { }
 
   createSuperAdmin = async (req: Request, res: Response) => {
     const SuperAdmin = await this._createSuperAdminUseCase.execute(
@@ -469,6 +475,26 @@ export class SuperAdminController {
       startDate as string,
       endDate as string,
       userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  getOrderDetails = async (req: Request, res: Response) => {
+    const { orderId } = req.params;
+    const response = await this._getOrderDetailsUseCase.execute(orderId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  updateOrderStatus = async (req: Request, res: Response) => {
+    const { orderId } = req.params;
+    const { status } = req.body;
+    const response = await this._updateOrderStatusUseCase.execute(
+      orderId,
+      status as OrderStatus
     );
     return res
       .status(HttpStatusCode.OK)
