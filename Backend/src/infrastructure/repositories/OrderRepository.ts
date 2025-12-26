@@ -13,8 +13,7 @@ import { AdminEarningsDTO } from "../../application/superAdmin/dto/AdminEarnings
 
 export class OrderRepository
   extends BaseRepository<IOrder, Order, Prisma.OrderCreateInput, "order">
-  implements IOrderRepository
-{
+  implements IOrderRepository {
   constructor() {
     super(prisma.order, (o: Order) => OrderMapper.toDomain(o));
   }
