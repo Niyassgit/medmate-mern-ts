@@ -11,11 +11,28 @@ export class WebRTCAdapter {
     };
   }
 
+  static fromSessionDescription(
+    sessionDesc: SessionDescription
+  ): RTCSessionDescriptionInit {
+    return {
+      type: sessionDesc.type,
+      sdp: sessionDesc.sdp,
+    };
+  }
+
   static toIceCandidate(rtc: RTCIceCandidate): IceCandidate {
     return {
       candidate: rtc.candidate,
       sdpMid: rtc.sdpMid ?? undefined,
       sdpMLineIndex: rtc.sdpMLineIndex ?? undefined,
+    };
+  }
+
+  static fromIceCandidate(ice: IceCandidate): RTCIceCandidateInit {
+    return {
+      candidate: ice.candidate,
+      sdpMid: ice.sdpMid ?? null,
+      sdpMLineIndex: ice.sdpMLineIndex ?? null,
     };
   }
 }

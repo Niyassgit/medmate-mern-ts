@@ -558,7 +558,8 @@ export class OrderRepository
     page: number,
     limit: number,
     startDate?: Date,
-    endDate?: Date
+    endDate?: Date,
+    status?: string
   ): Promise<{ orders: IOrder[]; total: number }> {
     const whereClause: Prisma.OrderWhereInput = {};
 
@@ -566,6 +567,10 @@ export class OrderRepository
       whereClause.createdAt = {};
       if (startDate) whereClause.createdAt.gte = startDate;
       if (endDate) whereClause.createdAt.lte = endDate;
+    }
+
+    if (status && status !== "ALL") {
+      whereClause.status = status as import("@prisma/client").OrderStatus;
     }
 
     const [orders, total] = await Promise.all([

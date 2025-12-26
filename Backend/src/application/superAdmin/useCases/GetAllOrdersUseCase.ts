@@ -12,6 +12,7 @@ export class GetAllOrdersUseCase implements IGetAllOrdersUseCase {
     limit: number,
     startDate?: string,
     endDate?: string,
+    status?: string,
     userId?: string
   ): Promise<OrdersListResponseDTO> {
     if (!userId) throw new UnautharizedError(ErrorMessages.UNAUTHORIZED);
@@ -27,7 +28,8 @@ export class GetAllOrdersUseCase implements IGetAllOrdersUseCase {
       page,
       limit,
       start,
-      end
+      end,
+      status
     );
 
     const mappedOrders = orders.map((order) => OrderMapper.toTableDTO(order));

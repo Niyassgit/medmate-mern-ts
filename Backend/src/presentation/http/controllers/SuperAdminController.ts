@@ -467,13 +467,14 @@ export class SuperAdminController {
     const userId = GetOptionalUserId(req.user);
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
-    const { startDate, endDate } = req.query;
+    const { startDate, endDate, status } = req.query;
 
     const response = await this._getAllOrdersUseCase.execute(
       page,
       limit,
       startDate as string,
       endDate as string,
+      status as string,
       userId
     );
     return res

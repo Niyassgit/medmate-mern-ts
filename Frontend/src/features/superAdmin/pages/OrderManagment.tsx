@@ -199,7 +199,7 @@ const OrderManagment = () => {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem asChild>
-                          <Link to={`/ admin / orders / ${order.orderId} `}>
+                          <Link to={`/admin/orders/${order.orderId}`}>
                             View Details
                           </Link>
                         </DropdownMenuItem>

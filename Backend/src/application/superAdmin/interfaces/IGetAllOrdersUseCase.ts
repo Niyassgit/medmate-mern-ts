@@ -6,6 +6,7 @@ export interface IGetAllOrdersUseCase {
     limit: number,
     startDate?: string,
     endDate?: string,
+    status?: string, // Added status
     userId?: string
   ): Promise<OrdersListResponseDTO>;
 }

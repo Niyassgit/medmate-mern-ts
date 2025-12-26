@@ -49,6 +49,7 @@ export interface IOrderRepository {
     page: number,
     limit: number,
     startDate?: Date,
-    endDate?: Date
+    endDate?: Date,
+    status?: string // Added status
   ): Promise<{ orders: IOrder[]; total: number }>;
 }
