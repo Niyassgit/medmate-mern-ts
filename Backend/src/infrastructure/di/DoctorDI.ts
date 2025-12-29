@@ -25,7 +25,7 @@ import { SocketEngagementEventPublisher } from "../realtime/publishers/SocketEng
 import { InterestRepository } from "../repositories/InterestRepostory";
 import { ToggleInterestOnPostUseCase } from "../../application/interest/use-cases/ToggleInterestOnPostUseCase";
 import { DoctorMutualConnectionsUseCase } from "../../application/doctor/use-cases/DoctorMutualConnectionsUseCase";
-import { DoctorPendingConnectionsUseCase } from "../../application/doctor/interfaces/DoctorPendingConectionsUseCase";
+import { DoctorPendingConnectionsUseCase } from "../../application/doctor/use-cases/DoctorPendingConectionsUseCase";
 import { NotificationRepository } from "../repositories/NotificationRepository";
 import { GetDoctorNotificationsUseCase } from "../../application/notification/use-cases/GetDoctorNotificationsUseCase";
 import { DoctorRejectConnectionUseCase } from "../../application/connection/use-cases/DoctorRejectConnectionUseCase";

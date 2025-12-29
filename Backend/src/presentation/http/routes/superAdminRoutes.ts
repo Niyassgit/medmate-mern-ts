@@ -51,6 +51,7 @@ export class SuperAdminRoutes {
       ValidateSchema(DepartmentSchema),
       superAdminController.editDepartment
     );
+    this.router.get("/features", superAdminController.getAllFeatures);
     this.router.get(
       "/subscriptions",
       superAdminController.getAllSubscriptionPlan
@@ -111,5 +112,10 @@ export class SuperAdminRoutes {
       superAdminController.territoryDetails
     );
     this.router.get("/:id", superAdminController.getSuperAdminByEmail);
+
+    this.router.post("/features/create", superAdminController.createFeature);
+    this.router.get("/features/list", superAdminController.getAllFeatureList);
+    this.router.put("/features/update/:id", superAdminController.updateFeature);
+    this.router.delete("/features/delete/:id", superAdminController.deleteFeature);
   }
 }

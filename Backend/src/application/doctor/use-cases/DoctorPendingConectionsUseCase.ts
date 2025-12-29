@@ -5,7 +5,7 @@ import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRe
 import { ErrorMessages } from "../../../shared/Messages";
 import { ConnectionMappers } from "../../common/mapper/ConnectionMappers";
 import { ConnectionsListOnModalDTO } from "../dto/MutualConnectionListDTO";
-import { IDoctorPendingConnectionsUseCase } from "./IDoctorPendingConnectionsUseCase";
+import { IDoctorPendingConnectionsUseCase } from "../interfaces/IDoctorPendingConnectionsUseCase";
 
 export class DoctorPendingConnectionsUseCase implements IDoctorPendingConnectionsUseCase{
 

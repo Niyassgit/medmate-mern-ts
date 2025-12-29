@@ -41,6 +41,11 @@ import { IGetAllOrdersUseCase } from "../../../application/superAdmin/interfaces
 import { IGetOrderDetailsUseCase } from "../../../application/superAdmin/interfaces/IGetOrderDetailsUseCase";
 import { IUpdateOrderStatusUseCase } from "../../../application/superAdmin/interfaces/IUpdateOrderStatusUseCase";
 import { OrderStatus } from "../../../shared/Enums";
+import { IGetAllFeaturesForPlanUseCase } from "../../../application/superAdmin/interfaces/IGetAllFeaturesForPlanUseCase";
+import { ICreateFeatureUseCase } from "../../../application/superAdmin/interfaces/ICreateFeatureUseCase";
+import { IGetFeaturesUseCase } from "../../../application/superAdmin/interfaces/IGetFeaturesUseCase";
+import { IUpdateFeatureUseCase } from "../../../application/superAdmin/interfaces/IUpdateFeatureUseCase";
+import { IDeleteFeatureUseCase } from "../../../application/superAdmin/interfaces/IDeleteFeatureUseCase";
 
 export class SuperAdminController {
   constructor(
@@ -76,7 +81,12 @@ export class SuperAdminController {
     private _getAdminEarningsUseCase: IGetAdminEarningsUseCase,
     private _getAllOrdersUseCase: IGetAllOrdersUseCase,
     private _getOrderDetailsUseCase: IGetOrderDetailsUseCase,
-    private _updateOrderStatusUseCase: IUpdateOrderStatusUseCase
+    private _updateOrderStatusUseCase: IUpdateOrderStatusUseCase,
+    private _getAllFeaturesForPlanUseCase: IGetAllFeaturesForPlanUseCase,
+    private _createFeatureUseCase: ICreateFeatureUseCase,
+    private _getFeaturesUseCase: IGetFeaturesUseCase,
+    private _updateFeatureUseCase: IUpdateFeatureUseCase,
+    private _deleteFeatureUseCase: IDeleteFeatureUseCase
   ) { }
 
   createSuperAdmin = async (req: Request, res: Response) => {
@@ -238,6 +248,13 @@ export class SuperAdminController {
       .json({ success: true, message: response });
   };
 
+  getAllFeatures = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._getAllFeaturesForPlanUseCase.execute(userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
   getAllSubscriptionPlan = async (req: Request, res: Response) => {
     const userId = GetOptionalUserId(req.user);
     const response = await this._getAllSubcriptionPlanUseCase.execute(userId);
@@ -501,4 +518,27 @@ export class SuperAdminController {
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
   };
+
+  createFeature = async (req: Request, res: Response) => {
+    const feature = await this._createFeatureUseCase.execute(req.body);
+    res.status(HttpStatusCode.CREATED).json({ success: true, data: feature });
+  };
+
+  getAllFeatureList = async (req: Request, res: Response) => {
+    const features = await this._getFeaturesUseCase.execute();
+    res.status(HttpStatusCode.OK).json({ success: true, data: features });
+  };
+
+  updateFeature = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const feature = await this._updateFeatureUseCase.execute(id, req.body);
+    res.status(HttpStatusCode.OK).json({ success: true, data: feature });
+  };
+
+  deleteFeature = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    await this._deleteFeatureUseCase.execute(id);
+    res.status(HttpStatusCode.NO_CONTENT).send();
+  };
+
 }

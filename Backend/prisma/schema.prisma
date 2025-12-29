@@ -187,12 +187,32 @@ model SubscriptionPlan {
   price       Float
   tenure      String
   isActive    Boolean  @default(true)
-  features    String[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   reps                MedicalRep[]
   subscriptionHistory SubscriptionHistory[]
+  features            PlanFeature[]
+}
+
+model PlanFeature {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  planId    String @db.ObjectId
+  featureId String @db.ObjectId
+
+  plan    SubscriptionPlan @relation(fields: [planId], references: [id])
+  feature Feature          @relation(fields: [featureId], references: [id])
+
+  @@unique([planId, featureId])
+}
+
+model Feature {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  key         String   @unique
+  description String
+  createdAt   DateTime @default(now())
+
+  plans PlanFeature[]
 }
 
 model Territory {

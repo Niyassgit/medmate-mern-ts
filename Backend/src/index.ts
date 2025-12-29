@@ -20,6 +20,7 @@ import { GuestRoutes } from "./presentation/http/routes/GuestRoutes";
 
 const app = express();
 
+
 app.use("/api/webhook", new WebhookRoutes().router);
 
 app.use(express.json());
@@ -48,7 +49,7 @@ const startServer = async () => {
     app.use("/api/admin", new SuperAdminRoutes().router);
     app.use("/api/auth", new LoginRoute().router);
     app.use("/api/common", new CommonRoutes().router);
-    app.use("/api/guest",new GuestRoutes().router);
+    app.use("/api/guest", new GuestRoutes().router);
 
     app.use(ErrorHandler);
 
