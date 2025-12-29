@@ -81,6 +81,7 @@ export const ErrorMessages = {
     "Medical Rep doesnt contains a valid Subscription plan to make this call",
   FILTER_DATE_WRONG: "Start date must be before or equal to end date",
   INVALID_DATE: "The date provided is invalid. Please ensure it is a future date.",
+  FEATURE_NOT_AVAILABLE:"Feature is not found!",
 } as const;
 
 export const SuccessMessages = {

@@ -272,7 +272,7 @@ export class SuperAdminController {
     );
     return res
       .status(HttpStatusCode.CREATED)
-      .json({ success: true, data: response });
+      .json({ success: true, data: response, message: "Subscription plan created successfully" });
   };
 
   subscriptionUpdate = async (req: Request, res: Response) => {

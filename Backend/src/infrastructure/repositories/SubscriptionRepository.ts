@@ -19,7 +19,11 @@ export class SubscriptionRepository
   }
   async createSubscription(data: ISubscription): Promise<ISubscription> {
     const mappedData = SubscriptionMapper.toPersistence(data);
-    return this.create(mappedData);
+    const created = await prisma.subscriptionPlan.create({
+      data: mappedData,
+      include: { features: { include: { feature: true } } },
+    });
+    return SubscriptionMapper.toDomainEntity(created as unknown as SubscriptionPlanWithFeatures);
   }
 
   async findSubscriptionById(
@@ -45,14 +49,27 @@ export class SubscriptionRepository
     subscriptionId: string,
     data: Omit<ISubscription, "id" | "createdAt" | "updatedAt">
   ): Promise<ISubscription> {
-
-    // Filtering out 'features' from data if simply passed as strings to update scalar fields
     const { features, ...rest } = data as any;
 
+    // First, delete all existing PlanFeature records for this plan
+    await prisma.planFeature.deleteMany({
+      where: { planId: subscriptionId },
+    });
+
+    // Then update the plan and create new PlanFeature records
     const result = await prisma.subscriptionPlan.update({
       where: { id: subscriptionId },
-      data: rest,
-      include: { features: { include: { feature: true } } }
+      data: {
+        ...rest,
+        features: {
+          create: features.map((featureId: string) => ({
+            feature: {
+              connect: { id: featureId },
+            },
+          })),
+        },
+      },
+      include: { features: { include: { feature: true } } },
     });
     return SubscriptionMapper.toDomainEntity(result as unknown as SubscriptionPlanWithFeatures);
   }

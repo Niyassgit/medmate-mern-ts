@@ -80,12 +80,12 @@ const SubscriptionManagement = () => {
       };
 
       if (editingPlan) {
-        await updateSubscriptionPlan(editingPlan.id, payload);
+        const res = await updateSubscriptionPlan(editingPlan.id, payload);
         toast.success("Plan updated successfully");
         setEditingPlan(null);
       } else {
         const res = await createSubscriptionPlan(payload);
-        toast.success(res.message || "Plan created successfully");
+        toast.success(res.message || res.data?.message || "Plan created successfully");
       }
 
       form.reset();

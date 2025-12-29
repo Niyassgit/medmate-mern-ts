@@ -16,7 +16,7 @@ export function useWebRTC(remoteUserId: string) {
   const createPeer = async (userIdOverride?: string) => {
     const targetUser = userIdOverride || remoteUserId;
 
-    // Close existing peer connection if any
+  
     if (peerRef.current) {
       peerRef.current.close();
       peerRef.current = null;
@@ -49,7 +49,6 @@ export function useWebRTC(remoteUserId: string) {
     };
 
     peer.oniceconnectionstatechange = () => {
-      // ICE connection state change
     };
 
     peer.onicecandidate = (event) => {
