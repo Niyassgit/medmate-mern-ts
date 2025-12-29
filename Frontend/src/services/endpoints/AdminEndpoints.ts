@@ -87,4 +87,9 @@ export const AdminEndpoints = {
     if (endDate) url += `&endDate=${endDate}`;
     return url;
   },
+  GET_FEATURES: `/admin/features`,
+  GET_FEATURES_LIST: `/admin/features/list`,
+  CREATE_FEATURE: `/admin/features/create`,
+  UPDATE_FEATURE: (featureId: string) => `/admin/features/update/${featureId}`,
+  DELETE_FEATURE: (featureId: string) => `/admin/features/delete/${featureId}`,
 };

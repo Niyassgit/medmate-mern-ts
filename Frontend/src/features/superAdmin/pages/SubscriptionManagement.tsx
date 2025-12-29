@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Trash2 } from "lucide-react";
+import { Trash2, Settings } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
@@ -19,7 +19,9 @@ import {
   getDepartments,
   toggleListPlan,
   updateSubscriptionPlan,
+  getFeaturesList,
 } from "../api/superAdminApi";
+import { Feature } from "../dto/Feature";
 import PlanCard from "../components/PlanCard";
 import ConfirmDialog from "@/components/shared/ConfirmDialog";
 import { ArrowRight } from "lucide-react";
@@ -31,7 +33,8 @@ const SubscriptionManagement = () => {
   const navigate=useNavigate();
   const [plans, setPlans] = useState<Plan[]>([]);
   const [editingPlan, setEditingPlan] = useState<Plan | null>(null);
-  const [currentFeature, setCurrentFeature] = useState("");
+  const [availableFeatures, setAvailableFeatures] = useState<Feature[]>([]);
+  const [loadingFeatures, setLoadingFeatures] = useState(true);
 
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [confirmTitle, setConfirmTitle] = useState("Confirm Action");
@@ -54,28 +57,26 @@ const SubscriptionManagement = () => {
 
   const { register, handleSubmit, formState, setValue, watch } = form;
   const { errors } = formState;
-  const features = watch("features");
+  const selectedFeatureIds = watch("features") as string[];
 
-  const addFeature = () => {
-    if (!currentFeature.trim()) return;
-    const updated = [...features, currentFeature.trim()];
-    setValue("features", updated);
-    setCurrentFeature("");
-  };
-
-  const removeFeature = (index: number) => {
-    const updated = features.filter((_, i) => i !== index);
-    setValue("features", updated);
+  const toggleFeature = (featureId: string) => {
+    const current = selectedFeatureIds || [];
+    if (current.includes(featureId)) {
+      setValue("features", current.filter((id) => id !== featureId));
+    } else {
+      setValue("features", [...current, featureId]);
+    }
   };
 
   const onSubmit = async (values: SubscriptionPlanBody) => {
     try {
+      // Backend expects feature IDs (not keys)
       const payload = {
         name: values.name,
         description: values.description,
         price: parseFloat(values.price),
         tenure: values.tenure,
-        features: values.features,
+        features: values.features, // These are feature IDs
       };
 
       if (editingPlan) {
@@ -127,8 +128,23 @@ const SubscriptionManagement = () => {
     }
   };
 
+  const fetchFeatures = async () => {
+    try {
+      setLoadingFeatures(true);
+      const res = await getFeaturesList();
+      if (res.success && res.data) {
+        setAvailableFeatures(res.data);
+      }
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || "Failed to fetch features");
+    } finally {
+      setLoadingFeatures(false);
+    }
+  };
+
   useEffect(() => {
     fetchPlans();
+    fetchFeatures();
   }, []);
 
   const handleEdit = (plan: Plan) => {
@@ -138,7 +154,13 @@ const SubscriptionManagement = () => {
     setValue("description", plan.description);
     setValue("price", String(plan.price));
     setValue("tenure", plan.tenure);
-    setValue("features", plan.features);
+    
+    // Plan.features contains feature keys, need to map to IDs
+    const featureKeys = plan.features || [];
+    const featureIds = availableFeatures
+      .filter((f) => featureKeys.includes(f.key))
+      .map((f) => f.id);
+    setValue("features", featureIds);
   };
 
   const performToggleListing = async (planId: string) => {
@@ -183,11 +205,25 @@ const SubscriptionManagement = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="mx-auto max-w-4xl space-y-6 p-6">
-        <h1 className="text-2xl font-bold">Subscription Plans</h1>
-        <Button className="bg-[#f17175] hover:bg-[#a81519] flex items-center gap-2" onClick={()=>navigate(`/admin/subscription-management/list`)}>
-          View All Subscribers
-          <ArrowRight className="w-4 h-4" />
-        </Button>
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold">Subscription Plans</h1>
+          <div className="flex gap-2">
+            <Button 
+              className="bg-blue-600 hover:bg-blue-700 flex items-center gap-2" 
+              onClick={() => navigate(`/admin/feature-management`)}
+            >
+              <Settings className="w-4 h-4" />
+              Manage Features
+            </Button>
+            <Button 
+              className="bg-[#f17175] hover:bg-[#a81519] flex items-center gap-2" 
+              onClick={()=>navigate(`/admin/subscription-management/list`)}
+            >
+              View All Subscribers
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
 
         <Card>
           <CardHeader>
@@ -248,34 +284,90 @@ const SubscriptionManagement = () => {
               </div>
 
               <div>
-                <Label>Features *</Label>
-                <div className="flex gap-2">
-                  <Input
-                    value={currentFeature}
-                    onChange={(e) => setCurrentFeature(e.target.value)}
-                    placeholder="Type feature and press Add"
-                  />
-                  <Button type="button" onClick={addFeature} variant="outline">
-                    Add
+                <div className="flex items-center justify-between mb-2">
+                  <Label>Features *</Label>
+                  <Button
+                    type="button"
+                    variant="link"
+                    className="text-sm text-blue-600"
+                    onClick={() => navigate(`/admin/feature-management`)}
+                  >
+                    Manage Features
                   </Button>
                 </div>
-                {errors.features && features.length === 0 && (
+                {loadingFeatures ? (
+                  <p className="text-sm text-gray-500">Loading features...</p>
+                ) : availableFeatures.length === 0 ? (
+                  <div className="p-4 border rounded-md bg-yellow-50">
+                    <p className="text-sm text-yellow-800">
+                      No features available. Please{" "}
+                      <button
+                        type="button"
+                        onClick={() => navigate(`/admin/feature-management`)}
+                        className="text-blue-600 underline"
+                      >
+                        create features
+                      </button>{" "}
+                      first.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="border rounded-md p-4 max-h-60 overflow-y-auto">
+                    <div className="space-y-2">
+                      {availableFeatures.map((feature) => (
+                        <label
+                          key={feature.id}
+                          className="flex items-start gap-3 p-2 hover:bg-gray-50 rounded cursor-pointer"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={selectedFeatureIds?.includes(feature.id) || false}
+                            onChange={() => toggleFeature(feature.id)}
+                            className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          />
+                          <div className="flex-1">
+                            <div className="font-medium text-sm">{feature.key}</div>
+                            <div className="text-xs text-gray-500">
+                              {feature.description}
+                            </div>
+                          </div>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {errors.features && (!selectedFeatureIds || selectedFeatureIds.length === 0) && (
                   <p className="text-xs text-red-500 mt-1">
                     {errors.features.message}
                   </p>
                 )}
-                {features.map((feature, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-2 bg-blue-50 border rounded-md mt-2"
-                  >
-                    <span className="text-sm">{feature}</span>
-                    <Trash2
-                      className="h-4 w-4 text-red-500 cursor-pointer"
-                      onClick={() => removeFeature(index)}
-                    />
+                {selectedFeatureIds && selectedFeatureIds.length > 0 && (
+                  <div className="mt-2">
+                    <p className="text-xs text-gray-500 mb-1">
+                      Selected: {selectedFeatureIds.length} feature(s)
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedFeatureIds.map((featureId) => {
+                        const feature = availableFeatures.find((f) => f.id === featureId);
+                        return feature ? (
+                          <span
+                            key={featureId}
+                            className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-md text-xs"
+                          >
+                            {feature.key}
+                            <button
+                              type="button"
+                              onClick={() => toggleFeature(featureId)}
+                              className="hover:text-blue-600"
+                            >
+                              <Trash2 className="h-3 w-3" />
+                            </button>
+                          </span>
+                        ) : null;
+                      })}
+                    </div>
                   </div>
-                ))}
+                )}
               </div>
 
               <Button className="w-full" type="submit">
