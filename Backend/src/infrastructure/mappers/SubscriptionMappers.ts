@@ -1,21 +1,25 @@
-import { Prisma, SubscriptionPlan } from "@prisma/client";
+import { Feature, PlanFeature, Prisma, SubscriptionPlan } from "@prisma/client";
 import { ISubscription } from "../../domain/subscription/entities/ISubscription";
 
+export type SubscriptionPlanWithFeatures = SubscriptionPlan & {
+  features: (PlanFeature & { feature: Feature })[];
+};
+
 export class SubscriptionMapper {
-  static toEntity(e: SubscriptionPlan): ISubscription {
+  static toEntity(e: SubscriptionPlanWithFeatures): ISubscription {
     return {
       id: e.id,
       name: e.name,
       description: e.description,
-      features: e.features,
       price: e.price,
       tenure: e.tenure,
-      isActive:e.isActive,
+      isActive: e.isActive,
       updatedAt: e.updatedAt,
       createdAt: e.createdAt,
+      features: e.features.map((pf) => pf.feature.key),
     };
   }
-  static toList(e: SubscriptionPlan[]): ISubscription[] {
+  static toList(e: SubscriptionPlanWithFeatures[]): ISubscription[] {
     return e.map((sub) => this.toEntity(sub));
   }
 
@@ -25,7 +29,6 @@ export class SubscriptionMapper {
     return {
       id: entity.id,
       description: entity.description,
-      features: entity.features,
       name: entity.name,
       price: entity.price,
       tenure: entity.tenure,
@@ -34,6 +37,14 @@ export class SubscriptionMapper {
       reps: entity.repIds?.length
         ? { connect: entity.repIds.map((id) => ({ id })) }
         : undefined,
+
+      features: {
+        create: entity.features.map((featureKey) => ({
+          feature: {
+            connect: { key: featureKey },
+          },
+        })),
+      },
     };
   }
 }

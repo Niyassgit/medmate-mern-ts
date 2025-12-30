@@ -1,6 +1,6 @@
 
 import { ISubscription } from "../../domain/subscription/entities/ISubscription";
-import { ISubscriptionRepositoy } from "../../domain/subscription/repositories/ISubscriptionRepository";
+import { ISubscriptionRepository } from "../../domain/subscription/repositories/ISubscriptionRepository";
 import { Prisma, SubscriptionPlan } from "@prisma/client";
 import { BaseRepository } from "../database/BaseRepository";
 import { prisma } from "../database/prisma";
@@ -13,7 +13,7 @@ export class SubscriptionRepository
     Prisma.SubscriptionPlanCreateInput,
     "subscriptionPlan"
   >
-  implements ISubscriptionRepositoy {
+  implements ISubscriptionRepository {
   constructor() {
     super(prisma.subscriptionPlan, (sub) => SubscriptionMapper.toDomainEntity(sub));
   }
@@ -41,7 +41,6 @@ export class SubscriptionRepository
     const result = await prisma.subscriptionPlan.findMany({
       include: { features: { include: { feature: true } } },
     });
-    // Map each prisma result to domain entity
     return result.map(p => SubscriptionMapper.toDomainEntity(p as unknown as SubscriptionPlanWithFeatures));
   }
 
@@ -49,26 +48,20 @@ export class SubscriptionRepository
     subscriptionId: string,
     data: Omit<ISubscription, "id" | "createdAt" | "updatedAt">
   ): Promise<ISubscription> {
-    const { features, ...rest } = data as any;
+    const { features, ...rest } = data;
 
-    // First, delete all existing PlanFeature records for this plan
     await prisma.planFeature.deleteMany({
       where: { planId: subscriptionId },
     });
 
-    // Then update the plan and create new PlanFeature records
+    const updateData = SubscriptionMapper.toUpdatePersistence({
+      ...rest,
+      features,
+    });
+
     const result = await prisma.subscriptionPlan.update({
       where: { id: subscriptionId },
-      data: {
-        ...rest,
-        features: {
-          create: features.map((featureId: string) => ({
-            feature: {
-              connect: { id: featureId },
-            },
-          })),
-        },
-      },
+      data: updateData,
       include: { features: { include: { feature: true } } },
     });
     return SubscriptionMapper.toDomainEntity(result as unknown as SubscriptionPlanWithFeatures);

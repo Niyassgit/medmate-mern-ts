@@ -1,7 +1,8 @@
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { logout } from "@/features/auth/authSlice"; 
+import { logout } from "@/features/auth/authSlice";
+import { clearSubscription } from "@/features/subscription/subscriptionSlice";
 import { LogOut } from "lucide-react"; 
 
 interface LogoutButtonProps {
@@ -19,7 +20,8 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    dispatch(logout()); 
+    dispatch(logout());
+    dispatch(clearSubscription());
     localStorage.removeItem("accessToken"); 
     localStorage.removeItem("user"); 
     navigate(redirectTo);

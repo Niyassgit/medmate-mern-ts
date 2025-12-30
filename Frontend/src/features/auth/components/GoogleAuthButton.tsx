@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Role } from "@/types/Role";
 import { useDispatch } from "react-redux";
 import { login } from "../authSlice";
+import { fetchSubscription } from "@/features/subscription/subscriptionThunks";
 import toast from "react-hot-toast";
 
 const GoogleAuthButton = () => {
@@ -31,6 +32,11 @@ const GoogleAuthButton = () => {
             user: response.data.user,
           })
         );
+
+        // Fetch subscription data for medical reps
+        if (response.data.user.role === Role.MEDICAL_REP) {
+          dispatch(fetchSubscription());
+        }
 
         if (response.data.user.role === Role.DOCTOR) {
           navigate("/doctor/feed");

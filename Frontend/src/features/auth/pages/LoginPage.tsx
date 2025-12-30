@@ -5,6 +5,7 @@ import { Role } from "@/types/Role";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../authSlice";
+import { fetchSubscription } from "@/features/subscription/subscriptionThunks";
 import toast from "react-hot-toast"
 
 
@@ -15,6 +16,10 @@ const LoginPage = () => {
     try {
       const { data } = await loginUser(values);
       dispatch(login({token:data.accessToken,user:data.user}));
+  
+      if (data.user.role === Role.MEDICAL_REP) {
+        dispatch(fetchSubscription());
+      }
       
       toast.success("User login successfully");
       if (data.user.role === Role.DOCTOR) {

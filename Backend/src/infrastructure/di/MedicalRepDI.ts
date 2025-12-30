@@ -155,7 +155,8 @@ const makeConnectionRequestUseCase = new RepMakeConnectionRequestUseCase(
   notificationRepository,
   storageService,
   notificationEventPublisher,
-  connectionRequestLogRepository
+  connectionRequestLogRepository,
+  subscriptionRepository
 );
 const acceptConnectionRequestUseCase = new DoctorAcceptConnectionRequestUseCase(
   medicalRepRepository,
@@ -283,7 +284,8 @@ const getSubscriptionHistoryUseCase = new GetSubscriptionHistoryUseCase(
 
 const getConnectionRequestStatsUseCase = new GetConnectionRequestStatsUseCase(
   medicalRepRepository,
-  connectionRequestLogRepository
+  connectionRequestLogRepository,
+  subscriptionRepository
 );
 
 const getAllProductsUseCase = new GetAllProductsUseCase(
@@ -340,9 +342,10 @@ const exportRepOrdersUseCase = new ExportRepOrdersUseCase(
 );
 
 const makeVideoCallWithDoctorUseCase = new MakeVideoCallWithDoctorUseCase(
-  doctorRepository, 
+  doctorRepository,
   videoCallEventPublisher,
-  medicalRepRepository
+  medicalRepRepository,
+  subscriptionRepository
 );
 
 export const medicalRepController = new MedicalRepController(

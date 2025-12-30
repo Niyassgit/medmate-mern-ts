@@ -5,7 +5,7 @@ import {
 import { IVideoCallEventPublisher } from "../../../domain/common/services/IVideoCallEventPublisher";
 import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRepository";
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
-import { ISubscriptionRepositoy } from "../../../domain/subscription/repositories/ISubscriptionRepository";
+import { ISubscriptionRepository } from "../../../domain/subscription/repositories/ISubscriptionRepository";
 import { Feature } from "../../../shared/Enums";
 import { ErrorMessages } from "../../../shared/Messages";
 import { IMakeVideoCallWithDoctorUseCase } from "../interfaces/IMakeVideoCallWithDoctorUseCase";
@@ -17,7 +17,7 @@ export class MakeVideoCallWithDoctorUseCase
     private _doctorRepository: IDoctorRepository,
     private _videoCallEventPublisher: IVideoCallEventPublisher,
     private _medicalRepRepository: IMedicalRepRepository,
-    private _subscriptionRepository: ISubscriptionRepositoy
+    private _subscriptionRepository: ISubscriptionRepository
   ) {}
 
   async execute(doctorId: string, userId?: string): Promise<string | void> {

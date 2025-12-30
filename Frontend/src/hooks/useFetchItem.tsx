@@ -1,31 +1,25 @@
-import {useState,useEffect} from 'react'
+import { useState, useEffect } from "react";
 
+const useFetchItem = <T,>(fetchFn: () => Promise<T>) => {
+  const [data, setData] = useState<T | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-
-const useFetchItem = <T,>(fetchFn:()=>Promise<T>) => {
-
-  const [data,setData]=useState<T| null>(null);
-  const [loading,setLoading]=useState(true);
-  const [error,setError]=useState<string | null>(null);
-
-  useEffect(()=>{
-
-    const fetchData=async ()=>{
+  useEffect(() => {
+    const fetchData = async () => {
       try {
-        const result=await fetchFn();
+        const result = await fetchFn();
         setData(result);
-      } catch (error:any) {
-        setError(error.message || "Something went wrong")
-      }finally{
+      } catch (error: any) {
+        setError(error.message || "Something went wrong");
+      } finally {
         setLoading(false);
       }
-    }
+    };
     fetchData();
-  },[fetchFn])
+  }, [fetchFn]);
 
+  return { data, setData, loading, error };
+};
 
- return {data,setData,loading,error};
-  
-}
-
-export default useFetchItem
+export default useFetchItem;

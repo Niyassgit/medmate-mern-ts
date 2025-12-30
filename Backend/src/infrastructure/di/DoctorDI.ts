@@ -61,6 +61,7 @@ import { MakeVideoCallWithRepUseCase } from "../../application/doctor/use-cases/
 import { VideoCallEventPublisher } from "../realtime/publishers/VideoCallEventPublisher";
 import { DoctorCommissionsUseCase } from "../../application/doctor/use-cases/DoctorCommissionsUseCase";
 import { CommissionRepository } from "../repositories/CommissionRepository";
+import { SubscriptionRepository } from "../repositories/SubscriptionRepository";
 
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
@@ -83,6 +84,7 @@ const chatEventPublisher = new ChatEventPublisher();
 const tokenService = new TokenService();
 const videoCallEventPublisher = new VideoCallEventPublisher();
 const commissionRepository = new CommissionRepository();
+const subscriptionRepository = new SubscriptionRepository();
 
 const createDoctorUseCase = new CreateDoctorUseCase(
   doctorRepository,
@@ -141,7 +143,8 @@ const getFeedUseCase = new GetFeedUseCase(
   likeRepository,
   interestRepository,
   storageService,
-  medicalRepRepository
+  medicalRepRepository,
+  subscriptionRepository
 );
 const postDetailsUseCase = new PostDetailsUseCase(
   doctorRepository,

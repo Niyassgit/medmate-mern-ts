@@ -206,7 +206,7 @@ const SubscriptionManagement = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="mx-auto max-w-4xl space-y-6 p-6">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Subscription Plans</h1>
+        <h1 className="text-2xl font-bold">Subscription Plans</h1>
           <div className="flex gap-2">
             <Button 
               className="bg-blue-600 hover:bg-blue-700 flex items-center gap-2" 
@@ -219,9 +219,9 @@ const SubscriptionManagement = () => {
               className="bg-[#f17175] hover:bg-[#a81519] flex items-center gap-2" 
               onClick={()=>navigate(`/admin/subscription-management/list`)}
             >
-              View All Subscribers
-              <ArrowRight className="w-4 h-4" />
-            </Button>
+          View All Subscribers
+          <ArrowRight className="w-4 h-4" />
+        </Button>
           </div>
         </div>
 
@@ -285,7 +285,7 @@ const SubscriptionManagement = () => {
 
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <Label>Features *</Label>
+                <Label>Features *</Label>
                   <Button
                     type="button"
                     variant="link"
@@ -353,7 +353,7 @@ const SubscriptionManagement = () => {
                           <span
                             key={featureId}
                             className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-md text-xs"
-                          >
+                  >
                             {feature.key}
                             <button
                               type="button"
