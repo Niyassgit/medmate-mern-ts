@@ -1,10 +1,12 @@
-
 import { ISubscription } from "../../domain/subscription/entities/ISubscription";
 import { ISubscriptionRepository } from "../../domain/subscription/repositories/ISubscriptionRepository";
 import { Prisma, SubscriptionPlan } from "@prisma/client";
 import { BaseRepository } from "../database/BaseRepository";
 import { prisma } from "../database/prisma";
-import { SubscriptionMapper, SubscriptionPlanWithFeatures } from "../../application/subscription/mappers/SubscriptionMapper";
+import {
+  SubscriptionMapper,
+  SubscriptionPlanWithFeatures,
+} from "../mappers/SubscriptionMappers";
 
 export class SubscriptionRepository
   extends BaseRepository<
@@ -13,9 +15,12 @@ export class SubscriptionRepository
     Prisma.SubscriptionPlanCreateInput,
     "subscriptionPlan"
   >
-  implements ISubscriptionRepository {
+  implements ISubscriptionRepository
+{
   constructor() {
-    super(prisma.subscriptionPlan, (sub) => SubscriptionMapper.toDomainEntity(sub));
+    super(prisma.subscriptionPlan, (sub) =>
+      SubscriptionMapper.toDomainWithoutFeatures(sub)
+    );
   }
   async createSubscription(data: ISubscription): Promise<ISubscription> {
     const mappedData = SubscriptionMapper.toPersistence(data);
@@ -23,7 +28,9 @@ export class SubscriptionRepository
       data: mappedData,
       include: { features: { include: { feature: true } } },
     });
-    return SubscriptionMapper.toDomainEntity(created as unknown as SubscriptionPlanWithFeatures);
+    return SubscriptionMapper.toEntity(
+      created as SubscriptionPlanWithFeatures
+    );
   }
 
   async findSubscriptionById(
@@ -34,14 +41,18 @@ export class SubscriptionRepository
       include: { features: { include: { feature: true } } },
     });
     if (!result) return null;
-    return SubscriptionMapper.toDomainEntity(result as unknown as SubscriptionPlanWithFeatures);
+    return SubscriptionMapper.toEntity(
+      result as SubscriptionPlanWithFeatures
+    );
   }
 
   async getAllSubscriptions(): Promise<ISubscription[]> {
     const result = await prisma.subscriptionPlan.findMany({
       include: { features: { include: { feature: true } } },
     });
-    return result.map(p => SubscriptionMapper.toDomainEntity(p as unknown as SubscriptionPlanWithFeatures));
+    return SubscriptionMapper.toList(
+      result as SubscriptionPlanWithFeatures[]
+    );
   }
 
   async updateSubscriptionPlan(
@@ -64,7 +75,9 @@ export class SubscriptionRepository
       data: updateData,
       include: { features: { include: { feature: true } } },
     });
-    return SubscriptionMapper.toDomainEntity(result as unknown as SubscriptionPlanWithFeatures);
+    return SubscriptionMapper.toEntity(
+      result as SubscriptionPlanWithFeatures
+    );
   }
 
   async toggleListStatus(
@@ -74,12 +87,17 @@ export class SubscriptionRepository
     const result = await prisma.subscriptionPlan.update({
       where: { id: subscriptionId },
       data: { isActive: isActive },
-      include: { features: { include: { feature: true } } }
+      include: { features: { include: { feature: true } } },
     });
-    return SubscriptionMapper.toDomainEntity(result as unknown as SubscriptionPlanWithFeatures);
+    return SubscriptionMapper.toEntity(
+      result as SubscriptionPlanWithFeatures
+    );
   }
 
   async deleteSubscriptionById(subscriptionId: string): Promise<void> {
+    await prisma.planFeature.deleteMany({
+      where: { planId: subscriptionId },
+    });
     await this.delete(subscriptionId);
   }
 }

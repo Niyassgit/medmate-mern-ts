@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { useFeature } from "@/hooks/useFeature";
 import { useSubscription } from "@/hooks/useFeature";
-import { Feature } from "@/features/subscription/subscriptionSlice";
+import { Feature } from "@/types/SubscriptionStatus";
 
 interface FeatureGateProps {
   feature: Feature | string;
@@ -29,4 +29,3 @@ export const FeatureGate = ({
 
   return <>{children}</>;
 };
-

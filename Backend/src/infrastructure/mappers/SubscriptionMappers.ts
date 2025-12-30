@@ -5,43 +5,100 @@ export type SubscriptionPlanWithFeatures = SubscriptionPlan & {
   features: (PlanFeature & { feature: Feature })[];
 };
 
+type SubscriptionPlanCreateInputWithFeatures = Omit<
+  Prisma.SubscriptionPlanCreateInput,
+  "features"
+> & {
+  features: {
+    create: Array<{
+      feature: {
+        connect: { id: string };
+      };
+    }>;
+  };
+};
+
+type SubscriptionPlanUpdateInputWithFeatures = Omit<
+  Prisma.SubscriptionPlanUpdateInput,
+  "features"
+> & {
+  features: {
+    create: Array<{
+      feature: {
+        connect: { id: string };
+      };
+    }>;
+  };
+};
+
 export class SubscriptionMapper {
+
   static toEntity(e: SubscriptionPlanWithFeatures): ISubscription {
+    const features: string[] = e.features.map(
+      (pf: PlanFeature & { feature: Feature }) => pf.feature.key
+    );
+
     return {
       id: e.id,
       name: e.name,
       description: e.description,
       price: e.price,
       tenure: e.tenure,
+      features: features,
       isActive: e.isActive,
-      updatedAt: e.updatedAt,
       createdAt: e.createdAt,
-      features: e.features.map((pf) => pf.feature.key),
+      updatedAt: e.updatedAt,
     };
   }
+
+  static toDomainWithoutFeatures(e: SubscriptionPlan): ISubscription {
+    return {
+      id: e.id,
+      name: e.name,
+      description: e.description,
+      price: e.price,
+      tenure: e.tenure,
+      features: [], 
+      isActive: e.isActive,
+      createdAt: e.createdAt,
+      updatedAt: e.updatedAt,
+    };
+  }
+
   static toList(e: SubscriptionPlanWithFeatures[]): ISubscription[] {
     return e.map((sub) => this.toEntity(sub));
   }
 
-  static toPersistance(
-    entity: ISubscription
-  ): Prisma.SubscriptionPlanCreateInput {
+  static toPersistence(
+    data: ISubscription
+  ): SubscriptionPlanCreateInputWithFeatures {
     return {
-      id: entity.id,
-      description: entity.description,
-      name: entity.name,
-      price: entity.price,
-      tenure: entity.tenure,
-      createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt,
-      reps: entity.repIds?.length
-        ? { connect: entity.repIds.map((id) => ({ id })) }
-        : undefined,
-
+      name: data.name,
+      description: data.description,
+      price: data.price,
+      tenure: data.tenure,
       features: {
-        create: entity.features.map((featureKey) => ({
+        create: data.features.map((featureId: string) => ({
           feature: {
-            connect: { key: featureKey },
+            connect: { id: featureId },
+          },
+        })),
+      },
+    };
+  }
+
+
+  static toUpdatePersistence(
+    data: Omit<ISubscription, "id" | "createdAt" | "updatedAt">
+  ): SubscriptionPlanUpdateInputWithFeatures {
+    const { features, ...rest } = data;
+
+    return {
+      ...rest,
+      features: {
+        create: features.map((featureId: string) => ({
+          feature: {
+            connect: { id: featureId },
           },
         })),
       },

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { loginUser } from "../api";
 import { Role } from "@/types/Role";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "@/app/hooks";
 import { login } from "../authSlice";
 import { fetchSubscription } from "@/features/subscription/subscriptionThunks";
 import toast from "react-hot-toast"
@@ -11,7 +11,7 @@ import toast from "react-hot-toast"
 
 const LoginPage = () => {
   const navigate=useNavigate();
-  const dispatch=useDispatch();
+  const dispatch=useAppDispatch();
   const handleLogin = async (values: { email: string; password: string }) => {
     try {
       const { data } = await loginUser(values);

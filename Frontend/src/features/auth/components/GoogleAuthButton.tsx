@@ -2,14 +2,14 @@ import { GoogleLogin } from "@react-oauth/google";
 import { googelPrecheck, googleLogin } from "../api";
 import { useNavigate } from "react-router-dom";
 import { Role } from "@/types/Role";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "@/app/hooks";
 import { login } from "../authSlice";
 import { fetchSubscription } from "@/features/subscription/subscriptionThunks";
 import toast from "react-hot-toast";
 
 const GoogleAuthButton = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const handleSuccess = async (credentialResponse: any) => {
     try {
