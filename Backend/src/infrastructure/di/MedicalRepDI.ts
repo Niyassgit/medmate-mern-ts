@@ -68,6 +68,7 @@ import { ExportRepOrdersUseCase } from "../../application/medicalRep/use-cases/E
 import { ExcelService } from "../services/ExcelService";
 import { VideoCallEventPublisher } from "../realtime/publishers/VideoCallEventPublisher";
 import { MakeVideoCallWithDoctorUseCase } from "../../application/medicalRep/use-cases/MakeVideoCallWithDoctorUseCase";
+import { UpgradeSubscriptionPlanUseCase } from "../../application/subscription/use-cases/UpgradeSubscriptionPlanUseCase";
 
 const medicalRepRepository = new MedicalRepRepository();
 const doctorRepository = new DoctorRepository();
@@ -348,6 +349,12 @@ const makeVideoCallWithDoctorUseCase = new MakeVideoCallWithDoctorUseCase(
   subscriptionRepository
 );
 
+const upgradeSubscriptionPlanUseCase = new UpgradeSubscriptionPlanUseCase(
+  medicalRepRepository,
+  subscriptionRepository,
+  stripePaymentService
+);
+
 export const medicalRepController = new MedicalRepController(
   createMedicalRepUseCase,
   getRepProfileByIdUseCase,
@@ -391,5 +398,6 @@ export const medicalRepController = new MedicalRepController(
   getOrderDetailsUseCase,
   repBusinessAnalyticsUseCase,
   exportRepOrdersUseCase,
-  makeVideoCallWithDoctorUseCase
+  makeVideoCallWithDoctorUseCase,
+  upgradeSubscriptionPlanUseCase
 );

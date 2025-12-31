@@ -12,7 +12,6 @@ export class GetSubscriptionStatusUseCase
   constructor(private _medicalRepRepository: IMedicalRepRepository) {}
 
   async execute(userId?: string): Promise<SubscriptionStatusDTO> {
-    console.log("userId:",userId);
     if (!userId) throw new UnautharizedError(ErrorMessages.UNAUTHORIZED);
     const { repId } = await this._medicalRepRepository.getRepIdByUserId(userId);
 
@@ -31,6 +30,7 @@ export class GetSubscriptionStatusUseCase
     return SubscriptionMapper.statusToDomain(repDetails);
   }
 }
+
 
 
 

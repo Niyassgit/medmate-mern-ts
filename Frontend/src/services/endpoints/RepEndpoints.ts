@@ -52,4 +52,5 @@ export const RepEndpoints = {
   REP_BUSINESS_STAT:`/rep/business/analytics`,
   RECENT_ORDERS:`/rep/business/recent-orders`,
   CALL_DOCTOR: (doctorId: string) => `/rep/call-doctor/${doctorId}`,
+  UPGRADE_SUBSCRIPTION: (newPlanId: string) => `/rep/subscription/upgrade-plan/${newPlanId}`,
 };

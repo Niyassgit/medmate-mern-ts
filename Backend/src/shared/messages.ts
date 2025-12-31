@@ -56,6 +56,7 @@ export const ErrorMessages = {
   SUB_CREATE_ERROR: "failed to add subscription!",
   SUB_NOT_FOUND: "Subscription not found!",
   SUB_UPDATE_ERROR: "Subscription updation failed",
+  NO_ACTIVE_SUB: "No active subscription found",
   SUB_ATTEMPT_FAILED: "Failed to register subscription!",
   NO_STRIPE_SIG_FOUND: "No Stripe signature found",
   WEB_HOOK_SIG_VER_FAILED: "Webhook signature verification failed",
@@ -80,8 +81,12 @@ export const ErrorMessages = {
   REP_SUBSCRIPTION_NEEDED:
     "Medical Rep doesnt contains a valid Subscription plan to make this call",
   FILTER_DATE_WRONG: "Start date must be before or equal to end date",
-  INVALID_DATE: "The date provided is invalid. Please ensure it is a future date.",
-  FEATURE_NOT_AVAILABLE:"Feature is not found!",
+  INVALID_DATE:
+    "The date provided is invalid. Please ensure it is a future date.",
+  FEATURE_NOT_AVAILABLE: "Feature is not found!",
+  ALREADY_LOGGED_IN:
+    "You are already logged in. Please logout first to login with another account.",
+  DOWN_GRADE_PLAN: "Downgrades are applied after current cycle",
 } as const;
 
 export const SuccessMessages = {

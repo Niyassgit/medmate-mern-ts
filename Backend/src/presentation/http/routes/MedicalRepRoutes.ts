@@ -185,5 +185,9 @@ export class MedicalRepRoutes {
       medicalRepController.exportOrders
     );
     this.router.post("/call-doctor/:doctorId", medicalRepController.callDoctor);
+    this.router.patch(
+      "/subscription/upgrade-plan/:newPlanId",
+      medicalRepController.subscriptionUpgradePlan
+    );
   }
 }

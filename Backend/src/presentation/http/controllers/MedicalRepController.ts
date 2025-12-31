@@ -51,6 +51,7 @@ import { IGetOrderDetailsUseCase } from "../../../application/medicalRep/interfa
 import { IRepBusinessAnalyticsUseCase } from "../../../application/medicalRep/interfaces/IRepBusinessAnalyticsUseCase";
 import { IExportRepOrdersUseCase } from "../../../application/medicalRep/interfaces/IExportRepOrdersUseCase";
 import { IMakeVideoCallWithDoctorUseCase } from "../../../application/medicalRep/interfaces/IMakeVideoCallWithDoctorUseCase";
+import { IUpgradeSubscriptionPlanUseCase } from "../../../application/subscription/interfaces/IUpgradeSubscriptionPlanUseCase";
 
 export class MedicalRepController {
   constructor(
@@ -97,7 +98,8 @@ export class MedicalRepController {
     private _repBusinessAnalyticsUseCase: IRepBusinessAnalyticsUseCase,
     private _exportRepOrdersUseCase: IExportRepOrdersUseCase,
     private _videoCallWithDoctorUseCase: IMakeVideoCallWithDoctorUseCase,
-  ) { }
+    private _upgradeSubscriptionPlanUseCase: IUpgradeSubscriptionPlanUseCase
+  ) {}
 
   createMedicalRep = async (req: Request, res: Response) => {
     const companyLogoUrl = req.file
@@ -443,9 +445,7 @@ export class MedicalRepController {
 
   getSubscriptionHistory = async (req: Request, res: Response) => {
     const userId = GetOptionalUserId(req.user);
-    console.log("userId:", userId);
     const response = await this._getSubscriptionHistoryUseCase.execute(userId);
-    console.log("response:", response);
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
@@ -587,12 +587,28 @@ export class MedicalRepController {
   callDoctor = async (req: Request, res: Response) => {
     const userId = GetOptionalUserId(req.user);
     const { doctorId } = req.params;
-    const error = await this._videoCallWithDoctorUseCase.execute(doctorId, userId);
+    const error = await this._videoCallWithDoctorUseCase.execute(
+      doctorId,
+      userId
+    );
     if (error) {
       return res
         .status(HttpStatusCode.BAD_REQUEST)
         .json({ success: false, message: error });
     }
     return res.sendStatus(HttpStatusCode.OK);
+  };
+
+  subscriptionUpgradePlan = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { newPlanId } = req.params;
+    const response = await this._upgradeSubscriptionPlanUseCase.execute(
+      newPlanId as string,
+      userId
+    );
+
+    return res
+      .status(HttpStatusCode.CREATED)
+      .json({ success: true, data: response });
   };
 }

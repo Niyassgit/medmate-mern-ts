@@ -58,7 +58,7 @@ export class AuthController {
           role: result.mappedUser.role,
           image: result.mappedUser.profileImage,
         },
-      };    
+      };
       res.status(HttpStatusCode.OK).json(response);
     } catch (error) {
       next(error);
@@ -69,7 +69,10 @@ export class AuthController {
     try {
       const cookies = req.cookies as Cookie;
       const token = cookies.refreshtoken;
-      if (!token) return res.status(HttpStatusCode.UNAUTHORIZED).json({ message: " No refresh token" });
+      if (!token)
+        return res
+          .status(HttpStatusCode.UNAUTHORIZED)
+          .json({ message: " No refresh token" });
 
       const newAccessToken = await this._getNewAccessTokenUsecase.execute(
         token
@@ -200,7 +203,7 @@ export class AuthController {
       const response = await this._resetPasswordUseCase.execute(
         email,
         password,
-        otp,
+        otp
       );
       res.status(HttpStatusCode.OK).json({ success: true, message: response });
     } catch (error) {
@@ -208,14 +211,14 @@ export class AuthController {
     }
   };
 
- 
-
   logoutUser = (req: Request, res: Response) => {
     res.clearCookie("refreshtoken", {
       httpOnly: true,
       sameSite: "strict",
       secure: process.env.NODE_ENV === "production",
     });
-    return res.status(HttpStatusCode.NO_CONTENT).json({ message: "Logged out successfully" });
+    return res
+      .status(HttpStatusCode.NO_CONTENT)
+      .json({ message: "Logged out successfully" });
   };
 }

@@ -3,15 +3,33 @@ import { Link } from "react-router-dom";
 import { loginUser } from "../api";
 import { Role } from "@/types/Role";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "@/app/hooks";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { login } from "../authSlice";
 import { fetchSubscription } from "@/features/subscription/subscriptionThunks";
 import toast from "react-hot-toast"
+import { useEffect } from "react";
 
 
 const LoginPage = () => {
   const navigate=useNavigate();
   const dispatch=useAppDispatch();
+  const { accessToken, user } = useAppSelector((state) => state.auth);
+
+  // Redirect if user is already logged in
+  useEffect(() => {
+    if (accessToken && user) {
+      // User is already logged in, redirect to their dashboard
+      if (user.role === Role.DOCTOR) {
+        navigate("/doctor/feed", { replace: true });
+      } else if (user.role === Role.MEDICAL_REP) {
+        navigate("/rep/dashboard", { replace: true });
+      } else if (user.role === Role.GUEST) {
+        navigate("/guest/dashboard", { replace: true });
+      } else if (user.role === Role.SUPER_ADMIN) {
+        navigate("/admin/dashboard", { replace: true });
+      }
+    }
+  }, [accessToken, user, navigate]);
   const handleLogin = async (values: { email: string; password: string }) => {
     try {
       const { data } = await loginUser(values);

@@ -2,7 +2,7 @@ import { GoogleLogin } from "@react-oauth/google";
 import { googelPrecheck, googleLogin } from "../api";
 import { useNavigate } from "react-router-dom";
 import { Role } from "@/types/Role";
-import { useAppDispatch } from "@/app/hooks";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { login } from "../authSlice";
 import { fetchSubscription } from "@/features/subscription/subscriptionThunks";
 import toast from "react-hot-toast";
@@ -10,9 +10,16 @@ import toast from "react-hot-toast";
 const GoogleAuthButton = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const { accessToken, user } = useAppSelector((state) => state.auth);
 
   const handleSuccess = async (credentialResponse: any) => {
     try {
+      // Check if already logged in before proceeding
+      if (accessToken && user) {
+        toast.error("You are already logged in. Please logout first.");
+        return;
+      }
+
       const idToken = credentialResponse.credential;
 
       if (!idToken) {
