@@ -83,10 +83,13 @@ export const ErrorMessages = {
   FILTER_DATE_WRONG: "Start date must be before or equal to end date",
   INVALID_DATE:
     "The date provided is invalid. Please ensure it is a future date.",
-  FEATURE_NOT_AVAILABLE: "Feature is not found!",
+  FEATURE_NOT_AVAILABLE:
+    "Feature is not found!Subscribe the plan to unlock relevent features",
   ALREADY_LOGGED_IN:
     "You are already logged in. Please logout first to login with another account.",
   DOWN_GRADE_PLAN: "Downgrades are applied after current cycle",
+  REP_SUB_INACTIVE:
+    "Your representative does not have an active subscription to use this feature.",
 } as const;
 
 export const SuccessMessages = {

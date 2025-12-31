@@ -314,7 +314,8 @@ const verifyOldPasswordUseCase = new VerifyOldPasswordUseCase(
 
 const makeVideoCallWithRepUseCase = new MakeVideoCallWithRepUseCase(
   videoCallEventPublisher,
-  medicalRepRepository
+  medicalRepRepository,
+  subscriptionRepository
 );
 
 const doctorCommissionUseCase = new DoctorCommissionsUseCase(
