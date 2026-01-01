@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   TrendingUp,
   Package,
@@ -40,7 +40,6 @@ const BusinessStat = () => {
   const [advancedAnalyticsData, setAdvancedAnalyticsData] =
     useState<AdvancedBusinessAnalyticsDTO | null>(null);
   const [loading, setLoading] = useState(true);
-  const [advancedLoading, setAdvancedLoading] = useState(false);
   const [dateRange, setDateRange] = useState({
     startDate: new Date(new Date().getFullYear(), 0, 1)
       .toISOString()
@@ -62,7 +61,6 @@ const BusinessStat = () => {
         
         // Fetch advanced analytics if user has the feature
         if (hasAdvancedAnalytics) {
-          setAdvancedLoading(true);
           try {
             const advancedData = await getAdvancedBusinessAnalytics(
               dateRange.startDate,
@@ -72,8 +70,6 @@ const BusinessStat = () => {
           } catch (error: any) {
             console.error("Failed to fetch advanced analytics:", error);
             // Don't show error toast for advanced analytics, just log it
-          } finally {
-            setAdvancedLoading(false);
           }
         }
       } catch (error: any) {
@@ -319,24 +315,32 @@ const BusinessStat = () => {
                   <ResponsiveContainer width="100%" height={250}>
                     <PieChart>
                       <Pie
-                        data={advancedAnalyticsData.revenueByStatus}
-                        dataKey="revenue"
-                        nameKey="status"
+                        data={advancedAnalyticsData.revenueByStatus.map(item => ({
+                          name: item.status,
+                          value: item.revenue,
+                          orderCount: item.orderCount
+                        }))}
+                        dataKey="value"
+                        nameKey="name"
                         cx="50%"
                         cy="50%"
                         outerRadius={80}
-                        label={(entry) => `${entry.status}: ₹${entry.revenue.toLocaleString()}`}
                       >
-                        {advancedAnalyticsData.revenueByStatus.map((entry, index) => (
+                        {advancedAnalyticsData.revenueByStatus.map((_, index) => (
                           <Cell key={`cell-${index}`} fill={["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6"][index % 5]} />
                         ))}
                       </Pie>
-                      <Tooltip formatter={(value: number) => `₹${value.toLocaleString()}`} />
+                      <Tooltip 
+                        formatter={(value: number, name: string, props: { payload?: { orderCount?: number } }) => [
+                          `₹${value.toLocaleString()}`, 
+                          `${name} (${props.payload?.orderCount || 0} orders)`
+                        ]} 
+                      />
                       <Legend />
                     </PieChart>
                   </ResponsiveContainer>
                   <div className="space-y-3">
-                    {advancedAnalyticsData.revenueByStatus.map((status, index) => (
+                    {advancedAnalyticsData.revenueByStatus.map((status) => (
                       <div key={status.status} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                         <span className="text-sm font-medium text-gray-700">{status.status}</span>
                         <div className="text-right">

@@ -1,7 +1,7 @@
 import { IOrder } from "../../../domain/order/entitiy/IOrder";
 import { AdvancedBusinessAnalyticsDTO } from "../dto/AdvancedBusinessAnalyticsDTO";
 import { RepBusinessStatDTO } from "../dto/RepBusinessStatDTO";
-import { Period, Trend } from "../../../shared/Enums";
+import { Period } from "../../../shared/Enums";
 import { RevenuePeriodUtil } from "../../superAdmin/utils/RevenuePeriodUtil";
 
 export class AdvancedBusinessAnalyticsMapper {
