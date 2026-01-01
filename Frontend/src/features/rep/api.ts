@@ -267,6 +267,16 @@ export const getBusinessAnalytics = async (
   return res.data.data;
 };
 
+export const getAdvancedBusinessAnalytics = async (
+  startDate: string,
+  endDate: string
+) => {
+  const res = await api.get(RepEndpoints.REP_ADVANCED_BUSINESS_STAT, {
+    params: { startDate, endDate },
+  });
+  return res.data.data;
+};
+
 export const exportOrders = async (startDate?: string, endDate?: string) => {
   const res = await api.get(RepEndpoints.REP_BUSINESS_STAT + "/export", {
     params: { startDate, endDate },

@@ -49,9 +49,11 @@ import { IVerifyOldPasswordUseCase } from "../../../application/common/interface
 import { IGetAllOrdersUseCase } from "../../../application/medicalRep/interfaces/IGetAllOrdersUseCase";
 import { IGetOrderDetailsUseCase } from "../../../application/medicalRep/interfaces/IGetOrderDetailsUseCase";
 import { IRepBusinessAnalyticsUseCase } from "../../../application/medicalRep/interfaces/IRepBusinessAnalyticsUseCase";
+import { IAdvancedBusinessAnalyticsUseCase } from "../../../application/medicalRep/interfaces/IAdvancedBusinessAnalyticsUseCase";
 import { IExportRepOrdersUseCase } from "../../../application/medicalRep/interfaces/IExportRepOrdersUseCase";
 import { IMakeVideoCallWithDoctorUseCase } from "../../../application/medicalRep/interfaces/IMakeVideoCallWithDoctorUseCase";
 import { IUpgradeSubscriptionPlanUseCase } from "../../../application/subscription/interfaces/IUpgradeSubscriptionPlanUseCase";
+import { ErrorMessages } from "../../../shared/Messages";
 
 export class MedicalRepController {
   constructor(
@@ -96,6 +98,7 @@ export class MedicalRepController {
     private _getAllOrdersUseCase: IGetAllOrdersUseCase,
     private _getOrderDetailsUseCase: IGetOrderDetailsUseCase,
     private _repBusinessAnalyticsUseCase: IRepBusinessAnalyticsUseCase,
+    private _advancedBusinessAnalyticsUseCase: IAdvancedBusinessAnalyticsUseCase,
     private _exportRepOrdersUseCase: IExportRepOrdersUseCase,
     private _videoCallWithDoctorUseCase: IMakeVideoCallWithDoctorUseCase,
     private _upgradeSubscriptionPlanUseCase: IUpgradeSubscriptionPlanUseCase
@@ -557,6 +560,28 @@ export class MedicalRepController {
       startDate as string | undefined,
       endDate as string | undefined
     );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  AdvancedBusinessAnalytics = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const { startDate, endDate } = req.query;
+
+    if (!startDate || !endDate) {
+      return res.status(HttpStatusCode.BAD_REQUEST).json({
+        success: false,
+        message: ErrorMessages.START_END_DATE_REQUIRED,
+      });
+    }
+
+    const response = await this._advancedBusinessAnalyticsUseCase.execute(
+      startDate as string,
+      endDate as string,
+      userId
+    );
+
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });

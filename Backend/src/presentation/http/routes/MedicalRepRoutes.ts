@@ -181,6 +181,10 @@ export class MedicalRepRoutes {
       medicalRepController.BusinessAnalytics
     );
     this.router.get(
+      "/business/analytics/advanced",
+      medicalRepController.AdvancedBusinessAnalytics
+    );
+    this.router.get(
       "/business/analytics/export",
       medicalRepController.exportOrders
     );

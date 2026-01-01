@@ -81,3 +81,16 @@ export enum Feature{
   FEED_ENHANCEMENT="FEED_ENHANCEMENT",
   UNLIMITED_CONNECTIONS="UNLIMITED_CONNECTIONS",
 }
+
+export enum Period{
+  DAILY="DAILY",
+  WEEKLY="WEEKLY",
+  MONTHLY="MONTHLY",
+  YEARLY="YEARLY"
+}
+
+export enum Trend{
+  UP="UP",
+  DOWN="DOWN",
+  STABLE="STABLE"
+}

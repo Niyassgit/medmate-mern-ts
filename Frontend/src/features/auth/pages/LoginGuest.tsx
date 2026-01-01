@@ -14,10 +14,9 @@ const LoginGuest = () => {
   const dispatch = useDispatch();
   const { accessToken, user } = useSelector((state: RootState) => state.auth);
 
-  // Redirect if user is already logged in
+
   useEffect(() => {
     if (accessToken && user) {
-      // User is already logged in, redirect to their dashboard
       if (user.role === Role.DOCTOR) {
         navigate("/doctor/feed", { replace: true });
       } else if (user.role === Role.MEDICAL_REP) {

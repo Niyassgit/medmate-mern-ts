@@ -90,6 +90,7 @@ export const ErrorMessages = {
   DOWN_GRADE_PLAN: "Downgrades are applied after current cycle",
   REP_SUB_INACTIVE:
     "Your representative does not have an active subscription to use this feature.",
+    START_END_DATE_REQUIRED:"Start Date and End Date are required"
 } as const;
 
 export const SuccessMessages = {

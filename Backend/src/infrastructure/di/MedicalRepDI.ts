@@ -64,6 +64,7 @@ import { GetAllOrdersUseCase } from "../../application/medicalRep/use-cases/GetA
 import { OrderRepository } from "../repositories/OrderRepository";
 import { GetOrderDetailsUseCase } from "../../application/medicalRep/use-cases/GetOrderDetailsUseCase";
 import { RepBusinessAnalyticsUseCase } from "../../application/medicalRep/use-cases/RepBusinessAnalyticsUseCase";
+import { AdvancedBusinessAnalyticsUseCase } from "../../application/medicalRep/use-cases/AdvancedBusinessAnalyticsUseCase";
 import { ExportRepOrdersUseCase } from "../../application/medicalRep/use-cases/ExportRepOrdersUseCase";
 import { ExcelService } from "../services/ExcelService";
 import { VideoCallEventPublisher } from "../realtime/publishers/VideoCallEventPublisher";
@@ -336,6 +337,12 @@ const repBusinessAnalyticsUseCase = new RepBusinessAnalyticsUseCase(
   storageService
 );
 
+const advancedBusinessAnalyticsUseCase = new AdvancedBusinessAnalyticsUseCase(
+  medicalRepRepository,
+  orderRepository,
+  storageService
+);
+
 const exportRepOrdersUseCase = new ExportRepOrdersUseCase(
   medicalRepRepository,
   orderRepository,
@@ -397,6 +404,7 @@ export const medicalRepController = new MedicalRepController(
   getAllOrdersUseCase,
   getOrderDetailsUseCase,
   repBusinessAnalyticsUseCase,
+  advancedBusinessAnalyticsUseCase,
   exportRepOrdersUseCase,
   makeVideoCallWithDoctorUseCase,
   upgradeSubscriptionPlanUseCase

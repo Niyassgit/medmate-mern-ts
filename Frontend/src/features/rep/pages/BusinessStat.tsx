@@ -6,18 +6,41 @@ import {
   DollarSign,
   Calendar,
   FileSpreadsheet,
+  BarChart3,
+  Users,
+  Activity,
 } from "lucide-react";
-import { getBusinessAnalytics, exportOrders } from "../api";
+import { getBusinessAnalytics, getAdvancedBusinessAnalytics, exportOrders } from "../api";
 import { SpinnerButton } from "@/components/shared/SpinnerButton";
 import { StatCard } from "../components/RepStatCard";
 import { RepStatAnalyticsDTO } from "../dto/RepStatAnalyticsDTO";
+import { AdvancedBusinessAnalyticsDTO } from "../dto/AdvancedBusinessAnalyticsDTO";
 import OrderTable from "../components/OrderTable";
 import toast from "react-hot-toast";
+import { useFeature } from "@/hooks/useFeature";
+import { Feature } from "@/types/SubscriptionStatus";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
+} from "recharts";
 
 const BusinessStat = () => {
+  const hasAdvancedAnalytics = useFeature(Feature.ADVANCED_BUSINESS_ANALYTICS);
   const [analyticsData, setAnalyticsData] =
     useState<RepStatAnalyticsDTO | null>(null);
+  const [advancedAnalyticsData, setAdvancedAnalyticsData] =
+    useState<AdvancedBusinessAnalyticsDTO | null>(null);
   const [loading, setLoading] = useState(true);
+  const [advancedLoading, setAdvancedLoading] = useState(false);
   const [dateRange, setDateRange] = useState({
     startDate: new Date(new Date().getFullYear(), 0, 1)
       .toISOString()
@@ -36,6 +59,23 @@ const BusinessStat = () => {
           dateRange.endDate
         );
         setAnalyticsData(data);
+        
+        // Fetch advanced analytics if user has the feature
+        if (hasAdvancedAnalytics) {
+          setAdvancedLoading(true);
+          try {
+            const advancedData = await getAdvancedBusinessAnalytics(
+              dateRange.startDate,
+              dateRange.endDate
+            );
+            setAdvancedAnalyticsData(advancedData);
+          } catch (error: any) {
+            console.error("Failed to fetch advanced analytics:", error);
+            // Don't show error toast for advanced analytics, just log it
+          } finally {
+            setAdvancedLoading(false);
+          }
+        }
       } catch (error: any) {
         toast.error(error.message || "Failed to fetch analytics");
       } finally {
@@ -44,7 +84,7 @@ const BusinessStat = () => {
     };
 
     fetchData();
-  }, [dateRange]);
+  }, [dateRange, hasAdvancedAnalytics]);
 
   const handleDateChange = (field: string, value: string) => {
     setDateRange((prev) => ({ ...prev, [field]: value }));
@@ -169,6 +209,150 @@ const BusinessStat = () => {
             color="bg-orange-500"
           />
         </div>
+
+        {/* Advanced Analytics Charts - Only for subscribed users */}
+        {hasAdvancedAnalytics && (
+          <>
+            {/* Growth Metrics Card */}
+            {advancedAnalyticsData?.growthMetrics && (
+              <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <Activity className="w-5 h-5 text-blue-600" />
+                  <h2 className="text-xl font-bold text-gray-900">Growth Metrics</h2>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4">
+                    <p className="text-sm text-gray-600 mb-1">Previous Period</p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      ₹{advancedAnalyticsData.growthMetrics.previousPeriodRevenue.toLocaleString()}
+                    </p>
+                  </div>
+                  <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4">
+                    <p className="text-sm text-gray-600 mb-1">Current Period</p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      ₹{advancedAnalyticsData.growthMetrics.currentPeriodRevenue.toLocaleString()}
+                    </p>
+                  </div>
+                  <div className={`bg-gradient-to-br rounded-lg p-4 ${
+                    advancedAnalyticsData.growthMetrics.growthPercentage >= 0
+                      ? "from-green-50 to-green-100"
+                      : "from-red-50 to-red-100"
+                  }`}>
+                    <p className="text-sm text-gray-600 mb-1">Growth</p>
+                    <p className={`text-2xl font-bold ${
+                      advancedAnalyticsData.growthMetrics.growthPercentage >= 0
+                        ? "text-green-700"
+                        : "text-red-700"
+                    }`}>
+                      {advancedAnalyticsData.growthMetrics.growthPercentage >= 0 ? "+" : ""}
+                      {advancedAnalyticsData.growthMetrics.growthPercentage.toFixed(2)}%
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {advancedAnalyticsData.growthMetrics.growthAmount >= 0 ? "+" : ""}
+                      ₹{Math.abs(advancedAnalyticsData.growthMetrics.growthAmount).toLocaleString()}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Revenue Timeline Chart */}
+            {advancedAnalyticsData?.revenueTimeline && advancedAnalyticsData.revenueTimeline.length > 0 && (
+              <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <BarChart3 className="w-5 h-5 text-blue-600" />
+                  <h2 className="text-xl font-bold text-gray-900">Revenue Timeline</h2>
+                </div>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={advancedAnalyticsData.revenueTimeline}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="period" />
+                    <YAxis />
+                    <Tooltip
+                      formatter={(value: number) => [`₹${value.toLocaleString()}`, "Revenue"]}
+                    />
+                    <Bar dataKey="amount" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            )}
+
+            {/* Revenue by Doctor */}
+            {advancedAnalyticsData?.revenueByDoctor && advancedAnalyticsData.revenueByDoctor.length > 0 && (
+              <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <Users className="w-5 h-5 text-blue-600" />
+                  <h2 className="text-xl font-bold text-gray-900">Revenue by Doctor</h2>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Doctor</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Hospital</th>
+                        <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Revenue</th>
+                        <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Orders</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {advancedAnalyticsData.revenueByDoctor.slice(0, 10).map((doctor) => (
+                        <tr key={doctor.doctorId} className="hover:bg-gray-50">
+                          <td className="px-4 py-3 text-sm font-medium text-gray-900">{doctor.doctorName}</td>
+                          <td className="px-4 py-3 text-sm text-gray-600">{doctor.hospital || "N/A"}</td>
+                          <td className="px-4 py-3 text-sm text-right font-semibold text-gray-900">
+                            ₹{doctor.revenue.toLocaleString()}
+                          </td>
+                          <td className="px-4 py-3 text-sm text-right text-gray-600">{doctor.orderCount}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {/* Revenue by Status */}
+            {advancedAnalyticsData?.revenueByStatus && advancedAnalyticsData.revenueByStatus.length > 0 && (
+              <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+                <h2 className="text-xl font-bold text-gray-900 mb-4">Revenue by Status</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <ResponsiveContainer width="100%" height={250}>
+                    <PieChart>
+                      <Pie
+                        data={advancedAnalyticsData.revenueByStatus}
+                        dataKey="revenue"
+                        nameKey="status"
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={80}
+                        label={(entry) => `${entry.status}: ₹${entry.revenue.toLocaleString()}`}
+                      >
+                        {advancedAnalyticsData.revenueByStatus.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6"][index % 5]} />
+                        ))}
+                      </Pie>
+                      <Tooltip formatter={(value: number) => `₹${value.toLocaleString()}`} />
+                      <Legend />
+                    </PieChart>
+                  </ResponsiveContainer>
+                  <div className="space-y-3">
+                    {advancedAnalyticsData.revenueByStatus.map((status, index) => (
+                      <div key={status.status} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span className="text-sm font-medium text-gray-700">{status.status}</span>
+                        <div className="text-right">
+                          <p className="text-sm font-semibold text-gray-900">
+                            ₹{status.revenue.toLocaleString()}
+                          </p>
+                          <p className="text-xs text-gray-500">{status.orderCount} orders</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
+        )}
 
         {/* Top Products */}
         <div className="bg-white rounded-lg shadow-md p-6">

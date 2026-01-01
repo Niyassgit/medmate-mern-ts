@@ -50,6 +50,7 @@ export const RepEndpoints = {
   GET_ALL_ORDERS: "/rep/orders",
   GET_ORDER_DETAILS: (orderId: string) => `/rep/orders/${orderId}`,
   REP_BUSINESS_STAT:`/rep/business/analytics`,
+  REP_ADVANCED_BUSINESS_STAT:`/rep/business/analytics/advanced`,
   RECENT_ORDERS:`/rep/business/recent-orders`,
   CALL_DOCTOR: (doctorId: string) => `/rep/call-doctor/${doctorId}`,
   UPGRADE_SUBSCRIPTION: (newPlanId: string) => `/rep/subscription/upgrade-plan/${newPlanId}`,
