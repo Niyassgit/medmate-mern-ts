@@ -6,7 +6,7 @@ import { ConnectionInitiator, ConnectionStatus } from "../../../shared/Enums";
 export class RepNetworkEvaluator {
   static evaluate(
     reps: IMedicalRepWithUser[],
-    connections: { doctorId: string; repId?: string; status: string; initiator: string }[]
+    connections: { doctorId: string; repId?: string; status: ConnectionStatus; initiator: ConnectionInitiator }[]
   ): IMedicalRepWithConnection[] {
     const results: IMedicalRepWithConnection[] = [];
 

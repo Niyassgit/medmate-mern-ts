@@ -7,7 +7,7 @@ export class PrescriptionItemMapper {
       id: data.id,
       prescriptionId: data.prescriptionId,
       productId: data.productId,
-      productPostId: data.productPostId ?? null,
+      productPostId: data.productId ?? null,
       dosage: data.dosage ?? null,
       quantity: data.quantity,
     };

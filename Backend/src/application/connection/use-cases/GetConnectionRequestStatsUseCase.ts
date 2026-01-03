@@ -1,6 +1,6 @@
 import { IConnectionRequestLogRepository } from "../../../domain/connection/repositories/IConnectionRequestLogRepository";
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
-import { ISubscriptionRepositoy } from "../../../domain/subscription/repositories/ISubscriptionRepository";
+import { ISubscriptionRepository } from "../../../domain/subscription/repositories/ISubscriptionRepository";
 import { Feature } from "../../../shared/Enums";
 import { ErrorMessages } from "../../../shared/Messages";
 import { PermissionService } from "../../common/services/PermissionService";
@@ -17,7 +17,7 @@ export class GetConnectionRequestStatsUseCase
   constructor(
     private _medicalRepRepository: IMedicalRepRepository,
     private _connectionRequestLogRepository: IConnectionRequestLogRepository,
-    private _subscriptionRepository: ISubscriptionRepositoy
+    private _subscriptionRepository: ISubscriptionRepository
   ) {}
 
   async execute(userId: string): Promise<ConnectionRequestStatsDTO> {
@@ -31,13 +31,12 @@ export class GetConnectionRequestStatsUseCase
     );
     if (!repDetails) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
 
-    // Check if rep has UNLIMITED_CONNECTIONS feature
     const hasUnlimitedConnections = await PermissionService.hasFeatureForRep(
       repDetails,
       Feature.UNLIMITED_CONNECTIONS,
       this._subscriptionRepository
     );
-    
+
     const todayCount =
       await this._connectionRequestLogRepository.getTodayRequestCount(repId);
 

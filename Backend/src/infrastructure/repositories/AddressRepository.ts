@@ -41,7 +41,7 @@ export class AddressRepository
     addressId: string,
     data: Omit<IAddress, "id" | "createdAt" | "updatedAt">
   ): Promise<IAddress> {
-    const exist = this.findById(addressId);
+    const exist =await this.findById(addressId);
     if (!exist) throw new NotFoundError(ErrorMessages.ADDRESS_NOT_FOUND);
     const updated = await prisma.address.update({
       where: { id: addressId },

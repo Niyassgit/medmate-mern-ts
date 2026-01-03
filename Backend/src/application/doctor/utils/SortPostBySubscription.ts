@@ -1,6 +1,6 @@
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
 import { IProductPostForFeed } from "../../../domain/productPost/entity/IProductPostForFeed";
-import { ISubscriptionRepositoy } from "../../../domain/subscription/repositories/ISubscriptionRepository";
+import { ISubscriptionRepository } from "../../../domain/subscription/repositories/ISubscriptionRepository";
 import { Feature } from "../../../shared/Enums";
 import { PermissionService } from "../../common/services/PermissionService";
 
@@ -8,12 +8,12 @@ export class SortPostBySubscription {
   static async sorted(
     posts: IProductPostForFeed[],
     medicalRepRepository: IMedicalRepRepository,
-    subscriptionRepository?: ISubscriptionRepositoy
+    subscriptionRepository?: ISubscriptionRepository
   ): Promise<IProductPostForFeed[]> {
     const repIds = [...new Set(posts.map((post) => post.repId))];
     const reps = await medicalRepRepository.findByIds(repIds);
     
-    // Check which reps have FEED_ENHANCEMENT feature
+
     const feedEnhancedRepIds = new Set<string>();
     
     if (subscriptionRepository) {
@@ -28,7 +28,6 @@ export class SortPostBySubscription {
         }
       }
     } else {
-      // Fallback to old method if subscriptionRepository not provided
       const subscribedRepIds = new Set(
         reps.filter(
           (rep) =>

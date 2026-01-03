@@ -1,12 +1,12 @@
 import { UnautharizedError } from "../../../domain/common/errors";
-import { ISubscriptionRepositoy } from "../../../domain/subscription/repositories/ISubscriptionRepository";
+import { ISubscriptionRepository } from "../../../domain/subscription/repositories/ISubscriptionRepository";
 import { ErrorMessages, SuccessMessages } from "../../../shared/Messages";
 import { IDeleteSubscriptionUseCase } from "../interfaces/IDeleteSubscriptionUseCase";
 
 export class DeleteSubscriptionPlanUseCase
   implements IDeleteSubscriptionUseCase
 {
-  constructor(private _subscriptionRepository: ISubscriptionRepositoy) {}
+  constructor(private _subscriptionRepository: ISubscriptionRepository) {}
   async execute(subscriptionId: string, userId?: string): Promise<string> {
     if (!userId) throw new UnautharizedError(ErrorMessages.UNAUTHORIZED);
 

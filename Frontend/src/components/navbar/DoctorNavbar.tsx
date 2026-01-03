@@ -7,7 +7,7 @@ import {
   notificationUnreadCount,
   doctorConversations,
 } from "@/features/doctor/api";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@/app/hooks";
 import { getSocket } from "@/lib/socket";
 import { MessageDTO } from "../Dto/MessageDTO";
 import { Role } from "@/types/Role";
@@ -17,7 +17,7 @@ const DoctorNavbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const [unreadChatCount, setUnreadChatCount] = useState(0);
-  const userId = useSelector((state: any) => state.auth.user?.id);
+  const userId = useAppSelector((state) => state.auth.user?.id);
   const token = useMemo(() => localStorage.getItem("accessToken"), []);
   const [practiceOpen, setPracticeOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);

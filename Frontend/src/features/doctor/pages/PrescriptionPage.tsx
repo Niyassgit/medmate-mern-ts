@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { X, Plus, Calendar, Pill, FileText, Search, UserPlus, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@/app/hooks";
 import { getGuests, createGuest, createPrescription, getAllReps, getRepProducts } from "../api";
 import { ProductDTO } from "../dto/ProductDTO";
 import { RepDTO } from "../dto/RepDTO";
@@ -16,7 +16,7 @@ interface Guest {
 }
 
 export default function PrescriptionPage() {
-  const user = useSelector((state: any) => state.auth.user);
+  const user = useAppSelector((state) => state.auth.user);
   const [selectedGuest, setSelectedGuest] = useState<Guest | null>(null);
   const [guestSearchQuery, setGuestSearchQuery] = useState("");
   const [guests, setGuests] = useState<Guest[]>([]);

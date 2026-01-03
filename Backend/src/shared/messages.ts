@@ -3,7 +3,8 @@ export const ErrorMessages = {
   USER_NOT_VERIFIED: "Please Verify to continue operations",
   ACCOUNT_EXIST: "User already exists",
   INVALID_REQUEST: "Request is invalid!",
-  INVALID_CREDENTIALS: "Invalid email or password",
+  INVALID_CREDENTIALS:
+    "The password you entered is incorrect. Please try again.",
   UNAUTHORIZED: "Unauthorized access",
   FORBIDDEN: "Forbidden",
   USER_NOT_HAVE_PROFILE: "User dont have profile",
@@ -90,7 +91,7 @@ export const ErrorMessages = {
   DOWN_GRADE_PLAN: "Downgrades are applied after current cycle",
   REP_SUB_INACTIVE:
     "Your representative does not have an active subscription to use this feature.",
-    START_END_DATE_REQUIRED:"Start Date and End Date are required"
+  START_END_DATE_REQUIRED: "Start Date and End Date are required",
 } as const;
 
 export const SuccessMessages = {

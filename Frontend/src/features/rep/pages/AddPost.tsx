@@ -3,13 +3,13 @@ import {
   ProductPostFormValues,
 } from "../schemas/ProductPostSchema";
 import { addPost } from "../api";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@/app/hooks";
 import toast from "react-hot-toast";
 import PostForm from "../components/PostFormProps";
 
 const AddPost = () => {
    const navigate = useNavigate();
-  const id = useSelector((state: any) => state.auth.user?.id);
+  const id = useAppSelector((state) => state.auth.user?.id);
 
   const handleSubmit = async (values: ProductPostFormValues, images: File[]) => {
     const formData = new FormData();

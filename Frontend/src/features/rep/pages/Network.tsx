@@ -12,14 +12,14 @@ import NetworkDoctorCard from "../components/NetworkDoctorCard";
 import { useCallback, useState } from "react";
 import { DoctorCardDTO } from "../dto/DoctorCardDTO";
 import useFetchItem from "@/hooks/useFetchItem";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@/app/hooks";
 import { networks } from "../api";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { Spinner } from "@/components/ui/spinner";
 import noDataImg from "@/assets/hand-drawn-no-data-illustration.png";
 
 const Network = () => {
-  const id = useSelector((state: any) => state.auth.user?.id);
+  const id = useAppSelector((state) => state.auth.user?.id);
 
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebouncedValue(search, 400);

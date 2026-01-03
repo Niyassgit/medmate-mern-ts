@@ -4,17 +4,16 @@ import { SessionDescription } from "../../../shared/videoCall/SessionDescription
 import { io } from "../SocketGateway";
 
 export class VideoCallEventPublisher implements IVideoCallEventPublisher {
-  async publishIncomingCall(
-    toUserId: string,
-    fromUserId: string
-  ): Promise<void> {
+  publishIncomingCall(toUserId: string, fromUserId: string): Promise<void> {
     const room = `user:${toUserId}`;
     io.to(room).emit("call:incoming", {
       fromUserId,
     });
+
+    return Promise.resolve();
   }
 
-  async publishCallAccepted(
+  publishCallAccepted(
     toUserId: string,
     fromUserId: string,
     answer: SessionDescription
@@ -24,9 +23,10 @@ export class VideoCallEventPublisher implements IVideoCallEventPublisher {
       fromUserId,
       answer,
     });
+    return Promise.resolve();
   }
 
-  async publishIceCandidate(
+  publishIceCandidate(
     toUserId: string,
     fromUserId: string,
     candidate: IceCandidate
@@ -36,24 +36,28 @@ export class VideoCallEventPublisher implements IVideoCallEventPublisher {
       fromUserId,
       candidate,
     });
+    return Promise.resolve();
   }
 
-  async publishCallEnded(toUserId: string, fromUserId: string): Promise<void> {
+  publishCallEnded(toUserId: string, fromUserId: string): Promise<void> {
     const room = `user:${toUserId}`;
     io.to(room).emit("call:ended", { fromUserId });
+    return Promise.resolve();
   }
 
-  async publishCallRejected(toUserId: string, fromUserId: string): Promise<void> {
+  publishCallRejected(toUserId: string, fromUserId: string): Promise<void> {
     const room = `user:${toUserId}`;
     io.to(room).emit("call:rejected", { fromUserId });
+    return Promise.resolve();
   }
 
-  async publishOffer(
+  publishOffer(
     toUserId: string,
     fromUserId: string,
     offer: SessionDescription
   ): Promise<void> {
     const room = `user:${toUserId}`;
     io.to(room).emit("call:offer", { fromUserId, offer });
+    return Promise.resolve();
   }
 }

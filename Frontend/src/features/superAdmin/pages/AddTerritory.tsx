@@ -13,14 +13,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { addTerritory, updateTerritory } from "../api/superAdminApi";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@/app/hooks";
 import { TeritorySchema, TerritorySchemaDTO } from "../Schemas/TerritorySchema";
 import toast from "react-hot-toast";
 
 const AddTerritory = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const userId = useSelector((state: any) => state.auth.user?.id);
+  const userId = useAppSelector((state) => state.auth.user?.id);
 
   const state = location.state as {
     existingData?: TerritorySchemaDTO;

@@ -84,7 +84,6 @@ export class CreateGuestUseCase implements ICreateGuestUseCase {
       OtpPurpose.SIGNUP
     );
  
-    console.log("otp sended:",otp)
     void this._notificationService.sendEmail(
       dto.email,
       NotificationMessages.OTP_SUBJECT,

@@ -3,7 +3,7 @@ import { INotificationEventPublisher } from "../../../domain/common/services/INo
 import { io } from "../SocketGateway";
 
 export class NotificationEventPublisher implements INotificationEventPublisher {
-  async publishNotification(event: {
+  publishNotification(event: {
     id: string;
     content: string;
     createdAt: Date;
@@ -28,8 +28,10 @@ export class NotificationEventPublisher implements INotificationEventPublisher {
       postId: event.postId,
       postImage: event.postImage,
     });
+    return Promise.resolve();
   }
-  async deletePublishedNotification(event: {
+  
+  deletePublishedNotification(event: {
     receiverUserId: string;
     notificationId: string;
   }): Promise<void> {
@@ -37,13 +39,15 @@ export class NotificationEventPublisher implements INotificationEventPublisher {
     io.to(room).emit("notification:deleted", {
       id: event.notificationId,
     });
+    return Promise.resolve();
   }
 
-  async unreadNotificationCount(event: {
+  unreadNotificationCount(event: {
     receiverUserId: string;
     count: number;
   }): Promise<void> {
     const room = `user:${event.receiverUserId}`;
     io.to(room).emit("notification:count", event.count);
+    return Promise.resolve();
   }
 }

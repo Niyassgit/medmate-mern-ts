@@ -1,10 +1,9 @@
 import React from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import UserAvatar from "../shared/UserAvatar";
 
 const GuestNavbar = () => {
   const [open, setOpen] = React.useState(false);
-  const navigate = useNavigate();
 
   const toggleMobileMenu = () => setOpen((prev) => !prev);
 

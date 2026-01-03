@@ -28,11 +28,6 @@ export class stripeWebhookService implements IStripeWebhookService {
       const { orderId } = session.metadata;
       const paymentId = (session.payment_intent as string) || session.id;
 
-      if (!orderId) {
-        console.warn("Order ID missing in webhook metadata");
-        return;
-      }
-
       await prisma.order.update({
         where: { id: orderId },
         data: {

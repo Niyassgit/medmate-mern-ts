@@ -1,6 +1,6 @@
 import { CheckCircle, Clock } from "lucide-react";
 import StatsCard from "@/components/shared/StatusCard";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@/app/hooks";
 import { useEffect, useState } from "react";
 import { AnalyticsDTO } from "../dto/AnalyticsDTO";
 import { networkAnalytics, RepMutualConnections, RepPendingConnections } from "../api";
@@ -9,7 +9,7 @@ import ConnectionTable from "@/components/shared/ConnectionTable";
 import ConnectionsModal from "@/components/shared/ConnectionsModal";
 
 const Analytics = () => {
-  const id = useSelector((state: any) => state.auth.user?.id);
+  const id = useAppSelector((state) => state.auth.user?.id);
   const [analytics, setAnalytics] = useState<AnalyticsDTO | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");

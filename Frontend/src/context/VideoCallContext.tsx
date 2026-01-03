@@ -10,7 +10,7 @@ import { getSocket } from "../lib/socket";
 import { useWebRTC } from "../hooks/useWebRTC";
 import VideoCallModal from "../components/shared/VideoCallModal";
 import VideoCallScreen from "../components/shared/VideoCallScreen";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../app/hooks";
 import { Role } from "../types/Role";
 import { callDoctor } from "../features/rep/api";
 import { callRep } from "../features/doctor/api";
@@ -49,7 +49,7 @@ export const VideoCallProvider: React.FC<{ children: ReactNode }> = ({
     const { localStream, remoteStream, createOffer, handleOffer } =
         useWebRTC(currentRemoteId);
     
-    const user = useSelector((state: any) => state.auth.user);
+    const user = useAppSelector((state) => state.auth.user);
     const userRole = user?.role;
     const token = localStorage.getItem("accessToken");
 

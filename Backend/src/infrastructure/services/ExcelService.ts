@@ -13,7 +13,7 @@ export class ExcelService implements IExcelService {
 
         let currentRow = 1;
 
-        // Title
+
         if (options?.title) {
             worksheet.mergeCells(`A${currentRow}:G${currentRow}`);
             const titleRow = worksheet.getRow(currentRow);
@@ -24,7 +24,6 @@ export class ExcelService implements IExcelService {
             currentRow++;
         }
 
-        // Subtitle (Date Range)
         if (options?.subTitle) {
             worksheet.mergeCells(`A${currentRow}:G${currentRow}`);
             const subTitleRow = worksheet.getRow(currentRow);
@@ -49,30 +48,27 @@ export class ExcelService implements IExcelService {
         });
         currentRow++;
 
-        // Data
         data.forEach((row) => {
             const dataRow = worksheet.getRow(currentRow);
             columns.forEach((col, index) => {
                 const cell = dataRow.getCell(index + 1);
-                cell.value = row[col.key] as any;
+                const cellValue = row[col.key];
+                cell.value = cellValue as string | number | boolean | Date | null | undefined;
                 cell.alignment = { horizontal: "center" };
             });
             currentRow++;
         });
 
-        // Total
         if (options?.showTotal && options.totalColKey) {
             currentRow++;
             const totalRow = worksheet.getRow(currentRow);
             const totalColIndex = columns.findIndex(c => String(c.key) === options.totalColKey) + 1;
 
-            // Total Label
             const totalLabelCell = totalRow.getCell(totalColIndex - 1);
             totalLabelCell.value = "Grand Total:";
             totalLabelCell.font = { bold: true };
             totalLabelCell.alignment = { horizontal: "right" };
 
-            // Total Value
             const totalValue = data.reduce((sum, item) => sum + (Number(item[options.totalColKey as keyof T]) || 0), 0);
             const totalValueCell = totalRow.getCell(totalColIndex);
             totalValueCell.value = totalValue;

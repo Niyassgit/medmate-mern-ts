@@ -1,4 +1,5 @@
 import { Prisma, SubscriptionHistory } from "@prisma/client";
+import Stripe from "stripe";
 import { ISubscriptionHistory } from "../../domain/subscription/entities/ISubscriptionHistory";
 import { IRecentsubscription } from "../../domain/subscription/entities/IRecentSubscription";
 import { IRecentSubscriptionPrisma } from "../types/IRecentSubscriptionPrisma";
@@ -53,21 +54,35 @@ export class SubscriptionHistoryMapper {
   }
 
   static toDomainFromSession(
-    session: any, // Using any for Stripe session to avoid importing Stripe types in Mapper if not present, or use correct Type if available
+    session: Stripe.Checkout.Session,
     repId: string,
     planId: string,
     startDate: Date,
     endDate: Date
   ): Omit<ISubscriptionHistory, "id"> {
+    const paymentIntentId = typeof session.payment_intent === "string" 
+      ? session.payment_intent 
+      : session.payment_intent?.id || null;
+    
+    const invoiceId = typeof session.invoice === "string"
+      ? session.invoice
+      : session.invoice?.id || null;
+
+    const amountTotal = session.amount_total ?? 0;
+    const amount = amountTotal / 100;
+
+    const currency = session.currency || "inr";
+    const paymentStatus = session.payment_status || "pending";
+
     return {
       repId,
       planId,
       sessionId: session.id,
-      paymentIntentId: (session.payment_intent as string) || null,
-      invoiceId: (session.invoice as string) || null,
-      amount: (session.amount_total || 0) / 100,
-      currency: session.currency || "inr",
-      status: session.payment_status,
+      paymentIntentId,
+      invoiceId,
+      amount,
+      currency,
+      status: paymentStatus,
       startDate,
       endDate,
       createdAt: new Date(),

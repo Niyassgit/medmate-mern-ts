@@ -2,14 +2,14 @@ import {
   BadRequestError,
   UnautharizedError,
 } from "../../../domain/common/errors";
-import { ISubscriptionRepositoy } from "../../../domain/subscription/repositories/ISubscriptionRepository";
+import { ISubscriptionRepository } from "../../../domain/subscription/repositories/ISubscriptionRepository";
 import { ErrorMessages, SuccessMessages } from "../../../shared/Messages";
 import { IListToggleSubscriptionPlanUseCase } from "../interfaces/IListToggleSubscriptionPlanUseCase";
 
 export class ListToggleSubscriptionPlanUseCase
   implements IListToggleSubscriptionPlanUseCase
 {
-  constructor(private _subscriptionRepository: ISubscriptionRepositoy) {}
+  constructor(private _subscriptionRepository: ISubscriptionRepository) {}
 
   async execute(
     subscriptionId: string,

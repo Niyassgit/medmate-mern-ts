@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { FilePenLine } from "lucide-react";
 import { MedicalRepDetails } from "@/components/Dto/MedicalRepDetails";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@/app/hooks";
 import { getProfileRep, updateProfileImage } from "../api";
 import ProfileAvatar from "@/components/shared/ProfileAvatar";
 import toast from "react-hot-toast";
@@ -17,7 +17,7 @@ const ProfilePage = () => {
   const [error, setError] = useState<string | null>(null);
   const [openConfirm, setOpenConfirm] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const id = useSelector((state: any) => state.auth.user?.id);
+  const id = useAppSelector((state) => state.auth.user?.id);
 
   useEffect(() => {
     if (!id) return;

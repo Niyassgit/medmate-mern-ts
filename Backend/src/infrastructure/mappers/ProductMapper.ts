@@ -13,7 +13,6 @@ export class ProductMapper {
       rep: { connect: { id: data.repId } },
       imageUrl: data.imageUrl,
       territoryIds: data.territoryIds || [],
-      useCases: data.useCase,
       ingredients: data.ingredients,
     };
   }
@@ -28,7 +27,6 @@ export class ProductMapper {
       ptr: data.ptr,
       imageUrl: data.imageUrl,
       territoryIds: data.territoryIds || [],
-      useCases: data.useCase,
       ingredients: data.ingredients,
       updatedAt: new Date(),
     };
@@ -44,7 +42,6 @@ export class ProductMapper {
       repId: data.repId,
       imageUrl: data.imageUrl,
       territoryIds: data.territoryIds || [],
-      useCase: data.useCases,
       ingredients: data.ingredients,
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,

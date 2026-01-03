@@ -14,6 +14,7 @@ import { IGetFeedUseCase } from "../../../application/doctor/interfaces/IGetFeed
 import { IPostDetailsUseCase } from "../../../application/doctor/interfaces/IPostDetailsUseCase";
 import { IGetRepDetailsOnDoctorUseCase } from "../../../application/doctor/interfaces/IGetRepDetailsOnDoctorUseCase";
 import { GetOptionalUserId } from "../utils/GetOptionalUserId";
+import { safeStringify, safeStringArray } from "../utils/QueryParamHandler";
 import { IToggleLikeOnPostUseCase } from "../../../application/Like/interfaces/IToggleLikeOnPostUseCase";
 import { IToggleInterestOnPostUseCase } from "../../../application/interest/interfaces/IToggleInterestOnPostUseCase";
 import { IDoctorMutualConnectionsUseCase } from "../../../application/doctor/interfaces/IDoctorMutualConnectionsUseCase";
@@ -28,6 +29,7 @@ import { IGetConversationsUseCase } from "../../../application/conversation/inte
 import { IGetAllMessagesUseCase } from "../../../application/conversation/interfaces/IGetAllMessagesUseCase";
 import { CreateMessageDTO } from "../../../application/conversation/dto/CreateMessageDTO";
 import { ICreateDoctorMessageUseCase } from "../../../application/conversation/interfaces/ICreateDoctorMessageUseCase";
+import { MessageDTO } from "../../../application/conversation/dto/MessageDTO";
 import { IDoctorMessageMarkAsReadUseCase } from "../../../application/conversation/interfaces/IDoctorMessageMarkAsReadUseCase";
 import { IGetRepsListForPracticeUseCase } from "../../../application/doctor/interfaces/IGetRepsListForPracticeUseCase";
 import { IGetRepProductsForDoctorUseCase } from "../../../application/doctor/interfaces/IGetRepProductsForDoctorUseCase";
@@ -42,6 +44,7 @@ import { Role } from "../../../shared/Enums";
 import { IVerifyOldPasswordUseCase } from "../../../application/common/interfaces/IverifyOldPasswordUsesCase";
 import { IMakeVideoCallWithRepUseCase } from "../../../application/doctor/interfaces/IMakeVideoCallWithrepUseCase";
 import { IDoctorCommissionsUseCase } from "../../../application/doctor/interfaces/IDoctorCommissionsUseCase";
+
 
 export class DoctorController {
   constructor(
@@ -128,8 +131,8 @@ export class DoctorController {
     const { search, company, territories } = req.query;
 
     const filters = {
-      company: company ? String(company) : undefined,
-      territories: territories ? String(territories).split(",") : undefined,
+      company: safeStringify(company),
+      territories: safeStringArray(territories),
     };
 
     const response = await this._networkUseCase.execute(
@@ -333,7 +336,7 @@ export class DoctorController {
   createMessage = async (req: Request, res: Response) => {
     const data = req.body as CreateMessageDTO;
     const userId = GetOptionalUserId(req.user);
-    const response = await this._createMessageUseCase.execute(data, userId);
+    const response: MessageDTO = await this._createMessageUseCase.execute(data, userId);
     return res
       .status(HttpStatusCode.CREATED)
       .json({ success: true, data: response });

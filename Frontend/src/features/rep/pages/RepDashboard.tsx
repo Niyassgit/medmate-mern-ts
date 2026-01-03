@@ -13,7 +13,7 @@ import ProfileCard from "../components/ProfileCard";
 import { ConnectionLimitBadge } from "../components/ConnectionLimitBadge";
 import { Link } from "react-router-dom";
 
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@/app/hooks";
 import { getPostList, getProfileRep, getConnectionRequestStats } from "../api";
 import useFetchList from "@/hooks/useFetchItem";
 import { useCallback, useEffect, useState } from "react";
@@ -24,7 +24,7 @@ import { SpinnerButton } from "@/components/shared/SpinnerButton";
 import { ProductPostListStatus } from "@/types/ProductListStatus";
 
 const RepDashboard = () => {
-  const id = useSelector((state: any) => state.auth.user?.id);
+  const id = useAppSelector((state) => state.auth.user?.id);
   const [posts, setPosts] = useState<ProductListDTO[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<ProductPostListStatus>(

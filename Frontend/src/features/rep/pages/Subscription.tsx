@@ -12,7 +12,7 @@ import { doctorsForShow } from "@/features/shared/api/SharedApi";
 import { DoctorCardGuestDTO } from "@/features/shared/dto/DoctorCardGuestDTO";
 import FaqSection from "@/components/shared/FaqSection";
 import LayoutTextFlipDemo from "@/components/shared/LayoutTextFlipDemo";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@/app/hooks";
 import toast from "react-hot-toast";
 import AnimeButton from "@/components/shared/AnimeButton";
 import { getSubscriptionHistory } from "../api";
@@ -27,7 +27,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 const Subscription = () => {
-  const userId = useSelector((state: any) => state.auth.user.id);
+  const userId = useAppSelector((state) => state.auth.user?.id);
   const [open, setOpen] = useState(false);
   const [history, setHistory] = useState<SubHistoryDTO[] | null>(null);
   const [historyLoading, setHistoryLoading] = useState(false);

@@ -3,14 +3,14 @@ import { AdminTable } from "../components/AdminTable";
 import { territories } from "../api/superAdminApi";
 import { TerritoryDTO } from "../dto/TerritoryDTO";
 import useFetchItem from "@/hooks/useFetchItem";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@/app/hooks";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { TerritoryApiResponse } from "../dto/TerritoryApiResponse";
 
 const TerritorryManagement: React.FC = () => {
-  const id = useSelector((state: any) => state.auth.user?.id);
+  const id = useAppSelector((state) => state.auth.user?.id);
   const navigate = useNavigate();
 
   const [page, setPage] = useState<number>(1);

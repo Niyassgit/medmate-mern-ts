@@ -46,6 +46,7 @@ import { ICreateFeatureUseCase } from "../../../application/superAdmin/interface
 import { IGetFeaturesUseCase } from "../../../application/superAdmin/interfaces/IGetFeaturesUseCase";
 import { IUpdateFeatureUseCase } from "../../../application/superAdmin/interfaces/IUpdateFeatureUseCase";
 import { IDeleteFeatureUseCase } from "../../../application/superAdmin/interfaces/IDeleteFeatureUseCase";
+import { IFeature } from "../../../domain/subscription/entities/IFeautre";
 
 export class SuperAdminController {
   constructor(
@@ -509,10 +510,10 @@ export class SuperAdminController {
 
   updateOrderStatus = async (req: Request, res: Response) => {
     const { orderId } = req.params;
-    const { status } = req.body;
+    const { status } = req.body as { status: OrderStatus };
     const response = await this._updateOrderStatusUseCase.execute(
       orderId,
-      status as OrderStatus
+      status
     );
     return res
       .status(HttpStatusCode.OK)
@@ -520,7 +521,9 @@ export class SuperAdminController {
   };
 
   createFeature = async (req: Request, res: Response) => {
-    const feature = await this._createFeatureUseCase.execute(req.body);
+    const feature = await this._createFeatureUseCase.execute(
+      req.body as Omit<IFeature, "id" | "createdAt">
+    );
     res.status(HttpStatusCode.CREATED).json({ success: true, data: feature });
   };
 
@@ -531,7 +534,10 @@ export class SuperAdminController {
 
   updateFeature = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const feature = await this._updateFeatureUseCase.execute(id, req.body);
+    const feature = await this._updateFeatureUseCase.execute(
+      id,
+      req.body as Partial<IFeature>
+    );
     res.status(HttpStatusCode.OK).json({ success: true, data: feature });
   };
 

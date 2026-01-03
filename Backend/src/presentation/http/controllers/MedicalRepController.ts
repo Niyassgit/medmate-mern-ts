@@ -20,6 +20,7 @@ import { IArchivePostUseCase } from "../../../application/productPost/interfaces
 import { IDeletePostUseCase } from "../../../application/productPost/interfaces/IDeletePostUseCase";
 import { IGetDoctorDetailsOnRepSideUseCase } from "../../../application/medicalRep/interfaces/IGetDoctorDetailsOnRepSideUseCase";
 import { GetOptionalUserId } from "../utils/GetOptionalUserId";
+import { safeStringify, safeNumber } from "../utils/QueryParamHandler";
 import { IRepMutualConnectionsUseCase } from "../../../application/medicalRep/interfaces/IRepMutualConnectionsUseCase";
 import { IRepPendingConnectionsUseCase } from "../../../application/medicalRep/interfaces/IRepPendingConnectionsUseCase";
 import { IGetRepNotificationsUseCase } from "../../../application/notification/interfaces/IGetRepNotificationsUseCase";
@@ -54,6 +55,7 @@ import { IExportRepOrdersUseCase } from "../../../application/medicalRep/interfa
 import { IMakeVideoCallWithDoctorUseCase } from "../../../application/medicalRep/interfaces/IMakeVideoCallWithDoctorUseCase";
 import { IUpgradeSubscriptionPlanUseCase } from "../../../application/subscription/interfaces/IUpgradeSubscriptionPlanUseCase";
 import { ErrorMessages } from "../../../shared/Messages";
+import { MessageDTO } from "../../../application/conversation/dto/MessageDTO";
 
 export class MedicalRepController {
   constructor(
@@ -189,7 +191,8 @@ export class MedicalRepController {
   editPost = async (req: Request, res: Response) => {
     const { postId } = req.params;
     const dto = req.body as Partial<ProductPostDTO>;
-    dto.imageUrl = processImages(req.body.existingImages, req.files);
+    const bodyWithImages = req.body as { existingImages?: string | string[] };
+    dto.imageUrl = processImages(bodyWithImages.existingImages, req.files);
     const response = await this._editpostUseCase.execute(
       postId,
       dto as ProductPostDTO
@@ -221,9 +224,9 @@ export class MedicalRepController {
     const { userId } = req.params;
     const { search, opTime, minAge, maxAge } = req.query;
     const filters = {
-      opTime: opTime ? String(opTime) : undefined,
-      minAge: minAge ? Number(minAge) : undefined,
-      maxAge: maxAge ? Number(maxAge) : undefined,
+      opTime: safeStringify(opTime),
+      minAge: safeNumber(minAge),
+      maxAge: safeNumber(maxAge),
     };
     const resposne = await this._getNetworksUseCase.execute(
       userId,
@@ -399,7 +402,7 @@ export class MedicalRepController {
   createMessage = async (req: Request, res: Response) => {
     const data = req.body as CreateMessageDTO;
     const userId = GetOptionalUserId(req.user);
-    const response = await this._createMessageuseCase.execute(data, userId);
+    const response: MessageDTO = await this._createMessageuseCase.execute(data, userId);
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
@@ -421,10 +424,11 @@ export class MedicalRepController {
   };
 
   createCheckoutSession = async (req: Request, res: Response) => {
-    const { userId, planId } = req.body;
+    const body = req.body as { userId: string; planId: string };
+    const { userId, planId } = body;
     const response = await this._createCheckoutSessionUseCase.execute(
-      userId as string,
-      planId as string
+      userId,
+      planId
     );
     return res
       .status(HttpStatusCode.OK)
@@ -628,8 +632,8 @@ export class MedicalRepController {
     const userId = GetOptionalUserId(req.user);
     const { newPlanId } = req.params;
     const response = await this._upgradeSubscriptionPlanUseCase.execute(
-      newPlanId as string,
-      userId
+      newPlanId,
+      userId ?? undefined
     );
 
     return res

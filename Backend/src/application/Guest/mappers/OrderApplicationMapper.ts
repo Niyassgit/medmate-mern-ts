@@ -6,6 +6,20 @@ import { OrderDTO } from "../dto/OrderDTO";
 import { OrderDetailDTO } from "../dto/OrderDetailDTO";
 import { IOrderDetail } from "../../../domain/order/entitiy/IOrderDetail";
 
+type PrescriptionItem = {
+    id: string;
+    quantity: number;
+    product: {
+        id: string;
+        name: string;
+        imageUrl: string[];
+        repId: string;
+        ptr: number;
+        mrp: number;
+        brand: string;
+    };
+};
+
 
 export class OrderApplicationMapper {
     static toPersistence(data: ICreateOrderData) {
@@ -35,7 +49,7 @@ export class OrderApplicationMapper {
 
         return {
             id: data.id,
-            paymentStatus: data.paymentStatus as PaymentStatus,
+            paymentStatus: data.paymentStatus,
             createdAt: data.createdAt,
             guestId: data.guestId,
             paymentId: data.paymentId,
@@ -46,24 +60,23 @@ export class OrderApplicationMapper {
         };
     }
     static async toDetailDomain(data: IOrderDetail, storageService: IStorageService, repId?: string): Promise<OrderDetailDTO> {
-        let items = data.prescription?.items || [];
+        let items: PrescriptionItem[] = data.prescription?.items || [];
         let totalAmount = data.totalAmount;
 
         if (repId) {
-            items = items.filter((item: any) => String(item.product.repId) === String(repId));
-            // Recalculate total for Rep view based on their items only
-            totalAmount = items.reduce((sum: number, item: any) => sum + ((item.product.ptr || 0) * item.quantity), 0);
+            items = items.filter((item) => String(item.product.repId) === String(repId));
+            totalAmount = items.reduce((sum, item) => sum + ((item.product.ptr || 0) * item.quantity), 0);
         }
 
         const itemsWithSignedUrls = items.length > 0
             ? await Promise.all(
-                items.map(async (item: any) => ({
+                items.map(async (item) => ({
                     name: item.product.name,
                     quantity: item.quantity,
                     image: item.product.imageUrl && item.product.imageUrl[0]
                         ? await storageService.generateSignedUrl(item.product.imageUrl[0])
                         : undefined,
-                    price: item.product.ptr // Correctly mapped to PTR
+                    price: item.product.ptr
                 }))
             )
             : [];

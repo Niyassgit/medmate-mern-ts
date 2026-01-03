@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@/app/hooks";
 import toast from "react-hot-toast";
 import { Users, Clock, UserPlus, Search } from "lucide-react";
 
@@ -17,7 +17,7 @@ import { mutualConnections} from "../api";
 import ConnectionsModal from "@/components/shared/ConnectionsModal";
 
 const DoctorAnalyticsPage = () => {
-  const id = useSelector((state: any) => state.auth.user?.id);
+  const id = useAppSelector((state) => state.auth.user?.id);
   const [analytics, setAnalytics] = useState<DoctorAnalyticsDTO | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");

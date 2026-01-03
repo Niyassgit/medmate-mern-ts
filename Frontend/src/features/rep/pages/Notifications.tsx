@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { NotificationItem } from "@/components/shared/NotificationItem";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useFetchItem from "@/hooks/useFetchItem";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@/app/hooks";
 import {
   acceptFromNotification,
   getRepnotifications,
@@ -29,7 +29,7 @@ const Notifications = () => {
   const [loadingMore, setLoadingMore] = useState(false);
   const loaderRef = useRef<HTMLDivElement | null>(null);
 
-  const id = useSelector((state: any) => state.auth.user?.id);
+  const id = useAppSelector((state) => state.auth.user?.id);
 
   const fetchInitial = useCallback(async () => {
     if (!id) return;

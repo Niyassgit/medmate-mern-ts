@@ -36,7 +36,7 @@ export class SubscriptionHistoryRepository
       orderBy: { createdAt: "desc" },
     });
     if (!result) return null;
-    return result.map(SubscriptionHistoryMapper.toDomain);
+    return result.map((sub)=>SubscriptionHistoryMapper.toDomain(sub));
   }
 
   async findAllPlans(): Promise<ISubscriptionHistory[]> {

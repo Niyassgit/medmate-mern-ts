@@ -1,5 +1,11 @@
 import { IOrder } from "../../../domain/order/entitiy/IOrder";
-import { AdvancedBusinessAnalyticsDTO } from "../dto/AdvancedBusinessAnalyticsDTO";
+import {
+  AdvancedBusinessAnalyticsDTO,
+  GrowthMetrics,
+  RevenueByDoctor,
+  RevenueByStatus,
+  ProductPerformance,
+} from "../dto/AdvancedBusinessAnalyticsDTO";
 import { RepBusinessStatDTO } from "../dto/RepBusinessStatDTO";
 import { Period } from "../../../shared/Enums";
 import { RevenuePeriodUtil } from "../../superAdmin/utils/RevenuePeriodUtil";
@@ -40,7 +46,6 @@ export class AdvancedBusinessAnalyticsMapper {
     );
 
     const revenueByDoctor = this._calculateRevenueByDoctor(orders, repId);
-    const revenueByTerritory = this._calculateRevenueByTerritory(orders, repId);
     const revenueByStatus = this._calculateRevenueByStatus(orders, repId);
     const productPerformance = this._calculateProductPerformance(orders, repId);
 
@@ -49,7 +54,6 @@ export class AdvancedBusinessAnalyticsMapper {
       revenueTimeline,
       growthMetrics,
       revenueByDoctor,
-      revenueByTerritory,
       revenueByStatus,
       productPerformance,
     };
@@ -76,13 +80,7 @@ export class AdvancedBusinessAnalyticsMapper {
     previousPeriodRevenue: number,
     currentPeriodRevenue: number,
     commissionPeriod: "weekly" | "monthly" | "yearly" | "custom"
-  ): {
-    previousPeriodRevenue: number;
-    currentPeriodRevenue: number;
-    growthPercentage: number;
-    growthAmount: number;
-    period: Period;
-  } {
+  ): GrowthMetrics {
     const growthAmount = currentPeriodRevenue - previousPeriodRevenue;
     const growthPercentage =
       previousPeriodRevenue > 0
@@ -132,13 +130,7 @@ export class AdvancedBusinessAnalyticsMapper {
   private static _calculateRevenueByDoctor(
     orders: IOrder[],
     repId: string
-  ): {
-    doctorId: string;
-    doctorName: string;
-    hospital?: string;
-    revenue: number;
-    orderCount: number;
-  }[] {
+  ): RevenueByDoctor[] {
     const doctorMap = new Map<
       string,
       {
@@ -190,26 +182,10 @@ export class AdvancedBusinessAnalyticsMapper {
       .sort((a, b) => b.revenue - a.revenue);
   }
 
-  private static _calculateRevenueByTerritory(
-    orders: IOrder[],
-    repId: string
-  ): {
-    territoryId: string;
-    territoryName: string;
-    revenue: number;
-    orderCount: number;
-  }[] {
-    return [];
-  }
-
   private static _calculateRevenueByStatus(
     orders: IOrder[],
     repId: string
-  ): {
-    status: string;
-    revenue: number;
-    orderCount: number;
-  }[] {
+  ): RevenueByStatus[] {
     const statusMap = new Map<
       string,
       { revenue: number; orderCount: number }
@@ -252,14 +228,7 @@ export class AdvancedBusinessAnalyticsMapper {
   private static _calculateProductPerformance(
     orders: IOrder[],
     repId: string
-  ): {
-    productId: string;
-    productName: string;
-    revenue: number;
-    unitsSold: number;
-    averagePrice: number;
-    orderCount: number;
-  }[] {
+  ): ProductPerformance[] {
     const productMap = new Map<
       string,
       {

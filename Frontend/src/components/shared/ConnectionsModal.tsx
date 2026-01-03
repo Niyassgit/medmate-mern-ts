@@ -110,10 +110,6 @@ export default function ConnectionsModal({
                     <p className="font-medium text-sm text-foreground">
                       {conn.name}
                     </p>
-
-                    <p className="font-medium text-sm text-foreground">
-                      {conn.name}
-                    </p>
                   </li>
                 ))}
               </ul>

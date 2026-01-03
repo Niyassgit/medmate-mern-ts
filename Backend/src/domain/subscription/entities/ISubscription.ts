@@ -4,7 +4,7 @@ export interface ISubscription {
   description: string;
   price: number;
   tenure: string;
-  features: string[]; // Feature keys (e.g., "VIDEO_CALL", "FEED_ENHANCEMENT")
+  features: string[]; 
   createdAt: Date;
   updatedAt: Date;
   isActive: boolean;

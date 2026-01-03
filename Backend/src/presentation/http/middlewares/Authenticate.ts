@@ -18,7 +18,7 @@ export const Authenticate = (
     const payload = jwt.verify(token, env.access_token) as JwtPayload;
     req.user = payload;
     next();
-  } catch (error: unknown) {
+  } catch {
     return res.status(HttpStatusCode.FORBIDDEN).json({ message: ErrorMessages.INVALID_TOKEN });
   }
 };

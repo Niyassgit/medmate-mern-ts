@@ -26,7 +26,7 @@ export class JWTServices implements IJWtService {
   verifyRefreshToken(token: string): RefreshTokenPayload | null {
     try {
       return jwt.verify(token, this.refreshSecret) as RefreshTokenPayload;
-    } catch (error) {
+    } catch {
       return null;
     }
   }

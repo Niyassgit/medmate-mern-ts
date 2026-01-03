@@ -434,12 +434,17 @@ export class OrderRepository
     startDate?: Date,
     endDate?: Date
   ): Promise<AdminEarningsDTO[]> {
-    const whereClause: any = {};
+    const dateFilter: Prisma.DateTimeFilter = {};
+    if (startDate) {
+      dateFilter.gte = startDate;
+    }
+    if (endDate) {
+      dateFilter.lte = endDate;
+    }
 
+    const whereClause: Prisma.OrderWhereInput = {};
     if (startDate || endDate) {
-      whereClause.createdAt = {};
-      if (startDate) whereClause.createdAt.gte = startDate;
-      if (endDate) whereClause.createdAt.lte = endDate;
+      whereClause.createdAt = dateFilter;
     }
 
     const doctorsWithActivity = await prisma.doctor.findMany({
@@ -448,14 +453,14 @@ export class OrderRepository
           {
             prescriptions: {
               some: {
-                createdAt: whereClause.createdAt,
+                createdAt: dateFilter,
               },
             },
           },
           {
             commissions: {
               some: {
-                createdAt: whereClause.createdAt,
+                createdAt: dateFilter,
               },
             },
           },
@@ -510,13 +515,7 @@ export class OrderRepository
         };
 
         if (startDate || endDate) {
-          commissionWhere.createdAt = {};
-          if (startDate) {
-            commissionWhere.createdAt.gte = startDate;
-          }
-          if (endDate) {
-            commissionWhere.createdAt.lte = endDate;
-          }
+          commissionWhere.createdAt = dateFilter;
         }
 
         const commission = await prisma.commission.aggregate({
@@ -528,13 +527,7 @@ export class OrderRepository
           doctorId: doctor.id,
         };
         if (startDate || endDate) {
-          prescriptionWhere.createdAt = {};
-          if (startDate) {
-            prescriptionWhere.createdAt.gte = startDate;
-          }
-          if (endDate) {
-            prescriptionWhere.createdAt.lte = endDate;
-          }
+          prescriptionWhere.createdAt = dateFilter;
         }
 
         const totalPrescriptions = await prisma.prescription.count({

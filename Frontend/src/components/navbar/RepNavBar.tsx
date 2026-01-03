@@ -4,14 +4,14 @@ import { Bell, Layout, Mail, Menu, X } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import UserAvatar from "../shared/UserAvatar";
 import { unreadNotificationCount, repConversations } from "@/features/rep/api";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@/app/hooks";
 import { getSocket } from "@/lib/socket";
 import { MessageDTO } from "../Dto/MessageDTO";
 import { Role } from "@/types/Role";
 import { Conversation } from "../Dto/Conversation";
 
 const RepNavbar = () => {
-  const userId = useSelector((state: any) => state.auth.user?.id);
+  const userId = useAppSelector((state) => state.auth.user?.id);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const [unreadChatCount, setUnreadChatCount] = useState(0);

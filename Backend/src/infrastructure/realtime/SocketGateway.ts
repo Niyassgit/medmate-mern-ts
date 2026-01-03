@@ -32,7 +32,7 @@ export function initSocket(server: HttpServer) {
       };
       socket.user = user;
       next();
-    } catch (error) {
+    } catch {
       next(new UnautharizedError(ErrorMessages.UNAUTHORIZED));
     }
   });
@@ -98,27 +98,26 @@ export function initSocket(server: HttpServer) {
       }
     );
 
-    socket.on("call:accepted", ({ toUserId, answer }) => {
-      console.log(`SocketGateway: Relaying call:accepted from ${user.id} to ${toUserId}`);
+    socket.on("call:accepted", ({ toUserId, answer }: { toUserId: string; answer: unknown }) => {
       io.to(`user:${toUserId}`).emit("call:accepted", {
         fromUserId: user.id,
         answer
       });
     });
 
-    socket.on("call:ice-candidate", ({ toUserId, candidate }) => {
+    socket.on("call:ice-candidate", ({ toUserId, candidate }: { toUserId: string; candidate: unknown }) => {
       io.to(`user:${toUserId}`).emit("call:ice-candidate", {
         fromUserId: user.id,
         candidate,
       });
     });
 
-    socket.on("call:offer", ({ toUserId, offer }) => {
+    socket.on("call:offer", ({ toUserId, offer }: { toUserId: string; offer: unknown }) => {
       io.to(`user:${toUserId}`).emit("call:offer", {
         fromUserId: user.id,
         offer
-      })
-    })
+      });
+    });
 
     socket.on("call:ended", ({ toUserId }) => {
       io.to(`user:${toUserId}`).emit("call:ended", { fromUserId: user.id });

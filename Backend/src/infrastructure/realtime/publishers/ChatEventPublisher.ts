@@ -3,15 +3,18 @@ import { IChatEventPublisher } from "../../../domain/common/services/IChatEventP
 import { io } from "../SocketGateway";
 
 export class ChatEventPublisher implements IChatEventPublisher {
-  async publishNewMessage(
+  publishNewMessage(
     conversationId: string,
     message: MessageDTO
   ): Promise<void> {
     const room = `conversation:${conversationId}`;
     io.to(room).emit("new_message", message);
+    return Promise.resolve();
   }
-  async updateChatAsSeen(conversationId: string): Promise<void> {
+  
+  updateChatAsSeen(conversationId: string): Promise<void> {
     const room = `conversation:${conversationId}`;
     io.to(room).emit("message_seen", conversationId);
+    return Promise.resolve();
   }
 }

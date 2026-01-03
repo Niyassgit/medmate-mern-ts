@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { DoctorDetails } from "@/components/Dto/DoctorDetails";
 import { getProfileDoctor } from "../api";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@/app/hooks";
 import ProfileAvatar from "@/components/shared/ProfileAvatar";
 import ConfirmDialog from "@/components/shared/ConfirmDialog";
 import { updateProfileImage } from "../api";
@@ -20,7 +20,7 @@ const ProfilePage = () => {
   const [openConfirm, setOpenConfirm] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const id = useSelector((state: any) => state.auth.user?.id);
+  const id = useAppSelector((state) => state.auth.user?.id);
 
   useEffect(() => {
     const fetchDoctor = async () => {

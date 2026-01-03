@@ -17,6 +17,7 @@ import { GuestProfileCompleteDTO } from "../../../application/Guest/dto/ProfileC
 import { IChangePasswordUseCase } from "../../../application/common/interfaces/IChangePasswordUseCase";
 import { Role } from "../../../shared/Enums";
 import { IVerifyOldPasswordUseCase } from "../../../application/common/interfaces/IverifyOldPasswordUsesCase";
+import { MakePaymentDTO } from "../../../application/Guest/dto/MakePaymentDTO";
 
 export class GuestController {
   constructor(
@@ -35,7 +36,8 @@ export class GuestController {
   ) {}
 
   createGuest = async (req: Request, res: Response) => {
-    const { name, email, phone, password, territoryId } = req.body;
+    const { name, email, phone, password, territoryId } =
+      req.body as RegisterGuestDTO;
     const shareToken =
       req.params.shareToken || (req.query.shareToken as string);
     const data: RegisterGuestDTO = {
@@ -92,13 +94,14 @@ export class GuestController {
 
   makePayment = async (req: Request, res: Response) => {
     const userId = GetOptionalUserId(req.user);
-    const { prescriptionId, addressId, paymentMethod } = req.body;
-    const response = await this._makePaymentUseCase.execute(
-      prescriptionId,
-      addressId,
-      paymentMethod,
-      userId
-    );
+    const body = req.body as MakePaymentDTO;
+    const data: MakePaymentDTO = {
+      prescriptionId: body.prescriptionId,
+      addressId: body.addressId,
+      paymentMethod: body.paymentMethod,
+      userId: body.userId ?? userId,
+    };
+    const response = await this._makePaymentUseCase.execute(data);
     return res.status(HttpStatusCode.OK).json({ success: true, url: response });
   };
 
@@ -150,7 +153,7 @@ export class GuestController {
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
   };
-  
+
   changePassword = async (req: Request, res: Response) => {
     const userId = GetOptionalUserId(req.user);
     const { role, newPassword } = req.query;

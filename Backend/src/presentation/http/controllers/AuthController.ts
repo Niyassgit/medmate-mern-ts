@@ -22,7 +22,6 @@ import {
   resendOtpBody,
   ForgotPasswordBody,
 } from "../../types/auth";
-import { GetOptionalUserId } from "../utils/GetOptionalUserId";
 
 export class AuthController {
   constructor(
