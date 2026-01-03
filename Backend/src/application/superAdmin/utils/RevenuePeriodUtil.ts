@@ -267,3 +267,4 @@ export class RevenuePeriodUtil {
     return sortedTimeline.map(({ sortKey, ...rest }) => rest);
   }
 }
+
