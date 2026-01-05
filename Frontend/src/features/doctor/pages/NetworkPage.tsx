@@ -2,13 +2,12 @@ import { useCallback, useState, useEffect } from "react";
 import Networks from "../components/Networks";
 import RepFilterSidebar from "../components/RepFilterSidebar";
 import { RepCardDetailsDTO } from "../dto/RepCardDetailsDTO";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@/app/hooks";
 import { getNetworks } from "../api";
 import useFetchItem from "@/hooks/useFetchItem";
 import { SpinnerButton } from "@/components/shared/SpinnerButton";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { Search } from "lucide-react";
-import { api } from "@/services/api";
 import { getTerritories } from "@/features/shared/api/SharedApi";
 
 interface Territory {
@@ -18,7 +17,7 @@ interface Territory {
 
 export default function NetworkPage() {
   const [connections, setConnections] = useState<Set<string>>(new Set());
-  const id = useSelector((state: any) => state.auth.user?.id);
+  const id = useAppSelector((state) => state.auth.user?.id);
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebouncedValue(search, 400);
 

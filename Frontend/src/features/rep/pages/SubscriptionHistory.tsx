@@ -15,7 +15,7 @@ const SubscriptionHistory = () => {
       try {
         const data = await getSubscriptionHistory();
         setHistory(data);
-      } catch (err) {
+      } catch {
         setError("Failed to fetch subscription history");
       } finally {
         setLoading(false);

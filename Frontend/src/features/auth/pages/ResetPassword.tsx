@@ -48,11 +48,11 @@ const ResetPassword = () => {
 
       toast.success(res.data.message || "password reset successfully");
       setTimeout(() => navigate("/auth/login", { replace: true }), 1200);
-    } catch (error: any) {
-      toast.error(
-        error.response?.data?.message ||
-          "Failed to reset password.Please try again"
-      );
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Failed to reset password.Please try again";
+      toast.error(errorMessage);
     }
   };
 

@@ -1,8 +1,5 @@
+import { MakePaymentDTO } from "../dto/MakePaymentDTO";
+
 export interface IMakePaymentUseCase {
-    execute(
-        prescriptionId: string,
-        addressId: string,
-        paymentMethod: string,
-        userId?:string
-    ): Promise<string | null>;
+    execute(data:MakePaymentDTO): Promise<string | null>;
 }

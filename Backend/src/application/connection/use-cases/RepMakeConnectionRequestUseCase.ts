@@ -1,4 +1,4 @@
-import { NotFoundError,BadRequestError } from "../../../domain/common/errors";
+import { NotFoundError, BadRequestError } from "../../../domain/common/errors";
 import { INotificationEventPublisher } from "../../../domain/common/services/INotificationEventPublisher";
 import { IStorageService } from "../../../domain/common/services/IStorageService";
 import { IConnectionRepository } from "../../../domain/connection/repositories/IConnectionRepository";
@@ -6,9 +6,11 @@ import { IConnectionRequestLogRepository } from "../../../domain/connection/repo
 import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRepository";
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
 import { INotificationRepository } from "../../../domain/notification/repositories/INotificationService";
+import { ISubscriptionRepository } from "../../../domain/subscription/repositories/ISubscriptionRepository";
 import {
   ConnectionInitiator,
   ConnectionStatus,
+  Feature,
   NotificationType,
   Role,
 } from "../../../shared/Enums";
@@ -17,6 +19,7 @@ import {
   NotificationMessages,
   SuccessMessages,
 } from "../../../shared/Messages";
+import { PermissionService } from "../../common/services/PermissionService";
 import { ANotificationMapper } from "../../notification/mappers/ANotificationMapper";
 import { IRepMakeConnectionRequestUseCase } from "../interfaces/IMakeConnectionRequestUseCase";
 
@@ -30,7 +33,8 @@ export class RepMakeConnectionRequestUseCase
     private _notificationRepository: INotificationRepository,
     private _storageService: IStorageService,
     private _notificationEventPublisher: INotificationEventPublisher,
-    private _connectionRequestLogRepository: IConnectionRequestLogRepository
+    private _connectionRequestLogRepository: IConnectionRequestLogRepository,
+    private _subscriptionRepository: ISubscriptionRepository
   ) {}
   async execute(doctorId: string, userId?: string): Promise<string> {
     if (!userId) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
@@ -40,6 +44,7 @@ export class RepMakeConnectionRequestUseCase
       repId
     );
 
+    if (!repDetails) throw new BadRequestError(ErrorMessages.USER_NOT_FOUND);
     const { doctorUserId } = await this._doctorRepository.getUserIdByDoctorId(
       doctorId
     );
@@ -84,12 +89,14 @@ export class RepMakeConnectionRequestUseCase
     }
 
     const DEFAULT_CONNECTION_LIMIT = 3;
-    const isSubscribed =
-      repDetails?.subscriptionStatus &&
-      repDetails.subscriptionEnd &&
-      new Date(repDetails.subscriptionEnd) > new Date();
 
-    if (!isSubscribed) {
+    const hasUnlimitedConnections = await PermissionService.hasFeatureForRep(
+      repDetails,
+      Feature.UNLIMITED_CONNECTIONS,
+      this._subscriptionRepository
+    );
+
+    if (!hasUnlimitedConnections) {
       const todayCount =
         await this._connectionRequestLogRepository.getTodayRequestCount(repId);
 
@@ -106,7 +113,7 @@ export class RepMakeConnectionRequestUseCase
     if (!requestRes)
       throw new BadRequestError(ErrorMessages.CONNECTION_REQUEST);
 
-    if (!isSubscribed) {
+    if (!hasUnlimitedConnections) {
       await this._connectionRequestLogRepository.incrementRequestCount(repId);
     }
 

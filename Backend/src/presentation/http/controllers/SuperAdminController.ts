@@ -36,6 +36,17 @@ import { ITerritoryDetailsUseCase } from "../../../application/superAdmin/interf
 import { IAdminOrderAnalyticsUseCase } from "../../../application/superAdmin/interfaces/IAdminOrderAnalyticsUseCase";
 import { IGetDoctorEarningsUseCase } from "../../../application/superAdmin/interfaces/IGetDoctorEarningsUseCase";
 import { IGetAdminEarningsUseCase } from "../../../application/superAdmin/interfaces/IGetAdminEarningsUseCase";
+import { IGetAllOrdersUseCase } from "../../../application/superAdmin/interfaces/IGetAllOrdersUseCase";
+
+import { IGetOrderDetailsUseCase } from "../../../application/superAdmin/interfaces/IGetOrderDetailsUseCase";
+import { IUpdateOrderStatusUseCase } from "../../../application/superAdmin/interfaces/IUpdateOrderStatusUseCase";
+import { OrderStatus } from "../../../shared/Enums";
+import { IGetAllFeaturesForPlanUseCase } from "../../../application/superAdmin/interfaces/IGetAllFeaturesForPlanUseCase";
+import { ICreateFeatureUseCase } from "../../../application/superAdmin/interfaces/ICreateFeatureUseCase";
+import { IGetFeaturesUseCase } from "../../../application/superAdmin/interfaces/IGetFeaturesUseCase";
+import { IUpdateFeatureUseCase } from "../../../application/superAdmin/interfaces/IUpdateFeatureUseCase";
+import { IDeleteFeatureUseCase } from "../../../application/superAdmin/interfaces/IDeleteFeatureUseCase";
+import { IFeature } from "../../../domain/subscription/entities/IFeautre";
 
 export class SuperAdminController {
   constructor(
@@ -68,7 +79,15 @@ export class SuperAdminController {
     private _getTerritoryDetailsUseCase: ITerritoryDetailsUseCase,
     private _adminOrderAnalyticsUseCase: IAdminOrderAnalyticsUseCase,
     private _getDoctorEarningsUseCase: IGetDoctorEarningsUseCase,
-    private _getAdminEarningsUseCase: IGetAdminEarningsUseCase
+    private _getAdminEarningsUseCase: IGetAdminEarningsUseCase,
+    private _getAllOrdersUseCase: IGetAllOrdersUseCase,
+    private _getOrderDetailsUseCase: IGetOrderDetailsUseCase,
+    private _updateOrderStatusUseCase: IUpdateOrderStatusUseCase,
+    private _getAllFeaturesForPlanUseCase: IGetAllFeaturesForPlanUseCase,
+    private _createFeatureUseCase: ICreateFeatureUseCase,
+    private _getFeaturesUseCase: IGetFeaturesUseCase,
+    private _updateFeatureUseCase: IUpdateFeatureUseCase,
+    private _deleteFeatureUseCase: IDeleteFeatureUseCase
   ) { }
 
   createSuperAdmin = async (req: Request, res: Response) => {
@@ -230,6 +249,13 @@ export class SuperAdminController {
       .json({ success: true, message: response });
   };
 
+  getAllFeatures = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const response = await this._getAllFeaturesForPlanUseCase.execute(userId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
   getAllSubscriptionPlan = async (req: Request, res: Response) => {
     const userId = GetOptionalUserId(req.user);
     const response = await this._getAllSubcriptionPlanUseCase.execute(userId);
@@ -247,7 +273,7 @@ export class SuperAdminController {
     );
     return res
       .status(HttpStatusCode.CREATED)
-      .json({ success: true, data: response });
+      .json({ success: true, data: response, message: "Subscription plan created successfully" });
   };
 
   subscriptionUpdate = async (req: Request, res: Response) => {
@@ -454,4 +480,71 @@ export class SuperAdminController {
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response, page, limit });
   };
+
+  getAllOrders = async (req: Request, res: Response) => {
+    const userId = GetOptionalUserId(req.user);
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const { startDate, endDate, status } = req.query;
+
+    const response = await this._getAllOrdersUseCase.execute(
+      page,
+      limit,
+      startDate as string,
+      endDate as string,
+      status as string,
+      userId
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  getOrderDetails = async (req: Request, res: Response) => {
+    const { orderId } = req.params;
+    const response = await this._getOrderDetailsUseCase.execute(orderId);
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  updateOrderStatus = async (req: Request, res: Response) => {
+    const { orderId } = req.params;
+    const { status } = req.body as { status: OrderStatus };
+    const response = await this._updateOrderStatusUseCase.execute(
+      orderId,
+      status
+    );
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, data: response });
+  };
+
+  createFeature = async (req: Request, res: Response) => {
+    const feature = await this._createFeatureUseCase.execute(
+      req.body as Omit<IFeature, "id" | "createdAt">
+    );
+    res.status(HttpStatusCode.CREATED).json({ success: true, data: feature });
+  };
+
+  getAllFeatureList = async (req: Request, res: Response) => {
+    const features = await this._getFeaturesUseCase.execute();
+    res.status(HttpStatusCode.OK).json({ success: true, data: features });
+  };
+
+  updateFeature = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const feature = await this._updateFeatureUseCase.execute(
+      id,
+      req.body as Partial<IFeature>
+    );
+    res.status(HttpStatusCode.OK).json({ success: true, data: feature });
+  };
+
+  deleteFeature = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    await this._deleteFeatureUseCase.execute(id);
+    res.status(HttpStatusCode.NO_CONTENT).send();
+  };
+
 }

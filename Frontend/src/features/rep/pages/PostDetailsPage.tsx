@@ -46,14 +46,6 @@ const PostDetailsPage = () => {
     }
   }, [post]);
 
-  const splitIngredient = (ingredient: string) => {
-    const words = ingredient.split(/\s+/);
-    const chunks: string[] = [];
-    for (let i = 0; i < words.length; i += 30) {
-      chunks.push(words.slice(i, i + 30).join(" "));
-    }
-    return chunks;
-  };
   const handleDeletePost = async () => {
     if (!id) return;
     setDeleteLoading(true);
@@ -62,7 +54,7 @@ const PostDetailsPage = () => {
       toast.success("Post deleted successfully!");
       setConfirmOpen(false);
       setTimeout(() => navigate(-1), 800);
-    } catch (error) {
+    } catch{
       toast.error("Failed to delete post!");
     } finally {
       setDeleteLoading(false);
@@ -114,7 +106,7 @@ const PostDetailsPage = () => {
       if (res.success && res.data?.data?.imageUrl) {
         setImageUrls(res.data.data.imageUrl);
       }
-    } catch (error) {
+    } catch {
       toast.error(
         "Something went wriong!..undable to acess data right the moment"
       );

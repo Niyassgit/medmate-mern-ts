@@ -17,7 +17,7 @@ const ProfilePage = () => {
   const [error, setError] = useState<string | null>(null);
   const [openConfirm, setOpenConfirm] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const id = useSelector((state: any) => state.auth.user?.id);
+  const id = useSelector((state: { auth: { user?: { id?: string } } }) => state.auth.user?.id);
 
   useEffect(() => {
     if (!id) return;
@@ -32,8 +32,10 @@ const ProfilePage = () => {
         } else {
           setError("Invalid request");
         }
-      } catch (error: any) {
-        setError(error.message || "Something went wrong");
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof Error ? error.message : "Something went wrong";
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
@@ -47,15 +49,17 @@ const ProfilePage = () => {
   const confirmAvatarChange = async () => {
     if (!rep || !selectedFile) return;
     try {
-      const response = await updateProfileImage(id, selectedFile);
+      const response = await updateProfileImage(id!, selectedFile);
       if (response.success) {
         setRep({ ...rep, profileImage: response.imageUrl });
         toast.success(response.message || "Image changed");
       } else {
         toast.error(response.message || "Something has happend");
       }
-    } catch (err: any) {
-      toast.error("Failed to upload profile image:", err.message);
+    } catch (err: unknown) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to upload profile image";
+      toast.error(errorMessage);
     } finally {
       setOpenConfirm(false);
       setSelectedFile(null);
@@ -83,20 +87,13 @@ const ProfilePage = () => {
   const filled = fields.filter((f) => f && f !== "").length;
   const completion = Math.round((filled / fields.length) * 100);
 
-  const getBorderColor = () => {
-    if (completion === 100) return "border-green-500";
-    if (completion >= 60) return "border-blue-500";
-    if (completion >= 30) return "border-yellow-400";
-    return "border-red-500";
-  };
-
   const handleImageError = async () => {
     try {
-      const res = await getProfileRep(id);
+      const res = await getProfileRep(id!);
       if (res.success && res.data?.profileImage) {
         return res.data.profileImage;
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to refresh profile Image");
     }
     return null;

@@ -41,7 +41,7 @@ export const getNetworks = async (
     territories?: string[];
   }
 ) => {
-  const params: any = {};
+  const params: Record<string, string> = {};
 
   if (search) params.search = search;
   if (filters?.company) params.company = filters.company;

@@ -6,7 +6,7 @@ interface UserAvatarProps {
   to: string; 
 }
 const UserAvatar = ({to}:UserAvatarProps) => {
-    const user=useSelector((state:any)=>state.auth.user);
+    const user=useSelector((state: { auth: { user?: { image?: string; email?: string } } })=>state.auth.user);
     const location=useLocation();
     const isActive=location.pathname===to
   return (

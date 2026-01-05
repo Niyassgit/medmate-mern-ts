@@ -33,7 +33,7 @@ const schema = z
   });
 
 interface ChangePasswordProps {
-  onChangePassword: (password: string) => Promise<any>;
+  onChangePassword: (password: string) => Promise<unknown>;
   onSuccessRedirect: string;
   title?: string;
 }
@@ -62,8 +62,11 @@ export default function ChangePassword({
       await onChangePassword(values.newPassword);
       toast.success("Password changed successfully");
       navigate(onSuccessRedirect);
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "Failed to change password");
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Failed to change password";
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }

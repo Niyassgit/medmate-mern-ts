@@ -1,6 +1,4 @@
-import { UnautharizedError } from "../../../domain/common/errors";
 import { ITerritoryRepository } from "../../../domain/territory/ITerritoryRepository";
-import { ErrorMessages } from "../../../shared/Messages";
 import { TerritoryMapper } from "../../territory/mappers/TerritoryMapper";
 import { TerritoryDetailsDTO } from "../dto/TerritoryDetailsDTO";
 import { ITerritoryDetailsUseCase } from "../interfaces/ITerritoryDetailsUseCase";

@@ -1,6 +1,6 @@
 import { IUser } from "../../domain/common/entities/IUser";
 import { AuthProvider as DomainAuthProvider,Role as DomainRole } from "../../shared/Enums"; 
-import { Prisma, User, Role as PrismaRole } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
 
 export class UserMapper {
   static toDomain(user: User): IUser {
@@ -25,8 +25,8 @@ export class UserMapper {
     return {
       email: domain.email,
       password: domain.password ?? null, 
-      authProvider: domain.authProvider as Prisma.AuthProvider,
-      role: domain.role as PrismaRole,
+      authProvider: domain.authProvider,
+      role: domain.role,
       providerId: domain.providerId ?? null, 
       isBlocked: domain.isBlocked ?? false, 
       isVerified: domain.isVerified ?? false, 

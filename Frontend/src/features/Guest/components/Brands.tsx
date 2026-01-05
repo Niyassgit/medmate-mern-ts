@@ -26,6 +26,7 @@ const Brands = () => {
 
   return (
     <>
+  
       <style>
         {`
           .marquee-inner {

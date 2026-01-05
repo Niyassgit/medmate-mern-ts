@@ -181,9 +181,17 @@ export class MedicalRepRoutes {
       medicalRepController.BusinessAnalytics
     );
     this.router.get(
+      "/business/analytics/advanced",
+      medicalRepController.AdvancedBusinessAnalytics
+    );
+    this.router.get(
       "/business/analytics/export",
       medicalRepController.exportOrders
     );
     this.router.post("/call-doctor/:doctorId", medicalRepController.callDoctor);
+    this.router.patch(
+      "/subscription/upgrade-plan/:newPlanId",
+      medicalRepController.subscriptionUpgradePlan
+    );
   }
 }

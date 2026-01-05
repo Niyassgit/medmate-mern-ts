@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ProductDTO } from "../dto/ProductDTO";
 import {
@@ -16,7 +16,9 @@ import { Button } from "@/components/ui/button";
 const ProductDetails = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
+
   const product: ProductDTO = state;
+  const [thumbnail, setThumbnail] = useState(product.imageUrls?.[0] || null);
 
   if (!product) {
     return (
@@ -29,11 +31,6 @@ const ProductDetails = () => {
     );
   }
 
-  const [thumbnail, setThumbnail] = React.useState(
-    product.imageUrls?.[0] || null
-  );
-
-  // Commission calculation (5% commission)
   const commissionPercentage = 5;
   const commissionAmount = (product.ptr * commissionPercentage) / 100;
 

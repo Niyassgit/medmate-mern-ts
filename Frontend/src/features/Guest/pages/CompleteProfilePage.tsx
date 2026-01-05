@@ -1,4 +1,4 @@
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate, useLocation } from "react-router-dom";
 import { completeUserProfile, getProfile } from "../api";
@@ -28,6 +28,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { User, Phone, MapPin, Loader2, Lock, Save } from "lucide-react";
+import { TerritoryDTO } from "@/features/superAdmin/dto/TerritoryDTO";
 
 interface TerritoryOption {
   value: string;
@@ -60,7 +61,7 @@ const CompleteProfilePage = () => {
         const terrData = await getTerritories();
         if (terrData && terrData.data.data) {
           setTerritories(
-            terrData.data.data.map((t: any) => ({
+            terrData.data.data.map((t: TerritoryDTO) => ({
               value: t.id,
               label: t.name,
             }))
@@ -74,7 +75,7 @@ const CompleteProfilePage = () => {
 
           if (profile.territoryName && profile.territoryName !== "Unknown") {
             const matched = terrData?.data?.data?.find(
-              (t: any) => t.name === profile.territoryName
+              (t: TerritoryDTO) => t.name === profile.territoryName
             );
             if (matched) {
               setValue("territoryId", matched.id);
@@ -106,8 +107,13 @@ const CompleteProfilePage = () => {
         isEdit ? "Profile updated successfully!" : "Profile completed successfully!"
       );
       navigate(isEdit ? "/guest/profile" : "/guest/dashboard");
-    } catch (error: any) {
-      toast.error(error.message || "Failed to complete profile");
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : (error as { response?: { data?: { message?: string } } })?.response
+              ?.data?.message || "Failed to complete profile";
+      toast.error(errorMessage);
     }
   };
 

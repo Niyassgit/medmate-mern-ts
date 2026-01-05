@@ -45,7 +45,7 @@ const SignupDoctor = () => {
 
         const terrData = await getTerritories();
         setTerritories(terrData.data.data);
-      } catch (error) {
+      } catch{
         toast.error("Failed to load departments or territories");
       }
     }
@@ -94,8 +94,11 @@ const SignupDoctor = () => {
           },
         });
       }
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "Something went wrong");
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Something went wrong";
+      toast.error(errorMessage);
     }
   };
 

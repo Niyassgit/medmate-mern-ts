@@ -24,7 +24,7 @@ import { SpinnerButton } from "@/components/shared/SpinnerButton";
 import { ProductPostListStatus } from "@/types/ProductListStatus";
 
 const RepDashboard = () => {
-  const id = useSelector((state: any) => state.auth.user?.id);
+  const id = useSelector((state: { auth: { user?: { id?: string } } }) => state.auth.user?.id);
   const [posts, setPosts] = useState<ProductListDTO[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<ProductPostListStatus>(
@@ -66,14 +66,14 @@ const RepDashboard = () => {
     error: profileError,
   } = useFetchList<MedicalRepDetailsDTO | null>(fetchProfile);
 
-  const { data: connectionStats, loading: statsLoading } =
-    useFetchList<any>(fetchConnectionStats);
+  const { data: connectionStats } =
+    useFetchList<{ used: number; limit: number; isSubscribed: boolean } | null>(fetchConnectionStats);
 
   const refreshSingnedUrls = async () => {
     try {
       const updatePosts = await fetchPosts();
       setPosts(updatePosts);
-    } catch (error) {
+    } catch {
       toast.error("Failed to refresh signed URLs");
     }
   };

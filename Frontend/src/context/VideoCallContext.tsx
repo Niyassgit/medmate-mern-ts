@@ -2,6 +2,7 @@ import React, {
     createContext,
     useContext,
     useEffect,
+    useRef,
     useState,
     ReactNode,
 } from "react";
@@ -9,11 +10,12 @@ import { getSocket } from "../lib/socket";
 import { useWebRTC } from "../hooks/useWebRTC";
 import VideoCallModal from "../components/shared/VideoCallModal";
 import VideoCallScreen from "../components/shared/VideoCallScreen";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../app/hooks";
 import { Role } from "../types/Role";
 import { callDoctor } from "../features/rep/api";
 import { callRep } from "../features/doctor/api";
 import toast from "react-hot-toast";
+import { WebRTCAdapter } from "../services/videocall/WebRTCAdapter";
 
 interface VideoCallContextType {
     startCall: (
@@ -43,14 +45,21 @@ export const VideoCallProvider: React.FC<{ children: ReactNode }> = ({
         avatar?: string;
     } | null>(null);
     const [currentRemoteId, setCurrentRemoteId] = useState<string>("");
+    const currentRemoteIdRef = useRef<string>("");
+    const [pendingOffer, setPendingOffer] = useState<{offer: RTCSessionDescriptionInit; fromUserId: string} | null>(null);
     const { localStream, remoteStream, createOffer, handleOffer } =
         useWebRTC(currentRemoteId);
     
-    const user = useSelector((state: any) => state.auth.user);
+    const user = useAppSelector((state) => state.auth.user);
     const userRole = user?.role;
     const token = localStorage.getItem("accessToken");
 
-    const cleanupCall = () => {
+    // Keep ref in sync with state
+    useEffect(() => {
+        currentRemoteIdRef.current = currentRemoteId;
+    }, [currentRemoteId]);
+
+    const cleanupCall = React.useCallback(() => {
         setCallState("idle");
         setRemoteUser(null);
         setCurrentRemoteId("");
@@ -59,7 +68,7 @@ export const VideoCallProvider: React.FC<{ children: ReactNode }> = ({
         if (localStream) {
             localStream.getTracks().forEach((track) => track.stop());
         }
-    };
+    }, [localStream]);
 
     useEffect(() => {
         if (!token) return;
@@ -73,37 +82,49 @@ export const VideoCallProvider: React.FC<{ children: ReactNode }> = ({
 
         socket.on(
             "call:offer",
-            async ({ fromUserId }: { offer?: any; fromUserId: string }) => {
-                if (callState === "idle" && fromUserId !== currentRemoteId) {
-                    setRemoteUser({
-                        id: fromUserId,
-                        name: "Incoming Call...",
-                        avatar: "",
-                    });
-                    setCurrentRemoteId(fromUserId);
-                    setCallState("incoming");
-                }
+            async ({ fromUserId }: { offer?: RTCSessionDescriptionInit; fromUserId: string }) => {
+                setRemoteUser((prev) => {
+                    // Only update if we're idle or if this is a different user
+                    if (!prev || prev.id !== fromUserId) {
+                        return {
+                            id: fromUserId,
+                            name: "Incoming Call...",
+                            avatar: "",
+                        };
+                    }
+                    return prev;
+                });
+                setCurrentRemoteId((prev) => prev || fromUserId);
+                setCallState((prev) => prev === "idle" ? "incoming" : prev);
             }
         );
 
-        socket.on("call:ended", () => {
-            cleanupCall();
-        });
+        const handleCallEnded = ({ fromUserId }: { fromUserId: string }) => {
+            // Only cleanup if this event is from the current remote user
+            if (currentRemoteIdRef.current === fromUserId) {
+                cleanupCall();
+            }
+        };
 
-        socket.on("call:rejected", () => {
-            cleanupCall();
-            toast.error("Call was rejected");
-        });
+        const handleCallRejected = ({ fromUserId }: { fromUserId: string }) => {
+            // Only cleanup if this event is from the current remote user
+            if (currentRemoteIdRef.current === fromUserId) {
+                cleanupCall();
+                toast.error("Call was rejected");
+            }
+        };
+
+        socket.on("call:ended", handleCallEnded);
+        socket.on("call:rejected", handleCallRejected);
 
         return () => {
             socket.off("call:incoming");
             socket.off("call:offer");
-            socket.off("call:ended");
-            socket.off("call:rejected");
+            socket.off("call:ended", handleCallEnded);
+            socket.off("call:rejected", handleCallRejected);
         };
-    }, [token, callState, currentRemoteId]);
+    }, [token, cleanupCall]);
 
-    const [pendingOffer, setPendingOffer] = useState<any>(null);
     useEffect(() => {
         if (!token) return;
         const socket = getSocket(token);
@@ -111,10 +132,10 @@ export const VideoCallProvider: React.FC<{ children: ReactNode }> = ({
             offer,
             fromUserId,
         }: {
-            offer: any;
+            offer: RTCSessionDescriptionInit;
             fromUserId: string;
         }) => {
-            setPendingOffer(offer);
+            setPendingOffer({ offer, fromUserId });
             if (!currentRemoteId) setCurrentRemoteId(fromUserId);
         };
         socket.on("call:offer", onOffer);
@@ -131,13 +152,13 @@ export const VideoCallProvider: React.FC<{ children: ReactNode }> = ({
         doctorId?: string
     ) => {
         try {
-            // Call backend API to validate subscription before starting video call
             if (userRole === Role.MEDICAL_REP && doctorId) {
                 try {
                     await callDoctor(doctorId);
-                    // If API call succeeds (200 OK), continue with video call
-                } catch (error: any) {
-                    const errorMessage = error?.response?.data?.message || "Subscription plan needed to make video call with doctor";
+                } catch (error: unknown) {
+                    const errorMessage =
+                      (error as { response?: { data?: { message?: string } } })?.response
+                        ?.data?.message || "Subscription plan needed to make video call with doctor";
                     toast.error(errorMessage);
                     return;
                 }
@@ -145,8 +166,10 @@ export const VideoCallProvider: React.FC<{ children: ReactNode }> = ({
                 try {
                     await callRep(repId);
                     // If API call succeeds (200 OK), continue with video call
-                } catch (error: any) {
-                    const errorMessage = error?.response?.data?.message || "Medical Rep doesn't have a valid subscription plan";
+                } catch (error: unknown) {
+                    const errorMessage =
+                      (error as { response?: { data?: { message?: string } } })?.response
+                        ?.data?.message || "Medical Rep doesn't have a valid subscription plan";
                     toast.error(errorMessage);
                     return;
                 }
@@ -161,8 +184,9 @@ export const VideoCallProvider: React.FC<{ children: ReactNode }> = ({
             setCallState("calling");
 
             await createOffer(remoteUserId);
-        } catch (error: any) {
-            const errorMessage = error?.message || "Failed to start video call";
+        } catch (error: unknown) {
+            const errorMessage =
+              error instanceof Error ? error.message : "Failed to start video call";
             toast.error(errorMessage);
             console.error("Error starting video call:", error);
         }
@@ -171,14 +195,17 @@ export const VideoCallProvider: React.FC<{ children: ReactNode }> = ({
     const acceptCall = async () => {
         if (pendingOffer) {
             try {
-                await handleOffer(pendingOffer);
+                const sessionDescription = WebRTCAdapter.toSessionDescription(pendingOffer.offer);
+                await handleOffer(sessionDescription, pendingOffer.fromUserId);
                 await new Promise((resolve) => setTimeout(resolve, 100));
                 setCallState("connected");
             } catch (err) {
                 console.error("VideoCallContext: Error in handleOffer", err);
+                toast.error("Failed to accept call. Please try again.");
             }
         } else {
             console.error("No pending offer to accept!");
+            toast.error("No pending offer to accept!");
         }
     };
 
@@ -225,6 +252,7 @@ export const VideoCallProvider: React.FC<{ children: ReactNode }> = ({
     );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useVideoCallContext = () => {
     const context = useContext(VideoCallContext);
     if (!context)

@@ -9,15 +9,27 @@ export const VerifyStripeSignature = (
   res: Response,
   next: NextFunction
 ) => {
-  const signature = req.headers["stripe-signature"];
+  const signatureHeader = req.headers["stripe-signature"];
+
+  if (!signatureHeader) {
+    throw new UnautharizedError( ErrorMessages.NO_STRIPE_SIG_FOUND);
+  }
+
+  const signature = typeof signatureHeader === "string" 
+    ? signatureHeader 
+    : signatureHeader[0];
 
   if (!signature) {
     throw new UnautharizedError( ErrorMessages.NO_STRIPE_SIG_FOUND);
   }
 
   try {
+    const body = Buffer.isBuffer(req.body) 
+      ? req.body 
+      : (typeof req.body === "string" ? req.body : Buffer.from(String(req.body)));
+    
     const event = stripe.webhooks.constructEvent(
-      req.body,
+      body,
       signature,
       env.stripe_webhook_secret
     );

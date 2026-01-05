@@ -60,7 +60,7 @@ export class ConversationRepository
 
     const result: IUserConversation[] = [];
 
-    for (let conv of conversations) {
+    for (const conv of conversations) {
       const isDoctor = conv.doctorId === profileId;
       const other = isDoctor ? conv.rep : conv.doctor;
       const latest = conv.messages[0];

@@ -63,7 +63,7 @@ export default function CompleteRepProfilePage() {
 
         const terrData = await getTerritories();
         setTerritories(terrData.data.data);
-      } catch (error) {
+      } catch {
         toast.error("Failed to load departments or territories");
       }
     }
@@ -141,12 +141,11 @@ export default function CompleteRepProfilePage() {
       const res = await completeProfile(id!, formData);
       toast.success(res.data.message || "Profile saved successfully");
       navigate("/rep/profile");
-    } catch (err: any) {
-      if (err.response) {
-        toast.error(err.response.data.message || "Failed to save profile");
-      } else {
-        toast.error("Internal server error");
-      }
+    } catch (err: unknown) {
+      const errorMessage =
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message || "Internal server error";
+      toast.error(errorMessage);
     } finally {
       setOpenConfirm(false);
     }

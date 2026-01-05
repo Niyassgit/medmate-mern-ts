@@ -1,5 +1,6 @@
 import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRepository";
 import { IGuestRepository } from "../../../domain/Patient/repositories/IGuestRepositories";
+import { IGuestListItem } from "../../../domain/Patient/entities/IGuestListItem";
 import { ErrorMessages } from "../../../shared/Messages";
 import { BadRequestError, UnautharizedError } from "../../errors";
 import { IGetGuestsByDoctorUseCase } from "../interfaces/IGetGuestsByDoctorUseCase";
@@ -10,7 +11,7 @@ export class GetGuestsByDoctorUseCase implements IGetGuestsByDoctorUseCase {
     private _guestRepository: IGuestRepository
   ) {}
 
-  async execute(userId?: string, search?: string): Promise<any[]> {
+  async execute(userId?: string, search?: string): Promise<IGuestListItem[]> {
     if (!userId) throw new UnautharizedError(ErrorMessages.UNAUTHORIZED);
 
     const { doctorId } = await this._doctorRepository.getDoctorIdByUserId(

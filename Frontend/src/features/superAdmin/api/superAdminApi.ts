@@ -5,6 +5,7 @@ import { DepartmentSchemaDTO } from "../Schemas/DepartmentSchema";
 import {
   SubscriptionPlanPayload,
 } from "../dto/SubscriptionPlan";
+import { CreateFeaturePayload, UpdateFeaturePayload } from "../dto/Feature";
 
 export const getAllDoctors = async (
   page: number = 1,
@@ -225,5 +226,53 @@ export const getAdminEarningsList = async (
   const res = await api.get(
     AdminEndpoints.ADMIN_EARNINGS(page, limit, startDate, endDate)
   );
+  return res.data;
+};
+
+export const getAllOrders = async (
+  page: number,
+  limit: number,
+  startDate?: string,
+  endDate?: string
+) => {
+  const res = await api.get(
+    AdminEndpoints.GET_ALL_ORDERS(page, limit, startDate, endDate)
+  );
+  return res.data;
+};
+
+export const getOrderDetails = async (orderId: string) => {
+  const res = await api.get(`/admin/orders/${orderId}`);
+  return res.data;
+};
+
+export const updateOrderStatus = async (orderId: string, status: string) => {
+  const res = await api.patch(`/admin/orders/${orderId}/status`, { status });
+  return res.data;
+};
+
+// Feature Management APIs
+export const getAllFeatures = async () => {
+  const res = await api.get(AdminEndpoints.GET_FEATURES);
+  return res.data;
+};
+
+export const getFeaturesList = async () => {
+  const res = await api.get(AdminEndpoints.GET_FEATURES_LIST);
+  return res.data;
+};
+
+export const createFeature = async (data: CreateFeaturePayload) => {
+  const res = await api.post(AdminEndpoints.CREATE_FEATURE, data);
+  return res.data;
+};
+
+export const updateFeature = async (featureId: string, data: UpdateFeaturePayload) => {
+  const res = await api.put(AdminEndpoints.UPDATE_FEATURE(featureId), data);
+  return res.data;
+};
+
+export const deleteFeature = async (featureId: string) => {
+  const res = await api.delete(AdminEndpoints.DELETE_FEATURE(featureId));
   return res.data;
 };

@@ -20,7 +20,7 @@ const featuresDoctor = [
 
 const NetworkSection = () => {
   return (
-    <section className="py-20 bg-gradient-to-b from-[#185891] via-[#14497a] to-[#103b64]">
+    <section className="py-20">
       <div className="container mx-auto px-4">
         {/* Heading */}
         <div className="text-center mb-16">
@@ -40,16 +40,16 @@ const NetworkSection = () => {
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.3 }}
           >
-            <Card className="bg-transparent border border-gray-200 shadow-lg hover:shadow-xl rounded-2xl overflow-hidden">
+            <Card className="bg-white/10 backdrop-blur-sm border border-white/20 shadow-lg hover:shadow-xl rounded-2xl overflow-hidden">
               <CardContent className="p-8 flex flex-col items-center text-center">
                 <div className="bg-healthcare-blue-light w-16 h-16 rounded-full flex items-center justify-center mb-6">
                   <BriefcaseMedical className="w-8 h-8 text-healthcare-blue" />
                 </div>
 
-                <h3 className="text-2xl font-bold text-foreground mb-4">
+                <h3 className="text-2xl font-bold text-white mb-4">
                   For Medical Representatives
                 </h3>
-                <p className="text-muted-foreground mb-8">
+                <p className="text-white/80 mb-8">
                   Showcase your products, connect with doctors in your territory,
                   and grow your professional network with ease.
                 </p>
@@ -58,7 +58,7 @@ const NetworkSection = () => {
                   {featuresRep.map((item, idx) => (
                     <li
                       key={idx}
-                      className="flex items-center gap-3 text-foreground text-left"
+                      className="flex items-center gap-3 text-white text-left"
                     >
                       <CheckCircle2 className="w-5 h-5 text-healthcare-blue shrink-0" />
                       <span>{item}</span>
@@ -81,16 +81,16 @@ const NetworkSection = () => {
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.3 }}
           >
-            <Card className="bg-transparent border border-gray-200 shadow-lg hover:shadow-xl rounded-2xl overflow-hidden">
+            <Card className="bg-white/10 backdrop-blur-sm border border-white/20 shadow-lg hover:shadow-xl rounded-2xl overflow-hidden">
               <CardContent className="p-8 flex flex-col items-center text-center">
                 <div className="bg-healthcare-blue-light w-16 h-16 rounded-full flex items-center justify-center mb-6">
                   <Stethoscope className="w-8 h-8 text-healthcare-blue" />
                 </div>
 
-                <h3 className="text-2xl font-bold text-foreground mb-4">
+                <h3 className="text-2xl font-bold text-white mb-4">
                   For Doctors
                 </h3>
-                <p className="text-muted-foreground mb-8">
+                <p className="text-white/80 mb-8">
                   Connect with trusted medical representatives, explore new
                   products, and collaborate to improve patient care.
                 </p>
@@ -99,7 +99,7 @@ const NetworkSection = () => {
                   {featuresDoctor.map((item, idx) => (
                     <li
                       key={idx}
-                      className="flex items-center gap-3 text-foreground text-left"
+                      className="flex items-center gap-3 text-white text-left"
                     >
                       <CheckCircle2 className="w-5 h-5 text-healthcare-blue shrink-0" />
                       <span>{item}</span>

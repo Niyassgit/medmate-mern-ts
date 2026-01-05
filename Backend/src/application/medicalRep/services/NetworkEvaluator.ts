@@ -6,7 +6,7 @@ import { ConnectionInitiator, ConnectionStatus } from "../../../shared/Enums";
 export class NetworkEvaluator {
   static evaluate(
     doctors: IDoctorWithUser[],
-    connections: { doctorId: string; status: string; initiator: string }[]
+    connections: { doctorId: string; status: ConnectionStatus; initiator: ConnectionInitiator }[]
     ): IDoctorWithConnection[] {
     const results: IDoctorWithConnection[] = [];
 

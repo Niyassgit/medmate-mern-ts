@@ -40,10 +40,9 @@ export class CommissionMapper {
     data: Commission & { product: Product | null }
   ): ICommissionWithProduct {
     const commission = this.toDomain(data);
-    const product = data.product as Product | null;
     return {
       ...commission,
-      product: product ? ProductMapper.toDomain(product) : null,
+      product: data.product ? ProductMapper.toDomain(data.product) : null,
     };
   }
 }

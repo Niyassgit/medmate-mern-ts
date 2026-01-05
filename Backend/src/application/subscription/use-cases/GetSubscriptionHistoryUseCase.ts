@@ -25,7 +25,6 @@ export class GetSubscriptionHistoryUseCase
     }
 
     const history = await this._subscriptionHistoryRepository.findHistoriesByRepId(repId);
-    console.log("sub history:",history);
     return history || [];
   }
 }

@@ -1,12 +1,10 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Search,
   Filter,
   Calendar,
-  DollarSign,
   Package,
-  User,
   CreditCard,
   Clock,
 } from "lucide-react";
@@ -43,22 +41,6 @@ export default function OrderListingPage() {
   const [paymentFilter, setPaymentFilter] = useState("all");
   const [sortBy, setSortBy] = useState("date-desc");
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case OrderStatus.PENDING:
-        return "bg-yellow-100 text-yellow-800";
-      case OrderStatus.CONFIRMED:
-        return "bg-blue-100 text-blue-800";
-      case OrderStatus.SHIPPED:
-        return "bg-indigo-100 text-indigo-800";
-      case OrderStatus.DELIVERED:
-        return "bg-green-100 text-green-800";
-      case OrderStatus.CANCELLED:
-        return "bg-red-100 text-red-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
 
   const getPaymentStatusColor = (status: string) => {
     switch (status) {
@@ -76,7 +58,7 @@ export default function OrderListingPage() {
   };
 
   const filteredAndSortedOrders = useMemo(() => {
-    let result = orders.filter((order) => {
+    const result = orders.filter((order) => {
       const matchesSearch =
         order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
         order.guestId?.toLowerCase().includes(searchTerm.toLowerCase()) ||

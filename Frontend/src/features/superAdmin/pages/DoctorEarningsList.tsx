@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   Table,
@@ -26,6 +26,10 @@ interface DoctorEarnings {
   totalCommission: number;
 }
 
+interface DoctorEarningsResponse {
+  data: DoctorEarnings[];
+}
+
 const DoctorEarningsList = () => {
     const navigate=useNavigate();
   const { startDate: defaultStart, endDate: defaultEnd } =
@@ -42,26 +46,29 @@ const DoctorEarningsList = () => {
     searchParams.get("endDate") || defaultEnd
   );
 
-  const fetchEarnings = async () => {
+  const fetchEarnings = useCallback(async () => {
     setLoading(true);
     try {
-      const res: any = await getDoctorEarningsList(
+      const res = await getDoctorEarningsList(
         page,
         limit,
         startDate,
         endDate
-      );
+      ) as DoctorEarningsResponse;
       setDoctors(res.data);
-    } catch (err) {
-      console.error("Failed to fetch doctor earnings", err);
+    } catch (err: unknown) {
+      const errorMessage = 
+        (err as { response?: { data?: { message?: string } } })?.response?.data?.message || 
+        "Failed to fetch doctor earnings";
+      console.error(errorMessage, err);
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, limit, startDate, endDate]);
 
   useEffect(() => {
     fetchEarnings();
-  }, [page, startDate, endDate]);
+  }, [fetchEarnings]);
 
   return (
     <div className="p-6 space-y-6">

@@ -20,6 +20,8 @@ import { CreateDepartmentUseCase } from "../../application/department/use-cases/
 import { DepartmentRepository } from "../repositories/DepatmentRepository";
 import { GetAllDepartmentsUseCase } from "../../application/superAdmin/useCases/GetAllDepartmentsUseCase";
 import { EditDepartmentUseCase } from "../../application/department/use-cases/EditDepartmentUseCase";
+import { GetOrderDetailsUseCase } from "../../application/superAdmin/useCases/GetOrderDetailsUseCase";
+import { UpdateOrderStatusUseCase } from "../../application/superAdmin/useCases/UpdateOrderStatusUseCase";
 import { s3StorageService } from "../services/S3StorageService";
 import { GetAllSubscriptionsUseCase } from "../../application/subscription/use-cases/GetAllSubscriptionsUseCase";
 import { SubscriptionRepository } from "../repositories/SubscriptionRepository";
@@ -44,6 +46,7 @@ import { OrderRepository } from "../repositories/OrderRepository";
 import { PrescriptionRepository } from "../repositories/PrescriptionRepository";
 import { GetDoctorEarningsUseCase } from "../../application/superAdmin/useCases/GetDoctorEarningsUseCase";
 import { GetAdminEarningsUseCase } from "../../application/superAdmin/useCases/GetAdminEarningsUseCase";
+import { GetAllOrdersUseCase } from "../../application/superAdmin/useCases/GetAllOrdersUseCase";
 
 const superAdminRepositories = new SuperAdminRepository();
 const userRepository = new UserRepository();
@@ -159,6 +162,29 @@ const adminOrderAnalytics = new AdminOrderAnalyticsUseCase(
 const getDoctorEarningsUseCase = new GetDoctorEarningsUseCase(orderRepository);
 const getAdminEarningsUseCase = new GetAdminEarningsUseCase(orderRepository);
 
+const getAllOrdersUseCase = new GetAllOrdersUseCase(orderRepository);
+const getOrderDetailsUseCase = new GetOrderDetailsUseCase(orderRepository);
+const updateOrderStatusUseCase = new UpdateOrderStatusUseCase(orderRepository);
+
+
+
+import { CreateFeatureUseCase } from "../../application/superAdmin/useCases/CreateFeatureUseCase";
+import { GetFeaturesUseCase } from "../../application/superAdmin/useCases/GetFeaturesUseCase";
+import { UpdateFeatureUseCase } from "../../application/superAdmin/useCases/UpdateFeatureUseCase";
+import { DeleteFeatureUseCase } from "../../application/superAdmin/useCases/DeleteFeatureUseCase";
+import { FeatureRepository } from "../repositories/FeatureRepository";
+import { prisma } from "../database/prisma";
+import { GetAllFeaturesForPlanUseCase } from "../../application/superAdmin/useCases/GetAllFeaturesForPlanUseCase";
+
+const featureRepository = new FeatureRepository(prisma);
+
+const getAllFeaturesForPlanUseCase = new GetAllFeaturesForPlanUseCase(featureRepository);
+
+const createFeatureUseCase = new CreateFeatureUseCase(featureRepository);
+const getFeaturesUseCase = new GetFeaturesUseCase(featureRepository);
+const updateFeatureUseCase = new UpdateFeatureUseCase(featureRepository);
+const deleteFeatureUseCase = new DeleteFeatureUseCase(featureRepository);
+
 export const superAdminController = new SuperAdminController(
   createSuperAdminUseCase,
   getSuperAdminByEmailIdUseCase,
@@ -189,5 +215,13 @@ export const superAdminController = new SuperAdminController(
   territoryDetailsUseCase,
   adminOrderAnalytics,
   getDoctorEarningsUseCase,
-  getAdminEarningsUseCase
+  getAdminEarningsUseCase,
+  getAllOrdersUseCase,
+  getOrderDetailsUseCase,
+  updateOrderStatusUseCase,
+  getAllFeaturesForPlanUseCase,
+  createFeatureUseCase,
+  getFeaturesUseCase,
+  updateFeatureUseCase,
+  deleteFeatureUseCase
 );

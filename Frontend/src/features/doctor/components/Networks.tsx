@@ -15,7 +15,6 @@ interface ConnectionCardProps {
 export default function Networks({
   user,
   onConnect,
-  isConnected,
 }: ConnectionCardProps) {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<string | null>(user.connectionStatus);
@@ -44,11 +43,14 @@ export default function Networks({
     try {
       const data = await connectionToggle(user.id);
       toast.success(data.message || "Action successful");
-    } catch (error: any) {
+    } catch (error: unknown) {
       setStatus(status);
       setInitiator(initiator);
       onConnect(user.id, status);
-      toast.error(error?.response?.data?.message || "Something went wrong");
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Something went wrong";
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -70,11 +72,14 @@ export default function Networks({
       setTimeout(() => {
         setIsRemoving(true);
       }, 500);
-    } catch (error: any) {
+    } catch (error: unknown) {
       setStatus(previousStatus);
       setInitiator(previousInitiator);
       onConnect(user.id, previousStatus);
-      toast.error(error?.response?.data?.message || "Something went wrong");
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Something went wrong";
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -92,11 +97,14 @@ export default function Networks({
     try {
       const data = await connectionToggle(user.id);
       toast.success(data.message || "Request cancelled");
-    } catch (error: any) {
+    } catch (error: unknown) {
       setStatus(previousStatus);
       setInitiator(previousInitiator);
       onConnect(user.id, previousStatus);
-      toast.error(error?.response?.data?.message || "Something went wrong");
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Something went wrong";
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }

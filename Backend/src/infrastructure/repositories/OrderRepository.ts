@@ -76,10 +76,7 @@ export class OrderRepository
     data: Partial<Omit<IOrder, "id" | "createdAt" | "updatedAt">>
   ): Promise<IOrder> {
     const exist = await this.findById(orderId);
-    if (!exist)
-      throw new NotFoundError(
-        ErrorMessages.ORDER_NOT_FOUND || "Order not found"
-      );
+    if (!exist) throw new NotFoundError(ErrorMessages.ORDER_NOT_FOUND);
 
     const mappedData = OrderMapper.toUpdatePersistance(data);
     const updated = await prisma.order.update({
@@ -195,7 +192,6 @@ export class OrderRepository
     });
   }
 
-
   async revenueTimeline(
     start?: Date,
     end?: Date
@@ -269,7 +265,6 @@ export class OrderRepository
         whereClause.createdAt.gte = startDate;
       }
       if (end) {
-
         const endDate = new Date(end);
         endDate.setHours(23, 59, 59, 999);
         whereClause.createdAt.lte = endDate;
@@ -398,14 +393,13 @@ export class OrderRepository
           }
         }
 
-
         const commission = await prisma.commission.aggregate({
           where: commissionWhere,
           _sum: { doctorCut: true },
         });
 
         const prescriptionWhere: Prisma.PrescriptionWhereInput = {
-          doctorId: doctor.id
+          doctorId: doctor.id,
         };
         if (startDate || endDate) {
           prescriptionWhere.createdAt = {};
@@ -417,21 +411,17 @@ export class OrderRepository
           }
         }
 
-
         const totalPrescriptions = await prisma.prescription.count({
           where: prescriptionWhere,
         });
 
-        return {
-          doctorId: doctor.id,
-          doctorName: doctor.name,
-          email: doctor.user?.email || "N/A",
-          department: doctor.department?.name || "N/A",
+        return OrderMapper.toDoctorEarningsDTO(
+          doctor,
           totalPrescriptions,
           paidOrders,
-          grossSales: grossSales._sum.totalAmount || 0,
-          totalCommission: commission._sum.doctorCut || 0,
-        };
+          grossSales._sum.totalAmount || 0,
+          commission._sum.doctorCut || 0
+        );
       })
     );
 
@@ -444,12 +434,17 @@ export class OrderRepository
     startDate?: Date,
     endDate?: Date
   ): Promise<AdminEarningsDTO[]> {
-    const whereClause: any = {};
+    const dateFilter: Prisma.DateTimeFilter = {};
+    if (startDate) {
+      dateFilter.gte = startDate;
+    }
+    if (endDate) {
+      dateFilter.lte = endDate;
+    }
 
+    const whereClause: Prisma.OrderWhereInput = {};
     if (startDate || endDate) {
-      whereClause.createdAt = {};
-      if (startDate) whereClause.createdAt.gte = startDate;
-      if (endDate) whereClause.createdAt.lte = endDate;
+      whereClause.createdAt = dateFilter;
     }
 
     const doctorsWithActivity = await prisma.doctor.findMany({
@@ -458,14 +453,14 @@ export class OrderRepository
           {
             prescriptions: {
               some: {
-                createdAt: whereClause.createdAt,
+                createdAt: dateFilter,
               },
             },
           },
           {
             commissions: {
               some: {
-                createdAt: whereClause.createdAt,
+                createdAt: dateFilter,
               },
             },
           },
@@ -520,50 +515,89 @@ export class OrderRepository
         };
 
         if (startDate || endDate) {
-          commissionWhere.createdAt = {};
-          if (startDate) {
-            commissionWhere.createdAt.gte = startDate;
-          }
-          if (endDate) {
-            commissionWhere.createdAt.lte = endDate;
-          }
+          commissionWhere.createdAt = dateFilter;
         }
 
         const commission = await prisma.commission.aggregate({
           where: commissionWhere,
-          _sum: { adminCut: true }, 
+          _sum: { adminCut: true },
         });
 
         const prescriptionWhere: Prisma.PrescriptionWhereInput = {
-          doctorId: doctor.id
+          doctorId: doctor.id,
         };
         if (startDate || endDate) {
-          prescriptionWhere.createdAt = {};
-          if (startDate) {
-            prescriptionWhere.createdAt.gte = startDate;
-          }
-          if (endDate) {
-            prescriptionWhere.createdAt.lte = endDate;
-          }
+          prescriptionWhere.createdAt = dateFilter;
         }
 
         const totalPrescriptions = await prisma.prescription.count({
           where: prescriptionWhere,
         });
 
-        return {
-          doctorId: doctor.id,
-          doctorName: doctor.name,
-          email: doctor.user?.email || "N/A",
-          department: doctor.department?.name || "N/A",
+        return OrderMapper.toAdminEarningsDTO(
+          doctor,
           totalPrescriptions,
           paidOrders,
-          grossSales: grossSales._sum.totalAmount || 0,
-          adminEarnings: commission._sum.adminCut || 0, 
-        };
+          grossSales._sum.totalAmount || 0,
+          commission._sum.adminCut || 0
+        );
       })
     );
 
     return results;
+  }
+
+  async getAllOrders(
+    page: number,
+    limit: number,
+    startDate?: Date,
+    endDate?: Date,
+    status?: string
+  ): Promise<{ orders: IOrder[]; total: number }> {
+    const whereClause: Prisma.OrderWhereInput = {};
+
+    if (startDate || endDate) {
+      whereClause.createdAt = {};
+      if (startDate) whereClause.createdAt.gte = startDate;
+      if (endDate) whereClause.createdAt.lte = endDate;
+    }
+
+    if (status && status !== "ALL") {
+      whereClause.status = status as import("@prisma/client").OrderStatus;
+    }
+
+    const [orders, total] = await Promise.all([
+      prisma.order.findMany({
+        where: whereClause,
+        include: {
+          prescription: {
+            include: {
+              doctor: {
+                include: {
+                  department: true,
+                },
+              },
+              items: {
+                include: {
+                  product: true,
+                },
+              },
+            },
+          },
+          guest: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      prisma.order.count({ where: whereClause }),
+    ]);
+
+    return {
+      orders: orders.map((o) => OrderMapper.toDomain(o)),
+      total,
+    };
   }
 }

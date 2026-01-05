@@ -309,7 +309,7 @@ export const ChatView = ({ conversation, owner }: ChatViewProps) => {
             <p className="text-xs text-online">Online</p>
           </div>
         </div>
-        ```
+
         <div className="flex items-center gap-2">
           <Button
             variant="ghost"

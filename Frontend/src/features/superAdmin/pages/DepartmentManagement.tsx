@@ -3,7 +3,7 @@ import { AdminTable } from "../components/AdminTable";
 import { departments } from "../api/superAdminApi";
 import { DepartmentDTO } from "../dto/DepartmentDTO";
 import useFetchList from "@/hooks/useFetchItem";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@/app/hooks";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -11,7 +11,7 @@ import toast from "react-hot-toast";
 import { DepartmentApiResponse } from "../dto/DepartmentApiResponse";
 
 const DepartmentManagement: React.FC = () => {
-  const id = useSelector((state: any) => state.auth.user?.id);
+  const id = useAppSelector((state) => state.auth.user?.id);
   const navigate = useNavigate();
 
   const [page, setPage] = useState<number>(1);

@@ -2,7 +2,7 @@ import {
   BadRequestError,
   UnautharizedError,
 } from "../../../domain/common/errors";
-import { ISubscriptionRepositoy } from "../../../domain/subscription/repositories/ISubscriptionRepository";
+import { ISubscriptionRepository } from "../../../domain/subscription/repositories/ISubscriptionRepository";
 import { ErrorMessages } from "../../../shared/Messages";
 import { CreateSubscriptionDTO } from "../dto/CreateSubscriptionDTO";
 import { SubscriptionDTO } from "../dto/SubscriptionDTO";
@@ -12,7 +12,7 @@ import { SubscriptionMapper } from "../mappers/SubscriptionMapper";
 export class UpdateSubscriptionPlanUseCase
   implements IUpdateSubscriptionPlanUseCase
 {
-  constructor(private _subscriptionRepository: ISubscriptionRepositoy) {}
+  constructor(private _subscriptionRepository: ISubscriptionRepository) {}
   async execute(
     subscriptionId: string,
     data: CreateSubscriptionDTO,

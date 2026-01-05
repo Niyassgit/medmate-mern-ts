@@ -1,6 +1,6 @@
 import { ISubscription } from "../entities/ISubscription";
 
-export interface ISubscriptionRepositoy {
+export interface ISubscriptionRepository {
   findSubscriptionById(subscriptionId: string): Promise<ISubscription | null>;
   getAllSubscriptions(): Promise<ISubscription[]>;
   createSubscription(

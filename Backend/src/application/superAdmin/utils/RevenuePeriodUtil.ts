@@ -1,7 +1,4 @@
-import {
-  CommissionPeriodUtil,
-  CommissionPeriod,
-} from "../../doctor/utils/CommissionPeriodUtil";
+import { CommissionPeriod } from "../../doctor/utils/CommissionPeriodUtil";
 
 export interface RevenueTimelineEntry {
   period: string;
@@ -20,10 +17,7 @@ export class RevenuePeriodUtil {
     startDate?: Date,
     endDate?: Date
   ): RevenueTimelineEntry[] {
-    const timelineMap = new Map<
-      string,
-      { amount: number; sortKey: string }
-    >();
+    const timelineMap = new Map<string, { amount: number; sortKey: string }>();
 
     revenueData.forEach((data) => {
       const { key, sortKey } = this._getPeriodKey(data.createdAt, period);
@@ -69,12 +63,16 @@ export class RevenuePeriodUtil {
         "Dec",
       ];
       const key = `${monthNames[date.getMonth()]} ${date.getFullYear()}`;
-      const sortKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+      const sortKey = `${date.getFullYear()}-${String(
+        date.getMonth() + 1
+      ).padStart(2, "0")}`;
       return { key, sortKey };
     } else if (period === "monthly") {
       const weekNumber = Math.ceil(date.getDate() / 7);
       const key = `Week ${weekNumber}`;
-      const sortKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(weekNumber).padStart(2, "0")}`;
+      const sortKey = `${date.getFullYear()}-${String(
+        date.getMonth() + 1
+      ).padStart(2, "0")}-${String(weekNumber).padStart(2, "0")}`;
       return { key, sortKey };
     } else {
       const dayNames = [
@@ -93,7 +91,9 @@ export class RevenuePeriodUtil {
         const sortKey = `${String(dayOrder).padStart(2, "0")}`;
         return { key, sortKey };
       } else {
-        const sortKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+        const sortKey = `${date.getFullYear()}-${String(
+          date.getMonth() + 1
+        ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
         return { key, sortKey };
       }
     }
@@ -130,8 +130,12 @@ export class RevenuePeriodUtil {
           "Nov",
           "Dec",
         ];
-        const key = `${monthNames[current.getMonth()]} ${current.getFullYear()}`;
-        const sortKey = `${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2, "0")}`;
+        const key = `${
+          monthNames[current.getMonth()]
+        } ${current.getFullYear()}`;
+        const sortKey = `${current.getFullYear()}-${String(
+          current.getMonth() + 1
+        ).padStart(2, "0")}`;
 
         if (!filledMap.has(key)) {
           filledMap.set(key, {
@@ -148,7 +152,10 @@ export class RevenuePeriodUtil {
 
       for (let week = 1; week <= 4; week++) {
         const key = `Week ${week}`;
-        const sortKey = `${startYear}-${String(startMonth + 1).padStart(2, "0")}-${String(week).padStart(2, "0")}`;
+        const sortKey = `${startYear}-${String(startMonth + 1).padStart(
+          2,
+          "0"
+        )}-${String(week).padStart(2, "0")}`;
 
         if (!filledMap.has(key)) {
           filledMap.set(key, {
@@ -200,7 +207,9 @@ export class RevenuePeriodUtil {
       while (current <= end) {
         const dayOfWeek = current.getDay();
         const key = dayNames[dayOfWeek];
-        const sortKey = `${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2, "0")}-${String(current.getDate()).padStart(2, "0")}`;
+        const sortKey = `${current.getFullYear()}-${String(
+          current.getMonth() + 1
+        ).padStart(2, "0")}-${String(current.getDate()).padStart(2, "0")}`;
 
         if (!filledMap.has(key)) {
           filledMap.set(key, {
@@ -258,4 +267,6 @@ export class RevenuePeriodUtil {
     return sortedTimeline.map(({ sortKey, ...rest }) => rest);
   }
 }
+
+
 

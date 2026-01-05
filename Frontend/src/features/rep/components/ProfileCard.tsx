@@ -33,7 +33,7 @@ const ProfileCard = ({ rep }: ProfileCardProps) => {
       } else {
         setImageUrl(null);
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to refresh signed URL");
       setImageUrl(null);
     }

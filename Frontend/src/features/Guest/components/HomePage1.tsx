@@ -10,11 +10,11 @@ const HomePage1 = () => {
         }
       `}</style>
 
-      <h1 className="text-3xl font-semibold text-center mx-auto">
+      <h1 className="text-3xl font-semibold text-center mx-auto text-white">
         Welcome to MedMate
       </h1>
 
-      <p className="text-sm text-slate-500 text-center mt-2 max-w-lg mx-auto">
+      <p className="text-sm text-white/80 text-center mt-2 max-w-lg mx-auto">
         Your trusted platform to connect with doctors, discover prescribed
         medicines, and manage healthcare seamlessly.
       </p>

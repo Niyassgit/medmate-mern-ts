@@ -25,7 +25,7 @@ import { SocketEngagementEventPublisher } from "../realtime/publishers/SocketEng
 import { InterestRepository } from "../repositories/InterestRepostory";
 import { ToggleInterestOnPostUseCase } from "../../application/interest/use-cases/ToggleInterestOnPostUseCase";
 import { DoctorMutualConnectionsUseCase } from "../../application/doctor/use-cases/DoctorMutualConnectionsUseCase";
-import { DoctorPendingConnectionsUseCase } from "../../application/doctor/interfaces/DoctorPendingConectionsUseCase";
+import { DoctorPendingConnectionsUseCase } from "../../application/doctor/use-cases/DoctorPendingConectionsUseCase";
 import { NotificationRepository } from "../repositories/NotificationRepository";
 import { GetDoctorNotificationsUseCase } from "../../application/notification/use-cases/GetDoctorNotificationsUseCase";
 import { DoctorRejectConnectionUseCase } from "../../application/connection/use-cases/DoctorRejectConnectionUseCase";
@@ -61,6 +61,7 @@ import { MakeVideoCallWithRepUseCase } from "../../application/doctor/use-cases/
 import { VideoCallEventPublisher } from "../realtime/publishers/VideoCallEventPublisher";
 import { DoctorCommissionsUseCase } from "../../application/doctor/use-cases/DoctorCommissionsUseCase";
 import { CommissionRepository } from "../repositories/CommissionRepository";
+import { SubscriptionRepository } from "../repositories/SubscriptionRepository";
 
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
@@ -83,6 +84,7 @@ const chatEventPublisher = new ChatEventPublisher();
 const tokenService = new TokenService();
 const videoCallEventPublisher = new VideoCallEventPublisher();
 const commissionRepository = new CommissionRepository();
+const subscriptionRepository = new SubscriptionRepository();
 
 const createDoctorUseCase = new CreateDoctorUseCase(
   doctorRepository,
@@ -141,7 +143,8 @@ const getFeedUseCase = new GetFeedUseCase(
   likeRepository,
   interestRepository,
   storageService,
-  medicalRepRepository
+  medicalRepRepository,
+  subscriptionRepository
 );
 const postDetailsUseCase = new PostDetailsUseCase(
   doctorRepository,
@@ -311,7 +314,8 @@ const verifyOldPasswordUseCase = new VerifyOldPasswordUseCase(
 
 const makeVideoCallWithRepUseCase = new MakeVideoCallWithRepUseCase(
   videoCallEventPublisher,
-  medicalRepRepository
+  medicalRepRepository,
+  subscriptionRepository
 );
 
 const doctorCommissionUseCase = new DoctorCommissionsUseCase(

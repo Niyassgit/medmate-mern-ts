@@ -64,10 +64,12 @@ import { GetAllOrdersUseCase } from "../../application/medicalRep/use-cases/GetA
 import { OrderRepository } from "../repositories/OrderRepository";
 import { GetOrderDetailsUseCase } from "../../application/medicalRep/use-cases/GetOrderDetailsUseCase";
 import { RepBusinessAnalyticsUseCase } from "../../application/medicalRep/use-cases/RepBusinessAnalyticsUseCase";
+import { AdvancedBusinessAnalyticsUseCase } from "../../application/medicalRep/use-cases/AdvancedBusinessAnalyticsUseCase";
 import { ExportRepOrdersUseCase } from "../../application/medicalRep/use-cases/ExportRepOrdersUseCase";
 import { ExcelService } from "../services/ExcelService";
 import { VideoCallEventPublisher } from "../realtime/publishers/VideoCallEventPublisher";
 import { MakeVideoCallWithDoctorUseCase } from "../../application/medicalRep/use-cases/MakeVideoCallWithDoctorUseCase";
+import { UpgradeSubscriptionPlanUseCase } from "../../application/subscription/use-cases/UpgradeSubscriptionPlanUseCase";
 
 const medicalRepRepository = new MedicalRepRepository();
 const doctorRepository = new DoctorRepository();
@@ -155,7 +157,8 @@ const makeConnectionRequestUseCase = new RepMakeConnectionRequestUseCase(
   notificationRepository,
   storageService,
   notificationEventPublisher,
-  connectionRequestLogRepository
+  connectionRequestLogRepository,
+  subscriptionRepository
 );
 const acceptConnectionRequestUseCase = new DoctorAcceptConnectionRequestUseCase(
   medicalRepRepository,
@@ -283,7 +286,8 @@ const getSubscriptionHistoryUseCase = new GetSubscriptionHistoryUseCase(
 
 const getConnectionRequestStatsUseCase = new GetConnectionRequestStatsUseCase(
   medicalRepRepository,
-  connectionRequestLogRepository
+  connectionRequestLogRepository,
+  subscriptionRepository
 );
 
 const getAllProductsUseCase = new GetAllProductsUseCase(
@@ -333,6 +337,12 @@ const repBusinessAnalyticsUseCase = new RepBusinessAnalyticsUseCase(
   storageService
 );
 
+const advancedBusinessAnalyticsUseCase = new AdvancedBusinessAnalyticsUseCase(
+  medicalRepRepository,
+  orderRepository,
+  storageService
+);
+
 const exportRepOrdersUseCase = new ExportRepOrdersUseCase(
   medicalRepRepository,
   orderRepository,
@@ -340,9 +350,16 @@ const exportRepOrdersUseCase = new ExportRepOrdersUseCase(
 );
 
 const makeVideoCallWithDoctorUseCase = new MakeVideoCallWithDoctorUseCase(
-  doctorRepository, 
+  doctorRepository,
   videoCallEventPublisher,
-  medicalRepRepository
+  medicalRepRepository,
+  subscriptionRepository
+);
+
+const upgradeSubscriptionPlanUseCase = new UpgradeSubscriptionPlanUseCase(
+  medicalRepRepository,
+  subscriptionRepository,
+  stripePaymentService
 );
 
 export const medicalRepController = new MedicalRepController(
@@ -387,6 +404,8 @@ export const medicalRepController = new MedicalRepController(
   getAllOrdersUseCase,
   getOrderDetailsUseCase,
   repBusinessAnalyticsUseCase,
+  advancedBusinessAnalyticsUseCase,
   exportRepOrdersUseCase,
-  makeVideoCallWithDoctorUseCase
+  makeVideoCallWithDoctorUseCase,
+  upgradeSubscriptionPlanUseCase
 );

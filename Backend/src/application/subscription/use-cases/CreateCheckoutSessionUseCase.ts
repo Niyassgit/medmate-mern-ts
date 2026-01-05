@@ -1,7 +1,7 @@
 import { BadRequestError } from "../../../domain/common/errors";
 import { IStripePaymentService } from "../../../domain/common/services/IStripePaymentService";
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
-import { ISubscriptionRepositoy } from "../../../domain/subscription/repositories/ISubscriptionRepository";
+import { ISubscriptionRepository } from "../../../domain/subscription/repositories/ISubscriptionRepository";
 import { ErrorMessages } from "../../../shared/Messages";
 import { ICreateCheckoutSessionUseCase } from "../interfaces/ICreateCheckoutSessionUseCase";
 
@@ -9,7 +9,7 @@ export class CreateCheckoutSessionUseCase
   implements ICreateCheckoutSessionUseCase
 {
   constructor(
-    private _subscriptionRepository: ISubscriptionRepositoy,
+    private _subscriptionRepository: ISubscriptionRepository,
     private _payementService: IStripePaymentService,
     private _medicalRepRepository: IMedicalRepRepository
   ) {}

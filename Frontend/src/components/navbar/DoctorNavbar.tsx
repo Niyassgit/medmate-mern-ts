@@ -7,7 +7,7 @@ import {
   notificationUnreadCount,
   doctorConversations,
 } from "@/features/doctor/api";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@/app/hooks";
 import { getSocket } from "@/lib/socket";
 import { MessageDTO } from "../Dto/MessageDTO";
 import { Role } from "@/types/Role";
@@ -17,7 +17,7 @@ const DoctorNavbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const [unreadChatCount, setUnreadChatCount] = useState(0);
-  const userId = useSelector((state: any) => state.auth.user?.id);
+  const userId = useAppSelector((state) => state.auth.user?.id);
   const token = useMemo(() => localStorage.getItem("accessToken"), []);
   const [practiceOpen, setPracticeOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -35,7 +35,7 @@ const DoctorNavbar = () => {
     try {
       const res = await doctorConversations();
       const totalUnread = res.data?.reduce(
-        (sum: number, conv: any) => sum + (conv.unread || 0),
+        (sum: number, conv: Conversation) => sum + (conv.unread || 0),
         0
       );
       setUnreadChatCount(totalUnread);
@@ -95,9 +95,11 @@ const DoctorNavbar = () => {
       }
     };
 
-    socket.connected
-      ? joinAllConversations()
-      : socket.once("connect", joinAllConversations);
+    if (socket.connected) {
+      joinAllConversations();
+    } else {
+      socket.once("connect", joinAllConversations);
+    }
 
     const handleNewMessage = (message: MessageDTO) => {
       if (message.senderRole !== Role.DOCTOR) {

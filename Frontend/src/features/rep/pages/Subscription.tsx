@@ -1,6 +1,7 @@
 import useFetchItem from "@/hooks/useFetchItem";
 import {
   checkoutSubscription,
+  upgradeSubscription,
   subcriptionPlans,
   getSubscriptionStatus,
 } from "../api";
@@ -17,12 +18,30 @@ import AnimeButton from "@/components/shared/AnimeButton";
 import { getSubscriptionHistory } from "../api";
 import { useState } from "react";
 import { SubHistoryDTO } from "../dto/SubHistoryDTO";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 const Subscription = () => {
-  const userId = useSelector((state: any) => state.auth.user.id);
+  const userId = useSelector((state: { auth: { user: { id?: string } } }) => state.auth.user.id);
   const [open, setOpen] = useState(false);
   const [history, setHistory] = useState<SubHistoryDTO[] | null>(null);
   const [historyLoading, setHistoryLoading] = useState(false);
+  
+  // Upgrade modal state
+  const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
+  const [upgradeLoading, setUpgradeLoading] = useState(false);
+  const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
+  const [prorationDetails, setProrationDetails] = useState<{
+    originalPrice: number;
+    creditAmount: number;
+    finalPrice: number;
+    daysRemaining: number;
+  } | null>(null);
 
   const {
     data: plans,
@@ -31,7 +50,7 @@ const Subscription = () => {
   } = useFetchItem<SubscriptionDTO[]>(subcriptionPlans);
 
   const { data: subscriptionStatus, loading: statusLoading } =
-    useFetchItem<any>(getSubscriptionStatus);
+    useFetchItem<{ isActive: boolean; endDate: string; planId?: string } | null>(getSubscriptionStatus);
 
   const {
     data: cardsData,
@@ -46,7 +65,7 @@ const Subscription = () => {
     try {
       const result = await getSubscriptionHistory();
       setHistory(result);
-    } catch (error) {
+    } catch {
       toast.error("Failed to load subscription history");
     } finally {
       setHistoryLoading(false);
@@ -66,9 +85,42 @@ const Subscription = () => {
     try {
       const url = await checkoutSubscription(userId, planId);
       window.location.href = url;
-    } catch (error) {
-      toast.error("Something went wrong, please try again.");
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Something went wrong, please try again.";
+      toast.error(errorMessage);
     }
+  };
+
+  const handleUpgrade = async (planId: string) => {
+    if (!userId) return;
+    setUpgradeLoading(true);
+    try {
+      const response = await upgradeSubscription(planId);
+      setCheckoutUrl(response.checkoutUrl);
+      setProrationDetails(response.prorationDetails);
+      setUpgradeModalOpen(true);
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Upgrade failed. Please try again.";
+      toast.error(errorMessage);
+    } finally {
+      setUpgradeLoading(false);
+    }
+  };
+
+  const handleConfirmUpgrade = () => {
+    if (checkoutUrl) {
+      window.location.href = checkoutUrl;
+    }
+  };
+
+  const handleCancelUpgrade = () => {
+    setUpgradeModalOpen(false);
+    setCheckoutUrl(null);
+    setProrationDetails(null);
   };
 
   if (plansError)
@@ -308,14 +360,32 @@ const Subscription = () => {
                     ))}
                   </ul>
                   <button
-                    onClick={() => handlePurchase(plan.id)}
+                    onClick={() => {
+                      if (isSubscribed) {
+                        handleUpgrade(plan.id);
+                      } else {
+                        handlePurchase(plan.id);
+                      }
+                    }}
+                    disabled={
+                      (isSubscribed && subscriptionStatus?.planId === plan.id) ||
+                      upgradeLoading
+                    }
                     className={`w-full py-2 px-4 text-sm rounded-md transition-all ${
-                      isSubscribed
-                        ? "bg-green-600 hover:bg-green-700 active:scale-95"
-                        : "bg-indigo-500 hover:bg-indigo-600 active:scale-95"
+                      isSubscribed && subscriptionStatus?.planId === plan.id
+                        ? "bg-gray-600 cursor-not-allowed opacity-50"
+                        : isSubscribed
+                        ? "bg-green-600 hover:bg-green-700 active:scale-95 disabled:opacity-50"
+                        : "bg-indigo-500 hover:bg-indigo-600 active:scale-95 disabled:opacity-50"
                     }`}
                   >
-                    {isSubscribed ? "+ Upgrade / Extend" : "Buy Now"}
+                    {upgradeLoading
+                      ? "Processing..."
+                      : isSubscribed && subscriptionStatus?.planId === plan.id
+                      ? "Current Plan"
+                      : isSubscribed
+                      ? "Upgrade"
+                      : "Buy Now"}
                   </button>
                 </div>
               ))}
@@ -326,6 +396,69 @@ const Subscription = () => {
       <div className="mt-14 mb-8">
         <FaqSection />
       </div>
+
+      {/* Upgrade Confirmation Modal */}
+      <Dialog open={upgradeModalOpen} onOpenChange={handleCancelUpgrade}>
+        <DialogContent className="bg-[#0A1A3A] border-gray-700 text-white max-w-md">
+          <DialogHeader>
+            <h2 className="text-2xl font-bold text-white">Confirm Upgrade</h2>
+          </DialogHeader>
+          
+          {prorationDetails && (
+            <div className="space-y-4 py-4">
+              <p className="text-gray-300">
+                You're upgrading your subscription. Here's the breakdown:
+              </p>
+              
+              <div className="bg-black/40 rounded-lg p-4 space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-400">New Plan Price:</span>
+                  <span className="text-white font-semibold">₹{prorationDetails.originalPrice}</span>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-400">
+                    Credit ({prorationDetails.daysRemaining} days remaining):
+                  </span>
+                  <span className="text-green-400 font-semibold">
+                    -₹{prorationDetails.creditAmount.toFixed(2)}
+                  </span>
+                </div>
+                
+                <div className="border-t border-gray-700 pt-3 mt-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-white font-semibold text-lg">Final Amount:</span>
+                    <span className="text-indigo-400 font-bold text-xl">
+                      ₹{prorationDetails.finalPrice.toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              <p className="text-sm text-gray-400">
+                Your premium plan will start immediately and expire after expiry of current plan.
+              </p>
+            </div>
+          )}
+          
+          <DialogFooter className="flex justify-end gap-3 mt-4">
+            <Button
+              variant="outline"
+              onClick={handleCancelUpgrade}
+              className="border-gray-600 text-gray-300 hover:bg-gray-800"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleConfirmUpgrade}
+              className="bg-green-600 hover:bg-green-700 text-white"
+              disabled={upgradeLoading || !checkoutUrl}
+            >
+              {upgradeLoading ? "Processing..." : "Proceed to Payment"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

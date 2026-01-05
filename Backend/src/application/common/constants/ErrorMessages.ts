@@ -1,0 +1,4 @@
+export const ERROR_MESSAGES = {
+    FEATURE_NOT_FOUND: "Feature not found",
+ 
+};

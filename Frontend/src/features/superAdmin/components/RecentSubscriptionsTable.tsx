@@ -46,9 +46,7 @@ export function RecentSubscriptionsTable({
   return (
     <Card className="border-border bg-card">
       <CardHeader className="pb-4">
-        <CardTitle className="text-lg font-semibold">
-          {title}
-        </CardTitle>
+        <CardTitle className="text-lg font-semibold">{title}</CardTitle>
       </CardHeader>
 
       <CardContent>
@@ -99,7 +97,7 @@ export function RecentSubscriptionsTable({
                         </TableCell>
 
                         <TableCell className="font-semibold">
-                          ${subscription.amount.toLocaleString()}
+                          ₹{subscription.amount.toLocaleString("en-IN")}
                         </TableCell>
 
                         <TableCell className="text-muted-foreground">
@@ -111,7 +109,10 @@ export function RecentSubscriptionsTable({
                             variant="outline"
                             className={cn(
                               "capitalize font-medium",
-                              statusStyles[subscription.status as keyof typeof statusStyles] || "bg-muted/10 text-muted-foreground border-muted/20"
+                              statusStyles[
+                                subscription.status as keyof typeof statusStyles
+                              ] ||
+                                "bg-muted/10 text-muted-foreground border-muted/20"
                             )}
                           >
                             {subscription.status}

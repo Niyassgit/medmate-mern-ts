@@ -92,7 +92,7 @@ export class NotificationRepository
     ?result[result.length-1].id : null;
 
     return {
-      notifications:result.map(NotificationMapper.toDomainWithUser),
+      notifications:result.map((not)=>NotificationMapper.toDomainWithUser(not)),
       nextCursor,
     }
   }

@@ -8,6 +8,7 @@ import { Role } from "../../../shared/Enums";
 import { TeritorySchema } from "../validators/TerritoryValidateSchema";
 import { DepartmentSchema } from "../validators/DepartmentShema";
 import { subscriptionPlanSchema } from "../validators/SubscriptionPlanSchema";
+import { CreateFeatureSchema } from "../validators/FeatureSchema";
 
 export class SuperAdminRoutes {
   public router: Router;
@@ -51,6 +52,7 @@ export class SuperAdminRoutes {
       ValidateSchema(DepartmentSchema),
       superAdminController.editDepartment
     );
+    this.router.get("/features", superAdminController.getAllFeatures);
     this.router.get(
       "/subscriptions",
       superAdminController.getAllSubscriptionPlan
@@ -99,10 +101,29 @@ export class SuperAdminRoutes {
       superAdminController.adminEarnings
     );
 
+    this.router.get("/orders", superAdminController.getAllOrders);
+    this.router.get("/orders/:orderId", superAdminController.getOrderDetails);
+    this.router.patch(
+      "/orders/:orderId/status",
+      superAdminController.updateOrderStatus
+    );
+
     this.router.get(
       "/territory/:territoryId",
       superAdminController.territoryDetails
     );
     this.router.get("/:id", superAdminController.getSuperAdminByEmail);
+
+    this.router.post(
+      "/features/create",
+      ValidateSchema(CreateFeatureSchema),
+      superAdminController.createFeature
+    );
+    this.router.get("/features/list", superAdminController.getAllFeatureList);
+    this.router.put("/features/update/:id", superAdminController.updateFeature);
+    this.router.delete(
+      "/features/delete/:id",
+      superAdminController.deleteFeature
+    );
   }
 }

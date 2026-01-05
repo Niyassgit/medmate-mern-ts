@@ -12,7 +12,7 @@ export class ProductMapper {
     let signedUrls: string[] | null = null;
     if (data.imageUrl && data.imageUrl.length > 0) {
       signedUrls = await Promise.all(
-        data.imageUrl.map(storageService.generateSignedUrl)
+        data.imageUrl.map((img)=>storageService.generateSignedUrl(img))
       );
     }
 

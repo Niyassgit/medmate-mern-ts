@@ -4,14 +4,16 @@ import { CreateSubscriptionDTO } from "../dto/CreateSubscriptionDTO";
 import { SubscriptionDTO } from "../dto/SubscriptionDTO";
 import { SubscriptionStatusDTO } from "../dto/SubscriptionStatusDTO";
 
+
 export class SubscriptionMapper {
+
   static toDomain(e: ISubscription): SubscriptionDTO {
     return {
       id: e.id,
       name: e.name,
       tenure: e.tenure,
       description: e.description,
-      features: e.features,
+      features: e.features, 
       price: e.price,
       isActive: e.isActive,
       updatedAt: e.updatedAt,
@@ -29,18 +31,19 @@ export class SubscriptionMapper {
     return {
       name: dto.name,
       description: dto.description,
-      features: dto.features,
       price: dto.price,
       tenure: dto.tenure,
+      features: dto.features, 
     };
   }
 
+ 
   static statusToDomain(data: IMedicalRepWithUser): SubscriptionStatusDTO {
     return {
       planId: data.subscriptionPlanId ?? null,
       startDate: data.subscriptionStart ?? null,
       endDate: data.subscriptionEnd ?? null,
-      isActive: data.subscriptionStatus ?? false, 
+      isActive: data.subscriptionStatus ?? false,
     };
   }
 }

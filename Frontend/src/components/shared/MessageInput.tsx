@@ -7,7 +7,7 @@ import { createMessageForDoctor } from "@/features/doctor/api";
 import { MessageType } from "@/types/MessageTypes";
 import { createMessageForRep } from "@/features/rep/api";
 import { Role } from "@/types/Role";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@/app/hooks";
 import { getSocket } from "@/lib/socket";
 
 interface MessageInputProps {
@@ -26,7 +26,7 @@ export const MessageInput = ({
   const [text, setText] = useState("");
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isTypingRef = useRef(false);
-  const userId = useSelector((state: any) => state.auth.user?.id);
+  const userId = useAppSelector((state) => state.auth.user?.id);
 
   const handleSend = async () => {
     if (!text.trim()) return;

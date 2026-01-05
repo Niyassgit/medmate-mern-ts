@@ -7,20 +7,19 @@ import { ErrorMessages } from "../../shared/Messages";
 import { PaymentStatus, OrderStatus } from "@prisma/client";
 import { IMedicalRepRepository } from "../../domain/medicalRep/repositories/IMedicalRepRepository";
 import { ISubscriptionHistoryRepository } from "../../domain/subscription/repositories/ISubscriptionHistoryRepository";
-import { ISubscriptionRepositoy } from "../../domain/subscription/repositories/ISubscriptionRepository";
+import { ISubscriptionRepository } from "../../domain/subscription/repositories/ISubscriptionRepository";
 import { ICommissionRepository } from "../../domain/commission/repositories/ICommissionRepository";
 import { IOrderRepository } from "../../domain/order/repositories/IOrderRepository";
-import { ICommission } from "../../domain/commission/entities/ICommission";
 import { CommissionStatus } from "../../shared/Enums";
 
 export class stripeWebhookService implements IStripeWebhookService {
   constructor(
     private _medicalRepRepository: IMedicalRepRepository,
     private _subscriptionHistoryRepository: ISubscriptionHistoryRepository,
-    private _subscriptionRepository: ISubscriptionRepositoy,
+    private _subscriptionRepository: ISubscriptionRepository,
     private _orderRepository: IOrderRepository,
     private _commissionRepository: ICommissionRepository
-  ) { }
+  ) {}
 
   async handleCheckoutCompleted(event: StripeWebhookEvent): Promise<void> {
     const session = event.data.object as Stripe.Checkout.Session;
@@ -28,11 +27,6 @@ export class stripeWebhookService implements IStripeWebhookService {
     if (session.metadata?.type === "ORDER") {
       const { orderId } = session.metadata;
       const paymentId = (session.payment_intent as string) || session.id;
-
-      if (!orderId) {
-        console.warn("Order ID missing in webhook metadata");
-        return;
-      }
 
       await prisma.order.update({
         where: { id: orderId },
@@ -57,10 +51,14 @@ export class stripeWebhookService implements IStripeWebhookService {
         const profit = mrp - ptr;
         const adminCut = +(profit * 0.05).toFixed(2);
         const doctorCut = +(profit - adminCut).toFixed(2);
+        const doctorId = orderDetails.prescription?.doctor?.id;
+        if (!doctorId) {
+          throw new BadRequestError(ErrorMessages.ORDER_NOT_FOUND);
+        }
         return {
           orderId,
           productId: item.product.id,
-          doctorId: orderDetails.prescription!.doctor.id,
+          doctorId,
           mrp,
           ptr,
           adminCut,
@@ -86,7 +84,11 @@ export class stripeWebhookService implements IStripeWebhookService {
     const start = new Date();
     let baseDate = new Date();
 
+    const isUpgrade =
+      rep.subscriptionPlanId && rep.subscriptionPlanId !== planId;
+
     if (
+      !isUpgrade &&
       rep.subscriptionStatus &&
       rep.subscriptionEnd &&
       new Date(rep.subscriptionEnd) > new Date()

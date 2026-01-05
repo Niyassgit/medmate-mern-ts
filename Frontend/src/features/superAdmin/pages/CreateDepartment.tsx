@@ -54,7 +54,7 @@ const CreateDepartment = () => {
         res = await createDepartment(values);
       }
 
-      const isSuccess = res?.data?.success || res?.data?.succes; 
+      const isSuccess = res?.data?.success || res?.data?.succes;
       if (isSuccess) {
         toast.success(
           res.data.message ||
@@ -65,11 +65,11 @@ const CreateDepartment = () => {
       } else {
         toast.error(res.data.message || "Failed to save department");
       }
-    } catch (err: any) {
-      const errorMsg =
-        err.response?.data?.message || "Failed to save department";
-      setError(errorMsg);
-      toast.error(errorMsg);
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as { message?: string })?.message || "Internal server error";
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }

@@ -1,5 +1,3 @@
-import { Role } from "../../shared/Enums";
-
 export interface TerritoryUsersPrismaResult {
   id: string;
   doctors: {

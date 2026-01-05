@@ -1,7 +1,6 @@
 import { Address, Prisma } from "@prisma/client";
 import { IAddress } from "../../domain/address/entities/IAddress";
 import { AddressType } from "../../shared/Enums";
-import { da } from "zod/v4/locales/index.cjs";
 
 export class AddressMapper {
   static toDomain(data: Address): IAddress {
@@ -35,7 +34,7 @@ export class AddressMapper {
       phone: data.phone,
       state: data.state,
       street: data.street,
-      type: data.type as AddressType,
+      type: data.type,
       isDefault: data.isDefault,
       isActive: data.isActive,
       zipCode: data.zipCode,

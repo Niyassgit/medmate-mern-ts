@@ -1,9 +1,12 @@
 import { ISubscription } from "../../domain/subscription/entities/ISubscription";
-import { ISubscriptionRepositoy } from "../../domain/subscription/repositories/ISubscriptionRepository";
+import { ISubscriptionRepository } from "../../domain/subscription/repositories/ISubscriptionRepository";
 import { Prisma, SubscriptionPlan } from "@prisma/client";
 import { BaseRepository } from "../database/BaseRepository";
 import { prisma } from "../database/prisma";
-import { SubscriptionMapper } from "../mappers/SubscriptionMappers";
+import {
+  SubscriptionMapper,
+  SubscriptionPlanWithFeatures,
+} from "../mappers/SubscriptionMappers";
 
 export class SubscriptionRepository
   extends BaseRepository<
@@ -12,35 +15,69 @@ export class SubscriptionRepository
     Prisma.SubscriptionPlanCreateInput,
     "subscriptionPlan"
   >
-  implements ISubscriptionRepositoy
+  implements ISubscriptionRepository
 {
   constructor() {
-    super(prisma.subscriptionPlan, (sub) => SubscriptionMapper.toEntity(sub));
+    super(prisma.subscriptionPlan, (sub) =>
+      SubscriptionMapper.toDomainWithoutFeatures(sub)
+    );
   }
   async createSubscription(data: ISubscription): Promise<ISubscription> {
-    const mappedData = SubscriptionMapper.toPersistance(data);
-    return this.create(mappedData);
+    const mappedData = SubscriptionMapper.toPersistence(data);
+    const created = await prisma.subscriptionPlan.create({
+      data: mappedData,
+      include: { features: { include: { feature: true } } },
+    });
+    return SubscriptionMapper.toEntity(
+      created as SubscriptionPlanWithFeatures
+    );
   }
 
   async findSubscriptionById(
     subscriptionId: string
   ): Promise<ISubscription | null> {
-    return await this.findById(subscriptionId);
+    const result = await prisma.subscriptionPlan.findUnique({
+      where: { id: subscriptionId },
+      include: { features: { include: { feature: true } } },
+    });
+    if (!result) return null;
+    return SubscriptionMapper.toEntity(
+      result as SubscriptionPlanWithFeatures
+    );
   }
 
   async getAllSubscriptions(): Promise<ISubscription[]> {
-    return await prisma.subscriptionPlan.findMany({});
+    const result = await prisma.subscriptionPlan.findMany({
+      include: { features: { include: { feature: true } } },
+    });
+    return SubscriptionMapper.toList(
+      result as SubscriptionPlanWithFeatures[]
+    );
   }
 
   async updateSubscriptionPlan(
     subscriptionId: string,
     data: Omit<ISubscription, "id" | "createdAt" | "updatedAt">
   ): Promise<ISubscription> {
+    const { features, ...rest } = data;
+
+    await prisma.planFeature.deleteMany({
+      where: { planId: subscriptionId },
+    });
+
+    const updateData = SubscriptionMapper.toUpdatePersistence({
+      ...rest,
+      features,
+    });
+
     const result = await prisma.subscriptionPlan.update({
       where: { id: subscriptionId },
-      data: data,
+      data: updateData,
+      include: { features: { include: { feature: true } } },
     });
-    return SubscriptionMapper.toEntity(result);
+    return SubscriptionMapper.toEntity(
+      result as SubscriptionPlanWithFeatures
+    );
   }
 
   async toggleListStatus(
@@ -50,11 +87,17 @@ export class SubscriptionRepository
     const result = await prisma.subscriptionPlan.update({
       where: { id: subscriptionId },
       data: { isActive: isActive },
+      include: { features: { include: { feature: true } } },
     });
-    return SubscriptionMapper.toEntity(result);
+    return SubscriptionMapper.toEntity(
+      result as SubscriptionPlanWithFeatures
+    );
   }
 
   async deleteSubscriptionById(subscriptionId: string): Promise<void> {
+    await prisma.planFeature.deleteMany({
+      where: { planId: subscriptionId },
+    });
     await this.delete(subscriptionId);
   }
 }

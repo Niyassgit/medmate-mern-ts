@@ -43,7 +43,7 @@ const DoctorsList = () => {
         setTerritoriesLoading(true);
         const response = await getTerritories();
         setTerritories(response.data.data || []);
-      } catch (err) {
+      } catch {
         toast.error("Failed to load territories");
       } finally {
         setTerritoriesLoading(false);
@@ -83,13 +83,13 @@ const DoctorsList = () => {
             }
           : prev
       );
-    } catch (err) {
+    } catch {
       toast.error("Something went wrong while updating block status");
     } finally {
       setBlockLoading(null);
     }
   };
-  
+
   const handleConfirmBlockToggle = async () => {
     if (!selectedDoctor) return;
     await handleBlockToggle(selectedDoctor);
@@ -110,7 +110,7 @@ const DoctorsList = () => {
     { key: "email", label: "Email" },
     { key: "phone", label: "Phone" },
     { key: "hospital", label: "Hospital" },
-    {key:"territory",label:"Territory"},
+    { key: "territory", label: "Territory" },
     {
       key: "isBlocked",
       label: "Status",
@@ -176,8 +176,8 @@ const DoctorsList = () => {
         onSearchChange={setSearch}
         onView={handleDetailPage}
         onBlockToggle={(doctor) => {
-          setSelectedDoctor(doctor);      
-          setConfirmDialogOpen(true);    
+          setSelectedDoctor(doctor);
+          setConfirmDialogOpen(true);
         }}
         blockLoadingId={blockLoading}
         getId={(d) => d.id}
@@ -187,11 +187,7 @@ const DoctorsList = () => {
 
       <ConfirmDialog
         open={confirmDialogOpen}
-        title={
-          selectedDoctor?.isBlocked
-            ? "Unblock Doctor"
-            : "Block Doctor"
-        }
+        title={selectedDoctor?.isBlocked ? "Unblock Doctor" : "Block Doctor"}
         message={
           selectedDoctor?.isBlocked
             ? `Are you sure you want to unblock Dr. ${selectedDoctor?.name}?`

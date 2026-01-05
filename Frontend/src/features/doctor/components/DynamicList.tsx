@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 interface DynamicListProps<T> {
-  name: string; // e.g. "educations" or "certificates"
+  name: string; 
   control: Control<any>;
   fields: { label: string; name: keyof T; type?: string; placeholder?: string }[];
 }

@@ -3,7 +3,8 @@ export const ErrorMessages = {
   USER_NOT_VERIFIED: "Please Verify to continue operations",
   ACCOUNT_EXIST: "User already exists",
   INVALID_REQUEST: "Request is invalid!",
-  INVALID_CREDENTIALS: "Invalid email or password",
+  INVALID_CREDENTIALS:
+    "The password you entered is incorrect. Please try again.",
   UNAUTHORIZED: "Unauthorized access",
   FORBIDDEN: "Forbidden",
   USER_NOT_HAVE_PROFILE: "User dont have profile",
@@ -56,6 +57,7 @@ export const ErrorMessages = {
   SUB_CREATE_ERROR: "failed to add subscription!",
   SUB_NOT_FOUND: "Subscription not found!",
   SUB_UPDATE_ERROR: "Subscription updation failed",
+  NO_ACTIVE_SUB: "No active subscription found",
   SUB_ATTEMPT_FAILED: "Failed to register subscription!",
   NO_STRIPE_SIG_FOUND: "No Stripe signature found",
   WEB_HOOK_SIG_VER_FAILED: "Webhook signature verification failed",
@@ -80,7 +82,16 @@ export const ErrorMessages = {
   REP_SUBSCRIPTION_NEEDED:
     "Medical Rep doesnt contains a valid Subscription plan to make this call",
   FILTER_DATE_WRONG: "Start date must be before or equal to end date",
-  INVALID_DATE: "The date provided is invalid. Please ensure it is a future date.",
+  INVALID_DATE:
+    "The date provided is invalid. Please ensure it is a future date.",
+  FEATURE_NOT_AVAILABLE:
+    "Feature is not found!Subscribe the plan to unlock relevent features",
+  ALREADY_LOGGED_IN:
+    "You are already logged in. Please logout first to login with another account.",
+  DOWN_GRADE_PLAN: "Downgrades are applied after current cycle",
+  REP_SUB_INACTIVE:
+    "Your representative does not have an active subscription to use this feature.",
+  START_END_DATE_REQUIRED: "Start Date and End Date are required",
 } as const;
 
 export const SuccessMessages = {

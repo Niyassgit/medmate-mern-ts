@@ -1,51 +1,69 @@
 import LandingPageNavbar from "@/components/navbar/LandingPageNavbar";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { 
-  FileText, 
-  ShoppingCart, 
-  UserCheck, 
-  Shield, 
+import {
+  FileText,
+  ShoppingCart,
+  UserCheck,
+  Shield,
   Clock,
-  ArrowRight 
+  ArrowRight,
 } from "lucide-react";
 import Footer from "./Footer";
+import ReviewMarquee from "@/features/rep/components/ReviewMarquee";
+import useFetchItem from "@/hooks/useFetchItem";
+import { DoctorCardGuestDTO } from "@/features/shared/dto/DoctorCardGuestDTO";
+import { doctorsForShow } from "@/features/shared/api/SharedApi";
+import { SpinnerButton } from "@/components/shared/SpinnerButton";
 
 const GuestInfoPage = () => {
+  const {
+    data: cardsData,
+    error: doctorsError,
+    loading: cardsLoading,
+  } = useFetchItem<DoctorCardGuestDTO[]>(doctorsForShow);
+
   const features = [
     {
       icon: FileText,
       title: "Digital Prescriptions",
-      description: "Access and manage your prescriptions online, anytime, anywhere"
+      description:
+        "Access and manage your prescriptions online, anytime, anywhere",
     },
     {
       icon: ShoppingCart,
       title: "Order Medications",
-      description: "Order prescribed medications directly from your dashboard"
+      description: "Order prescribed medications directly from your dashboard",
     },
     {
       icon: UserCheck,
       title: "Doctor Connections",
-      description: "Stay connected with your healthcare providers"
+      description: "Stay connected with your healthcare providers",
     },
     {
       icon: Shield,
       title: "Secure & Private",
-      description: "Your health information is protected with industry-standard security"
+      description:
+        "Your health information is protected with industry-standard security",
     },
     {
       icon: Clock,
       title: "24/7 Access",
-      description: "View your medical records and prescriptions at your convenience"
-    }
+      description:
+        "View your medical records and prescriptions at your convenience",
+    },
   ];
 
+  if (cardsLoading) return <SpinnerButton />;
+
+  if (doctorsError)
+    return <p className="text-center text-red-600">{doctorsError}</p>;
   return (
     <>
       <LandingPageNavbar />
-      
+
       {/* Hero Section */}
-      <section className="w-full min-h-screen bg-gradient-to-b from-[#185891] via-[#022b4e] to-[#185891] py-20 px-4">
+      <section className="w-full min-h-screen bg-gradient-to-b from-[#0A1A3F] via-[#0B152F] to-black py-20 px-4">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="text-center mb-16">
@@ -56,15 +74,16 @@ const GuestInfoPage = () => {
               </span>
             </h1>
             <p className="text-xl text-gray-200 max-w-3xl mx-auto leading-relaxed">
-              Manage your prescriptions, order medications, and stay connected with your healthcare providers—all in one secure platform.
+              Manage your prescriptions, order medications, and stay connected
+              with your healthcare providers—all in one secure platform.
             </p>
           </div>
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-20">
             <Link to="/register/guest">
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 className="bg-gradient-to-r from-[#25b6c0] to-blue-600 text-white px-8 py-6 text-lg font-semibold hover:from-[#1fa5af] hover:to-blue-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1"
               >
                 Create Account
@@ -72,8 +91,8 @@ const GuestInfoPage = () => {
               </Button>
             </Link>
             <Link to="/auth/login/guest">
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 variant="outline"
                 className="border-2 border-white text-white px-8 py-6 text-lg font-semibold hover:bg-white hover:text-[#022b4e] transition-all"
               >
@@ -121,7 +140,8 @@ const GuestInfoPage = () => {
                       Easy Prescription Management
                     </h3>
                     <p className="text-gray-200">
-                      View all your prescriptions in one place, track medication history, and never lose a prescription again.
+                      View all your prescriptions in one place, track medication
+                      history, and never lose a prescription again.
                     </p>
                   </div>
                 </div>
@@ -134,7 +154,8 @@ const GuestInfoPage = () => {
                       Convenient Ordering
                     </h3>
                     <p className="text-gray-200">
-                      Order your prescribed medications online and have them delivered to your doorstep.
+                      Order your prescribed medications online and have them
+                      delivered to your doorstep.
                     </p>
                   </div>
                 </div>
@@ -147,7 +168,8 @@ const GuestInfoPage = () => {
                       Secure & Private
                     </h3>
                     <p className="text-gray-200">
-                      Your health data is encrypted and protected. We follow strict privacy standards to keep your information safe.
+                      Your health data is encrypted and protected. We follow
+                      strict privacy standards to keep your information safe.
                     </p>
                   </div>
                 </div>
@@ -160,7 +182,8 @@ const GuestInfoPage = () => {
                       Always Accessible
                     </h3>
                     <p className="text-gray-200">
-                      Access your medical information 24/7 from any device. No need to visit clinics for prescription copies.
+                      Access your medical information 24/7 from any device. No
+                      need to visit clinics for prescription copies.
                     </p>
                   </div>
                 </div>
@@ -168,15 +191,14 @@ const GuestInfoPage = () => {
             </div>
           </div>
 
+          <ReviewMarquee cardsData={cardsData ?? []} />
           {/* Bottom CTA */}
           <div className="text-center mt-12">
-            <p className="text-gray-200 text-lg mb-6">
-              Ready to get started?
-            </p>
+            <p className="text-gray-200 text-lg mb-6">Ready to get started?</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/register/guest">
-                <Button 
-                  size="lg" 
+                <Button
+                  size="lg"
                   className="bg-gradient-to-r from-[#25b6c0] to-blue-600 text-white px-8 py-6 text-lg font-semibold hover:from-[#1fa5af] hover:to-blue-700 transition-all shadow-lg hover:shadow-xl"
                 >
                   Sign Up Now
@@ -184,8 +206,8 @@ const GuestInfoPage = () => {
                 </Button>
               </Link>
               <Link to="/auth/login/guest">
-                <Button 
-                  size="lg" 
+                <Button
+                  size="lg"
                   variant="outline"
                   className="border-2 border-white text-white px-8 py-6 text-lg font-semibold hover:bg-white hover:text-[#022b4e] transition-all"
                 >
@@ -203,4 +225,3 @@ const GuestInfoPage = () => {
 };
 
 export default GuestInfoPage;
-

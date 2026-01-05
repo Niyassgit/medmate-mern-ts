@@ -58,8 +58,10 @@ export default function OrderDetailPage() {
                 setLoading(true);
                 const data = await getOrderDetails(orderId);
                 setOrder(data);
-            } catch (err: any) {
-                setError(err.message || 'Failed to load order details');
+            } catch (err: unknown) {
+                const errorMessage =
+                  err instanceof Error ? err.message : 'Failed to load order details';
+                setError(errorMessage);
             } finally {
                 setLoading(false);
             }

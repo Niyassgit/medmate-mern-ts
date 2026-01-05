@@ -1,3 +1,4 @@
+
 import AdminLayout from "@/features/superAdmin/components/AdminLayout";
 import AdminDashboard from "@/features/superAdmin/pages/AdminDashboard";
 import RepsList from "@/features/superAdmin/pages/RepsList";
@@ -13,11 +14,18 @@ import DepartmentManagement from "@/features/superAdmin/pages/DepartmentManageme
 import CreateDepartment from "@/features/superAdmin/pages/CreateDepartment";
 import SubscriptionManagement from "@/features/superAdmin/pages/SubscriptionManagement";
 import SubscriptionsList from "@/features/superAdmin/pages/SubscriptionsList";
+import FeatureManagement from "@/features/superAdmin/pages/FeatureManagement";
 import Guests from "@/features/superAdmin/pages/Guests";
 import TerritoryDetails from "@/features/superAdmin/pages/TerritoryDetails";
 import OrderAnalytics from "@/features/superAdmin/pages/OrderAnalytics";
 import DoctorEarningsList from "@/features/superAdmin/pages/DoctorEarningsList";
 import AdminEarningsList from "@/features/superAdmin/pages/AdminEarningsList";
+import OrderManagment from "@/features/superAdmin/pages/OrderManagment";
+import { lazy } from "react";
+
+const AdminOrderDetails = lazy(
+  () => import("../features/superAdmin/pages/AdminOrderDetails")
+);
 
 export const AdminRoutes = {
   path: "/admin",
@@ -39,9 +47,12 @@ export const AdminRoutes = {
     { path: "departments/form", element: <CreateDepartment /> },
     { path: "subscription-management", element: <SubscriptionManagement /> },
     { path: "subscription-management/list", element: <SubscriptionsList /> },
+    { path: "feature-management", element: <FeatureManagement /> },
     { path: "guests", element: <Guests /> },
     { path: "territories/:territoryId", element: <TerritoryDetails /> },
     { path: "order-analytics", element: <OrderAnalytics /> },
+    { path: "orders", element: <OrderManagment /> },
+    { path: "orders/:orderId", element: <AdminOrderDetails /> },
     {
       path: "order-analytics/doctor-earnings",
       element: <DoctorEarningsList />,

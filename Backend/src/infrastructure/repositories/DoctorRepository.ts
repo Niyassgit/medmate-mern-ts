@@ -170,10 +170,24 @@ export class DoctorRepository
         user: {
           isBlocked: false,
           isVerified: true,
+          profileImage: {
+            not: null, 
+          },
+        },
+        about: {
+          not: null, 
+        },
+        departmentId: {
+          not: null, 
+        },
+        territoryId: {
+          not: null, 
         },
       },
       include: {
         user: true,
+        department: true,
+        territory: true,
       },
       orderBy: {
         dob: "asc",

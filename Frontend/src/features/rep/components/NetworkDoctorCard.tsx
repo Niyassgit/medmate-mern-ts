@@ -29,7 +29,9 @@ const NetworkDoctorCard = ({
 }: DoctorCardProps) => {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<string | null>(connectionStatus);
-  const [initiator, setInitiator] = useState<string | null>(connectionInitiator);
+  const [initiator, setInitiator] = useState<string | null>(
+    connectionInitiator
+  );
   const [isRemoving, setIsRemoving] = useState(false);
   const navigate = useNavigate();
 
@@ -52,10 +54,13 @@ const NetworkDoctorCard = ({
     try {
       const res = await connectionToggle(id);
       toast.success(res.data.message || "Action successful");
-    } catch (error: any) {
+    } catch (error: unknown) {
       setStatus(status);
       setInitiator(initiator);
-      toast.error(error?.response?.data?.message || "Something went wrong.");
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Something went wrong.";
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -73,10 +78,13 @@ const NetworkDoctorCard = ({
       const res = await acceptConnection(id);
       toast.success(res.message || "Connection accepted");
       setTimeout(() => setIsRemoving(true), 500);
-    } catch (error: any) {
+    } catch (error: unknown) {
       setStatus(previousStatus);
       setInitiator(previousInitiator);
-      toast.error(error?.response?.data?.message || "Something went wrong.");
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Something went wrong.";
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -93,15 +101,17 @@ const NetworkDoctorCard = ({
     try {
       const res = await connectionToggle(id);
       toast.success(res.data.message || "Request cancelled");
-    } catch (error: any) {
+    } catch (error: unknown) {
       setStatus(previousStatus);
       setInitiator(previousInitiator);
-      toast.error(error?.response?.data?.message || "Something went wrong.");
+      const erroMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Something went wrong.";
+      toast.error(erroMessage);
     } finally {
       setLoading(false);
     }
   };
-
 
   const handleCardClick = () => {
     navigate(`/rep/doctor/details/${id}`);
@@ -140,11 +150,7 @@ const NetworkDoctorCard = ({
     >
       <div className="relative w-full h-48 bg-muted flex items-center justify-center overflow-hidden">
         {image ? (
-          <img
-            src={image}
-            alt={name}
-            className="w-full h-full object-cover"
-          />
+          <img src={image} alt={name} className="w-full h-full object-cover" />
         ) : (
           <div className="flex items-center justify-center w-full h-full bg-primary/5 text-primary">
             <User className="w-12 h-12" />
@@ -179,7 +185,7 @@ const NetworkDoctorCard = ({
         {/* Buttons */}
         <div
           className="flex gap-2 pt-4 border-t border-border"
-          onClick={(e) => e.stopPropagation()} 
+          onClick={(e) => e.stopPropagation()}
         >
           <Button
             onClick={onClickHandler}

@@ -188,6 +188,11 @@ export const checkoutSubscription = async (userId: string, planId: string) => {
   return res.data.data;
 };
 
+export const upgradeSubscription = async (newPlanId: string) => {
+  const res = await api.patch(RepEndpoints.UPGRADE_SUBSCRIPTION(newPlanId));
+  return res.data.data;
+};
+
 export const getCheckoutDetails = async (sessionId: string) => {
   const res = await api.get(RepEndpoints.CHECKOUT_SESSION(sessionId));
   return res.data.data;
@@ -262,7 +267,15 @@ export const getBusinessAnalytics = async (
   return res.data.data;
 };
 
-
+export const getAdvancedBusinessAnalytics = async (
+  startDate: string,
+  endDate: string
+) => {
+  const res = await api.get(RepEndpoints.REP_ADVANCED_BUSINESS_STAT, {
+    params: { startDate, endDate },
+  });
+  return res.data.data;
+};
 
 export const exportOrders = async (startDate?: string, endDate?: string) => {
   const res = await api.get(RepEndpoints.REP_BUSINESS_STAT + "/export", {
@@ -275,4 +288,9 @@ export const exportOrders = async (startDate?: string, endDate?: string) => {
 export const callDoctor = async (doctorId: string) => {
   const res = await api.post(RepEndpoints.CALL_DOCTOR(doctorId));
   return res.data;
+};
+
+export const updgradePlan = async (newPlanId: string) => {
+  const res = await api.patch(RepEndpoints.UPGRADE_SUBSCRIPTION(newPlanId));
+  return res.data.data;
 };

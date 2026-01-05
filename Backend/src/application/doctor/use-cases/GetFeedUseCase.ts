@@ -5,6 +5,7 @@ import { IInterestRepository } from "../../../domain/Interest/repositories/IInte
 import { ILikeRepository } from "../../../domain/Like/repositories/ILikeRepository";
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
 import { IProductPostRepository } from "../../../domain/productPost/repositories/IProductPostRepository";
+import { ISubscriptionRepository } from "../../../domain/subscription/repositories/ISubscriptionRepository";
 import { ErrorMessages } from "../../../shared/Messages";
 import { UnautharizedError } from "../../errors";
 import { FeedDTO } from "../dto/FeedDTO";
@@ -20,7 +21,8 @@ export class GetFeedUseCase implements IGetFeedUseCase {
     private _likeRepository: ILikeRepository,
     private _interestRepository: IInterestRepository,
     private _storageService: IStorageService,
-    private _medicalRepRepository: IMedicalRepRepository
+    private _medicalRepRepository: IMedicalRepRepository,
+    private _subscriptionRepository: ISubscriptionRepository
   ) { }
   async execute(userId: string, page: number, limit: number): Promise<FeedDTO[]> {
     const { doctorId } = await this._doctorRepository.getDoctorIdByUserId(
@@ -43,7 +45,8 @@ export class GetFeedUseCase implements IGetFeedUseCase {
 
     const sortedPosts = await SortPostBySubscription.sorted(
       posts,
-      this._medicalRepRepository
+      this._medicalRepRepository,
+      this._subscriptionRepository
     );
 
     const startIndex = (page - 1) * limit;

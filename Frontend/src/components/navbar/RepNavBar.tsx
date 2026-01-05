@@ -4,14 +4,14 @@ import { Bell, Layout, Mail, Menu, X } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import UserAvatar from "../shared/UserAvatar";
 import { unreadNotificationCount, repConversations } from "@/features/rep/api";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@/app/hooks";
 import { getSocket } from "@/lib/socket";
 import { MessageDTO } from "../Dto/MessageDTO";
 import { Role } from "@/types/Role";
 import { Conversation } from "../Dto/Conversation";
 
 const RepNavbar = () => {
-  const userId = useSelector((state: any) => state.auth.user?.id);
+  const userId = useAppSelector((state) => state.auth.user?.id);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const [unreadChatCount, setUnreadChatCount] = useState(0);
@@ -32,7 +32,7 @@ const RepNavbar = () => {
       const res = await repConversations();
       const totalUnread =
         res.data?.reduce(
-          (sum: number, conv: any) => sum + (conv.unread || 0),
+          (sum: number, conv: Conversation) => sum + (conv.unread || 0),
           0
         ) || 0;
       setUnreadChatCount(totalUnread);
@@ -69,7 +69,11 @@ const RepNavbar = () => {
       );
     };
 
-    socket.connected ? join() : socket.once("connect", join);
+    if (socket.connected) {
+      join();
+    } else {
+      socket.once("connect", join);
+    }
     socket.on("new_message", (message: MessageDTO) => {
       if (message.senderRole !== Role.MEDICAL_REP)
         setUnreadChatCount((p) => p + 1);

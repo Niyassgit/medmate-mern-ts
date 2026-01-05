@@ -11,6 +11,7 @@ import { OrderUtils } from "../utils/OrderUtils";
 import { OrderApplicationMapper } from "../mappers/OrderApplicationMapper";
 import { IGuestRepository } from "../../../domain/Patient/repositories/IGuestRepositories";
 import { PaymentStatus } from "../../../shared/Enums";
+import { MakePaymentDTO } from "../dto/MakePaymentDTO";
 
 export class MakePaymentUseCase implements IMakePaymentUseCase {
   constructor(
@@ -18,20 +19,15 @@ export class MakePaymentUseCase implements IMakePaymentUseCase {
     private _prescriptionRepository: IPrescriptionRepository,
     private _stripePaymentService: IStripePaymentService,
     private _guestRepository: IGuestRepository
-  ) { }
+  ) {}
 
-  async execute(
-    prescriptionId: string,
-    addressId: string,
-    paymentMethod: string,
-    userId?: string
-  ): Promise<string | null> {
-    if (!userId) throw new UnautharizedError(ErrorMessages.UNAUTHORIZED);
-    const guest = await this._guestRepository.findGuestByuserId(userId);
+  async execute(data: MakePaymentDTO): Promise<string | null> {
+    if (!data.userId) throw new UnautharizedError(ErrorMessages.UNAUTHORIZED);
+    const guest = await this._guestRepository.findGuestByuserId(data.userId);
     if (!guest) throw new BadRequestError(ErrorMessages.USER_NOT_FOUND);
     const prescription =
       await this._prescriptionRepository.findPrescriptionByIdWithItems(
-        prescriptionId
+        data.prescriptionId
       );
 
     if (!prescription)
@@ -50,7 +46,7 @@ export class MakePaymentUseCase implements IMakePaymentUseCase {
         await this._stripePaymentService.createOrderCheckoutSession({
           orderId: existingOrder.id,
           items: paymentItems,
-          prescriptionId,
+          prescriptionId: data.prescriptionId,
           guestId: guest.id,
           customerEmail: guest.email ?? "",
         });
@@ -59,8 +55,8 @@ export class MakePaymentUseCase implements IMakePaymentUseCase {
 
     const orderData = OrderApplicationMapper.toPersistence({
       guestId: guest.id,
-      prescriptionId,
-      addressId,
+      prescriptionId: data.prescriptionId,
+      addressId: data.addressId,
       totalAmount,
       deliveryAddress: "Fetched from Address ID",
       paymentId: "",
@@ -68,7 +64,7 @@ export class MakePaymentUseCase implements IMakePaymentUseCase {
 
     const order = await this._orderRepository.createOrder(orderData);
 
-    if (paymentMethod === "upi") {
+    if (data.paymentMethod === "upi") {
       // Handle COD logic - return simple success URL or order ID
       // For now returning null as specific requirement was for payment integration
       return null;
@@ -78,7 +74,7 @@ export class MakePaymentUseCase implements IMakePaymentUseCase {
       await this._stripePaymentService.createOrderCheckoutSession({
         orderId: order.id,
         items: paymentItems,
-        prescriptionId,
+        prescriptionId: data.prescriptionId,
         guestId: guest.id,
         customerEmail: guest.email ?? "",
       });
