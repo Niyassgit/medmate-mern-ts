@@ -19,6 +19,6 @@ export class RecentOrdersUseCase implements IRecentOrdersUseCase {
     const { repId } = await this._medicalRepRepository.getRepIdByUserId(userId);
     if (!repId) throw new BadRequestError(ErrorMessages.USER_NOT_FOUND);
     const orders = await this._orderRepository.findOrdersByRepId(repId);
-    return PrescriptionOrderMapper.toListOrderTable(orders);
+    return PrescriptionOrderMapper.toListOrderTable(orders, repId);
   }
 }

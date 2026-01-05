@@ -5,7 +5,7 @@ import { BadRequestError, NotFoundError } from "../../errors";
 import { ICompleteGuestProfileUseCase } from "../interefaces/ICompleteGuestProfileUseCase";
 import { IUserRepository } from "../../../domain/common/repositories/IUserRepository";
 import { GuestMapper } from "../mappers/GuestMapper";
-import { GuestProfileCompleteDTO } from "../dto/ProfileCompleteDTO";
+import { GuestProfileCompleteDTO } from "../dto/GuestProfileCompleteDTO";
 
 export class CompleteGuestProfileUseCase
   implements ICompleteGuestProfileUseCase {

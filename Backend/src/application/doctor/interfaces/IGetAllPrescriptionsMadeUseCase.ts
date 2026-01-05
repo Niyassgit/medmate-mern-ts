@@ -1,4 +1,4 @@
-import { PrescriptionDetailsDTO } from "../../Guest/interefaces/PrescriptionDetailsDTO";
+import { PrescriptionDetailsDTO } from "../../guest/interefaces/PrescriptionDetailsDTO";
 
 export interface IGetAllPrescriptionsMadeUseCase{
     execute(userId?:string):Promise<PrescriptionDetailsDTO[]>

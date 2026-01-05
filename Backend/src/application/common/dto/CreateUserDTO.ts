@@ -1,5 +1,4 @@
-import { AuthProvider } from "../../../domain/common/value-objects/AuthProvider";
-import { Role } from "../../../domain/common/value-objects/Role";
+import { AuthProvider, Role } from "../../../shared/Enums";
 
 export interface CreateUserDTO {
   email: string;

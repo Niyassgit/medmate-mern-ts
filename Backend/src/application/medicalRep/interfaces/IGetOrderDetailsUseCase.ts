@@ -1,4 +1,4 @@
-import { OrderDetailDTO } from "../../Guest/dto/OrderDetailDTO";
+import { OrderDetailDTO } from "../../guest/dto/OrderDetailDTO";
 
 
 export interface IGetOrderDetailsUseCase {

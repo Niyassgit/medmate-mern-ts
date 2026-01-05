@@ -6,8 +6,8 @@ import { IStorageService } from "../../../domain/common/services/IStorageService
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
 import { IOrderRepository } from "../../../domain/order/repositories/IOrderRepository";
 import { ErrorMessages } from "../../../shared/Messages";
-import { OrderDetailDTO } from "../../Guest/dto/OrderDetailDTO";
-import { OrderApplicationMapper } from "../../Guest/mappers/OrderApplicationMapper";
+import { OrderDetailDTO } from "../../guest/dto/OrderDetailDTO";
+import { OrderApplicationMapper } from "../../guest/mappers/OrderApplicationMapper";
 import { IGetOrderDetailsUseCase } from "../interfaces/IGetOrderDetailsUseCase";
 
 

@@ -1,23 +1,23 @@
 import { Request, Response } from "express";
-import { RegisterGuestDTO } from "../../../application/Guest/dto/RegisterPatientDTO";
-import { IMakePaymentUseCase } from "../../../application/Guest/interefaces/IMakePaymentUseCase";
-import { ICreateGuestUseCase } from "../../../application/Guest/interefaces/ICreateGuestUseCase";
+import { RegisterGuestDTO } from "../../../application/guest/dto/RegisterPatientDTO";
+import { IMakePaymentUseCase } from "../../../application/guest/interefaces/IMakePaymentUseCase";
+import { ICreateGuestUseCase } from "../../../application/guest/interefaces/ICreateGuestUseCase";
 import { HttpStatusCode } from "../../../shared/HttpStatusCodes";
 import { GetOptionalUserId } from "../utils/GetOptionalUserId";
-import { IGetAllPrescriptionsUseCase } from "../../../application/Guest/interefaces/IGetAllPrescriptions";
-import { IGetAllAddressUseCase } from "../../../application/Guest/interefaces/IGetAllAddressUseCase";
-import { ICreateAddressUseCase } from "../../../application/Guest/interefaces/ICreateAddressUseCase";
-import { AddressDTO } from "../../../application/Guest/dto/AddressDTO";
-import { IDeleteAddressUseCase } from "../../../application/Guest/interefaces/IDeleteAddressUseCase";
-import { IGetOrdersUseCase } from "../../../application/Guest/interefaces/IGetOrdersUseCase";
-import { IGetOrderDetailUseCase } from "../../../application/Guest/interefaces/IGetOrderDetailUseCase";
-import { IGetProfileDetailsUseCase } from "../../../application/Guest/interefaces/IGetProfileDetailsUseCase";
-import { ICompleteGuestProfileUseCase } from "../../../application/Guest/interefaces/ICompleteGuestProfileUseCase";
-import { GuestProfileCompleteDTO } from "../../../application/Guest/dto/ProfileCompleteDTO";
+import { IGetAllPrescriptionsUseCase } from "../../../application/guest/interefaces/IGetAllPrescriptions";
+import { IGetAllAddressUseCase } from "../../../application/guest/interefaces/IGetAllAddressUseCase";
+import { ICreateAddressUseCase } from "../../../application/guest/interefaces/ICreateAddressUseCase";
+import { AddressDTO } from "../../../application/guest/dto/AddressDTO";
+import { IDeleteAddressUseCase } from "../../../application/guest/interefaces/IDeleteAddressUseCase";
+import { IGetOrdersUseCase } from "../../../application/guest/interefaces/IGetOrdersUseCase";
+import { IGetOrderDetailUseCase } from "../../../application/guest/interefaces/IGetOrderDetailUseCase";
+import { IGetProfileDetailsUseCase } from "../../../application/guest/interefaces/IGetProfileDetailsUseCase";
+import { ICompleteGuestProfileUseCase } from "../../../application/guest/interefaces/ICompleteGuestProfileUseCase";
+import { GuestProfileCompleteDTO } from "../../../application/guest/dto/GuestProfileCompleteDTO";
 import { IChangePasswordUseCase } from "../../../application/common/interfaces/IChangePasswordUseCase";
 import { Role } from "../../../shared/Enums";
 import { IVerifyOldPasswordUseCase } from "../../../application/common/interfaces/IverifyOldPasswordUsesCase";
-import { MakePaymentDTO } from "../../../application/Guest/dto/MakePaymentDTO";
+import { MakePaymentDTO } from "../../../application/guest/dto/MakePaymentDTO";
 
 export class GuestController {
   constructor(

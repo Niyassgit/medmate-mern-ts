@@ -3,7 +3,7 @@ import { IStorageService } from "../../../domain/common/services/IStorageService
 import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRepository";
 import { IPrescriptionRepository } from "../../../domain/prescription/repositories/IPrescriptionRepository";
 import { ErrorMessages } from "../../../shared/Messages";
-import { PrescriptionDetailsDTO } from "../../Guest/interefaces/PrescriptionDetailsDTO";
+import { PrescriptionDetailsDTO } from "../../guest/interefaces/PrescriptionDetailsDTO";
 import { PrescriptionMapper } from "../../prescription/mappers/PrescriptionMapper";
 import { IGetAllPrescriptionsMadeUseCase } from "../interfaces/IGetAllPrescriptionsMadeUseCase";
 

@@ -3,7 +3,7 @@ import { NotificationMessages } from "../../../shared/Messages";
 import { RegisterResponseDTO } from "../../doctor/dto/RegisterResponseDTO";
 import { RegisterGuestDTO } from "../dto/RegisterPatientDTO";
 import { IGuest } from "../../../domain/guest/entities/IGuest";
-import { GuestProfileCompleteDTO } from "../dto/ProfileCompleteDTO";
+import { GuestProfileCompleteDTO } from "../dto/GuestProfileCompleteDTO";
 import { GuestListDTO } from "../../superAdmin/dto/GuestListDTO";
 import { CreateGuestByDoctorDTO } from "../../doctor/dto/CreateGuestByDoctorDTO";
 

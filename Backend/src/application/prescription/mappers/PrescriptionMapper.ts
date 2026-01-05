@@ -1,7 +1,7 @@
 import { IPrescription } from "../../../domain/prescription/entites/IPrescription";
 import { IPrescriptionItem } from "../../../domain/prescription/entites/IPrescriptionItem";
 import { IPrescriptionWithItemsAndProduct } from "../../../domain/prescription/entites/IPrescriptionWIthItemsAndProduct";
-import { PrescriptionDetailsDTO } from "../../Guest/interefaces/PrescriptionDetailsDTO";
+import { PrescriptionDetailsDTO } from "../../guest/interefaces/PrescriptionDetailsDTO";
 import { PrescriptionDTO } from "../dto/PrescriptionDTO";
 import { PrescriptionItemDTO } from "../dto/PrescriptionItemDTO";
 import { PrescriptionStatus as DomainPrescriptionStatus } from "../../../shared/Enums";

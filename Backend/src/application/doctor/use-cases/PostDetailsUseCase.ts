@@ -3,6 +3,7 @@ import { IConnectionRepository } from "../../../domain/connection/repositories/I
 import { IDoctorRepository } from "../../../domain/doctor/repositories/IDoctorRepository";
 import { IProductPostRepository } from "../../../domain/productPost/repositories/IProductPostRepository";
 import { ErrorMessages } from "../../../shared/Messages";
+import { ProductPostListStatus } from "../../../shared/Enums";
 import {
   BadRequestError,
   UnautharizedError,
@@ -42,7 +43,7 @@ export class PostDetailsUseCase implements IPostDetailsUseCase {
       !!repIsConnected,
       this._storageService
     );
-    const allProducts = await this._postRepository.getProducts(medicalRep.id);
+    const allProducts = await this._postRepository.getProducts(medicalRep.id, ProductPostListStatus.PUBLISHED);
     const relatedProducts = (allProducts ?? []).filter(
       (product) => product.id !== postDetails.id
     );

@@ -5,7 +5,7 @@ import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/I
 import { ErrorMessages } from "../../../shared/Messages";
 import { UnautharizedError } from "../../errors";
 import { CreateMessageDTO } from "../dto/CreateMessageDTO";
-import { MessageResponseDTO } from "../dto/MessageDTO";
+import { MessageDTO } from "../dto/MessageDTO";
 import { ICreateRepMessageUseCase } from "../interfaces/ICreateRepMessage";
 import { MessageMapper } from "../mappers/MessageMapper";
 
@@ -19,7 +19,7 @@ export class CreateRepMessageUseCase implements ICreateRepMessageUseCase {
   async execute(
     data: CreateMessageDTO,
     userId?: string
-  ): Promise<MessageResponseDTO> {
+  ): Promise<MessageDTO> {
     if (!userId) throw new UnautharizedError(ErrorMessages.UNAUTHORIZED);
 
     const { repId } = await this._medicalRepRepository.getRepIdByUserId(userId);
