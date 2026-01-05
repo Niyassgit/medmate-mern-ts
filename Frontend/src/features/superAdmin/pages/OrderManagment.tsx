@@ -1,5 +1,4 @@
-
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -22,38 +21,10 @@ import { getAllOrders } from "../api/superAdminApi";
 import { OrderTableDTO } from "../dto/OrderTableDTO";
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
-
-import { OrderStatus, PaymentStatus } from "../dto/OrderTableDTO";
-
-export const getOrderStatusBadge = (status: OrderStatus) => {
-  switch (status) {
-    case OrderStatus.PENDING:
-      return "bg-yellow-100 text-yellow-700 hover:bg-yellow-100";
-    case OrderStatus.CONFIRMED:
-      return "bg-blue-100 text-blue-700 hover:bg-blue-100";
-    case OrderStatus.SHIPPED:
-      return "bg-indigo-100 text-indigo-700 hover:bg-indigo-100";
-    case OrderStatus.DELIVERED:
-      return "bg-green-100 text-green-700 hover:bg-green-100";
-    case OrderStatus.CANCELLED:
-      return "bg-red-100 text-red-700 hover:bg-red-100";
-    default:
-      return "bg-gray-100 text-gray-700 hover:bg-gray-100";
-  }
-};
-
-export const getPaymentStatusBadge = (status: PaymentStatus) => {
-  switch (status) {
-    case PaymentStatus.SUCCESS:
-      return "bg-green-100 text-green-700 hover:bg-green-100";
-    case PaymentStatus.FAILED:
-      return "bg-red-100 text-red-700 hover:bg-red-100";
-    case PaymentStatus.PENDING:
-      return "bg-yellow-100 text-yellow-700 hover:bg-yellow-100";
-    default:
-      return "bg-gray-100 text-gray-700 hover:bg-gray-100";
-  }
-};
+import {
+  getOrderStatusBadge,
+  getPaymentStatusBadge,
+} from "../components/StatusBadges";
 
 const OrderManagment = () => {
   const [orders, setOrders] = useState<OrderTableDTO[]>([]);
@@ -63,7 +34,7 @@ const OrderManagment = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     setLoading(true);
     try {
       const response = await getAllOrders(page, 10, startDate, endDate);
@@ -71,16 +42,19 @@ const OrderManagment = () => {
         setOrders(response.data.orders);
         setTotalPages(Math.ceil(response.data.total / 10));
       }
-    } catch (error) {
-      console.error("Failed to fetch orders", error);
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Failed to fetch orders";
+      console.error(errorMessage, error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, startDate, endDate]);
 
   useEffect(() => {
     fetchOrders();
-  }, [page, startDate, endDate]);
+  }, [fetchOrders]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
@@ -181,7 +155,9 @@ const OrderManagment = () => {
                   </TableCell>
                   <TableCell>₹{order.totalAmount}</TableCell>
                   <TableCell>
-                    <Badge className={getPaymentStatusBadge(order.payementStatus)}>
+                    <Badge
+                      className={getPaymentStatusBadge(order.payementStatus)}
+                    >
                       {order.payementStatus}
                     </Badge>
                   </TableCell>

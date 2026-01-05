@@ -1,7 +1,19 @@
 import { MedicalRep } from "../dto/RepFullDetailsDTO";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Mail, Phone, Building2, IdCard, MapPin, ChevronDown, ChevronUp, UserPlus, UserCheck, RefreshCcw, X } from "lucide-react";
+import {
+  Mail,
+  Phone,
+  Building2,
+  IdCard,
+  MapPin,
+  ChevronDown,
+  ChevronUp,
+  UserPlus,
+  UserCheck,
+  RefreshCcw,
+  X,
+} from "lucide-react";
 import { useState } from "react";
 import { connectionToggle, acceptRequest } from "../api";
 import toast from "react-hot-toast";
@@ -14,7 +26,9 @@ export const ProfileHeader = ({ rep }: ProfileHeaderProps) => {
   const [isAboutExpanded, setIsAboutExpanded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<string | null>(rep.connectionStatus);
-  const [initiator, setInitiator] = useState<string | null>(rep.connectionInitiator);
+  const [initiator, setInitiator] = useState<string | null>(
+    rep.connectionInitiator
+  );
 
   const handleConnect = async () => {
     setStatus("PENDING");
@@ -23,10 +37,13 @@ export const ProfileHeader = ({ rep }: ProfileHeaderProps) => {
     try {
       const data = await connectionToggle(rep.id);
       toast.success(data.message || "Connection request sent");
-    } catch (error: any) {
+    } catch (error: unknown) {
       setStatus(null);
       setInitiator(null);
-      toast.error(error?.response?.data?.message || "Something went wrong");
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Something went wrong";
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -42,10 +59,13 @@ export const ProfileHeader = ({ rep }: ProfileHeaderProps) => {
     try {
       const data = await acceptRequest(rep.id);
       toast.success(data.message || "Connection accepted");
-    } catch (error: any) {
+    } catch (error: unknown) {
       setStatus(previousStatus);
       setInitiator(previousInitiator);
-      toast.error(error?.response?.data?.message || "Something went wrong");
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Something went wrong";
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -61,10 +81,13 @@ export const ProfileHeader = ({ rep }: ProfileHeaderProps) => {
     try {
       const data = await connectionToggle(rep.id);
       toast.success(data.message || "Request cancelled");
-    } catch (error: any) {
+    } catch (error: unknown) {
       setStatus(previousStatus);
       setInitiator(previousInitiator);
-      toast.error(error?.response?.data?.message || "Something went wrong");
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Something went wrong";
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -83,7 +106,9 @@ export const ProfileHeader = ({ rep }: ProfileHeaderProps) => {
             />
           </div>
           <h1 className="text-2xl font-bold text-foreground">{rep.name}</h1>
-          <p className="text-sm text-muted-foreground">{rep.companyName} - Medical Representative</p>
+          <p className="text-sm text-muted-foreground">
+            {rep.companyName} - Medical Representative
+          </p>
         </div>
 
         {/* Contact Information Grid */}
@@ -107,7 +132,9 @@ export const ProfileHeader = ({ rep }: ProfileHeaderProps) => {
           <div className="flex items-start gap-3">
             <Building2 className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
             <div className="min-w-0 flex-1">
-              <p className="text-xs font-medium text-muted-foreground">Company</p>
+              <p className="text-xs font-medium text-muted-foreground">
+                Company
+              </p>
               <p className="text-sm text-foreground">{rep.companyName}</p>
             </div>
           </div>
@@ -115,7 +142,9 @@ export const ProfileHeader = ({ rep }: ProfileHeaderProps) => {
           <div className="flex items-start gap-3">
             <IdCard className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
             <div className="min-w-0 flex-1">
-              <p className="text-xs font-medium text-muted-foreground">Employee ID</p>
+              <p className="text-xs font-medium text-muted-foreground">
+                Employee ID
+              </p>
               <p className="text-sm text-foreground">{rep.employeeId}</p>
             </div>
           </div>
@@ -124,8 +153,12 @@ export const ProfileHeader = ({ rep }: ProfileHeaderProps) => {
             <div className="flex items-start gap-3">
               <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
               <div className="min-w-0 flex-1">
-                <p className="text-xs font-medium text-muted-foreground">Territory</p>
-                <p className="text-sm text-foreground">{rep.educations[0].institute}</p>
+                <p className="text-xs font-medium text-muted-foreground">
+                  Territory
+                </p>
+                <p className="text-sm text-foreground">
+                  {rep.educations[0].institute}
+                </p>
               </div>
             </div>
           )}
@@ -137,7 +170,9 @@ export const ProfileHeader = ({ rep }: ProfileHeaderProps) => {
             onClick={() => setIsAboutExpanded(!isAboutExpanded)}
             className="flex w-full items-center justify-between text-left"
           >
-            <h2 className="text-base font-semibold text-foreground">About Me</h2>
+            <h2 className="text-base font-semibold text-foreground">
+              About Me
+            </h2>
             {isAboutExpanded ? (
               <ChevronUp className="h-4 w-4 text-muted-foreground" />
             ) : (
@@ -151,15 +186,20 @@ export const ProfileHeader = ({ rep }: ProfileHeaderProps) => {
               </p>
               {rep.educations.length > 0 && (
                 <div className="pt-2">
-                  <p className="text-xs font-medium text-foreground">Education:</p>
+                  <p className="text-xs font-medium text-foreground">
+                    Education:
+                  </p>
                   <p className="text-sm text-muted-foreground">
-                    {rep.educations[0].degree} - {rep.educations[0].institute} ({rep.educations[0].year})
+                    {rep.educations[0].degree} - {rep.educations[0].institute} (
+                    {rep.educations[0].year})
                   </p>
                 </div>
               )}
               {rep.certificates.length > 0 && (
                 <div className="pt-2">
-                  <p className="text-xs font-medium text-foreground">Certifications:</p>
+                  <p className="text-xs font-medium text-foreground">
+                    Certifications:
+                  </p>
                   {rep.certificates.map((cert) => (
                     <p key={cert.id} className="text-sm text-muted-foreground">
                       • {cert.name} - {cert.issuedBy} ({cert.year})
@@ -188,7 +228,7 @@ export const ProfileHeader = ({ rep }: ProfileHeaderProps) => {
                 {loading ? "Processing..." : "Connect"}
               </Button>
             )}
-            
+
             {status === "PENDING" && initiator === "DOCTOR" && (
               <>
                 <Button
@@ -208,7 +248,7 @@ export const ProfileHeader = ({ rep }: ProfileHeaderProps) => {
                 </Button>
               </>
             )}
-            
+
             {status === "PENDING" && initiator === "REP" && (
               <Button
                 onClick={handleAcceptRequest}

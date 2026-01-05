@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { useAppSelector } from "@/app/hooks";
+import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { Users, Clock, UserPlus, Search } from "lucide-react";
 
@@ -14,18 +14,18 @@ import { RepListOnDoctorAnalyticsDTO } from "../dto/RepListOnDocAnlyticsDTO";
 import ConnectionTable from "@/components/shared/ConnectionTable";
 import { SpinnerButton } from "@/components/shared/SpinnerButton";
 import { mutualConnections} from "../api";
-import ConnectionsModal from "@/components/shared/ConnectionsModal";
+import ConnectionsModal, { ConnectionItem } from "@/components/shared/ConnectionsModal";
 
 const DoctorAnalyticsPage = () => {
-  const id = useAppSelector((state) => state.auth.user?.id);
+  const id = useSelector((state: { auth: { user?: { id?: string } } }) => state.auth.user?.id);
   const [analytics, setAnalytics] = useState<DoctorAnalyticsDTO | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [fetcher, setFetcher] = useState<any>(() => null);
+  const [fetcher, setFetcher] = useState<(() => Promise<ConnectionItem[]>) | null>(() => null);
   const [modalTitle, setModalTitle] = useState("");
 
-  const openModal = (title: string, fetchFn: any) => {
+  const openModal = (title: string, fetchFn: () => Promise<ConnectionItem[]>) => {
     setModalTitle(title);
     setFetcher(() => fetchFn);
     setIsOpen(true);
@@ -94,7 +94,7 @@ const DoctorAnalyticsPage = () => {
               value={String(analytics?.mutualConnectionsCount ?? 0)}
               description="Total connected representatives"
               iconColor="bg-blue-100 text-blue-600"
-              onClick={() => openModal("Mutual Connections", ()=>mutualConnections(id))}
+              onClick={() => openModal("Mutual Connections", ()=>mutualConnections(id!))}
             />
             <StatsCard
               icon={Clock}
@@ -103,7 +103,7 @@ const DoctorAnalyticsPage = () => {
               description="Awaiting approval"
               iconColor="bg-yellow-100 text-yellow-600"
               onClick={() =>
-                openModal("Pending Connections",()=> pendingConnections(id))
+                openModal("Pending Connections",()=> pendingConnections(id!))
               }
             />
             {isOpen && fetcher &&(

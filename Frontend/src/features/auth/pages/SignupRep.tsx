@@ -58,7 +58,7 @@ const SignupRep = () => {
 
         const terrData = await getTerritories();
         setTerritories(terrData.data.data);
-      } catch (error) {
+      } catch{
         toast.error("Failed to load departments or territories");
       }
     }
@@ -66,36 +66,39 @@ const SignupRep = () => {
   }, []);
 
   const onSubmit = async (data: RegisterRepBody) => {
-  try {
-    const formData = new FormData();
+    try {
+      const formData = new FormData();
 
-    Object.entries(data).forEach(([key, val]) => {
-      if (key === "companyLogoUrl" && val instanceof File) {
-        formData.append(key, val);
-      } else if (Array.isArray(val)) {
-        formData.append(key, JSON.stringify(val)); 
-      } else if (val !== null && val !== undefined) {
-        formData.append(key, String(val));
-      }
-    });
-
-    const res = await registerRep(formData);
-
-    if (res.data.success && res.data.email) {
-      toast.success(res.data.message || "Registered successfully!");
-
-      navigate("/verifyotp", {
-        state: {
-          email: res.data.email,
-          purpose: "signup",
-          expiredAt: res.data.expiredAt,
-        },
+      Object.entries(data).forEach(([key, val]) => {
+        if (key === "companyLogoUrl" && val instanceof File) {
+          formData.append(key, val);
+        } else if (Array.isArray(val)) {
+          formData.append(key, JSON.stringify(val));
+        } else if (val !== null && val !== undefined) {
+          formData.append(key, String(val));
+        }
       });
+
+      const res = await registerRep(formData);
+
+      if (res.data.success && res.data.email) {
+        toast.success(res.data.message || "Registered successfully!");
+
+        navigate("/verifyotp", {
+          state: {
+            email: res.data.email,
+            purpose: "signup",
+            expiredAt: res.data.expiredAt,
+          },
+        });
+      }
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Something went wrong";
+      toast.error(errorMessage);
     }
-  } catch (error: any) {
-    toast.error(error.response?.data?.message || "Something went wrong");
-  }
-};
+  };
 
   return (
     <Form {...form}>
@@ -272,10 +275,10 @@ const SignupRep = () => {
               <FormItem>
                 <FormLabel>Department</FormLabel>
                 <select
-                  value={field.value?.[0] ?? ""} 
+                  value={field.value?.[0] ?? ""}
                   onChange={(e) => {
                     const value = e.target.value;
-                    field.onChange(value ? [value] : []); 
+                    field.onChange(value ? [value] : []);
                   }}
                   className="
           w-full 

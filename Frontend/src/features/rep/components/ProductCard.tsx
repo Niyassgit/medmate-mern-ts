@@ -1,4 +1,3 @@
-import React from "react";
 import { ProductDTO } from "../dto/ProductDTO";
 import { IndianRupee } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -8,7 +7,7 @@ interface ProductCardProps {
   id: string;
 }
 
-const ProductCard = ({ product, id }: ProductCardProps) => {
+const ProductCard = ({ product}: ProductCardProps) => {
     const navigate=useNavigate()
   return (
     <div className="flex flex-col md:flex-row bg-white shadow-md rounded-xl overflow-hidden hover:shadow-lg transition-all duration-200 max-w-[650px]">

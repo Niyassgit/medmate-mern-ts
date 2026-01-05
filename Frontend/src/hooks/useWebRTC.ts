@@ -1,6 +1,7 @@
 import { getSocket } from "@/lib/socket";
 import { WebRTCAdapter } from "@/services/videocall/WebRTCAdapter";
 import { IceCandidate } from "@/types/videocall/IceCandidate";
+import { SessionDescription } from "@/types/videocall/SessionDescription";
 import { useEffect, useRef, useState } from "react";
 
 export function useWebRTC(remoteUserId: string) {
@@ -83,8 +84,8 @@ export function useWebRTC(remoteUserId: string) {
     });
   };
 
-  // In useWebRTC.ts
-  const handleOffer = async (offer: any, fromUserId: string) => {
+
+  const handleOffer = async (offer: SessionDescription, fromUserId: string) => {
     if (!fromUserId) {
       console.error("handleOffer: fromUserId is required");
       return;
@@ -92,7 +93,6 @@ export function useWebRTC(remoteUserId: string) {
 
     const peer = await createPeer(fromUserId);
 
-    // Convert SessionDescription to RTCSessionDescriptionInit
     const rtcOffer = WebRTCAdapter.fromSessionDescription(offer);
     await peer.setRemoteDescription(rtcOffer);
 
@@ -147,15 +147,12 @@ export function useWebRTC(remoteUserId: string) {
     socket.on("call:ice-candidate", async ({ candidate }) => {
       const peer = peerRef.current;
 
-      // If peer doesn't exist yet (Receiver before accept)
-      // OR description isn't set (Caller before answer), buffer it.
       if (!peer || !peer.remoteDescription) {
         pendingCandidates.current.push(candidate);
         return;
       }
 
       try {
-        // Convert IceCandidate to RTCIceCandidateInit
         const rtcCandidate = WebRTCAdapter.fromIceCandidate(candidate);
         await peer.addIceCandidate(rtcCandidate);
       } catch (e) {
@@ -166,10 +163,10 @@ export function useWebRTC(remoteUserId: string) {
     return () => {
       socket.off("call:accepted");
       socket.off("call:ice-candidate");
-      // Cleanup streams
+
       localStream?.getTracks().forEach((track) => track.stop());
     };
-  }, [localStream]);
+  }, [localStream, token]);
 
   return {
     localStream,

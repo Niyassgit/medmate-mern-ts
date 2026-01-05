@@ -12,7 +12,7 @@ import { MoveRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Feed = () => {
-  const auth = useSelector((s: any) => s.auth.user);
+  const auth = useSelector((s: { auth: { user?: { id?: string } } }) => s.auth.user);
   const id = auth?.id as string | undefined;
   const token = useMemo(() => localStorage.getItem("accessToken"), []);
 
@@ -47,14 +47,17 @@ const Feed = () => {
         const newPosts = data.data as FeedPostDTO[];
 
         setLocalFeed((prev) => {
-          const existingIds = new Set(prev.map(p => p.id));
-          const uniqueNewPosts = newPosts.filter(p => !existingIds.has(p.id));
+          const existingIds = new Set(prev.map((p) => p.id));
+          const uniqueNewPosts = newPosts.filter((p) => !existingIds.has(p.id));
           return page === 1 ? newPosts : [...prev, ...uniqueNewPosts];
         });
 
         setHasMore(newPosts.length === 5);
-      } catch (error: any) {
-        toast.error(error.message || "Failed to fetch feed");
+      } catch (error: unknown) {
+        const errorMessage =
+          (error as { response?: { data?: { message?: string } } })?.response
+            ?.data?.message || "Failed to fetch feed";
+        toast.error(errorMessage);
       } finally {
         setLoading(false);
       }
@@ -79,9 +82,7 @@ const Feed = () => {
               ...p,
               likes: payload.counts?.likes ?? p.likes,
             };
-
-            if (payload.liked !== undefined) {
-            }
+            // liked status is handled by the likes count update above
             return updatedPost;
           }
           return p;
@@ -101,7 +102,6 @@ const Feed = () => {
             return {
               ...p,
               interests: payload.counts?.interests ?? p.interests,
-            
             };
           }
           return p;
@@ -152,10 +152,10 @@ const Feed = () => {
         prev.map((p) =>
           p.id === postId
             ? {
-              ...p,
-              likes: p.liked ? p.likes - 1 : p.likes + 1,
-              liked: !p.liked,
-            }
+                ...p,
+                likes: p.liked ? p.likes - 1 : p.likes + 1,
+                liked: !p.liked,
+              }
             : p
         )
       );
@@ -170,16 +170,18 @@ const Feed = () => {
             : p
         )
       );
-    } catch (error: any) {
-      toast.error(error.message || "Failed to toggle like");
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to toggle like";
+      toast.error(errorMessage);
       setLocalFeed((prev) =>
         prev.map((p) =>
           p.id === postId
             ? {
-              ...p,
-              likes: p.liked ? p.likes + 1 : p.likes - 1,
-              liked: !p.liked,
-            }
+                ...p,
+                likes: p.liked ? p.likes + 1 : p.likes - 1,
+                liked: !p.liked,
+              }
             : p
         )
       );
@@ -192,10 +194,10 @@ const Feed = () => {
         prev.map((p) =>
           p.id === postId
             ? {
-              ...p,
-              interests: p.interested ? p.interests - 1 : p.interests + 1,
-              interested: !p.interested,
-            }
+                ...p,
+                interests: p.interested ? p.interests - 1 : p.interests + 1,
+                interested: !p.interested,
+              }
             : p
         )
       );
@@ -207,23 +209,26 @@ const Feed = () => {
         prev.map((p) =>
           p.id === postId
             ? {
-              ...p,
-              interests: res.data.totalInterests ?? p.interests,
-              interested: res.data.interested,
-            }
+                ...p,
+                interests: res.data.totalInterests ?? p.interests,
+                interested: res.data.interested,
+              }
             : p
         )
       );
-    } catch (error: any) {
-      toast.error(error.message || "Failed to toggle interest");
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Failed to toggle interest";
+      toast.error(errorMessage);
       setLocalFeed((prev) =>
         prev.map((p) =>
           p.id === postId
             ? {
-              ...p,
-              interests: p.interested ? p.interests + 1 : p.interests - 1,
-              interested: !p.interested,
-            }
+                ...p,
+                interests: p.interested ? p.interests + 1 : p.interests - 1,
+                interested: !p.interested,
+              }
             : p
         )
       );

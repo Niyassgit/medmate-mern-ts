@@ -32,7 +32,7 @@ const RepNavbar = () => {
       const res = await repConversations();
       const totalUnread =
         res.data?.reduce(
-          (sum: number, conv: any) => sum + (conv.unread || 0),
+          (sum: number, conv: Conversation) => sum + (conv.unread || 0),
           0
         ) || 0;
       setUnreadChatCount(totalUnread);
@@ -69,7 +69,11 @@ const RepNavbar = () => {
       );
     };
 
-    socket.connected ? join() : socket.once("connect", join);
+    if (socket.connected) {
+      join();
+    } else {
+      socket.once("connect", join);
+    }
     socket.on("new_message", (message: MessageDTO) => {
       if (message.senderRole !== Role.MEDICAL_REP)
         setUnreadChatCount((p) => p + 1);

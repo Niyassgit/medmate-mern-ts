@@ -103,9 +103,10 @@ const OtpPage = () => {
         }, 1500);
         return;
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       setMessage(
-        error.response?.data?.message || "Invalid OTP. Please try again."
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Invalid OTP. Please try again."
       );
       setMessageType("error");
     } finally {
@@ -141,7 +142,7 @@ const OtpPage = () => {
       setCanResend(false);
       setOtp(["", "", "", "", "", ""]);
       document.getElementById("otp-0")?.focus();
-    } catch (error) {
+    } catch  {
       setMessage("Failed to resend OTP. Please try again.");
       setMessageType("error");
     } finally {

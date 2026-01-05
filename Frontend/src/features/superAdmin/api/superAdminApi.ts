@@ -5,7 +5,7 @@ import { DepartmentSchemaDTO } from "../Schemas/DepartmentSchema";
 import {
   SubscriptionPlanPayload,
 } from "../dto/SubscriptionPlan";
-import { CreateFeaturePayload, Feature, UpdateFeaturePayload } from "../dto/Feature";
+import { CreateFeaturePayload, UpdateFeaturePayload } from "../dto/Feature";
 
 export const getAllDoctors = async (
   page: number = 1,

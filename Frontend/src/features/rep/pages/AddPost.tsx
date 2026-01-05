@@ -12,6 +12,11 @@ const AddPost = () => {
   const id = useAppSelector((state) => state.auth.user?.id);
 
   const handleSubmit = async (values: ProductPostFormValues, images: File[]) => {
+    if (!id) {
+      toast.error("User ID not found. Please log in again.");
+      return;
+    }
+
     const formData = new FormData();
     Object.entries(values).forEach(([key, value]) => {
       if (Array.isArray(value)) {
@@ -28,7 +33,7 @@ const AddPost = () => {
         toast.success(res.data.message || "Post uploaded successfully");
         navigate("/rep/dashboard");
       }
-    } catch (err) {
+    } catch {
       toast.error("Failed to add post");
     }
   };

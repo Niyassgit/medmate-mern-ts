@@ -9,7 +9,7 @@ const LogoutFn = () => {
     const navigate=useNavigate();
     const dispatch = useDispatch();
  
-    const logout=async()=>{
+    const handleLogout=async()=>{
         try {
             await logoutUser();
             googleLogout();
@@ -22,7 +22,7 @@ const LogoutFn = () => {
             console.error("Logout failed", error);
         }
     }
-  return {logout};
+  return {logout: handleLogout};
 }
 
 export default LogoutFn

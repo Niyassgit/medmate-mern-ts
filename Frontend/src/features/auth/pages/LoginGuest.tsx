@@ -14,7 +14,6 @@ const LoginGuest = () => {
   const dispatch = useDispatch();
   const { accessToken, user } = useSelector((state: RootState) => state.auth);
 
-
   useEffect(() => {
     if (accessToken && user) {
       if (user.role === Role.DOCTOR) {
@@ -28,14 +27,14 @@ const LoginGuest = () => {
       }
     }
   }, [accessToken, user, navigate]);
-  
+
   const handleLogin = async (values: { email: string; password: string }) => {
     try {
       const { data } = await loginUser(values);
       dispatch(login({ token: data.accessToken, user: data.user }));
-      
+
       toast.success("Login successful!");
-      
+
       if (data.user.role === Role.GUEST) {
         navigate("/guest/dashboard", { replace: true });
       } else if (data.user.role === Role.DOCTOR) {
@@ -47,8 +46,11 @@ const LoginGuest = () => {
       } else {
         navigate("/", { replace: true });
       }
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "Login failed");
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Login failed";
+      toast.error(errorMessage);
     }
   };
 
@@ -75,7 +77,7 @@ const LoginGuest = () => {
           <p className="text-sm text-gray-600 mb-6 text-center md:text-left">
             Welcome back! Please sign in to access your guest portal.
           </p>
-          
+
           <ExampleForm onSubmit={handleLogin} />
 
           <div className="flex flex-col items-center mt-4 space-y-2">
@@ -87,7 +89,10 @@ const LoginGuest = () => {
             </Link>
             <p className="text-sm text-gray-600">
               Don't have an account?{" "}
-              <Link to="/register/guest" className="text-[#3fa8e9] hover:underline">
+              <Link
+                to="/register/guest"
+                className="text-[#3fa8e9] hover:underline"
+              >
                 Sign up
               </Link>
             </p>
@@ -99,4 +104,3 @@ const LoginGuest = () => {
 };
 
 export default LoginGuest;
-

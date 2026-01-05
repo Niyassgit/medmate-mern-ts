@@ -1,5 +1,4 @@
 import imageCompression from "browser-image-compression";
-import { maxSize } from "zod";
 
 export const compressImage = async (file: File) => {
   const options = {

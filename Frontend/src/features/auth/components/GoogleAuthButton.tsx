@@ -35,9 +35,8 @@ const GoogleAuthButton = () => {
     }
   }, [accessToken, user, navigate]);
 
-  const handleSuccess = async (credentialResponse: any) => {
+  const handleSuccess = async (credentialResponse: { credential?: string }) => {
     try {
-
       if (accessToken && user) {
         toast.error("You are already logged in.");
         return;
@@ -55,7 +54,6 @@ const GoogleAuthButton = () => {
       if (precheckRes.data.exists && precheckRes.data.user?.role) {
         const role = precheckRes.data.user.role;
 
-    
         const response = await googleLogin(idToken, role);
 
         dispatch(
@@ -72,11 +70,13 @@ const GoogleAuthButton = () => {
       }
 
       navigate(`/selectrole?idToken=${idToken}`);
-    } catch (error: any) {
-      toast.error(error?.message || "Google login failed");
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Google login failed";
+      toast.error(errorMessage);
     }
   };
-
 
   if (accessToken && user) {
     return null;

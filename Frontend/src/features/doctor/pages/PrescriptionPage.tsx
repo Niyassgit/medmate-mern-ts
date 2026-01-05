@@ -1,8 +1,22 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { X, Plus, Calendar, Pill, FileText, Search, UserPlus, Loader2 } from "lucide-react";
+import {
+  X,
+  Plus,
+  Calendar,
+  Pill,
+  FileText,
+  Search,
+  UserPlus,
+  Loader2,
+} from "lucide-react";
 import toast from "react-hot-toast";
-import { useAppSelector } from "@/app/hooks";
-import { getGuests, createGuest, createPrescription, getAllReps, getRepProducts } from "../api";
+import {
+  getGuests,
+  createGuest,
+  createPrescription,
+  getAllReps,
+  getRepProducts,
+} from "../api";
 import { ProductDTO } from "../dto/ProductDTO";
 import { RepDTO } from "../dto/RepDTO";
 import { useNavigate } from "react-router-dom";
@@ -16,14 +30,18 @@ interface Guest {
 }
 
 export default function PrescriptionPage() {
-  const user = useAppSelector((state) => state.auth.user);
   const [selectedGuest, setSelectedGuest] = useState<Guest | null>(null);
   const [guestSearchQuery, setGuestSearchQuery] = useState("");
   const [guests, setGuests] = useState<Guest[]>([]);
   const [loadingGuests, setLoadingGuests] = useState(false);
   const [showGuestDropdown, setShowGuestDropdown] = useState(false);
   const [showCreateGuestModal, setShowCreateGuestModal] = useState(false);
-  const [newGuest, setNewGuest] = useState({ name: "", email: "", phone: "", territoryId: "" });
+  const [newGuest, setNewGuest] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    territoryId: "",
+  });
   const [creatingGuest, setCreatingGuest] = useState(false);
   const navigate = useNavigate();
   const [prescription, setPrescription] = useState({
@@ -32,7 +50,11 @@ export default function PrescriptionPage() {
     expiresAt: "",
     shareToken: "",
     linkExpiresAt: "",
-    items: [] as Array<{ productId: string; dosage?: string; quantity: number }>,
+    items: [] as Array<{
+      productId: string;
+      dosage?: string;
+      quantity: number;
+    }>,
   });
 
   const [currentItem, setCurrentItem] = useState({
@@ -50,7 +72,6 @@ export default function PrescriptionPage() {
   const [loadingProducts, setLoadingProducts] = useState(false);
   const [loadingReps, setLoadingReps] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-
 
   useEffect(() => {
     loadReps();
@@ -86,7 +107,7 @@ export default function PrescriptionPage() {
       setLoadingReps(true);
       const data = await getAllReps();
       setReps(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error loading reps:", error);
       toast.error("Failed to load representatives");
     } finally {
@@ -100,7 +121,7 @@ export default function PrescriptionPage() {
       const data = await getGuests(search);
       setGuests(data || []);
       setShowGuestDropdown(true);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error loading guests:", error);
       toast.error("Failed to load guests");
     } finally {
@@ -113,7 +134,7 @@ export default function PrescriptionPage() {
       setLoadingProducts(true);
       const data = await getRepProducts(repId);
       setProducts(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error loading products:", error);
       toast.error("Failed to load products");
       setProducts([]);
@@ -162,9 +183,12 @@ export default function PrescriptionPage() {
       setNewGuest({ name: "", email: "", phone: "", territoryId: "" });
       setGuestSearchQuery("");
       toast.success("Guest created successfully");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error creating guest:", error);
-      toast.error(error.response?.data?.message || "Failed to create guest");
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Failed to create guest";
+      toast.error(errorMessage);
     } finally {
       setCreatingGuest(false);
     }
@@ -233,10 +257,12 @@ export default function PrescriptionPage() {
 
       await createPrescription(selectedGuest.id, prescriptionData);
       toast.success("Prescription created successfully!");
-      navigate(`/doctor/prescriptions`)
-    } catch (error: any) {
-      console.error("Error creating prescription:", error);
-      toast.error(error.response?.data?.message || "Failed to create prescription");
+      navigate(`/doctor/prescriptions`);
+    } catch (error: unknown) {
+      const erroMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Failed to create prescription";
+      toast.error(erroMessage);
     } finally {
       setSubmitting(false);
     }
@@ -248,7 +274,9 @@ export default function PrescriptionPage() {
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <div className="flex items-center gap-3 mb-6 pb-4 border-b-2 border-indigo-100">
             <FileText className="w-8 h-8 text-indigo-600" />
-            <h1 className="text-3xl font-bold text-gray-800">Create Prescription</h1>
+            <h1 className="text-3xl font-bold text-gray-800">
+              Create Prescription
+            </h1>
           </div>
 
           {/* Guest Selection */}
@@ -276,7 +304,10 @@ export default function PrescriptionPage() {
                       }
                     }}
                     onFocus={() => {
-                      if (guestSearchQuery.trim().length >= 2 || guests.length > 0) {
+                      if (
+                        guestSearchQuery.trim().length >= 2 ||
+                        guests.length > 0
+                      ) {
                         setShowGuestDropdown(true);
                       }
                     }}
@@ -320,9 +351,13 @@ export default function PrescriptionPage() {
                         }}
                         className="p-3 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors"
                       >
-                        <div className="font-semibold text-gray-800">{guest.name}</div>
+                        <div className="font-semibold text-gray-800">
+                          {guest.name}
+                        </div>
                         {guest.email && (
-                          <div className="text-sm text-gray-600 mt-1">{guest.email}</div>
+                          <div className="text-sm text-gray-600 mt-1">
+                            {guest.email}
+                          </div>
                         )}
                       </div>
                     ))
@@ -331,7 +366,9 @@ export default function PrescriptionPage() {
                       <div className="text-gray-400 mb-3">
                         <UserPlus className="w-12 h-12 mx-auto opacity-50" />
                       </div>
-                      <p className="text-gray-600 font-medium mb-1">No patients found</p>
+                      <p className="text-gray-600 font-medium mb-1">
+                        No patients found
+                      </p>
                       <p className="text-sm text-gray-500 mb-4">
                         No patients found matching "{guestSearchQuery}"
                       </p>
@@ -367,10 +404,14 @@ export default function PrescriptionPage() {
                         Selected Patient: {selectedGuest.name}
                       </div>
                       {selectedGuest.email && (
-                        <div className="text-sm text-blue-700">{selectedGuest.email}</div>
+                        <div className="text-sm text-blue-700">
+                          {selectedGuest.email}
+                        </div>
                       )}
                       {selectedGuest.phone && (
-                        <div className="text-sm text-blue-700">{selectedGuest.phone}</div>
+                        <div className="text-sm text-blue-700">
+                          {selectedGuest.phone}
+                        </div>
                       )}
                     </div>
                     <button
@@ -391,15 +432,22 @@ export default function PrescriptionPage() {
 
           {/* Prescription Details */}
           <div className="mb-8 bg-gray-50 p-6 rounded-xl">
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">Prescription Details</h2>
+            <h2 className="text-xl font-semibold text-gray-700 mb-4">
+              Prescription Details
+            </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Status
+                </label>
                 <select
                   value={prescription.status}
                   onChange={(e) =>
-                    setPrescription((prev) => ({ ...prev, status: e.target.value }))
+                    setPrescription((prev) => ({
+                      ...prev,
+                      status: e.target.value,
+                    }))
                   }
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 >
@@ -418,7 +466,10 @@ export default function PrescriptionPage() {
                   type="date"
                   value={prescription.expiresAt}
                   onChange={(e) =>
-                    setPrescription((prev) => ({ ...prev, expiresAt: e.target.value }))
+                    setPrescription((prev) => ({
+                      ...prev,
+                      expiresAt: e.target.value,
+                    }))
                   }
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 />
@@ -432,7 +483,10 @@ export default function PrescriptionPage() {
                   type="text"
                   value={prescription.shareToken || ""}
                   onChange={(e) =>
-                    setPrescription((prev) => ({ ...prev, shareToken: e.target.value }))
+                    setPrescription((prev) => ({
+                      ...prev,
+                      shareToken: e.target.value,
+                    }))
                   }
                   placeholder="Leave empty to auto-generate"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-gray-50"
@@ -454,7 +508,10 @@ export default function PrescriptionPage() {
                   type="date"
                   value={prescription.linkExpiresAt}
                   onChange={(e) =>
-                    setPrescription((prev) => ({ ...prev, linkExpiresAt: e.target.value }))
+                    setPrescription((prev) => ({
+                      ...prev,
+                      linkExpiresAt: e.target.value,
+                    }))
                   }
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 />
@@ -468,7 +525,10 @@ export default function PrescriptionPage() {
               <textarea
                 value={prescription.notes}
                 onChange={(e) =>
-                  setPrescription((prev) => ({ ...prev, notes: e.target.value }))
+                  setPrescription((prev) => ({
+                    ...prev,
+                    notes: e.target.value,
+                  }))
                 }
                 placeholder="General instructions, precautions, or notes for the patient..."
                 rows={3}
@@ -479,7 +539,9 @@ export default function PrescriptionPage() {
 
           {/* Rep Selection for Products */}
           <div className="mb-8 bg-green-50 p-6 rounded-xl">
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">Select Representative</h2>
+            <h2 className="text-xl font-semibold text-gray-700 mb-4">
+              Select Representative
+            </h2>
             {loadingReps ? (
               <div className="flex justify-center py-4">
                 <Loader2 className="animate-spin text-green-600 w-6 h-6" />
@@ -491,10 +553,11 @@ export default function PrescriptionPage() {
                     key={rep.id}
                     type="button"
                     onClick={() => setSelectedRep(rep)}
-                    className={`p-3 rounded-lg border-2 transition-colors ${selectedRep?.id === rep.id
+                    className={`p-3 rounded-lg border-2 transition-colors ${
+                      selectedRep?.id === rep.id
                         ? "border-green-600 bg-green-100"
                         : "border-gray-200 bg-white hover:border-green-300"
-                      }`}
+                    }`}
                   >
                     <div className="font-semibold text-sm">{rep.name}</div>
                     <div className="text-xs text-gray-600">{rep.company}</div>
@@ -531,11 +594,16 @@ export default function PrescriptionPage() {
                       setProductSearchQuery(e.target.value);
                       setShowProductDropdown(true);
                       if (!e.target.value) {
-                        setCurrentItem({ ...currentItem, productId: "", productName: "" });
+                        setCurrentItem({
+                          ...currentItem,
+                          productId: "",
+                          productName: "",
+                        });
                       }
                     }}
                     onFocus={() => {
-                      if (filteredProducts.length > 0) setShowProductDropdown(true);
+                      if (filteredProducts.length > 0)
+                        setShowProductDropdown(true);
                     }}
                     placeholder={
                       selectedRep
@@ -558,8 +626,12 @@ export default function PrescriptionPage() {
                         onClick={() => handleSelectProduct(product)}
                         className="p-3 hover:bg-indigo-50 cursor-pointer border-b border-gray-100 last:border-b-0"
                       >
-                        <div className="font-semibold text-gray-800">{product.name}</div>
-                        <div className="text-sm text-gray-600">{product.brand}</div>
+                        <div className="font-semibold text-gray-800">
+                          {product.name}
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          {product.brand}
+                        </div>
                         <div className="text-xs text-gray-500">
                           MRP: ₹{product.mrp} | PTR: ₹{product.ptr}
                         </div>
@@ -577,7 +649,10 @@ export default function PrescriptionPage() {
                   type="text"
                   value={currentItem.dosage}
                   onChange={(e) =>
-                    setCurrentItem((prev) => ({ ...prev, dosage: e.target.value }))
+                    setCurrentItem((prev) => ({
+                      ...prev,
+                      dosage: e.target.value,
+                    }))
                   }
                   placeholder="e.g., 1 tablet twice daily"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
@@ -585,7 +660,9 @@ export default function PrescriptionPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Quantity</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Quantity
+                </label>
                 <input
                   type="number"
                   min="1"
@@ -631,7 +708,9 @@ export default function PrescriptionPage() {
                           {product?.name || "Product"}
                         </div>
                         <div className="text-sm text-gray-600 mt-1">
-                          {item.dosage && <span className="mr-4">📋 {item.dosage}</span>}
+                          {item.dosage && (
+                            <span className="mr-4">📋 {item.dosage}</span>
+                          )}
                           <span>📦 Quantity: {item.quantity}</span>
                         </div>
                       </div>
@@ -653,7 +732,9 @@ export default function PrescriptionPage() {
           <div className="flex gap-4">
             <button
               onClick={handleSubmit}
-              disabled={!selectedGuest || prescription.items.length === 0 || submitting}
+              disabled={
+                !selectedGuest || prescription.items.length === 0 || submitting
+              }
               className="flex-1 bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors shadow-lg disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {submitting ? (
@@ -678,7 +759,12 @@ export default function PrescriptionPage() {
                   linkExpiresAt: "",
                   items: [],
                 });
-                setCurrentItem({ productId: "", productName: "", dosage: "", quantity: 1 });
+                setCurrentItem({
+                  productId: "",
+                  productName: "",
+                  dosage: "",
+                  quantity: 1,
+                });
                 setSelectedRep(null);
                 setProducts([]);
               }}
@@ -695,11 +781,18 @@ export default function PrescriptionPage() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-gray-800">Create New Patient</h2>
+              <h2 className="text-2xl font-bold text-gray-800">
+                Create New Patient
+              </h2>
               <button
                 onClick={() => {
                   setShowCreateGuestModal(false);
-                  setNewGuest({ name: "", email: "", phone: "", territoryId: "" });
+                  setNewGuest({
+                    name: "",
+                    email: "",
+                    phone: "",
+                    territoryId: "",
+                  });
                 }}
                 className="text-gray-500 hover:text-gray-700"
               >
@@ -771,7 +864,12 @@ export default function PrescriptionPage() {
                 <button
                   onClick={() => {
                     setShowCreateGuestModal(false);
-                    setNewGuest({ name: "", email: "", phone: "", territoryId: "" });
+                    setNewGuest({
+                      name: "",
+                      email: "",
+                      phone: "",
+                      territoryId: "",
+                    });
                   }}
                   className="px-6 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300"
                 >

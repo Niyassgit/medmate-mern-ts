@@ -58,7 +58,7 @@ const PostEditPage = () => {
       } else {
         toast.error(res.data.message || "Failed to update post");
       }
-    } catch (err) {
+    } catch {
       toast.error("Error updating post");
     }
   };

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { RecentSubscriptionsTable } from "../components/RecentSubscriptionsTable";
 import { subscribedUsers } from "../api/superAdminApi";
 import toast from "react-hot-toast";
@@ -9,22 +9,25 @@ const SubscriptionsList = () => {
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
 
-  const fetchSubscriptions = async () => {
+  const fetchSubscriptions = useCallback(async () => {
     try {
       setLoading(true);
       const res = await subscribedUsers(page, 10);
       setSubscriptions(res.subscriptions);
       setTotalPages(res.totalPages || 1);
-    } catch (err:any) {
-      toast.error(err?.response?.data?.message || "Failed to fetch subscriptions");
+    } catch (err: unknown) {
+      const errorMessage = 
+        (err as { response?: { data?: { message?: string } } })?.response?.data?.message || 
+        "Failed to fetch subscriptions";
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
-  };
+  }, [page]);
 
   useEffect(() => {
     fetchSubscriptions();
-  }, [page]);
+  }, [fetchSubscriptions]);
 
   return (
     <div className="p-6">

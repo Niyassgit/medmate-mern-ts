@@ -4,7 +4,6 @@ import { getOrderDetails } from "../api";
 import { IRepOrderDetails } from "../dto/RepOrderDetailsDTO";
 import {
   ArrowLeft,
-  MapPin,
   CreditCard,
   User,
   Box,

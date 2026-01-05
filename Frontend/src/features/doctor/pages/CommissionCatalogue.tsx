@@ -1,7 +1,5 @@
 import {
   IndianRupee,
-  Clock,
-  CheckCircle,
   ShoppingCart,
   Package,
   Calendar,

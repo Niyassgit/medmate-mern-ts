@@ -14,7 +14,7 @@ interface PostCardProps {
   category: string;
   title: string;
   date: string;
-  isArchived:boolean;
+  isArchived: boolean;
   description: string;
   likes: number;
   onImageError?: () => void;
@@ -69,7 +69,7 @@ const PostCard = ({
       } else {
         toast.error(res.message || "Failed to archive post");
       }
-    } catch (err) {
+    } catch{
       toast.error("Something went wrong");
     } finally {
       setLoading(false);
@@ -79,6 +79,13 @@ const PostCard = ({
   const handleCardClick = () => {
     navigate(`/rep/dashboard/post-details/${id}`);
   };
+
+  if (loading)
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
 
   return (
     <>

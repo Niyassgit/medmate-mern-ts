@@ -106,7 +106,7 @@ export function AdminTable<T extends object>({
                         {col.render
                           ? col.render(item)
                           : typeof col.key === "string" && col.key in item
-                          ? (item[col.key as keyof T] as any)
+                          ? String(item[col.key as keyof T])
                           : null}
                       </td>
                     ))}

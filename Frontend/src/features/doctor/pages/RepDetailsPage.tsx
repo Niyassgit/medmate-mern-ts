@@ -1,4 +1,4 @@
-import { RepProfileData } from "../dto/RepFullDetailsDTO";
+import { RepProfileData, MedicalRep } from "../dto/RepFullDetailsDTO";
 import { ProfileHeader } from "../components/ProfileHeader";
 import { ProductPost } from "../components/ProductPost";
 import { repProfileDetails } from "../api";
@@ -17,9 +17,11 @@ export const RepDetailsPage = () => {
       if (!repId) throw new Error("No repId found");
       const res = await repProfileDetails(repId);
       return res.data as RepProfileData;
-    } catch (error: any) {
-      toast.error(error.message || "Failed to fetch representative details");
-      return { medicalRep: {} as any, posts: [] };
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to fetch representative details";
+      toast.error(errorMessage);
+      return { medicalRep: {} as MedicalRep, posts: [] };
     }
   }, [repId]);
 

@@ -38,8 +38,11 @@ const ForgotPassword = () => {
       toast.success(res.data.message);
          navigate("/forgotpassword/verifyotp",{state:{email:res.data.email,purpose:"reset",expiredAt:res.data.expiredAt}});
     }
-    } catch (error:any) {
-          toast.error(error.response?.data?.message || "Something went wrong");
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Something went wrong";
+      toast.error(errorMessage);
     }
     
   };

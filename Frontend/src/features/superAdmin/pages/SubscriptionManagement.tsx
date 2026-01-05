@@ -70,17 +70,17 @@ const SubscriptionManagement = () => {
 
   const onSubmit = async (values: SubscriptionPlanBody) => {
     try {
-      // Backend expects feature IDs (not keys)
+
       const payload = {
         name: values.name,
         description: values.description,
         price: parseFloat(values.price),
         tenure: values.tenure,
-        features: values.features, // These are feature IDs
+        features: values.features, 
       };
 
       if (editingPlan) {
-        const res = await updateSubscriptionPlan(editingPlan.id, payload);
+        await updateSubscriptionPlan(editingPlan.id, payload);
         toast.success("Plan updated successfully");
         setEditingPlan(null);
       } else {
@@ -90,8 +90,11 @@ const SubscriptionManagement = () => {
 
       form.reset();
       fetchPlans();
-    } catch (error: any) {
-      toast.error(error?.response?.data?.message || "Failed to save plan");
+    } catch (error: unknown) {
+      const errorMessage = 
+        (error as { response?: { data?: { message?: string } } })?.response?.data?.message || 
+        "Failed to save plan";
+      toast.error(errorMessage);
     }
   };
 
@@ -105,8 +108,9 @@ const SubscriptionManagement = () => {
       } else {
         toast.error(res.message || "Failed to delete plan");
       }
-    } catch (error: any) {
-      toast.error(error?.message || "Internal server error");
+    } catch (error: unknown) {
+      const errorMessage = (error as { message?: string })?.message || "Internal server error";
+      toast.error(errorMessage);
     }
   };
 
@@ -123,7 +127,7 @@ const SubscriptionManagement = () => {
     try {
       const res = await getDepartments();
       setPlans(res.data);
-    } catch (error) {
+    } catch {
       toast.error("Failed to load subscription plans");
     }
   };
@@ -135,8 +139,11 @@ const SubscriptionManagement = () => {
       if (res.success && res.data) {
         setAvailableFeatures(res.data);
       }
-    } catch (error: any) {
-      toast.error(error?.response?.data?.message || "Failed to fetch features");
+    } catch (error: unknown) {
+      const errorMessage = 
+        (error as { response?: { data?: { message?: string } } })?.response?.data?.message || 
+        "Failed to fetch features";
+      toast.error(errorMessage);
     } finally {
       setLoadingFeatures(false);
     }
@@ -155,7 +162,6 @@ const SubscriptionManagement = () => {
     setValue("price", String(plan.price));
     setValue("tenure", plan.tenure);
     
-    // Plan.features contains feature keys, need to map to IDs
     const featureKeys = plan.features || [];
     const featureIds = availableFeatures
       .filter((f) => featureKeys.includes(f.key))
@@ -164,9 +170,6 @@ const SubscriptionManagement = () => {
   };
 
   const performToggleListing = async (planId: string) => {
-    const current = plans.find((p) => p.id === planId);
-    const goingToList = current ? !current.isActive : true;
-
     try {
       const res = await toggleListPlan(planId);
 
@@ -181,8 +184,9 @@ const SubscriptionManagement = () => {
       } else {
         toast.error(res.data || "Failed to update listing");
       }
-    } catch (error: any) {
-      toast.error(error?.message || "Internal server error");
+    } catch (error: unknown) {
+      const errorMessage = (error as { message?: string })?.message || "Internal server error";
+      toast.error(errorMessage);
     }
   };
 

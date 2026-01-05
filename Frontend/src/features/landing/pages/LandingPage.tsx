@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Autoplay from "embla-carousel-autoplay";
 
 import {
+  type CarouselApi,
   Carousel,
   CarouselContent,
   CarouselItem,
@@ -14,6 +15,8 @@ import { useEffect, useState } from "react";
 import DoctorsSection from "./DoctorsSection";
 import NetworkSection from "./NetworkSection";
 import Footer from "./Footer";
+import Brands from "@/features/Guest/components/Brands";
+import GuestBlog from "./GuestBlog";
 
 const slides = [
   {
@@ -37,7 +40,7 @@ const slides = [
 ];
 
 const LandingPage = () => {
-  const [emblaApi, setEmblaApi] = useState<any>();
+  const [emblaApi, setEmblaApi] = useState<CarouselApi>();
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   useEffect(() => {
@@ -48,26 +51,18 @@ const LandingPage = () => {
     emblaApi.on("select", onSelect);
     onSelect();
 
-    return () => emblaApi.off("select", onSelect);
+    return () => {
+      emblaApi.off("select", onSelect);
+    };
   }, [emblaApi]);
 
   return (
-    <>
+    <div className="min-h-screen bg-gradient-to-b from-[#0A1A3F] via-[#0B152F] to-black">
       <LandingPageNavbar />
 
       {/* Full-width / full-height hero carousel */}
-      <section
-        className="w-full flex justify-center items-center py-12 relative overflow-hidden"
-        style={{
-          backgroundImage: "url('/bg-1.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-        }}
-      >
-      
-      <div className="relative bg-white/50 backdrop-blur-sm rounded-3xl p-3 border border-white/20 shadow-2xl w-[90%]">
-
+      <section className="w-full flex justify-center items-center py-12 relative overflow-hidden">
+        <div className="relative bg-white/50 backdrop-blur-sm rounded-3xl p-3 border border-white/20 shadow-2xl w-[90%]">
           <Carousel
             className="w-full h-full relative"
             setApi={setEmblaApi}
@@ -175,14 +170,17 @@ const LandingPage = () => {
             scrollTo={(i: number) => emblaApi && emblaApi.scrollTo(i)}
           />
         </div>
-
       </section>
 
       <DoctorsSection />
       <NetworkSection />
-      <Footer/>
+      <GuestBlog />
+      <div className="m-10">
+        <Brands />
+      </div>
 
-    </>
+      <Footer />
+    </div>
   );
 };
 

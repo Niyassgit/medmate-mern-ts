@@ -65,7 +65,10 @@ export class DoctorMapper {
       about:E.about ?? "",
       createdAt:E.createdAt,
       hospitalName:E.hospital,
-      profileImage:signedUrl
+      profileImage:signedUrl,
+      dob:E.dob ?? null,
+      departmentName:E.departmentName ?? null,
+      territoryName:E.territoryName ?? null
     }
   }
 

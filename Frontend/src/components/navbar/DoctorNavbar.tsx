@@ -35,7 +35,7 @@ const DoctorNavbar = () => {
     try {
       const res = await doctorConversations();
       const totalUnread = res.data?.reduce(
-        (sum: number, conv: any) => sum + (conv.unread || 0),
+        (sum: number, conv: Conversation) => sum + (conv.unread || 0),
         0
       );
       setUnreadChatCount(totalUnread);
@@ -95,9 +95,11 @@ const DoctorNavbar = () => {
       }
     };
 
-    socket.connected
-      ? joinAllConversations()
-      : socket.once("connect", joinAllConversations);
+    if (socket.connected) {
+      joinAllConversations();
+    } else {
+      socket.once("connect", joinAllConversations);
+    }
 
     const handleNewMessage = (message: MessageDTO) => {
       if (message.senderRole !== Role.DOCTOR) {

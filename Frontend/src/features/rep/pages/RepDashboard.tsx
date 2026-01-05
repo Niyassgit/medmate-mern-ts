@@ -13,7 +13,7 @@ import ProfileCard from "../components/ProfileCard";
 import { ConnectionLimitBadge } from "../components/ConnectionLimitBadge";
 import { Link } from "react-router-dom";
 
-import { useAppSelector } from "@/app/hooks";
+import { useSelector } from "react-redux";
 import { getPostList, getProfileRep, getConnectionRequestStats } from "../api";
 import useFetchList from "@/hooks/useFetchItem";
 import { useCallback, useEffect, useState } from "react";
@@ -24,7 +24,7 @@ import { SpinnerButton } from "@/components/shared/SpinnerButton";
 import { ProductPostListStatus } from "@/types/ProductListStatus";
 
 const RepDashboard = () => {
-  const id = useAppSelector((state) => state.auth.user?.id);
+  const id = useSelector((state: { auth: { user?: { id?: string } } }) => state.auth.user?.id);
   const [posts, setPosts] = useState<ProductListDTO[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<ProductPostListStatus>(
@@ -66,14 +66,14 @@ const RepDashboard = () => {
     error: profileError,
   } = useFetchList<MedicalRepDetailsDTO | null>(fetchProfile);
 
-  const { data: connectionStats, loading: statsLoading } =
-    useFetchList<any>(fetchConnectionStats);
+  const { data: connectionStats } =
+    useFetchList<{ used: number; limit: number; isSubscribed: boolean } | null>(fetchConnectionStats);
 
   const refreshSingnedUrls = async () => {
     try {
       const updatePosts = await fetchPosts();
       setPosts(updatePosts);
-    } catch (error) {
+    } catch {
       toast.error("Failed to refresh signed URLs");
     }
   };

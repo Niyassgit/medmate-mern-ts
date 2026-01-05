@@ -30,7 +30,7 @@ const SubscriptionSuccess: React.FC = () => {
       try {
         const details = await getCheckoutDetails(sessionId);
         setCheckoutDetails(details);
-      } catch (err) {
+      } catch {
         setError("Failed to fetch payment details");
       } finally {
         setLoading(false);
@@ -53,7 +53,7 @@ const SubscriptionSuccess: React.FC = () => {
         } else {
           setPollAttempts((prev) => prev + 1);
         }
-      } catch (err) {
+      } catch {
         setPollAttempts((prev) => prev + 1);
       }
     };

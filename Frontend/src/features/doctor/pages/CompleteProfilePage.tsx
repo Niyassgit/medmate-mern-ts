@@ -48,7 +48,7 @@ export default function CompleteProfilePage() {
 
         const terrData = await getTerritories();
         setTerritories(terrData.data.data);
-      } catch (error) {
+      } catch {
         toast.error("Failed to load departments or territories");
       }
     }

@@ -3,7 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -18,8 +17,8 @@ import {
 } from "@/components/ui/select";
 import { getOrderDetails, updateOrderStatus } from "../api/superAdminApi";
 import { IOrderDetailsDTO } from "../dto/OrderDetailsDTO";
-import { OrderStatus, PaymentStatus } from "../dto/OrderTableDTO";
-import { getOrderStatusBadge, getPaymentStatusBadge } from "./OrderManagment";
+import { OrderStatus } from "../dto/OrderTableDTO";
+import { getOrderStatusBadge,getPaymentStatusBadge } from "../components/StatusBadges";
 import { format } from "date-fns";
 import { ArrowLeft, MapPin, Package, User } from "lucide-react";
 import toast from "react-hot-toast";

@@ -12,7 +12,7 @@ import { doctorsForShow } from "@/features/shared/api/SharedApi";
 import { DoctorCardGuestDTO } from "@/features/shared/dto/DoctorCardGuestDTO";
 import FaqSection from "@/components/shared/FaqSection";
 import LayoutTextFlipDemo from "@/components/shared/LayoutTextFlipDemo";
-import { useAppSelector } from "@/app/hooks";
+import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import AnimeButton from "@/components/shared/AnimeButton";
 import { getSubscriptionHistory } from "../api";
@@ -27,7 +27,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 const Subscription = () => {
-  const userId = useAppSelector((state) => state.auth.user?.id);
+  const userId = useSelector((state: { auth: { user: { id?: string } } }) => state.auth.user.id);
   const [open, setOpen] = useState(false);
   const [history, setHistory] = useState<SubHistoryDTO[] | null>(null);
   const [historyLoading, setHistoryLoading] = useState(false);
@@ -50,7 +50,7 @@ const Subscription = () => {
   } = useFetchItem<SubscriptionDTO[]>(subcriptionPlans);
 
   const { data: subscriptionStatus, loading: statusLoading } =
-    useFetchItem<any>(getSubscriptionStatus);
+    useFetchItem<{ isActive: boolean; endDate: string; planId?: string } | null>(getSubscriptionStatus);
 
   const {
     data: cardsData,
@@ -65,7 +65,7 @@ const Subscription = () => {
     try {
       const result = await getSubscriptionHistory();
       setHistory(result);
-    } catch (error) {
+    } catch {
       toast.error("Failed to load subscription history");
     } finally {
       setHistoryLoading(false);
@@ -85,8 +85,11 @@ const Subscription = () => {
     try {
       const url = await checkoutSubscription(userId, planId);
       window.location.href = url;
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "Something went wrong, please try again.");
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Something went wrong, please try again.";
+      toast.error(errorMessage);
     }
   };
 
@@ -98,8 +101,11 @@ const Subscription = () => {
       setCheckoutUrl(response.checkoutUrl);
       setProrationDetails(response.prorationDetails);
       setUpgradeModalOpen(true);
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "Upgrade failed. Please try again.");
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Upgrade failed. Please try again.";
+      toast.error(errorMessage);
     } finally {
       setUpgradeLoading(false);
     }

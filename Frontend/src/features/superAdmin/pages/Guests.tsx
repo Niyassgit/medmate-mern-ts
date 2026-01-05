@@ -41,7 +41,7 @@ const Guests = () => {
         setTerritoriesLoading(true);
         const response = await getTerritories();
         setTerritories(response.data.data || []);
-      } catch (err) {
+      } catch {
         toast.error("Failed to load territories");
       } finally {
         setTerritoriesLoading(false);

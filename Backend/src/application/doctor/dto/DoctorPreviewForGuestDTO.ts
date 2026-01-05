@@ -5,4 +5,7 @@ export interface DoctorPreviewForGuestDTO {
   profileImage: string | null;
   about: string;
   createdAt: Date;
+  dob: Date | null;
+  departmentName: string | null;
+  territoryName: string | null;
 }

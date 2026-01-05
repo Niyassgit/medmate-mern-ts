@@ -50,8 +50,11 @@ const FeatureManagement = () => {
       if (res.success && res.data) {
         setFeatures(res.data);
       }
-    } catch (error: any) {
-      toast.error(error?.response?.data?.message || "Failed to fetch features");
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Failed to fetch features";
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -73,10 +76,11 @@ const FeatureManagement = () => {
       }
       reset();
       fetchFeatures();
-    } catch (error: any) {
-      toast.error(
-        error?.response?.data?.message || "Failed to save feature"
-      );
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Failed to save feature";
+      toast.error(errorMessage);
     }
   };
 
@@ -103,10 +107,11 @@ const FeatureManagement = () => {
       await deleteFeature(pendingDeleteId);
       toast.success("Feature deleted successfully");
       setFeatures((prev) => prev.filter((f) => f.id !== pendingDeleteId));
-    } catch (error: any) {
-      toast.error(
-        error?.response?.data?.message || "Failed to delete feature"
-      );
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Failed to delete feature";
+      toast.error(errorMessage);
     } finally {
       setPendingDeleteId(null);
       setConfirmOpen(false);
@@ -205,7 +210,8 @@ const FeatureManagement = () => {
                         {feature.description}
                       </p>
                       <p className="text-xs text-gray-400 mt-2">
-                        Created: {new Date(feature.createdAt).toLocaleDateString()}
+                        Created:{" "}
+                        {new Date(feature.createdAt).toLocaleDateString()}
                       </p>
                     </div>
                     <div className="flex items-center gap-2 ml-4">
@@ -249,4 +255,3 @@ const FeatureManagement = () => {
 };
 
 export default FeatureManagement;
-

@@ -34,8 +34,10 @@ const ProfilePage = () => {
         } else {
           setError("Invalid request");
         }
-      } catch (error: any) {
-        setError(error.message || "Something went wrong");
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof Error ? error.message : "Something went wrong";
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
@@ -52,7 +54,7 @@ const ProfilePage = () => {
   const confirmAvatarChange = async () => {
     if (!doctor || !selectedFile) return;
     try {
-      const response = await updateProfileImage(id, selectedFile);
+      const response = await updateProfileImage(id!, selectedFile);
       if (response.success) {
         setDoctor({
           ...doctor,
@@ -63,8 +65,11 @@ const ProfilePage = () => {
       } else {
         toast.error(response.message || "Something has happened");
       }
-    } catch (err: any) {
-      toast.error("Failed to upload profile image:", err.message);
+    } catch (err: unknown) {
+      const errorMessage =
+        (err as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Failed to upload profile image";
+      toast.error(errorMessage);
     } finally {
       setOpenConfirm(false);
       setSelectedFile(null);
@@ -95,11 +100,11 @@ const ProfilePage = () => {
 
   const handleImageError = async () => {
     try {
-      const res = await getProfileRep(id);
+      const res = await getProfileRep(id!);
       if (res.success && res.data?.profileImage) {
         return res.data.profileImage;
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to refresh profile image");
     }
     return null;

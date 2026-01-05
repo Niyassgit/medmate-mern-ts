@@ -42,15 +42,18 @@ const Notifications = () => {
     try {
       const res = await getDoctorNotifications(id, cursor ?? undefined);
       const { data, nextCursor, hasMore: more } = res.data;
-      const normalizedNotifications: Notification[] = data.map((n: any) => ({
+      const normalizedNotifications: Notification[] = data.map((n: Notification) => ({
         ...n,
         createdAt: new Date(n.createdAt),
       }));
       setLocalNotifications((prev) => [...prev, ...normalizedNotifications]);
       setCursor(nextCursor);
       setHasMore(more);
-    } catch (error: any) {
-      toast.error(error.message || "Failed to load more notifications");
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Failed to load more notifications";
+      toast.error(errorMessage);
     } finally {
       setLoadingMore(false);
     }
@@ -59,9 +62,13 @@ const Notifications = () => {
   const { data: notificationsRes, error, loading } = useFetchItem(fetchInitial);
 
   useEffect(() => {
-    if (notificationsRes && notificationsRes.data && Array.isArray(notificationsRes.data)) {
+    if (
+      notificationsRes &&
+      notificationsRes.data &&
+      Array.isArray(notificationsRes.data)
+    ) {
       const normalizedNotifications: Notification[] = notificationsRes.data.map(
-        (n: any) => ({
+        (n: Notification) => ({
           ...n,
           createdAt: new Date(n.createdAt),
         })
@@ -85,9 +92,11 @@ const Notifications = () => {
       prev.map((notification) => ({ ...notification, isRead: true }))
     );
     try {
-      await markAllNotificationsAsRead(id);
-    } catch (error: any) {
-      toast.error(error.message || "Internal server Error");
+      await markAllNotificationsAsRead(id!);
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Internal server Error";
+      toast.error(errorMessage);
     }
   };
 
@@ -102,8 +111,11 @@ const Notifications = () => {
 
     try {
       await markNotificationAsRead(id);
-    } catch (error: any) {
-      toast.error(error.message || "Failed to update notification as read");
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Failed to update notification as read";
+      toast.error(errorMessage);
     }
   };
 
@@ -121,8 +133,11 @@ const Notifications = () => {
       } else {
         toast.error(res.message || "Something has happened!");
       }
-    } catch (error: any) {
-      toast.error(error.message || "Internal error");
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Internal error";
+      toast.error(errorMessage);
     }
   };
 
@@ -140,8 +155,11 @@ const Notifications = () => {
       } else {
         toast.error(res.message || "Something has happened!");
       }
-    } catch (error: any) {
-      toast.error(error.message || "Internal error");
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Internal error";
+      toast.error(errorMessage);
     }
   };
 

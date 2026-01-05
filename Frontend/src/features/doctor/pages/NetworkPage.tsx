@@ -8,7 +8,6 @@ import useFetchItem from "@/hooks/useFetchItem";
 import { SpinnerButton } from "@/components/shared/SpinnerButton";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { Search } from "lucide-react";
-import { api } from "@/services/api";
 import { getTerritories } from "@/features/shared/api/SharedApi";
 
 interface Territory {

@@ -32,10 +32,10 @@ const HomePage2 = () => {
             </svg>
           </div>
           <div className="mt-5 space-y-2 text-center">
-            <h3 className="text-base font-semibold text-slate-700">
+            <h3 className="text-base font-semibold text-white">
               Real-Time Analytics
             </h3>
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-white/80">
               Get instant insights into your finances with live dashboards.
             </p>
           </div>
@@ -66,10 +66,10 @@ const HomePage2 = () => {
             </svg>
           </div>
           <div className="mt-5 space-y-2 text-center">
-            <h3 className="text-base font-semibold text-slate-700">
+            <h3 className="text-base font-semibold text-white">
               Bank-Grade Security
             </h3>
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-white/80">
               End-to-end encryption, 2FA, compliance with GDPR standards.
             </p>
           </div>
@@ -100,10 +100,10 @@ const HomePage2 = () => {
             </svg>
           </div>
           <div className="mt-5 space-y-2 text-center">
-            <h3 className="text-base font-semibold text-slate-700">
+            <h3 className="text-base font-semibold text-white">
               Customizable Reports
             </h3>
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-white/80">
               Export professional, audit-ready financial reports for tax or
               internal review.
             </p>

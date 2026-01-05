@@ -4,7 +4,6 @@ import {
   Clock,
   AlertCircle,
   Package,
-  ExternalLink,
   CreditCard,
   CheckCircle,
   XCircle,

@@ -20,7 +20,7 @@ const schema = z.object({
 });
 
 interface VerifyPasswordProps {
-  onVerify: (password: string) => Promise<any>;
+  onVerify: (password: string) => Promise<unknown>;
   onSuccessRedirect: string;
   title?: string;
   subTitle?: string;
@@ -46,8 +46,11 @@ export default function VerifyPassword({
       await onVerify(values.password);
       toast.success("Password verified successfully");
       navigate(onSuccessRedirect);
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "Verification failed");
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Verification failed";
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }

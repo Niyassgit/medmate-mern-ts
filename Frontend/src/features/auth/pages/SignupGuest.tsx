@@ -77,7 +77,6 @@ const SignupGuest = () => {
 
   const onSubmit = async (values: RegisterGuestBody) => {
     try {
-      // Ensure all required fields are present and not empty
       if (!values.name || !values.email || !values.phone || !values.password) {
         toast.error("Please fill in all required fields");
         return;
@@ -91,10 +90,6 @@ const SignupGuest = () => {
         territoryId: values.territoryId || undefined,
         shareToken: shareToken || undefined,
       };
-
-      // Debug: Log the payload to see what's being sent
-      console.log("Guest registration payload:", payload);
-
       const res = await registerGuest(payload);
 
       if (res.data.success && res.data.email && res.data.expiredAt) {
@@ -107,13 +102,10 @@ const SignupGuest = () => {
           },
         });
       }
-    } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.message ||
-        error.message ||
-        "Something went wrong";
+    } catch (error: unknown) {
+      const errorMessage = (error as { response?: { data?: { message?: string } } })?.response
+        ?.data?.message || "Internal Server error";
       toast.error(errorMessage);
-      console.error("Registration error:", error.response?.data || error);
     }
   };
 

@@ -13,7 +13,7 @@ const HomePage3 = () => {
       <div className="relative mx-auto max-w-5xl px-4">
         <div className="absolute -z-50 size-[400px] -top-10 -left-20 aspect-square rounded-full bg-indigo-500/30 blur-3xl"></div>
 
-        <p className="text-slate-800 text-lg text-left max-w-3xl">
+        <p className="text-white/90 text-lg text-left max-w-3xl">
           MedMate simplifies healthcare by connecting patients, doctors, and
           medical representatives on a single, secure platform — making
           consultations, prescriptions, and medicine ordering effortless.
@@ -34,11 +34,11 @@ const HomePage3 = () => {
               src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/features/image-3.png"
             />
 
-            <h3 className="text-[24px]/7.5 text-slate-800 font-medium mt-6">
+            <h3 className="text-[24px]/7.5 text-white font-medium mt-6">
               Smarter healthcare with transparency and trust
             </h3>
 
-            <p className="text-gray-300 mt-2">
+            <p className="text-white/80 mt-2">
               From verified doctors to digital prescriptions and transparent
               medicine pricing, MedMate ensures clarity, convenience, and care
               at every step of your healthcare journey.
@@ -46,7 +46,7 @@ const HomePage3 = () => {
 
             <a
               href="#"
-              className="group flex items-center gap-2 mt-4 text-indigo-600 hover:text-indigo-700 transition"
+              className="group flex items-center gap-2 mt-4 text-[#25b6c0] hover:text-[#1fa5af] transition"
             >
               Explore how MedMate works
               <svg

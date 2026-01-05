@@ -1,5 +1,4 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { formatMessageTimestamp } from "@/lib/formatMessageTimestamp";
 import { cn } from "@/lib/utils";
 import { Check, CheckCheck } from "lucide-react";
@@ -10,7 +9,6 @@ interface ConversationItemProps {
   lastMessage: string;
   timestamp: string;
   unread: number;
-  // online: boolean;
   isActive?: boolean;
   onClick?: () => void;
 

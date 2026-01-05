@@ -10,8 +10,8 @@ const useFetchItem = <T,>(fetchFn: () => Promise<T>) => {
       try {
         const result = await fetchFn();
         setData(result);
-      } catch (error: any) {
-        setError(error.message || "Something went wrong");
+      } catch (error: unknown) {
+        setError((error as {message:string})?.message || "Something went wrong");
       } finally {
         setLoading(false);
       }
