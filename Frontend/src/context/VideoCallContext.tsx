@@ -205,7 +205,6 @@ export const VideoCallProvider: React.FC<{ children: ReactNode }> = ({
             }
         } else {
             console.error("No pending offer to accept!");
-            toast.error("No pending offer to accept!");
         }
     };
 

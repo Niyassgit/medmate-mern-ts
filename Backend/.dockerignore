@@ -1,0 +1,27 @@
+
+#Dependencies
+node_modules
+
+#Logs
+Logs
+*.logs
+
+#Environment
+.env
+.env.* 
+
+#Git 
+.git 
+.gitignore 
+
+#Dev & tooling 
+eslint.config 
+coverage 
+
+#OS /Editor 
+.vscode 
+.idea 
+.DS_Store 
+
+#Build output (generated inside Docker)
+dist
