@@ -18,7 +18,7 @@ const UserAvatar = ({to}:UserAvatarProps) => {
                 <AvatarImage src={user.image}/>
             ):(
                 <AvatarFallback>
-                    {user?.email.charAt(0).toUpperCase() || "U"}
+                    {user?.email?.charAt(0).toUpperCase() || "U"}
                 </AvatarFallback>
             )}
         </Avatar>

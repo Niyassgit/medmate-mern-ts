@@ -20,7 +20,7 @@ const DepartmentManagement: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<string>("");
 
   const fetchDepartmentsFn = useCallback(
-    () => departments(id, page, limit, search),
+    () => departments(id!, page, limit, search),
     [id, page, limit, search, statusFilter]
   );
 

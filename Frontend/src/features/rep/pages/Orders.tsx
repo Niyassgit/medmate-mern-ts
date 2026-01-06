@@ -1,7 +1,7 @@
 import { getOrderStatusBadge } from "@/types/utils/orderStatusBadge";
 import { getAllOrders } from "../api";
 import { IRepOrder } from "../dto/RepOrderDTO";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { OrderStatus } from "@/types/PaymentTypes";
 

@@ -18,7 +18,7 @@ const TerritorryManagement: React.FC = () => {
   const [search, setSearch] = useState<string>("");
 
   const fetchTerritoriesFn = useCallback(
-    () => territories(id, page, limit, search),
+    () => territories(id!, page, limit, search),
     [id, page, limit, search]
   );
   const { data, loading, error } =

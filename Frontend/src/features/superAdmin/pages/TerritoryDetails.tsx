@@ -1,5 +1,5 @@
 import useFetchItem from "@/hooks/useFetchItem";
-import React, { useCallback, useState } from "react";
+import  { useCallback, useState } from "react";
 import { territoryDetails } from "../api/superAdminApi";
 import { useNavigate, useParams } from "react-router-dom";
 import { SpinnerButton } from "@/components/shared/SpinnerButton";

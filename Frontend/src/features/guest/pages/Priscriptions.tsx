@@ -1,4 +1,3 @@
-import React from "react";
 import PrescriptionList from "@/components/shared/PrescriptionList";
 import { getAllPrescriptions } from "../api";
 import { useNavigate } from "react-router-dom";

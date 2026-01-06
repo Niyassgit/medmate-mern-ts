@@ -1,4 +1,3 @@
-import React from "react";
 import HomePage1 from "../components/HomePage1";
 import HomePage2 from "../components/HomePage2";
 import HomePage3 from "../components/HomePage3";

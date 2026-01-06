@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { RecentSubscriptionsTable } from "../components/RecentSubscriptionsTable";
 import { subscribedUsers } from "../api/superAdminApi";
 import toast from "react-hot-toast";

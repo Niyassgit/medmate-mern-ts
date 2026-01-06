@@ -1,8 +1,8 @@
-import { OrderStatus, StripePaymentStatus } from "@/types/PaymentTypes";
+import { OrderStatus, PaymentStatus } from "@/types/PaymentTypes";
 
 export interface PrescriptionOrderDTO {
   id: string;
   totalAmount: number;
-  paymentStatus: StripePaymentStatus,
+  paymentStatus: PaymentStatus,
   status: OrderStatus,
 }

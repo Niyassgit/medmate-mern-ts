@@ -1,5 +1,5 @@
 import { CheckCircle, Home } from "lucide-react";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 

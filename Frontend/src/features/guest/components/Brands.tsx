@@ -1,5 +1,3 @@
-import React from "react";
-
 const Brands = () => {
   const companiesLogo = [
     {
@@ -26,7 +24,6 @@ const Brands = () => {
 
   return (
     <>
-  
       <style>
         {`
           .marquee-inner {
