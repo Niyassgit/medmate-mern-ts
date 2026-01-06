@@ -5,3 +5,8 @@ node_modules
 /src/generated/prisma
 
 logs 
+
+# VS Code & browser cache
+.vscode/
+**/chrome/
+**/*Cache/
