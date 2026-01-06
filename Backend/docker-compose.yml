@@ -1,9 +1,12 @@
 services:
   backend:
     build: .
+    image: medmate-backend-image
     container_name: medmate-backend
     ports:
       - "${PORT:-5000}:5000"
     env_file:
       - .env
+    volumes:
+    - ./uploads:/app/uploads  
     restart: unless-stopped
