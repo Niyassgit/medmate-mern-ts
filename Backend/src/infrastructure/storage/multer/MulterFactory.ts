@@ -3,12 +3,12 @@ import { Request } from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+const dirname = process.cwd()
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    let uploadPath = path.join(__dirname, "../uploads");
+    let uploadPath = path.join(dirname, "uploads");
 
     if (file.fieldname === "licenseImageUrl") {
       uploadPath = path.join(uploadPath, "licenses");

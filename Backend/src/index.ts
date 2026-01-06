@@ -20,7 +20,6 @@ import { GuestRoutes } from "./presentation/http/routes/GuestRoutes";
 
 const app = express();
 
-
 app.use("/api/webhook", new WebhookRoutes().router);
 
 app.use(express.json());
@@ -35,9 +34,7 @@ app.use(
 const server = http.createServer(app);
 initSocket(server);
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const uploadsPath = path.join(__dirname, "infrastructure/storage/uploads");
+const uploadsPath = path.join(process.cwd(), "uploads");
 
 app.use("/uploads", express.static(uploadsPath));
 

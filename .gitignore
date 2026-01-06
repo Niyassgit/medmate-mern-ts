@@ -9,7 +9,11 @@ node_modules/
 Thumbs.db
 
 # Ignore VS Code temporary files
-.vscode/chrome/        # Chrome debug cache
+.vscode/chrome/        
 
 
 Backend/logs/
+
+dist
+
+uploads

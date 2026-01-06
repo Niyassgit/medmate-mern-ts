@@ -2,7 +2,7 @@ import { AuthController } from "../../presentation/http/controllers/AuthControll
 import { LoginUserUseCase } from "../../application/common/use-cases/LoginUserUseCase";
 import { GoogleLoginUseCase } from "../../application/common/use-cases/GoogleLoginUseCase";
 import { UserRepository } from "../repositories/UserRepository";
-import { GooglePrecheckUseCase } from "../../application/common/use-cases/GooglePrecheckUseCase.ts";
+import { GooglePrecheckUseCase } from "../../application/common/use-cases/GooglePrecheckUseCase";
 import { GetNewAccessTokenUseCase } from "../../application/common/use-cases/GetNewAcccessTokenUseCase";
 import { VerifySignupOtpUseCase } from "../../application/common/use-cases/VerifySignupOtpUseCase";
 import { BcryptServices } from "../services/BcryptService";

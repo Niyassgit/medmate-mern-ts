@@ -38,12 +38,8 @@ dist
 build
 *.tsbuildinfo
 
-# Storage and uploads (not needed in build)
-src/infrastructure/storage/uploads
-src/infrastructure/storage/**/*.png
-src/infrastructure/storage/**/*.jpg
-src/infrastructure/storage/**/*.jpeg
-src/infrastructure/storage/**/*.gif
+
+
 
 # Test files
 *.test.ts
@@ -63,3 +59,5 @@ docs
 Dockerfile*
 docker-compose*.yml
 .dockerignore
+
+uploads

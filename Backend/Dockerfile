@@ -1,42 +1,32 @@
-FROM node:20-alpine AS builder
+FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy package files first for better caching
-COPY package.json package-lock.json ./
-RUN npm ci --only=production=false
+# Copy package files
+COPY package*.json ./
 
-# Copy configuration files
-COPY tsconfig.json ./
-COPY prisma ./prisma
+# Install only production deps
+RUN npm ci
 
-# Generate Prisma Client
+# Copy Prisma schema
+COPY prisma ./prisma/
+
+# Generate Prisma client
 RUN npx prisma generate
 
-# Copy source files (excluding uploads via .dockerignore)
-COPY src ./src
+# Copy source
+COPY . .
 
 # Build TypeScript
 RUN npm run build
 
-FROM node:20-alpine
-
-WORKDIR /app
-
-# Copy package files for production dependencies
-COPY package.json package-lock.json ./
-RUN npm ci --only=production && npm cache clean --force
-
-# Copy built application, Prisma files, and generated Prisma Client
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+# Remove dev dependencies
+RUN npm prune --omit=dev
 
 # Create uploads directory structure (empty, will be populated at runtime)
-RUN mkdir -p src/infrastructure/storage/uploads/licenses \
-    src/infrastructure/storage/uploads/company-logo \
-    src/infrastructure/storage/uploads/others
+RUN mkdir -p uploads/licenses \
+    uploads/company-logo \
+    uploads/others
 
 EXPOSE 5000
 
