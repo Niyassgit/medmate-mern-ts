@@ -15,7 +15,7 @@ import { useEffect, useState } from "react";
 import DoctorsSection from "./DoctorsSection";
 import NetworkSection from "./NetworkSection";
 import Footer from "./Footer";
-import Brands from "@/features/Guest/components/Brands";
+import Brands from "@/features/guest/components/Brands";
 import GuestBlog from "./GuestBlog";
 
 const slides = [

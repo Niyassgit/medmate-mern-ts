@@ -1,16 +1,16 @@
 import PrivateRoute from "@/components/shared/PrivateRoute";
-import GuestLayout from "@/features/Guest/components/GuestLayout";
-import CheckoutPage from "@/features/Guest/pages/CheckoutPage";
-import HomePage from "@/features/Guest/pages/HomePage";
-import PrescriptionList from "@/features/Guest/pages/Priscriptions";
-import OrderSuccessPage from "@/features/Guest/pages/OrderSuccessPage";
-import OrderCancelPage from "@/features/Guest/pages/OrderCancelPage";
+import GuestLayout from "@/features/guest/components/GuestLayout";
+import CheckoutPage from "@/features/guest/pages/CheckoutPage";
+import HomePage from "@/features/guest/pages/HomePage";
+import PrescriptionList from "@/features/guest/pages/Priscriptions";
+import OrderSuccessPage from "@/features/guest/pages/OrderSuccessPage";
+import OrderCancelPage from "@/features/guest/pages/OrderCancelPage";
 import { Role } from "@/types/Role";
-import OrderListingPage from "@/features/Guest/pages/OrdersListPage";
-import OrderDetailPage from "@/features/Guest/pages/OrderDetailPage";
-import ProfilePage from "@/features/Guest/pages/ProfilePage";
-import CompleteProfilePage from "@/features/Guest/pages/CompleteProfilePage";
-import { changePassword, verifyPassword } from "@/features/Guest/api";
+import OrderListingPage from "@/features/guest/pages/OrdersListPage";
+import OrderDetailPage from "@/features/guest/pages/OrderDetailPage";
+import ProfilePage from "@/features/guest/pages/ProfilePage";
+import CompleteProfilePage from "@/features/guest/pages/CompleteProfilePage";
+import { changePassword, verifyPassword } from "@/features/guest/api";
 import ChangePassword from "@/components/shared/ChangePassword";
 import VerifyPassword from "@/components/shared/VerifyPassword";
 
