@@ -5,7 +5,6 @@ import cookieParser from "cookie-parser";
 import path from "path";
 import morgan from "morgan";
 import { env } from "./infrastructure/config/env";
-import { fileURLToPath } from "url";
 import { connectDB } from "./infrastructure/config/db";
 import { LoginRoute } from "./presentation/http/routes/AuthRoute";
 import { MedicalRepRoutes } from "./presentation/http/routes/MedicalRepRoutes";
