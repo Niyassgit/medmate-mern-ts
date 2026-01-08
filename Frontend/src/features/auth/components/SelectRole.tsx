@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { UserCheck, Stethoscope, Briefcase, X, ArrowRight } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { googleLogin } from "../api";
 import toast from "react-hot-toast";
+import { useAppDispatch } from "@/app/hooks";
+import { login } from "../authSlice";
+import { fetchSubscription } from "@/features/subscription/subscriptionThunks";
 
 enum Role {
   DOCTOR = "DOCTOR",
@@ -14,10 +17,18 @@ enum Role {
 export default function SelectRolePage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useAppDispatch();
   const searchParams = new URLSearchParams(location.search);
   const idToken = searchParams.get("idToken");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
+
+  useEffect(() => {
+    if (!idToken) {
+      toast.error("Missing authentication token. Please try logging in again.");
+      navigate("/auth/login", { replace: true });
+    }
+  }, [idToken, navigate]);
 
   const handleRoleSelect = async (role: Role) => {
     if (!idToken) return;
@@ -28,6 +39,22 @@ export default function SelectRolePage() {
     try {
       const response = await googleLogin(idToken, role);
 
+      // Dispatch login action to update auth state
+      dispatch(
+        login({
+          token: response.data.accessToken,
+          user: response.data.user,
+        })
+      );
+
+      // Fetch subscription for medical reps
+      if (response.data.user.role === Role.MEDICAL_REP) {
+        dispatch(fetchSubscription());
+      }
+
+      toast.success("Login successful!");
+
+      // Navigate based on role
       if (response.data.user.role === Role.DOCTOR) {
         navigate("/doctor/feed", { replace: true });
       } else if (response.data.user.role === Role.MEDICAL_REP) {

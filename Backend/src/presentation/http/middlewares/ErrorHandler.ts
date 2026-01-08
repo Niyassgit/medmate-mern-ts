@@ -15,7 +15,8 @@ export const ErrorHandler = (
     res.status(err.statusCode).json({ success: false, message: err.message });
   } else {
     const error=err as Error;
-    logger.error(`🔥 Unhandled Error:${error.message}`);
+    logger.error(`🔥 Unhandled Error: ${error.message}`);
+    logger.error(`Stack trace: ${error.stack}`);
     res
       .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
       .json({ success: false, message: ErrorMessages.SERVER_ERROR });

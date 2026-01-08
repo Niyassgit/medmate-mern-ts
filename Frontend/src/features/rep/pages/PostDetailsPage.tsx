@@ -100,7 +100,7 @@ const PostDetailsPage = () => {
     );
   };
 
-  const handleErrorImage = async () => {
+  const handleErrorImage = async (idx: number) => {
     try {
       const res = await postDetails(id!);
       if (res.success && res.data?.data?.imageUrl) {
@@ -162,7 +162,7 @@ const PostDetailsPage = () => {
                   src={imageUrls[currentImageIndex]}
                   alt={post.title}
                   className="h-full w-full object-cover"
-                  onError={() => handleErrorImage()}
+                  onError={() => handleErrorImage(currentImageIndex)}
                 />
 
                 {post.imageUrl.length > 1 && (
@@ -209,7 +209,7 @@ const PostDetailsPage = () => {
                         src={url}
                         alt={`${post.title} ${idx + 1}`}
                         className="h-full w-full object-cover"
-                        onError={() => handleErrorImage()}
+                        onError={() => handleErrorImage(idx)}
                       />
                     </button>
                   ))}

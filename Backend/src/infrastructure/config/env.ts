@@ -27,5 +27,6 @@ export const env = {
     secretAccessKey:required("AWS_SECRET_ACCESS_KEY"),
     region:required("AWS_REGION"),
     bucketName:required("AWS_BUCKET_NAME")
-  }
+  },
+  googleClientId: required("GOOGLE_CLIENT_ID")
 };
