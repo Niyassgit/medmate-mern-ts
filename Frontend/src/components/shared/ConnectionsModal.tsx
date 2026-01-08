@@ -46,6 +46,7 @@ export default function ConnectionsModal({
       mounted = false;
     };
   }, [isOpen, fetcher]);
+  console.log("data for the connection modal:",connections);
 
   if (!isOpen) return null;
 
