@@ -57,10 +57,12 @@ export function useWebRTC(remoteUserId: string) {
       if (event.candidate) {
         if (targetUser) {
           const socket = getSocket(token);
-          socket.emit("call:ice-candidate", {
-            toUserId: targetUser,
-            candidate: WebRTCAdapter.toIceCandidate(event.candidate),
-          });
+          if (socket) {
+            socket.emit("call:ice-candidate", {
+              toUserId: targetUser,
+              candidate: WebRTCAdapter.toIceCandidate(event.candidate),
+            });
+          }
         }
       }
     };
@@ -78,10 +80,12 @@ export function useWebRTC(remoteUserId: string) {
     await peer.setLocalDescription(offer);
 
     const socket = getSocket(token!);
-    socket.emit("call:offer", {
-      toUserId: targetId,
-      offer: WebRTCAdapter.toSessionDescription(offer),
-    });
+    if (socket) {
+      socket.emit("call:offer", {
+        toUserId: targetId,
+        offer: WebRTCAdapter.toSessionDescription(offer),
+      });
+    }
   };
 
 
@@ -100,10 +104,12 @@ export function useWebRTC(remoteUserId: string) {
     await peer.setLocalDescription(answer);
 
     const socket = getSocket(token!);
-    socket.emit("call:accepted", {
-      toUserId: fromUserId,
-      answer: WebRTCAdapter.toSessionDescription(answer),
-    });
+    if (socket) {
+      socket.emit("call:accepted", {
+        toUserId: fromUserId,
+        answer: WebRTCAdapter.toSessionDescription(answer),
+      });
+    }
 
     // Process pending candidates - convert from IceCandidate to RTCIceCandidateInit
     if (pendingCandidates.current.length > 0) {
@@ -123,6 +129,7 @@ export function useWebRTC(remoteUserId: string) {
 
   useEffect(() => {
     const socket = getSocket(token!);
+    if (!socket) return;
     socket.on("call:accepted", async ({ answer }) => {
       if (!peerRef.current) return;
       

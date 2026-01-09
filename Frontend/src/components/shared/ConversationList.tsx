@@ -66,6 +66,7 @@ export const ConversationList = ({
     if (!token || !conversations.length) return;
 
     const socket = getSocket(token);
+    if (!socket) return;
 
     conversations.forEach((conv) => {
       socket.emit("join_conversation", conv.id);
