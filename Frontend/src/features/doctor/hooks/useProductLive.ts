@@ -16,6 +16,7 @@ export function useProductLive(
     useEffect(()=>{
         if(!productId || !token) return;
         const socket=getSocket(token);
+        if(!socket) return;
         socket.emit("room:join:product",{productId});
         const handleLikeToggled=(p:LikeToggledPayload)=>{
             if(p.productId===productId) onLikeCounts(p.counts.like);

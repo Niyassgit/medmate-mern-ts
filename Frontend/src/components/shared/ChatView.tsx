@@ -144,6 +144,8 @@ export const ChatView = ({ conversation, owner }: ChatViewProps) => {
     if (!token) return;
 
     const socket = getSocket(token);
+    if (!socket) return;
+
     const joinConversation = () => {
       socket.emit("join_conversation", conversation.id);
     };

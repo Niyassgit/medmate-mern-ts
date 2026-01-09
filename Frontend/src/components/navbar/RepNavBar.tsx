@@ -50,6 +50,8 @@ const RepNavbar = () => {
     if (!token || !userId) return;
 
     const socket = getSocket(token);
+    if (!socket) return;
+
     socket.on("notification:count", (data) => setUnreadCount(data));
 
     return () => {
@@ -61,6 +63,7 @@ const RepNavbar = () => {
   useEffect(() => {
     if (!token || !userId) return;
     const socket = getSocket(token);
+    if (!socket) return;
 
     const join = async () => {
       const res = await repConversations();

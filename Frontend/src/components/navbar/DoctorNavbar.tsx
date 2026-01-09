@@ -71,6 +71,7 @@ const DoctorNavbar = () => {
   useEffect(() => {
     if (!token || !userId) return;
     const socket = getSocket(token);
+    if (!socket) return;
 
     socket.on("notification:count", (data) => setUnreadCount(data));
 
@@ -82,6 +83,7 @@ const DoctorNavbar = () => {
   useEffect(() => {
     if (!token || !userId) return;
     const socket = getSocket(token);
+    if (!socket) return;
 
     const joinAllConversations = async () => {
       try {
