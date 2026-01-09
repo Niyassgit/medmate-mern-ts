@@ -38,35 +38,85 @@ export const getSocket = (token: string) => {
       throw new Error("Socket URL is not configured. Please set VITE_API_URL or VITE_WS_URL");
     }
     
+    // Detect if we're in production (HTTPS or non-localhost)
+    const isProduction = socketUrl.includes("https://") || 
+                        (!socketUrl.includes("localhost") && !socketUrl.includes("127.0.0.1"));
+    
+    // In production, prioritize polling first (more reliable behind proxies/load balancers)
+    // Then upgrade to WebSocket if available
+    // In development, try WebSocket first for better performance
+    const transports = isProduction 
+      ? ["polling", "websocket"]  // Polling first in production
+      : ["websocket", "polling"]; // WebSocket first in development
+    
     // Socket.IO configuration
     // Socket.IO automatically handles protocol conversion:
     // - http://example.com -> uses ws:// for WebSocket
     // - https://example.com -> uses wss:// for WebSocket (secure)
     socket = io(socketUrl, {
       auth: { token },
-      transports: ["websocket", "polling"], // Allow polling fallback for production
+      transports: transports,
       reconnection: true,
       reconnectionDelay: 1000,
-      reconnectionAttempts: 5,
+      reconnectionAttempts: 10, // More attempts for production
       reconnectionDelayMax: 5000,
       timeout: 20000,
       forceNew: false,
-      // Auto-upgrade: try websocket first, fallback to polling if needed
+      // Auto-upgrade: start with first transport, upgrade if available
       upgrade: true,
+      // Allow polling to work even if WebSocket fails
+      rememberUpgrade: false,
     });
+    
+    let pollingAttempted = false;
     
     // Add error handlers for debugging
     socket.on("connect_error", (error) => {
       console.error("Socket connection error:", error.message);
       console.error("Attempted URL:", socketUrl);
+      const currentSocket = socket;
+      if (currentSocket) {
+        console.error("Transport:", currentSocket.io.engine?.transport?.name || "unknown");
+        
+        // If WebSocket fails, force polling
+        if ((error.message.includes("websocket") || error.message.includes("WebSocket")) && 
+            !pollingAttempted && 
+            currentSocket.io.engine) {
+          console.warn("WebSocket failed, forcing polling transport...");
+          pollingAttempted = true;
+          currentSocket.io.opts.transports = ["polling"];
+          currentSocket.disconnect();
+          currentSocket.connect();
+        }
+      }
     });
     
     socket.on("connect", () => {
-      console.log("Socket connected successfully to:", socketUrl);
+      const currentSocket = socket;
+      if (currentSocket) {
+        const transport = currentSocket.io.engine?.transport?.name || "unknown";
+        console.log(`Socket connected successfully to: ${socketUrl} (transport: ${transport})`);
+      }
     });
     
     socket.on("disconnect", (reason) => {
       console.warn("Socket disconnected:", reason);
+      const currentSocket = socket;
+      // If disconnected due to transport error, try reconnecting with polling
+      if (reason === "transport error" && !pollingAttempted && currentSocket) {
+        console.warn("Transport error detected, retrying with polling only...");
+        pollingAttempted = true;
+        currentSocket.io.opts.transports = ["polling"];
+      }
+    });
+    
+    // Monitor transport upgrades
+    socket.io.engine?.on("upgrade", () => {
+      const currentSocket = socket;
+      if (currentSocket) {
+        const transport = currentSocket.io.engine?.transport?.name || "unknown";
+        console.log(`Socket upgraded to: ${transport}`);
+      }
     });
   } else if (socket.disconnected) {
     socket.auth = { token };
