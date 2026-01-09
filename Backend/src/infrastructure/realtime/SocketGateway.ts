@@ -12,9 +12,18 @@ import logger from "../logger/Logger";
 export let io: Server;
 
 export function initSocket(server: HttpServer) {
+  // CORS configuration - supports single origin or comma-separated origins
+  const origin = env.origin === "*" ? true : env.origin;
+
   io = new Server(server, {
-    cors: { origin: env.origin.split(",") ?? true, credentials: true },
+    cors: { 
+      origin: origin,
+      credentials: true 
+    },
+    transports: ["websocket", "polling"], // Allow both transports
   });
+
+
   io.use((socket: AuthenticatedSocket, next) => {
     try {
       let token = socket.handshake.auth?.token as string | undefined;
@@ -23,6 +32,7 @@ export function initSocket(server: HttpServer) {
         token = authHeader.replace(/^Bearer\s+/i, "").trim();
       }
       if (!token) {
+        logger.warn("Socket connection rejected: No token provided");
         return next(new UnautharizedError(ErrorMessages.UNAUTHORIZED));
       }
       const payload = jwt.verify(token, env.access_token) as JwtPayload;
@@ -32,10 +42,12 @@ export function initSocket(server: HttpServer) {
       };
       socket.user = user;
       next();
-    } catch {
+    } catch (error) {
+      logger.warn(`Socket connection rejected: Invalid token - ${error instanceof Error ? error.message : "Unknown error"}`);
       next(new UnautharizedError(ErrorMessages.UNAUTHORIZED));
     }
   });
+
   io.on("connection", (socket: AuthenticatedSocket) => {
     const user = socket.user;
 
@@ -44,6 +56,7 @@ export function initSocket(server: HttpServer) {
       socket.disconnect(true);
       return;
     }
+
 
     void socket.join(`user:${user.id}`);
     void socket.on(
@@ -127,7 +140,14 @@ export function initSocket(server: HttpServer) {
       io.to(`user:${toUserId}`).emit("call:rejected", { fromUserId: user.id });
     });
 
+    socket.on("error", (error) => {
+      logger.error(`Socket error for user ${user.id}: ${error.message || error}`);
+    });
 
+  });
+
+  io.engine.on("connection_error", (err) => {
+    logger.error(`Socket.IO connection error: ${err.message}`);
   });
 
   return io;
