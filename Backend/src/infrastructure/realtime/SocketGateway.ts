@@ -12,16 +12,31 @@ import logger from "../logger/Logger";
 export let io: Server;
 
 export function initSocket(server: HttpServer) {
-  // CORS configuration - supports single origin or comma-separated origins
-  const origin = env.origin === "*" ? true : env.origin;
+  let origin: string | string[] | boolean = true;
+  
+  if (env.origin === "*") {
+    origin = true; // Allow all origins
+  } else if (env.origin.includes(",")) {
+    origin = env.origin.split(",").map(o => o.trim());
+  } else {
+    origin = env.origin;
+  }
 
   io = new Server(server, {
     cors: { 
       origin: origin,
-      credentials: true 
+      credentials: true,
+      methods: ["GET", "POST"],
+      allowedHeaders: ["Authorization", "Content-Type"],
     },
-    transports: ["websocket", "polling"], // Allow both transports
+    transports: ["websocket", "polling"], 
+    allowEIO3: true, 
+    path: "/socket.io", 
+    pingTimeout: 60000, 
+    pingInterval: 25000, 
   });
+
+  logger.info(`Socket.IO server initialized with CORS origin: ${JSON.stringify(origin)}`);
 
 
   io.use((socket: AuthenticatedSocket, next) => {
