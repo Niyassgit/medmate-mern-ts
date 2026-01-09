@@ -68,6 +68,7 @@ const Feed = () => {
   useEffect(() => {
     if (!token || !id) return;
     const socket = getSocket(token);
+    if (!socket) return;
 
     const onLikeToggled = (payload: {
       productId: string;
@@ -121,6 +122,7 @@ const Feed = () => {
   useEffect(() => {
     if (!token || localFeed.length === 0) return;
     const socket = getSocket(token);
+    if (!socket) return;
 
     const joinRooms = () => {
       localFeed.forEach((post) => {

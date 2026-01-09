@@ -16,9 +16,9 @@ const getSocketUrl = (): string | undefined => {
   return apiUrl;
 };
 
-export const getSocket = (token: string) => {
-  if (!token) {
-    throw new Error("Token is required to establish socket connection");
+export const getSocket = (token: string | null | undefined): Socket | null => {
+  if (!token || token.trim() === "") {
+    return null;
   }
 
   if (!socket) {
@@ -77,8 +77,10 @@ export const getSocket = (token: string) => {
       }
     });
   } else if (socket.disconnected) {
-    socket.auth = { token };
-    socket.connect();
+    if (token) {
+      socket.auth = { token };
+      socket.connect();
+    }
   }
   return socket;
 };

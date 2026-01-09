@@ -166,6 +166,7 @@ const Notifications = () => {
   useEffect(() => {
     if (!token || !id) return;
     const socket = getSocket(token);
+    if (!socket) return;
     socket.on("notification:new", (data) => {
       setLocalNotifications((prev) => [data, ...prev]);
     });

@@ -60,7 +60,7 @@ export const MessageInput = ({
     }
 
     const socket = getSocket(token);
-    if (!socket.connected) {
+    if (!socket || !socket.connected) {
       return;
     }
     socket.emit("typing:start", { conversationId, userId });
@@ -74,7 +74,7 @@ export const MessageInput = ({
     }
 
     const socket = getSocket(token);
-    if (!socket.connected) {
+    if (!socket || !socket.connected) {
       return;
     }
     socket.emit("typing:stop", { conversationId, userId });

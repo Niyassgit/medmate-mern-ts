@@ -73,6 +73,7 @@ export const VideoCallProvider: React.FC<{ children: ReactNode }> = ({
     useEffect(() => {
         if (!token) return;
         const socket = getSocket(token);
+        if (!socket) return;
 
         socket.on("call:incoming", ({ fromUserId }: { fromUserId: string }) => {
             setRemoteUser({ id: fromUserId, name: "Dr/Rep", avatar: "" });
@@ -128,6 +129,7 @@ export const VideoCallProvider: React.FC<{ children: ReactNode }> = ({
     useEffect(() => {
         if (!token) return;
         const socket = getSocket(token);
+        if (!socket) return;
         const onOffer = ({
             offer,
             fromUserId,
@@ -210,7 +212,7 @@ export const VideoCallProvider: React.FC<{ children: ReactNode }> = ({
 
     const rejectCall = () => {
         const socket = getSocket(token!);
-        if (currentRemoteId) {
+        if (socket && currentRemoteId) {
             socket.emit("call:rejected", { toUserId: currentRemoteId });
         }
         cleanupCall();
@@ -218,7 +220,7 @@ export const VideoCallProvider: React.FC<{ children: ReactNode }> = ({
 
     const endCall = () => {
         const socket = getSocket(token!);
-        if (currentRemoteId) {
+        if (socket && currentRemoteId) {
             socket.emit("call:ended", { toUserId: currentRemoteId });
         }
         cleanupCall();
