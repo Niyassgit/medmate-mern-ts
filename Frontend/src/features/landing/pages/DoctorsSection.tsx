@@ -4,6 +4,7 @@ import { Star } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import { doctorsForShow } from "@/features/shared/api/SharedApi";
 import doctor1 from "@/assets/doctor-1.jpg";
+import { Link } from "react-router-dom";
 
 interface DoctorPreview {
   id: string;
@@ -166,10 +167,11 @@ const DoctorsSection = () => {
 
             <div className="text-center">
               <Button 
+                asChild
                 variant="outline"
                 className="border-healthcare-blue text-healthcare-blue hover:bg-healthcare-blue hover:text-white transition-all duration-200"
               >
-                View All Doctors
+                <Link to="/auth/login">View All Doctors</Link>
               </Button>
             </div>
           </>
