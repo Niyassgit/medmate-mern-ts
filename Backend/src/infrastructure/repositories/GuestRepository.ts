@@ -32,7 +32,7 @@ export class GuestRepository
   }
   async updateGuest(
     guestId: string,
-    data: Omit<IGuest, "id" | "createdAt">
+    data: Omit<IGuest, "id" | "createdAt" | "updatedAt">
   ): Promise<IGuest> {
     const prismaData = GuestMapper.toPersistenceUpdate(data);
     const result = await prisma.guest.update({

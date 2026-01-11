@@ -24,10 +24,7 @@ export class CompleteGuestProfileUseCase
     if (!user) {
       throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
     }
-    const existingGuest = await this._guestRepository.findGuestByuserId(userId);
-    if (existingGuest) {
-      throw new BadRequestError(ErrorMessages.GUEST_ALREADY_EXISTS);
-    }
+
     const territory = await this._territoryRepository.findById(
       data.territoryId
     );
@@ -35,10 +32,23 @@ export class CompleteGuestProfileUseCase
       throw new NotFoundError(ErrorMessages.TERR_NOT_FOUND);
     }
 
-    const mappedData = GuestMapper.toEntity(data, user.email, userId);
-    const result = await this._guestRepository.createGuest(mappedData);
-    if (!result) return ErrorMessages.PROFILE_UPDATE_FAIL;
-
-    return SuccessMessages.PROFILE_UPDATED;
+    const existingGuest = await this._guestRepository.findGuestByuserId(userId);
+    
+    if (existingGuest) {
+      // Update existing guest profile
+      const mappedData = GuestMapper.toEntity(data, user.email, userId);
+      const result = await this._guestRepository.updateGuest(
+        existingGuest.id,
+        mappedData
+      );
+      if (!result) return ErrorMessages.PROFILE_UPDATE_FAIL;
+      return SuccessMessages.PROFILE_UPDATED;
+    } else {
+      // Create new guest profile
+      const mappedData = GuestMapper.toEntity(data, user.email, userId);
+      const result = await this._guestRepository.createGuest(mappedData);
+      if (!result) return ErrorMessages.PROFILE_UPDATE_FAIL;
+      return SuccessMessages.PROFILE_UPDATED;
+    }
   }
 }

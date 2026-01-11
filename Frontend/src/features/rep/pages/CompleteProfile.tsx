@@ -103,7 +103,7 @@ export default function CompleteRepProfilePage() {
         });
       } catch (err) {
         console.error(err);
-        toast.error("Failed to fetch profile");
+        // toast.error("Failed to fetch profile");
       }
     }
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { UserCheck, Stethoscope, Briefcase, X, ArrowRight } from "lucide-react";
+import { UserCheck, Stethoscope, Briefcase, X, ArrowRight, CheckCircle } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { googleLogin } from "../api";
 import toast from "react-hot-toast";
@@ -22,6 +22,8 @@ export default function SelectRolePage() {
   const idToken = searchParams.get("idToken");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
+  const [showCompleteProfileModal, setShowCompleteProfileModal] = useState(false);
+  const [userData, setUserData] = useState<{ id: string; role: Role } | null>(null);
 
   useEffect(() => {
     if (!idToken) {
@@ -54,22 +56,55 @@ export default function SelectRolePage() {
 
       toast.success("Login successful!");
 
-      // Navigate based on role
-      if (response.data.user.role === Role.DOCTOR) {
-        navigate("/doctor/feed", { replace: true });
-      } else if (response.data.user.role === Role.MEDICAL_REP) {
-        navigate("/rep/dashboard", { replace: true });
-      } else if (response.data.user.role === Role.SUPER_ADMIN) {
-        navigate("/admin/dashboard", { replace: true });
-      } else if (response.data.user.role === Role.GUEST) {
-        navigate("/guest/dashboard", { replace: true });
-      }
+      // Store user data and show complete profile modal for new users
+      setUserData({
+        id: response.data.user.id,
+        role: response.data.user.role as Role,
+      });
+      setShowCompleteProfileModal(true);
+      setIsLoading(false);
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Signup failed. Please try again.";
       toast.error(errorMessage);
       setIsLoading(false);
       setSelectedRole(null);
+    }
+  };
+
+  const handleCompleteProfile = () => {
+    if (!userData) return;
+
+    let profilePath = "";
+    if (userData.role === Role.DOCTOR) {
+      profilePath = `/doctor/profile/complete/${userData.id}`;
+    } else if (userData.role === Role.MEDICAL_REP) {
+      profilePath = `/rep/profile/complete/${userData.id}`;
+    } else if (userData.role === Role.GUEST) {
+      profilePath = `/guest/complete-profile`;
+    } else if (userData.role === Role.SUPER_ADMIN) {
+      // Super admin might not need profile completion
+      navigate("/admin/dashboard", { replace: true });
+      return;
+    }
+
+    if (profilePath) {
+      navigate(profilePath, { replace: true });
+    }
+  };
+
+  const handleSkipProfile = () => {
+    if (!userData) return;
+
+    // Navigate to dashboard based on role
+    if (userData.role === Role.DOCTOR) {
+      navigate("/doctor/feed", { replace: true });
+    } else if (userData.role === Role.MEDICAL_REP) {
+      navigate("/rep/dashboard", { replace: true });
+    } else if (userData.role === Role.SUPER_ADMIN) {
+      navigate("/admin/dashboard", { replace: true });
+    } else if (userData.role === Role.GUEST) {
+      navigate("/guest/dashboard", { replace: true });
     }
   };
 
@@ -107,6 +142,43 @@ export default function SelectRolePage() {
       hoverColor: "hover:from-purple-600 hover:to-pink-600",
     },
   ];
+
+  // Complete Profile Modal
+  if (showCompleteProfileModal) {
+    return (
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div className="bg-white/95 backdrop-blur-md border border-white/20 rounded-2xl shadow-2xl max-w-md w-full animate-in fade-in-0 zoom-in-95 duration-300">
+          <div className="p-8 text-center">
+            <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full shadow-lg">
+              <CheckCircle size={32} className="text-white" />
+            </div>
+
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              Welcome to MedMate!
+            </h2>
+            <p className="text-gray-600 mb-6">
+              Your account has been created successfully. Complete your profile to get started and unlock all features.
+            </p>
+
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={handleCompleteProfile}
+                className="w-full px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-600 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+              >
+                Complete Profile
+              </button>
+              <button
+                onClick={handleSkipProfile}
+                className="w-full px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-all duration-200"
+              >
+                Skip for Now
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
