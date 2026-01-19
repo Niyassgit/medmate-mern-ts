@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Calendar, X, Filter, Check } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
@@ -20,10 +21,11 @@ export function DashboardFilters({ onFilterChange }: DashboardFiltersProps) {
   const [selectedYear, setSelectedYear] = useState(currentYear.toString());
   const [isApplying, setIsApplying] = useState(false);
   const [justApplied, setJustApplied] = useState(false);
+  const today = new Date().toISOString().split("T")[0];
 
   const handleApplyFilters = () => {
     setIsApplying(true);
-    
+
     // Simulate loading effect
     setTimeout(() => {
       onFilterChange({
@@ -33,7 +35,7 @@ export function DashboardFilters({ onFilterChange }: DashboardFiltersProps) {
       });
       setIsApplying(false);
       setJustApplied(true);
-      
+
       // Remove success indicator after 2 seconds
       setTimeout(() => setJustApplied(false), 2000);
     }, 300);
@@ -78,7 +80,14 @@ export function DashboardFilters({ onFilterChange }: DashboardFiltersProps) {
                 <input
                   type="date"
                   value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
+                  max={endDate || today}
+                  onChange={(e) => {
+                    if (e.target.value > today) {
+                      toast.error("Cannot select future dates");
+                      return;
+                    }
+                    setStartDate(e.target.value);
+                  }}
                   className="w-full px-3 py-2 border-2 border-border rounded-lg bg-background text-foreground text-sm 
                            transition-all duration-200
                            hover:border-primary/50
@@ -93,8 +102,15 @@ export function DashboardFilters({ onFilterChange }: DashboardFiltersProps) {
                 <input
                   type="date"
                   value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
+                  onChange={(e) => {
+                    if (e.target.value > today) {
+                      toast.error("Cannot select future dates");
+                      return;
+                    }
+                    setEndDate(e.target.value);
+                  }}
                   min={startDate}
+                  max={today}
                   className="w-full px-3 py-2 border-2 border-border rounded-lg bg-background text-foreground text-sm 
                            transition-all duration-200
                            hover:border-primary/50

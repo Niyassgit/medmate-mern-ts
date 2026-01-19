@@ -21,11 +21,13 @@ import { doctorCommissions } from "../api";
 import { DoctorCommissionDashboardDTO } from "../dto/DoctorCommissionDashboardDTO";
 import { DoctorCommissionItemDTO } from "../dto/DoctorCommissionItemDTO";
 import { Spinner } from "@/components/ui/spinner";
+import toast from "react-hot-toast";
 
 const CommissionCatalogue = () => {
   const [filter, setFilter] = useState<"weekly" | "monthly" | "yearly" | "custom">("monthly");
   const [customStartDate, setCustomStartDate] = useState("");
   const [customEndDate, setCustomEndDate] = useState("");
+  const today = new Date().toISOString().split("T")[0];
   const [localCommissions, setLocalCommissions] = useState<DoctorCommissionItemDTO[]>([]);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(false);
@@ -179,7 +181,7 @@ const CommissionCatalogue = () => {
                   type="date"
                   value={customStartDate}
                   onChange={(e) => setCustomStartDate(e.target.value)}
-                  max={customEndDate || undefined}
+                  max={customEndDate || today}
                   className="px-3 py-1.5 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                   placeholder="Start Date"
                 />
@@ -187,8 +189,15 @@ const CommissionCatalogue = () => {
                 <input
                   type="date"
                   value={customEndDate}
-                  onChange={(e) => setCustomEndDate(e.target.value)}
+                  onChange={(e) => {
+                    if (e.target.value > today) {
+                      toast.error("Cannot select future dates");
+                      return;
+                    }
+                    setCustomEndDate(e.target.value);
+                  }}
                   min={customStartDate || undefined}
+                  max={today}
                   className="px-3 py-1.5 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                   placeholder="End Date"
                 />

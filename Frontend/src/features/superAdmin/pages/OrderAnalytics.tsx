@@ -8,6 +8,7 @@ import {
   Stethoscope,
   ShieldCheck,
 } from "lucide-react";
+import toast from "react-hot-toast";
 
 import {
   BarChart,
@@ -29,7 +30,7 @@ const OrderAnalyticsPage = () => {
   const navigate = useNavigate();
   const { startDate: defaultStart, endDate: defaultEnd } =
     getCurrentMonthRange();
-
+  const today = new Date().toISOString().split("T")[0];
   const [startDate, setStartDate] = useState(defaultStart);
   const [endDate, setEndDate] = useState(defaultEnd);
   const [data, setData] = useState<OrderAnalyticsResponse | null>(null);
@@ -78,7 +79,14 @@ const OrderAnalyticsPage = () => {
           <input
             type="date"
             value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
+            max={endDate || today}
+            onChange={(e) => {
+              if (e.target.value > today) {
+                toast.error("Cannot select future dates");
+                return;
+              }
+              setStartDate(e.target.value);
+            }}
             className="border rounded px-3 py-2 text-sm"
           />
         </div>
@@ -88,7 +96,14 @@ const OrderAnalyticsPage = () => {
           <input
             type="date"
             value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
+            max={today}
+            onChange={(e) => {
+              if (e.target.value > today) {
+                toast.error("Cannot select future dates");
+                return;
+              }
+              setEndDate(e.target.value);
+            }}
             className="border rounded px-3 py-2 text-sm"
           />
         </div>

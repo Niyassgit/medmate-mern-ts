@@ -44,11 +44,12 @@ const BusinessStat = () => {
   const [advancedAnalyticsData, setAdvancedAnalyticsData] =
     useState<AdvancedBusinessAnalyticsDTO | null>(null);
   const [loading, setLoading] = useState(true);
+  const today = new Date().toISOString().split("T")[0];
   const [dateRange, setDateRange] = useState({
     startDate: new Date(new Date().getFullYear(), 0, 1)
       .toISOString()
       .split("T")[0],
-    endDate: new Date().toISOString().split("T")[0],
+    endDate: today,
   });
 
   const [isDownloading, setIsDownloading] = useState(false);
@@ -90,6 +91,10 @@ const BusinessStat = () => {
   }, [dateRange, hasAdvancedAnalytics]);
 
   const handleDateChange = (field: string, value: string) => {
+    if (value > today) {
+      toast.error("Cannot select future dates");
+      return;
+    }
     setDateRange((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -149,6 +154,7 @@ const BusinessStat = () => {
                   </label>
                   <input
                     type="date"
+                    max={today}
                     value={dateRange.startDate}
                     onChange={(e) =>
                       handleDateChange("startDate", e.target.value)
@@ -163,6 +169,7 @@ const BusinessStat = () => {
                   </label>
                   <input
                     type="date"
+                    max={today}
                     value={dateRange.endDate}
                     onChange={(e) =>
                       handleDateChange("endDate", e.target.value)
@@ -176,9 +183,8 @@ const BusinessStat = () => {
 
           {/* Right: Export Icon */}
           <div
-            className={`bg-white rounded-lg shadow-md p-4 h-fit transition-all ${
-              isDownloading ? "cursor-not-allowed opacity-70" : "cursor-pointer"
-            }`}
+            className={`bg-white rounded-lg shadow-md p-4 h-fit transition-all ${isDownloading ? "cursor-not-allowed opacity-70" : "cursor-pointer"
+              }`}
             onClick={dawnloadExcel}
             title="Download Excel Report"
           >
@@ -248,20 +254,18 @@ const BusinessStat = () => {
                     </p>
                   </div>
                   <div
-                    className={`bg-gradient-to-br rounded-lg p-4 ${
-                      advancedAnalyticsData.growthMetrics.growthPercentage >= 0
+                    className={`bg-gradient-to-br rounded-lg p-4 ${advancedAnalyticsData.growthMetrics.growthPercentage >= 0
                         ? "from-green-50 to-green-100"
                         : "from-red-50 to-red-100"
-                    }`}
+                      }`}
                   >
                     <p className="text-sm text-gray-600 mb-1">Growth</p>
                     <p
-                      className={`text-2xl font-bold ${
-                        advancedAnalyticsData.growthMetrics.growthPercentage >=
-                        0
+                      className={`text-2xl font-bold ${advancedAnalyticsData.growthMetrics.growthPercentage >=
+                          0
                           ? "text-green-700"
                           : "text-red-700"
-                      }`}
+                        }`}
                     >
                       {advancedAnalyticsData.growthMetrics.growthPercentage >= 0
                         ? "+"
@@ -419,11 +423,10 @@ const BusinessStat = () => {
                             name: string,
                             props: { payload?: { orderCount?: number } }
                           ) => [
-                            `₹${value.toLocaleString()}`,
-                            `${name} (${
-                              props.payload?.orderCount || 0
-                            } orders)`,
-                          ]}
+                              `₹${value.toLocaleString()}`,
+                              `${name} (${props.payload?.orderCount || 0
+                              } orders)`,
+                            ]}
                         />
                         <Legend />
                       </PieChart>
@@ -504,8 +507,8 @@ const BusinessStat = () => {
                 ₹
                 {analyticsData && analyticsData.totalOrders > 0
                   ? (
-                      analyticsData.totalRevenue / analyticsData.totalOrders
-                    ).toFixed(2)
+                    analyticsData.totalRevenue / analyticsData.totalOrders
+                  ).toFixed(2)
                   : "0.00"}
               </p>
             </div>
@@ -514,8 +517,8 @@ const BusinessStat = () => {
               <p className="text-2xl font-bold">
                 {analyticsData && analyticsData.totalOrders > 0
                   ? (
-                      analyticsData.totalUnits / analyticsData.totalOrders
-                    ).toFixed(1)
+                    analyticsData.totalUnits / analyticsData.totalOrders
+                  ).toFixed(1)
                   : "0.0"}
               </p>
             </div>
