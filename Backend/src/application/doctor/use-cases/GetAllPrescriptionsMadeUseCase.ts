@@ -8,29 +8,37 @@ import { PrescriptionMapper } from "../../prescription/mappers/PrescriptionMappe
 import { IGetAllPrescriptionsMadeUseCase } from "../interfaces/IGetAllPrescriptionsMadeUseCase";
 
 export class GetAllPresscriptionsMadeUseCase
-  implements IGetAllPrescriptionsMadeUseCase
-{
+  implements IGetAllPrescriptionsMadeUseCase {
   constructor(
     private _doctorRepository: IDoctorRepository,
     private _prescriptionRepository: IPrescriptionRepository,
     private _storageService: IStorageService
-  ) {}
-  async execute(userId?: string): Promise<PrescriptionDetailsDTO[]> {
+  ) { }
+  async execute(
+    userId?: string,
+    page: number = 1,
+    limit: number = 10
+  ): Promise<{ prescriptions: PrescriptionDetailsDTO[]; total: number }> {
     if (!userId) throw new UnautharizedError(ErrorMessages.UNAUTHORIZED);
     const { doctorId } = await this._doctorRepository.getDoctorIdByUserId(
       userId
     );
     if (!doctorId) throw new BadRequestError(ErrorMessages.USER_NOT_FOUND);
 
-    const prescriptions =
+    const { prescriptions, total } =
       await this._prescriptionRepository.findAllPrescriptionByDoctorId(
-        doctorId
+        doctorId,
+        page,
+        limit
       );
 
-    return Promise.all(
+    const mappedPrescriptions = await Promise.all(
       prescriptions.map((p) =>
         PrescriptionMapper.toDomain(p, this._storageService)
       )
     );
+
+    return { prescriptions: mappedPrescriptions, total };
   }
+
 }

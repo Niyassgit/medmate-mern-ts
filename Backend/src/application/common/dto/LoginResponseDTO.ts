@@ -1,7 +1,7 @@
-import { UserProfileDTO } from "./UserProfileDTO";
+import { AuthUserDTO } from "./AuthUserDTO";
 
-export interface LoginResponseDTO{
-    accessToken:string,
-    refreshToken:string,
-    mappedUser:UserProfileDTO,  
+export interface LoginResponseDTO {
+    accessToken: string;
+    refreshToken: string;
+    user: AuthUserDTO;
 }

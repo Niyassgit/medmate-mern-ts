@@ -1,4 +1,4 @@
-import { Star, Search } from "lucide-react";
+import { Star, Search, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -9,14 +9,13 @@ import {
 } from "@/components/ui/select";
 import NetworkFilterSideBar from "../components/NetworkFilterSideBar";
 import NetworkDoctorCard from "../components/NetworkDoctorCard";
-import { useCallback, useState } from "react";
+import { useState, useEffect } from "react";
 import { DoctorCardDTO } from "../dto/DoctorCardDTO";
-import useFetchItem from "@/hooks/useFetchItem";
 import { useAppSelector } from "@/app/hooks";
 import { networks } from "../api";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
-import { Spinner } from "@/components/ui/spinner";
 import noDataImg from "@/assets/hand-drawn-no-data-illustration.png";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
 const Network = () => {
   const id = useAppSelector((state) => state.auth.user?.id);
@@ -32,17 +31,63 @@ const Network = () => {
     ageRange: [25, 70],
   });
 
-  const fetchDoctors = useCallback(() => {
-    if (!id) return Promise.resolve(null);
-    return networks(id, debouncedSearch, appliedFilters);
-  }, [id, debouncedSearch, appliedFilters]);
+  const [page, setPage] = useState(1);
+  const limit = 9;
 
-  const { data: doctors, loading, error} =
-    useFetchItem<DoctorCardDTO[]>(fetchDoctors);
+  const [allDoctors, setAllDoctors] = useState<DoctorCardDTO[]>([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const { ref: loadMoreRef, isIntersecting } = useIntersectionObserver({
+    threshold: 0.5,
+  });
+
+  useEffect(() => {
+    setPage(1);
+    setAllDoctors([]);
+    setHasMore(true);
+  }, [debouncedSearch, appliedFilters]);
+
+  useEffect(() => {
+    if (!id) return;
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await networks(
+          id,
+          debouncedSearch,
+          appliedFilters,
+          page,
+          limit
+        );
+ 
+        const newData = response.data || []; 
+  
+
+        setAllDoctors((prev) => (page === 1 ? newData : [...prev, ...newData]));
+        setHasMore(newData.length === limit);
+
+      } catch (err) {
+        setError("Failed to fetch doctors");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [id, debouncedSearch, appliedFilters, page]);
+
+  // Load More Trigger
+  useEffect(() => {
+    if (isIntersecting && hasMore && !loading) {
+      setPage((prev) => prev + 1);
+    }
+  }, [isIntersecting, hasMore, loading]);
+
 
   const applyFilters = () => {
     setAppliedFilters({ opTime, ageRange });
-
   };
 
   const resetFilters = () => {
@@ -51,16 +96,6 @@ const Network = () => {
     setSearch("");
     setAppliedFilters({ opTime: "any", ageRange: [25, 70] });
   };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <Spinner className="h-8 w-8 text-primary" />
-      </div>
-    );
-  }
-
-  if (error) return <p className="text-center text-red-600">{error}</p>;
 
   return (
     <div className="min-h-screen bg-background">
@@ -109,30 +144,51 @@ const Network = () => {
           />
 
           <main className="flex-1">
-            {doctors && doctors.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                {doctors.map((doctor) => (
-                  <NetworkDoctorCard
-                    key={doctor.id}
-                    {...doctor}
-                    location={doctor.territory}
-                    image={doctor.profileImage}
-                  />
-                ))}
-              </div>
+            {error && <p className="text-red-500 mb-4">{error}</p>}
+
+            {allDoctors.length > 0 ? (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                  {allDoctors.map((doctor) => (
+                    <NetworkDoctorCard
+                      key={doctor.id}
+                      {...doctor}
+                      location={doctor.territory}
+                      image={doctor.profileImage}
+                    />
+                  ))}
+                </div>
+                {/* Loader Trigger */}
+                {hasMore && (
+                  <div
+                    ref={loadMoreRef}
+                    className="flex justify-center p-4 mt-4"
+                  >
+                    {loading && <Loader2 className="w-6 h-6 animate-spin" />}
+                  </div>
+                )}
+              </>
             ) : (
-              <div className="flex flex-col items-center justify-center py-16 text-center text-muted-foreground">
-                <img
-                  src={noDataImg}
-                  alt="No doctors found"
-                  className="w-68 h-68 mb-4 opacity-80"
-                />
-                <h2 className="text-lg font-semibold text-foreground">
-                  No doctors found
-                </h2>
-                <p className="text-sm text-muted-foreground">
-                  Try adjusting your search or filters.
-                </p>
+              !loading && (
+                <div className="flex flex-col items-center justify-center py-16 text-center text-muted-foreground">
+                  <img
+                    src={noDataImg}
+                    alt="No doctors found"
+                    className="w-68 h-68 mb-4 opacity-80"
+                  />
+                  <h2 className="text-lg font-semibold text-foreground">
+                    No doctors found
+                  </h2>
+                  <p className="text-sm text-muted-foreground">
+                    Try adjusting your search or filters.
+                  </p>
+                </div>
+              )
+            )}
+            {/* Initial loading state (page 1) */}
+            {loading && allDoctors.length === 0 && (
+              <div className="flex justify-center p-12">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
               </div>
             )}
           </main>

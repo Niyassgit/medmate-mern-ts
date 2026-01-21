@@ -37,10 +37,12 @@ export const addPost = async (id: string, formData: FormData) => {
 };
 export const getPostList = async (
   id: string,
-  status: ProductPostListStatus
+  status: ProductPostListStatus,
+  page: number = 1,
+  limit: number = 10
 ) => {
   const response = await api.get(RepEndpoints.GET_POSTS(id), {
-    params: { status },
+    params: { status, page, limit },
   });
   return response.data?.data;
 };
@@ -56,9 +58,11 @@ export const updatePost = async (id: string, formData: FormData) => {
 export const networks = async (
   id: string,
   search?: string,
-  filters?: { opTime?: string; ageRange?: number[] }
+  filters?: { opTime?: string; ageRange?: number[] },
+  page: number = 1,
+  limit: number = 9
 ) => {
-  const params: Record<string, string> = {};
+  const params: Record<string, string | number> = {};
   if (search) params.search = search;
   if (filters?.opTime && filters.opTime !== "any")
     params.opTime = filters.opTime;
@@ -66,6 +70,8 @@ export const networks = async (
     params.minAge = String(filters.ageRange[0]);
     params.maxAge = String(filters.ageRange[1]);
   }
+  params.page = page;
+  params.limit = limit;
   const res = await api.get(RepEndpoints.NETWORKS(id), { params });
   return res.data.data;
 };
@@ -103,7 +109,7 @@ export const RepPendingConnections = async (userId: string) => {
 export const getRepnotifications = async (
   userId: string,
   cursor?: string,
-  limit: number = 20
+  limit: number = 10
 ) => {
   const res = await api.get(RepEndpoints.NOTIFICATIONS(userId), {
     params: { cursor, limit },

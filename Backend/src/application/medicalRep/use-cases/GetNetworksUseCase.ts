@@ -18,12 +18,14 @@ export class GetNetworksUseCase implements IGetNetworksUseCase {
     private _medicalRepRepository: IMedicalRepRepository,
     private _storageService: IStorageService,
     private _connectionRepository: IConnectionRepository
-  ) {}
+  ) { }
   async execute(
     userId: string,
     search?: string,
-    filters?: { opTime?: string; minAge?: number; maxAge?: number }
-  ): Promise<DoctorNetworkCardDTO[] | null> {
+    filters?: { opTime?: string; minAge?: number; maxAge?: number },
+    page: number = 1,
+    limit: number = 10
+  ): Promise<{ data: DoctorNetworkCardDTO[]; total: number } | null> {
     const user = await this._userRepository.findById(userId);
     if (!user) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
     const rep = await this._medicalRepRepository.getMedicalRepByUserId(userId);
@@ -42,17 +44,22 @@ export class GetNetworksUseCase implements IGetNetworksUseCase {
       filteredDoctor,
       connections
     );
-    return evaluatedDoctors.length
-      ? await Promise.all(
-          evaluatedDoctors.map((doc) =>
-            NetworkMapper.toResponse(
-              doc,
-              this._storageService,
-              doc.connectionStatus,
-              doc.connectionInitiator
-            )
-          )
+
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const paginatedDoctors = evaluatedDoctors.slice(startIndex, endIndex);
+
+    const data = await Promise.all(
+      paginatedDoctors.map((doc) =>
+        NetworkMapper.toResponse(
+          doc,
+          this._storageService,
+          doc.connectionStatus,
+          doc.connectionInitiator
         )
-      : null;
+      )
+    );
+    console.log("evaluated doctor count:",evaluatedDoctors.length);
+    return { data, total: evaluatedDoctors.length };
   }
 }

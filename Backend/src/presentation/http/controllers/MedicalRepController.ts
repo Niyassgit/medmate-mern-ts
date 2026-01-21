@@ -104,7 +104,7 @@ export class MedicalRepController {
     private _exportRepOrdersUseCase: IExportRepOrdersUseCase,
     private _videoCallWithDoctorUseCase: IMakeVideoCallWithDoctorUseCase,
     private _upgradeSubscriptionPlanUseCase: IUpgradeSubscriptionPlanUseCase
-  ) {}
+  ) { }
 
   createMedicalRep = async (req: Request, res: Response) => {
     const companyLogoUrl = req.file
@@ -171,9 +171,14 @@ export class MedicalRepController {
   posts = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const { status } = req.query;
+    const page = req.query.page ? parseInt(req.query.page as string) : 1;
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
+
     const response = await this._getProductsListUseCase.execute(
       userId,
-      status as ProductPostListStatus
+      status as ProductPostListStatus,
+      page,
+      limit
     );
     return res
       .status(HttpStatusCode.OK)
@@ -223,6 +228,9 @@ export class MedicalRepController {
   networks = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const { search, opTime, minAge, maxAge } = req.query;
+    const page = req.query.page ? parseInt(req.query.page as string) : 1;
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
+
     const filters = {
       opTime: safeStringify(opTime),
       minAge: safeNumber(minAge),
@@ -231,7 +239,9 @@ export class MedicalRepController {
     const resposne = await this._getNetworksUseCase.execute(
       userId,
       search as string,
-      filters
+      filters,
+      page,
+      limit
     );
     res.status(HttpStatusCode.OK).json({ success: true, data: resposne });
   };

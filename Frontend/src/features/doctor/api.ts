@@ -39,19 +39,24 @@ export const getNetworks = async (
   filters?: {
     company?: string;
     territories?: string[];
-  }
+  },
+  page: number = 1,
+  limit: number = 9
 ) => {
-  const params: Record<string, string> = {};
+  const params: Record<string, string | number> = {};
 
   if (search) params.search = search;
   if (filters?.company) params.company = filters.company;
   if (filters?.territories && filters.territories.length > 0) {
     params.territories = filters.territories.join(",");
   }
+  params.page = page;
+  params.limit = limit;
 
   const resp = await api.get(DoctorEndpoints.NETWORKS(id), { params });
   return resp.data.data;
 };
+
 
 export const connectionToggle = async (id: string) => {
   const resp = await api.post(DoctorEndpoints.CONNECTION_TOGGLE(id));
@@ -232,10 +237,16 @@ export const createPrescription = async (
   return res.data;
 };
 
-export const getAllDoctorPrescriptions = async () => {
-  const res = await api.get(DoctorEndpoints.GET_ALL_PRESCRIPTIONS);
+export const getAllDoctorPrescriptions = async (
+  page: number = 1,
+  limit: number = 10
+) => {
+  const res = await api.get(DoctorEndpoints.GET_ALL_PRESCRIPTIONS, {
+    params: { page, limit },
+  });
   return res.data.data;
 };
+
 
 export const verifyPassword = async (password: string) => {
   const res = await api.get(DoctorEndpoints.VERIFY_PASSWORD, {

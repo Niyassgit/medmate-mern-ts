@@ -1,4 +1,4 @@
-import { Search, Plus, Archive, CheckCircle } from "lucide-react";
+import { Search, Plus, Archive, CheckCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -22,19 +22,26 @@ import { MedicalRepDetailsDTO } from "../dto/MedicalRepDetailsDTO";
 import toast from "react-hot-toast";
 import { SpinnerButton } from "@/components/shared/SpinnerButton";
 import { ProductPostListStatus } from "@/types/ProductListStatus";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
 const RepDashboard = () => {
   const id = useSelector((state: { auth: { user?: { id?: string } } }) => state.auth.user?.id);
-  const [posts, setPosts] = useState<ProductListDTO[]>([]);
+
+  // Infinite Scroll State
+  const [allPosts, setAllPosts] = useState<ProductListDTO[]>([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const limit = 9;
+
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<ProductPostListStatus>(
     ProductPostListStatus.ALL
   );
 
-  const fetchPosts = useCallback(() => {
-    if (!id) return Promise.resolve([]);
-    return getPostList(id, statusFilter);
-  }, [id, statusFilter]);
+  const { ref, isIntersecting } = useIntersectionObserver({
+    threshold: 0.5,
+  });
 
   const fetchProfile = useCallback(async () => {
     if (!id) return Promise.resolve(null);
@@ -52,15 +59,6 @@ const RepDashboard = () => {
   }, []);
 
   const {
-    data: fetchedPost,
-    loading: postLoading,
-    error: postError,
-  } = useFetchList(fetchPosts);
-  useEffect(() => {
-    setPosts(fetchedPost || []);
-  }, [fetchedPost]);
-
-  const {
     data: rep,
     loading: profileLoading,
     error: profileError,
@@ -69,26 +67,68 @@ const RepDashboard = () => {
   const { data: connectionStats } =
     useFetchList<{ used: number; limit: number; isSubscribed: boolean } | null>(fetchConnectionStats);
 
+  // Reset list when filter changes
+  useEffect(() => {
+    setPage(1);
+    setAllPosts([]);
+    setHasMore(true);
+  }, [statusFilter]);
+
+  // Fetch Logic
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchPosts = async () => {
+      setLoading(true);
+      try {
+        const response = await getPostList(id, statusFilter, page, limit);
+        // response is { data: ProductListDTO[], total: number } or undefined
+        const newData = response?.data || [];
+
+        setAllPosts((prev) => (page === 1 ? newData : [...prev, ...newData]));
+        setHasMore(newData.length === limit);
+      } catch (error) {
+        console.error("Failed to fetch posts:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, [id, statusFilter, page]);
+
+  // Load More Trigger
+  useEffect(() => {
+    if (isIntersecting && hasMore && !loading) {
+      setPage((prev) => prev + 1);
+    }
+  }, [isIntersecting, hasMore, loading]);
+
   const refreshSingnedUrls = async () => {
     try {
-      const updatePosts = await fetchPosts();
-      setPosts(updatePosts);
+      // Ideally we should refresh current view. For now, forcing a reload of page 1 might simplest
+      // but might lose scroll position.
+      // Let's just try fetching page 1 again? 
+      // Or simpler, let's keep it simple for now and maybe just log.
+      // The original logic re-fetched everything.
+      setPage(1); // This will trigger re-fetch of page 1 and reset list
     } catch {
       toast.error("Failed to refresh signed URLs");
     }
   };
+
   const handleArchived = (postId: string) => {
     setTimeout(() => {
-      setPosts((prev) => prev.filter((post) => post.id !== postId));
+      setAllPosts((prev) => prev.filter((post) => post.id !== postId));
     }, 700);
   };
 
-  const filteredPosts = posts.filter((post) =>
+  const filteredPosts = allPosts.filter((post) =>
     post.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  if (postError || profileError) return <p>{postError || profileError}</p>;
-  if (postLoading || profileLoading) return <SpinnerButton />;
+  if (profileError) return <p>{profileError}</p>;
+  if (profileLoading && page === 1 && allPosts.length === 0) return <SpinnerButton />;
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -139,79 +179,89 @@ const RepDashboard = () => {
 
             <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
               {filteredPosts.length > 0 ? (
-                filteredPosts.map((post) => (
-                  <PostCard
-                    key={post.id}
-                    {...post}
-                    likes={119}
-                    category={rep?.departmentName ?? ""}
-                    onImageError={refreshSingnedUrls}
-                    onArchived={handleArchived}
-                  />
-                ))
-              ) : (
-                <div className="col-span-full flex flex-col items-center justify-center border rounded-2xl p-12 text-center shadow-sm bg-muted/10 min-h-[300px]">
-                  {searchQuery ? (
-                    <>
-                      <div className="bg-muted p-4 rounded-full mb-4">
-                        <Search className="h-8 w-8 text-muted-foreground" />
-                      </div>
-                      <h3 className="text-xl font-semibold text-foreground mb-2">
-                        No matches found
-                      </h3>
-                      <p className="text-muted-foreground max-w-sm mx-auto">
-                        We couldn't find any posts matching "{searchQuery}". Try adjusting your search terms.
-                      </p>
-                    </>
-                  ) : statusFilter === ProductPostListStatus.ARCHIVE ? (
-                    <>
-                      <div className="bg-orange-100 p-4 rounded-full mb-4">
-                        <Archive className="h-8 w-8 text-orange-600" />
-                      </div>
-                      <h3 className="text-xl font-semibold text-foreground mb-2">
-                        No archived products
-                      </h3>
-                      <p className="text-muted-foreground max-w-sm mx-auto">
-                        You haven't archived any products yet. Archived products will appear here.
-                      </p>
-                    </>
-                  ) : statusFilter === ProductPostListStatus.PUBLISHED ? (
-                    <>
-                      <div className="bg-green-100 p-4 rounded-full mb-4">
-                        <CheckCircle className="h-8 w-8 text-green-600" />
-                      </div>
-                      <h3 className="text-xl font-semibold text-foreground mb-2">
-                        No published products
-                      </h3>
-                      <p className="text-muted-foreground max-w-sm mx-auto">
-                        You don't have any active products visible to the public.
-                      </p>
-                      <Link to="/rep/dashboard/add-post" className="mt-6">
-                        <Button className="bg-primary hover:bg-primary/90">
-                          <Plus className="mr-2 h-4 w-4" /> Add Product
-                        </Button>
-                      </Link>
-                    </>
-                  ) : (
-                    <>
-                      <div className="bg-primary/10 p-4 rounded-full mb-4">
-                        <Plus className="h-8 w-8 text-primary" />
-                      </div>
-                      <h3 className="text-xl font-semibold text-foreground mb-2">
-                        No Products Yet
-                      </h3>
-                      <p className="text-muted-foreground max-w-sm mx-auto mb-6">
-                        You haven’t uploaded any products yet. Start by adding one
-                        now to reach more doctors!
-                      </p>
-                      <Link to="/rep/dashboard/add-post">
-                        <Button className="bg-primary hover:bg-primary/90">
-                          <Plus className="mr-2 h-4 w-4" /> Add Product
-                        </Button>
-                      </Link>
-                    </>
+                <>
+                  {filteredPosts.map((post) => (
+                    <PostCard
+                      key={post.id}
+                      {...post}
+                      likes={119}
+                      category={rep?.departmentName ?? ""}
+                      onImageError={refreshSingnedUrls}
+                      onArchived={handleArchived}
+                    />
+                  ))}
+                  {/* Sentinel for Infinite Scroll */}
+                  {hasMore && (
+                    <div ref={ref} className="col-span-full flex justify-center p-4">
+                      <Loader2 className="animate-spin" />
+                    </div>
                   )}
-                </div>
+                </>
+              ) : (
+                !loading && (
+                  <div className="col-span-full flex flex-col items-center justify-center border rounded-2xl p-12 text-center shadow-sm bg-muted/10 min-h-[300px]">
+                    {searchQuery ? (
+                      <>
+                        <div className="bg-muted p-4 rounded-full mb-4">
+                          <Search className="h-8 w-8 text-muted-foreground" />
+                        </div>
+                        <h3 className="text-xl font-semibold text-foreground mb-2">
+                          No matches found
+                        </h3>
+                        <p className="text-muted-foreground max-w-sm mx-auto">
+                          We couldn't find any posts matching "{searchQuery}". Try adjusting your search terms.
+                        </p>
+                      </>
+                    ) : statusFilter === ProductPostListStatus.ARCHIVE ? (
+                      <>
+                        <div className="bg-orange-100 p-4 rounded-full mb-4">
+                          <Archive className="h-8 w-8 text-orange-600" />
+                        </div>
+                        <h3 className="text-xl font-semibold text-foreground mb-2">
+                          No archived products
+                        </h3>
+                        <p className="text-muted-foreground max-w-sm mx-auto">
+                          You haven't archived any products yet. Archived products will appear here.
+                        </p>
+                      </>
+                    ) : statusFilter === ProductPostListStatus.PUBLISHED ? (
+                      <>
+                        <div className="bg-green-100 p-4 rounded-full mb-4">
+                          <CheckCircle className="h-8 w-8 text-green-600" />
+                        </div>
+                        <h3 className="text-xl font-semibold text-foreground mb-2">
+                          No published products
+                        </h3>
+                        <p className="text-muted-foreground max-w-sm mx-auto">
+                          You don't have any active products visible to the public.
+                        </p>
+                        <Link to="/rep/dashboard/add-post" className="mt-6">
+                          <Button className="bg-primary hover:bg-primary/90">
+                            <Plus className="mr-2 h-4 w-4" /> Add Product
+                          </Button>
+                        </Link>
+                      </>
+                    ) : (
+                      <>
+                        <div className="bg-primary/10 p-4 rounded-full mb-4">
+                          <Plus className="h-8 w-8 text-primary" />
+                        </div>
+                        <h3 className="text-xl font-semibold text-foreground mb-2">
+                          No Products Yet
+                        </h3>
+                        <p className="text-muted-foreground max-w-sm mx-auto mb-6">
+                          You haven’t uploaded any products yet. Start by adding one
+                          now to reach more doctors!
+                        </p>
+                        <Link to="/rep/dashboard/add-post">
+                          <Button className="bg-primary hover:bg-primary/90">
+                            <Plus className="mr-2 h-4 w-4" /> Add Product
+                          </Button>
+                        </Link>
+                      </>
+                    )}
+                  </div>
+                )
               )}
             </div>
           </div>

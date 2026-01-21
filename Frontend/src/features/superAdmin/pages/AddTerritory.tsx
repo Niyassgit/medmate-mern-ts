@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AxiosError } from "axios";
 import {
   Form,
   FormField,
@@ -52,7 +53,7 @@ const AddTerritory = () => {
       if (res?.data?.success) {
         toast.success(
           res.data.data?.message ||
-            `Territory ${territoryId ? "updated" : "added"} successfully!`
+          `Territory ${territoryId ? "updated" : "added"} successfully!`
         );
 
         await new Promise((resolve) => setTimeout(resolve, 800));
@@ -60,12 +61,15 @@ const AddTerritory = () => {
       } else {
         toast.error(
           res?.data?.data?.message ||
-            `Failed to ${territoryId ? "update" : "add"} territory`
+          `Failed to ${territoryId ? "update" : "add"} territory`
         );
       }
     } catch (err: unknown) {
+      const error = err as AxiosError<{ message: string }>;
       const errorMessage =
-        (err as { message?: string })?.message || "Failed to save territory";
+        error.response?.data?.message ||
+        (err as Error).message ||
+        "Failed to save territory";
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -120,8 +124,8 @@ const AddTerritory = () => {
                 ? "Updating..."
                 : "Adding..."
               : territoryId
-              ? "Update Territory"
-              : "Add Territory"}
+                ? "Update Territory"
+                : "Add Territory"}
           </Button>
         </form>
       </Form>

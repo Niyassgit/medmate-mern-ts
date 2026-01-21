@@ -11,7 +11,11 @@ export interface IPrescriptionRepository {
     data: Partial<Omit<IPrescription, "id" | "createdAt" | "updatedAt">>
   ): Promise<IPrescription>;
   findAllPrescriptionsByGuestId(guestId: string): Promise<IPrescriptionWithItemsAndProduct[]>;
-  findAllPrescriptionByDoctorId(doctorId: string): Promise<IPrescriptionWithItemsAndProduct[]>;
+  findAllPrescriptionByDoctorId(
+    doctorId: string,
+    page: number,
+    limit: number
+  ): Promise<{ prescriptions: IPrescriptionWithItemsAndProduct[]; total: number }>;
   findPrescriptionByShareToken(
     shareToken: string
   ): Promise<IPrescription | null>;

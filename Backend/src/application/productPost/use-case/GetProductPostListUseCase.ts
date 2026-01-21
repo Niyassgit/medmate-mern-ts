@@ -4,7 +4,7 @@ import { ProductListDTO } from "../dto/ProductListDTO";
 import { NotFoundError } from "../../errors";
 import { ProductPostMapper } from "../mappers/ProductPostMapper";
 import { IGetProductPostListUseCase } from "../interfaces/IGetProductPostListUseCase";
-import { ErrorMessages} from "../../../shared/Messages";
+import { ErrorMessages } from "../../../shared/Messages";
 import { IMedicalRepRepository } from "../../../domain/medicalRep/repositories/IMedicalRepRepository";
 import { IProductPostPresentationService } from "../interfaces/IProductPostPresentationService";
 import { ProductPostListStatus } from "../../../shared/Enums";
@@ -14,21 +14,32 @@ export class GetProductPostListUseCase implements IGetProductPostListUseCase {
     private _userRepository: IUserRepository,
     private _productPostRepository: IProductPostRepository,
     private _medicalRepRepository: IMedicalRepRepository,
-    private _presentationService:IProductPostPresentationService,
-    
-  ) {}
+    private _presentationService: IProductPostPresentationService,
 
-  async execute(userId: string,status:ProductPostListStatus): Promise<ProductListDTO[] | null> {
+  ) { }
+
+  async execute(
+    userId: string,
+    status: ProductPostListStatus,
+    page: number,
+    limit: number
+  ): Promise<{ data: ProductListDTO[]; total: number } | null> {
     const user = await this._userRepository.findById(userId);
     if (!user) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
     const repId = await this._medicalRepRepository.findMedicalRepIdByUserId(
       userId
     );
     if (!repId) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
-    const products = await this._productPostRepository.getProducts(repId,status);
-    if (!products) return null;
+    const result = await this._productPostRepository.getProducts(
+      repId,
+      status,
+      page,
+      limit
+    );
+    if (!result) return null;
+    const { data: products, total } = result;
     const dto = ProductPostMapper.toProductList(products);
-    const mapped=await this._presentationService.mapWithSignedUrls(dto);
-    return mapped;
+    const mapped = await this._presentationService.mapWithSignedUrls(dto);
+    return { data: mapped, total };
   }
 }

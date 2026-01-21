@@ -10,8 +10,12 @@ import ConfirmDialog from "@/components/shared/ConfirmDialog";
 import { useNavigate } from "react-router-dom";
 import { SpinnerButton } from "@/components/shared/SpinnerButton";
 
+import { useDispatch } from "react-redux";
+import { updateUser } from "@/features/auth/authSlice";
+
 const ProfilePage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [rep, setRep] = useState<MedicalRepDetails | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,6 +46,7 @@ const ProfilePage = () => {
     };
     fetchProfile();
   }, [id]);
+
   const handleAvatarChange = (file: File) => {
     setSelectedFile(file);
     setOpenConfirm(true);
@@ -51,7 +56,8 @@ const ProfilePage = () => {
     try {
       const response = await updateProfileImage(id!, selectedFile);
       if (response.success) {
-        setRep({ ...rep, profileImage: response.imageUrl });
+        setRep({ ...rep, profileImage: response.signedUrl }); // Using signedUrl from backend
+        dispatch(updateUser({ image: response.signedUrl }));
         toast.success(response.message || "Image changed");
       } else {
         toast.error(response.message || "Something has happend");

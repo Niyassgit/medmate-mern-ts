@@ -1,7 +1,7 @@
-import { IUser } from "../../../domain/common/entities/IUser";
+import { AuthUserDTO } from "./AuthUserDTO";
 
 export interface GoogleLoginResponseDTO {
   accessToken: string;
   refreshToken: string;
-  user: IUser;
+  user: AuthUserDTO;
 }

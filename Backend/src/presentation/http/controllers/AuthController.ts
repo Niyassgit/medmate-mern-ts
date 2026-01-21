@@ -22,6 +22,7 @@ import {
   resendOtpBody,
   ForgotPasswordBody,
 } from "../../types/auth";
+import { ErrorMessages, SuccessMessages } from "../../../shared/Messages";
 
 export class AuthController {
   constructor(
@@ -34,7 +35,7 @@ export class AuthController {
     private _forgotPasswordUseCase: IForgotPasswordUseCase,
     private _verifyForgotPasswordOtpUseCase: IVerifyForgotPasswordOtpUseCase,
     private _resetPasswordUseCase: IResetPasswordUseCase,
-    private _resetPasswordResendOtpUseCase: IResetPasswordResendOtpUseCase
+    private _resetPasswordResendOtpUseCase: IResetPasswordResendOtpUseCase,
   ) {}
 
   loginUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -51,12 +52,7 @@ export class AuthController {
 
       const response: AuthResponseDTO = {
         accessToken: result.accessToken,
-        user: {
-          id: result.mappedUser.id,
-          email: result.mappedUser.email,
-          role: result.mappedUser.role,
-          image: result.mappedUser.profileImage,
-        },
+        user: result.user,
       };
       res.status(HttpStatusCode.OK).json(response);
     } catch (error) {
@@ -71,11 +67,10 @@ export class AuthController {
       if (!token)
         return res
           .status(HttpStatusCode.UNAUTHORIZED)
-          .json({ message: " No refresh token" });
+          .json({ message: ErrorMessages.NO_REFRESH });
 
-      const newAccessToken = await this._getNewAccessTokenUsecase.execute(
-        token
-      );
+      const newAccessToken =
+        await this._getNewAccessTokenUsecase.execute(token);
       res.status(HttpStatusCode.OK).json({ accessToken: newAccessToken });
     } catch (error) {
       next(error);
@@ -95,11 +90,7 @@ export class AuthController {
 
       const response: AuthResponseDTO = {
         accessToken: result.accessToken,
-        user: {
-          id: result.user.id,
-          email: result.user.email,
-          role: result.user.role,
-        },
+        user: result.user,
       };
 
       res.status(HttpStatusCode.OK).json(response);
@@ -112,7 +103,14 @@ export class AuthController {
     try {
       const { idToken } = req.body as PreCheckRequestBody;
       const result = await this._googlePrecheckUseCase.execute(idToken);
-      if (!result.exists) return res.json({ exists: false });
+      if (
+        !result.exists ||
+        !result.accessToken ||
+        !result.refreshToken ||
+        !result.user
+      ) {
+        return res.json({ exists: false });
+      }
 
       res.cookie("refreshtoken", result.refreshToken, {
         httpOnly: true,
@@ -123,11 +121,7 @@ export class AuthController {
 
       const response: AuthResponseDTO = {
         accessToken: result.accessToken,
-        user: {
-          id: result.user.id,
-          email: result.user.email,
-          role: result.user.role,
-        },
+        user: result.user,
       };
 
       res.status(HttpStatusCode.OK).json({ exists: true, ...response });
@@ -169,13 +163,13 @@ export class AuthController {
   verifyResetPassOtp = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ) => {
     try {
       const { email, otp } = req.body as VerifyOtpBody;
       const response = await this._verifyForgotPasswordOtpUseCase.execute(
         email,
-        otp
+        otp,
       );
       res.status(HttpStatusCode.OK).json({ success: true, message: response });
     } catch (error) {
@@ -186,7 +180,7 @@ export class AuthController {
   forgotPasswordResendOtp = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ) => {
     try {
       const { email } = req.body as resendOtpBody;
@@ -202,7 +196,7 @@ export class AuthController {
       const response = await this._resetPasswordUseCase.execute(
         email,
         password,
-        otp
+        otp,
       );
       res.status(HttpStatusCode.OK).json({ success: true, message: response });
     } catch (error) {
@@ -218,6 +212,6 @@ export class AuthController {
     });
     return res
       .status(HttpStatusCode.NO_CONTENT)
-      .json({ message: "Logged out successfully" });
+      .json({ message: SuccessMessages.LOGOUT_SUCCESS });
   };
 }

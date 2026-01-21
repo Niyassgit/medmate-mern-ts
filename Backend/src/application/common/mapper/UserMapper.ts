@@ -1,6 +1,7 @@
 import { IUser } from "../../../domain/common/entities/IUser";
-import { AuthProvider,Role } from "../../../shared/Enums"; 
+import { AuthProvider, Role } from "../../../shared/Enums";
 import { UserProfileDTO } from "../dto/UserProfileDTO";
+import { AuthUserDTO } from "../dto/AuthUserDTO";
 
 export class UserMapper {
   static toUserEntity(
@@ -19,7 +20,10 @@ export class UserMapper {
     };
   }
 
-  static toUserProfile(user: IUser,profileImageUrl:string | null): UserProfileDTO {
+  static toUserProfile(
+    user: IUser,
+    profileImageUrl: string | null
+  ): UserProfileDTO {
     return {
       id: user.id,
       email: user.email,
@@ -28,6 +32,13 @@ export class UserMapper {
     };
   }
 
-  
-  
+  static toAuthUser(user: IUser, profileImageUrl: string | null): AuthUserDTO {
+    return {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      image: profileImageUrl,
+    };
+  }
 }
+

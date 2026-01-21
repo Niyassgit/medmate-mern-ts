@@ -16,8 +16,7 @@ export class ProductPostRepository
     Prisma.ProductPostCreateInput,
     "productPost"
   >
-  implements IProductPostRepository
-{
+  implements IProductPostRepository {
   constructor() {
     super(prisma.productPost, (product) => ProductPostMapper.toDomain(product));
   }
@@ -44,8 +43,10 @@ export class ProductPostRepository
 
   async getProducts(
     repId: string,
-    status: ProductPostListStatus
-  ): Promise<IProductPostForFeed[] | null> {
+    status: ProductPostListStatus,
+    page: number,
+    limit: number
+  ): Promise<{ data: IProductPostForFeed[]; total: number } | null> {
     const where: Prisma.ProductPostWhereInput = {
       repId,
     };
@@ -55,25 +56,34 @@ export class ProductPostRepository
     if (status === ProductPostListStatus.ARCHIVE) {
       where.isArchived = true;
     }
-    const products = await prisma.productPost.findMany({
-      where,
-      include: {
-        rep: {
-          include: {
-            user: true,
+
+    const skip = (page - 1) * limit;
+
+    const [products, total] = await Promise.all([
+      prisma.productPost.findMany({
+        where,
+        include: {
+          rep: {
+            include: {
+              user: true,
+            },
+          },
+          _count: {
+            select: {
+              interests: true,
+              likes: true,
+            },
           },
         },
-        _count: {
-          select: {
-            interests: true,
-            likes: true,
-          },
-        },
-      },
-      orderBy: { createdAt: "desc" },
-    });
-    if (!products || products.length === 0) return null;
-    return ProductPostMapper.toFeedList(products);
+        orderBy: { createdAt: "desc" },
+        skip,
+        take: limit,
+      }),
+      prisma.productPost.count({ where }),
+    ]);
+
+    if (!products || products.length === 0) return { data: [], total: 0 };
+    return { data: ProductPostMapper.toFeedList(products), total };
   }
   async getPostDetails(postId: string): Promise<IProductPost | null> {
     const product = await this.findById(postId);

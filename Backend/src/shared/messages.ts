@@ -8,6 +8,7 @@ export const ErrorMessages = {
   UNAUTHORIZED: "Unauthorized access",
   FORBIDDEN: "Forbidden",
   USER_NOT_HAVE_PROFILE: "User dont have profile",
+  NO_REFRESH:"No refresh token",
   SERVER_ERROR: "Internal server error",
   EMAIL_ALREADY_EXISTS: "Email already exists",
   PASSWORD_REQUIRED: "Password is required",

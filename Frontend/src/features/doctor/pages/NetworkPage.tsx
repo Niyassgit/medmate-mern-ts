@@ -1,14 +1,13 @@
-import { useCallback, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Networks from "../components/Networks";
 import RepFilterSidebar from "../components/RepFilterSidebar";
 import { RepCardDetailsDTO } from "../dto/RepCardDetailsDTO";
 import { useAppSelector } from "@/app/hooks";
 import { getNetworks } from "../api";
-import useFetchItem from "@/hooks/useFetchItem";
-import { SpinnerButton } from "@/components/shared/SpinnerButton";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
-import { Search } from "lucide-react";
+import { Loader2, Search } from "lucide-react";
 import { getTerritories } from "@/features/shared/api/SharedApi";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
 interface Territory {
   id: string;
@@ -27,9 +26,20 @@ export default function NetworkPage() {
     company?: string;
     territories?: string[];
   }>({});
+  const [page, setPage] = useState(1);
+  const limit = 9;
 
   const [territories, setTerritories] = useState<Territory[]>([]);
   const [companies, setCompanies] = useState<string[]>([]);
+
+  const [allReps, setAllReps] = useState<RepCardDetailsDTO[]>([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const { ref: loadMoreRef, isIntersecting } = useIntersectionObserver({
+    threshold: 0.5,
+  });
 
   useEffect(() => {
     const fetchTerritories = async () => {
@@ -43,30 +53,68 @@ export default function NetworkPage() {
     fetchTerritories();
   }, []);
 
-  const fetchReps = useCallback(() => {
-    if (!id) return Promise.resolve(null);
-    return getNetworks(id, debouncedSearch, appliedFilters);
-  }, [id, debouncedSearch, appliedFilters]);
-
-  const {
-    data: reps,
-    loading,
-    error,
-  } = useFetchItem<RepCardDetailsDTO[] | null>(fetchReps);
 
   useEffect(() => {
-    if (reps && reps.length > 0) {
-      const uniqueCompanies = Array.from(
-        new Set(reps.map((rep) => rep.companyName))
-      ).sort();
-      setCompanies(uniqueCompanies);
+    setPage(1);
+    setAllReps([]);
+    setHasMore(true);
+  }, [debouncedSearch, appliedFilters]);
+
+
+  useEffect(() => {
+    if (!id) return;
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await getNetworks(
+          id,
+          debouncedSearch,
+          appliedFilters,
+          page,
+          limit
+        );
+
+
+
+        const newData = response.data || [];
+
+        setAllReps((prev) => (page === 1 ? newData : [...prev, ...newData]));
+        setHasMore(newData.length === limit);
+
+        // Extract companies
+        if (newData.length > 0) {
+          const uniqueCompanies = Array.from(
+            new Set(newData.map((rep: RepCardDetailsDTO) => rep.companyName))
+          ).sort() as string[];
+          setCompanies((prev) => {
+            const newComps = new Set([...prev, ...uniqueCompanies]);
+            return Array.from(newComps).sort();
+          });
+        }
+
+      } catch (err) {
+        setError("Failed to fetch medical reps");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [id, debouncedSearch, appliedFilters, page]);
+
+  useEffect(() => {
+    if (isIntersecting && hasMore && !loading) {
+      setPage((prev) => prev + 1);
     }
-  }, [reps]);
+  }, [isIntersecting, hasMore, loading]);
+
 
   const applyFilters = () => {
     setAppliedFilters({
       company: company || undefined,
-      territories: selectedTerritories.length > 0 ? selectedTerritories : undefined,
+      territories:
+        selectedTerritories.length > 0 ? selectedTerritories : undefined,
     });
   };
 
@@ -76,9 +124,6 @@ export default function NetworkPage() {
     setSearch("");
     setAppliedFilters({});
   };
-
-  if (loading) return <SpinnerButton />;
-  if (error) return <p className="text-center text-red-600">{error}</p>;
 
   const handleConnect = (userId: string, status: string | null) => {
     setConnections((prev) => {
@@ -96,15 +141,13 @@ export default function NetworkPage() {
     <main className="min-h-screen bg-background">
       <header className="border-b border-border bg-card sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex justify-between items-start">
-            <div>
-              <h1 className="text-3xl font-bold text-foreground">
-                Explore Medical Reps
-              </h1>
-              <p className="text-muted-foreground mt-1">
-                Find and connect with medical representatives in your department
-              </p>
-            </div>
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">
+              Explore Medical Reps
+            </h1>
+            <p className="text-muted-foreground mt-1">
+              Find and connect with medical representatives in your department
+            </p>
           </div>
           <div className="mt-4">
             <div className="relative w-full max-w-md">
@@ -137,20 +180,43 @@ export default function NetworkPage() {
 
           {/* Reps Grid */}
           <div className="flex-1">
-            {reps && reps.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {reps.map((user) => (
-                  <Networks
-                    key={user.id}
-                    user={user}
-                    onConnect={handleConnect}
-                    isConnected={connections.has(user.id)}
-                  />
-                ))}
-              </div>
+            {error && <p className="text-red-500 mb-4">{error}</p>}
+
+            {allReps.length > 0 ? (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {allReps.map((user) => (
+                    <Networks
+                      key={user.id}
+                      user={user}
+                      onConnect={handleConnect}
+                      isConnected={connections.has(user.id)}
+                    />
+                  ))}
+                </div>
+                {/* Loader Trigger */}
+                {hasMore && (
+                  <div
+                    ref={loadMoreRef}
+                    className="flex justify-center p-4 mt-4"
+                  >
+                    {loading && <Loader2 className="w-6 h-6 animate-spin" />}
+                  </div>
+                )}
+              </>
             ) : (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground">No reps found matching your criteria</p>
+              !loading && (
+                <div className="text-center py-12">
+                  <p className="text-muted-foreground">
+                    No reps found matching your criteria
+                  </p>
+                </div>
+              )
+            )}
+            {/* Initial loading state (page 1) */}
+            {loading && allReps.length === 0 && (
+              <div className="flex justify-center p-12">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
               </div>
             )}
           </div>
@@ -159,3 +225,4 @@ export default function NetworkPage() {
     </main>
   );
 }
+

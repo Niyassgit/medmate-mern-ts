@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AxiosError } from "axios";
 import {
   Form,
   FormField,
@@ -58,7 +59,7 @@ const CreateDepartment = () => {
       if (isSuccess) {
         toast.success(
           res.data.message ||
-            `Department ${departmentId ? "updated" : "added"} successfully!`
+          `Department ${departmentId ? "updated" : "added"} successfully!`
         );
         await new Promise((resolve) => setTimeout(resolve, 800));
         navigate("/admin/departments");
@@ -66,8 +67,11 @@ const CreateDepartment = () => {
         toast.error(res.data.message || "Failed to save department");
       }
     } catch (error: unknown) {
+      const err = error as AxiosError<{ message: string }>;
       const errorMessage =
-        (error as { message?: string })?.message || "Internal server error";
+        err.response?.data?.message ||
+        (error as Error).message ||
+        "Internal server error";
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -131,8 +135,8 @@ const CreateDepartment = () => {
                 ? "Updating..."
                 : "Adding..."
               : departmentId
-              ? "Update Department"
-              : "Add Department"}
+                ? "Update Department"
+                : "Add Department"}
           </Button>
         </form>
       </Form>

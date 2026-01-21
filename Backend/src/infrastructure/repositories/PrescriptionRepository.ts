@@ -28,21 +28,39 @@ export class PrescriptionRepository
   }
 
   async findAllPrescriptionByDoctorId(
-    doctorId: string
-  ): Promise<IPrescriptionWithItemsAndProduct[]> {
-    const prescriptions = await prisma.prescription.findMany({
-      where: { doctorId },
-      orderBy: { createdAt: "desc" },
-      include: {
-        items: { include: { product: true } },
-        order: true,
-        doctor: true,
-        guest: true,
-      },
-    });
+    doctorId: string,
+    page: number,
+    limit: number
+  ): Promise<{
+    prescriptions: IPrescriptionWithItemsAndProduct[];
+    total: number;
+  }> {
+    const skip = (page - 1) * limit;
 
-    return prescriptions.map((p) => PrescriptionMapper.toDomainWithItems(p));
+    const [prescriptions, total] = await Promise.all([
+      prisma.prescription.findMany({
+        where: { doctorId },
+        orderBy: { createdAt: "desc" },
+        include: {
+          items: { include: { product: true } },
+          order: true,
+          doctor: true,
+          guest: true,
+        },
+        skip,
+        take: limit,
+      }),
+      prisma.prescription.count({ where: { doctorId } }),
+    ]);
+
+    return {
+      prescriptions: prescriptions.map((p) =>
+        PrescriptionMapper.toDomainWithItems(p)
+      ),
+      total,
+    };
   }
+
 
   async findAllPrescriptionsByGuestId(
     guestId: string

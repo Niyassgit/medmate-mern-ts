@@ -20,24 +20,26 @@ export class NetworksUseCase implements INetworkUseCase {
     private _medicalRepRepository: IMedicalRepRepository,
     private _storageService: IStorageService,
     private _connectionRepository: IConnectionRepository
-  ) {}
+  ) { }
   async execute(
     userId: string,
     search?: string,
     filters?: {
       company?: string;
       territories?: string[];
-    }
-  ): Promise<NetworkResponseDTO[] | null> {
+    },
+    page: number = 1,
+    limit: number = 10
+  ): Promise<{ data: NetworkResponseDTO[]; total: number } | null> {
     const user = await this._userRepository.findById(userId);
     if (!user) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
     if (user.role !== Role.DOCTOR)
       throw new UnautharizedError(ErrorMessages.DOCTOR_ACCESS);
     const doctor = await this._doctorRepository.getDoctorByUserId(userId);
-    if (!doctor || !doctor.departmentId) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
+    if (!doctor || !doctor.departmentId)
+      throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
     const { departmentId } = doctor;
-    
- 
+
     const reps = await this._medicalRepRepository.findByDepartment(
       departmentId
     );
@@ -56,17 +58,22 @@ export class NetworksUseCase implements INetworkUseCase {
       return bSubscribed - aSubscribed;
     });
 
-    return sortedReps.length
-      ? Promise.all(
-          sortedReps.map((rep) =>
-            NetworkMapper.toResponse(
-              rep,
-              this._storageService,
-              rep.connectionStatus,
-              rep.connectionInitiator
-            )
-          )
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const paginatedReps = sortedReps.slice(startIndex, endIndex);
+
+    const data = await Promise.all(
+      paginatedReps.map((rep) =>
+        NetworkMapper.toResponse(
+          rep,
+          this._storageService,
+          rep.connectionStatus,
+          rep.connectionInitiator
         )
-      : null;
+      )
+    );
+
+    return { data, total: sortedReps.length };
   }
+
 }

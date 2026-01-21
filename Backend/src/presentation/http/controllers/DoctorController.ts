@@ -129,6 +129,8 @@ export class DoctorController {
   networks = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const { search, company, territories } = req.query;
+    const page = req.query.page ? parseInt(req.query.page as string) : 1;
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
 
     const filters = {
       company: safeStringify(company),
@@ -138,10 +140,13 @@ export class DoctorController {
     const response = await this._networkUseCase.execute(
       userId,
       search as string,
-      filters
+      filters,
+      page,
+      limit
     );
     res.status(HttpStatusCode.OK).json({ success: true, data: response });
   };
+
 
   connectionRequest = async (req: Request, res: Response) => {
     const { repId } = req.params;
@@ -409,11 +414,19 @@ export class DoctorController {
 
   getAllPrescriptions = async (req: Request, res: Response) => {
     const userId = GetOptionalUserId(req.user);
-    const response = await this._getAllPrescriptionsMadeUseCase.execute(userId);
+    const page = req.query.page ? parseInt(req.query.page as string) : 1;
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
+
+    const response = await this._getAllPrescriptionsMadeUseCase.execute(
+      userId,
+      page,
+      limit
+    );
     return res
       .status(HttpStatusCode.OK)
       .json({ success: true, data: response });
   };
+
 
   verifyPassword = async (req: Request, res: Response) => {
     const userId = GetOptionalUserId(req.user);

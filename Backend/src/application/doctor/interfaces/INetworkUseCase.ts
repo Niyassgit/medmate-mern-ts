@@ -1,12 +1,14 @@
 import { NetworkResponseDTO } from "../dto/NetworkResponseDTO";
 
-export interface INetworkUseCase{
+export interface INetworkUseCase {
     execute(
-        userId:string,
-        search?:string,
+        userId: string,
+        search?: string,
         filters?: {
             company?: string;
             territories?: string[];
-        }
-    ):Promise<NetworkResponseDTO[] | null>;
+        },
+        page?: number,
+        limit?: number
+    ): Promise<{ data: NetworkResponseDTO[]; total: number } | null>;
 }

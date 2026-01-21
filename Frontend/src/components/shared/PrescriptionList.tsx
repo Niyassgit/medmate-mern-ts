@@ -15,9 +15,18 @@ import useFetchItem from "@/hooks/useFetchItem";
 import { SpinnerButton } from "@/components/shared/SpinnerButton";
 import { PrescriptionDTO } from "../Dto/Prescriptions";
 import { PaymentStatus } from "@/types/PaymentTypes";
+import AppPagination from "./AppPagination";
+
+interface PaginatedResponse {
+  prescriptions: PrescriptionDTO[];
+  total: number;
+}
 
 interface Props {
-  fetcher: () => Promise<PrescriptionDTO[]>;
+  fetcher: (
+    page: number,
+    limit: number
+  ) => Promise<PrescriptionDTO[] | PaginatedResponse>;
   title?: string;
   emptyMessage?: string;
   mode: string;
@@ -32,13 +41,31 @@ const PrescriptionList: React.FC<Props> = ({
   onPay,
 }) => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const [filterStatus, setFilterStatus] = useState<"ALL" | "PAID" | "PENDING">("ALL");
+  const [filterStatus, setFilterStatus] = useState<"ALL" | "PAID" | "PENDING">(
+    "ALL"
+  );
+  const [page, setPage] = useState(1);
+  const limit = 10;
 
-  const fetchData = useCallback(() => fetcher(), [fetcher]);
+  const fetchData = useCallback(
+    () => fetcher(page, limit),
+    [fetcher, page, limit]
+  );
 
-  const { data, error, loading } = useFetchItem<PrescriptionDTO[]>(fetchData);
+  const { data, error, loading } =
+    useFetchItem<PrescriptionDTO[] | PaginatedResponse>(fetchData);
 
-  const rawPrescriptions = data ?? [];
+  let rawPrescriptions: PrescriptionDTO[] = [];
+  let totalPages = 1;
+
+  if (data) {
+    if (Array.isArray(data)) {
+      rawPrescriptions = data;
+    } else {
+      rawPrescriptions = data.prescriptions;
+      totalPages = Math.ceil(data.total / limit);
+    }
+  }
 
   const prescriptions = rawPrescriptions.filter((prescription) => {
     if (filterStatus === "ALL") return true;
@@ -51,7 +78,12 @@ const PrescriptionList: React.FC<Props> = ({
     }
 
     if (filterStatus === "PENDING") {
-      return !hasOrder || paymentStatus === PaymentStatus.PENDING || paymentStatus === PaymentStatus.FAILED || paymentStatus === PaymentStatus.REFUNDED;
+      return (
+        !hasOrder ||
+        paymentStatus === PaymentStatus.PENDING ||
+        paymentStatus === PaymentStatus.FAILED ||
+        paymentStatus === PaymentStatus.REFUNDED
+      );
     }
 
     return true;
@@ -117,8 +149,8 @@ const PrescriptionList: React.FC<Props> = ({
             <button
               onClick={() => setFilterStatus("ALL")}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${filterStatus === "ALL"
-                ? "bg-blue-600 text-white shadow-sm"
-                : "text-gray-600 hover:bg-gray-50"
+                  ? "bg-blue-600 text-white shadow-sm"
+                  : "text-gray-600 hover:bg-gray-50"
                 }`}
             >
               All
@@ -126,8 +158,8 @@ const PrescriptionList: React.FC<Props> = ({
             <button
               onClick={() => setFilterStatus("PENDING")}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${filterStatus === "PENDING"
-                ? "bg-blue-600 text-white shadow-sm"
-                : "text-gray-600 hover:bg-gray-50"
+                  ? "bg-blue-600 text-white shadow-sm"
+                  : "text-gray-600 hover:bg-gray-50"
                 }`}
             >
               Pending
@@ -135,8 +167,8 @@ const PrescriptionList: React.FC<Props> = ({
             <button
               onClick={() => setFilterStatus("PAID")}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${filterStatus === "PAID"
-                ? "bg-blue-600 text-white shadow-sm"
-                : "text-gray-600 hover:bg-gray-50"
+                  ? "bg-blue-600 text-white shadow-sm"
+                  : "text-gray-600 hover:bg-gray-50"
                 }`}
             >
               Paid
@@ -151,7 +183,9 @@ const PrescriptionList: React.FC<Props> = ({
               {emptyMessage}
             </h3>
             {filterStatus !== "ALL" && (
-              <p className="text-gray-500">No prescriptions found with status "{filterStatus.toLowerCase()}".</p>
+              <p className="text-gray-500">
+                No prescriptions found with status "{filterStatus.toLowerCase()}".
+              </p>
             )}
           </div>
         ) : (
@@ -359,6 +393,14 @@ const PrescriptionList: React.FC<Props> = ({
               );
             })}
           </div>
+        )}
+
+        {totalPages > 1 && (
+          <AppPagination
+            page={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+          />
         )}
       </div>
     </div>

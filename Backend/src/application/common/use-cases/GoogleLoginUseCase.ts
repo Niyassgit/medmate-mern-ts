@@ -6,13 +6,14 @@ import { UnautharizedError } from "../../../domain/common/errors";
 import { GoogleLoginResponseDTO } from "../dto/GoogleLoginResponseDTO";
 import { IGoogleLoginUseCase } from "../interfaces/IGoogleLoginUseCase";
 import { ErrorMessages } from "../../../shared/Messages";
+import { UserMapper } from "../mapper/UserMapper";
 
-export class GoogleLoginUseCase implements IGoogleLoginUseCase{
+export class GoogleLoginUseCase implements IGoogleLoginUseCase {
   constructor(
     private _userRepository: IUserRepository,
     private _googleAuthService: IGoogleAuthService,
     private _jwtServices: IJWtService
-  ) {}
+  ) { }
 
   async execute(
     payload: GoogleLoginDTO
@@ -38,6 +39,8 @@ export class GoogleLoginUseCase implements IGoogleLoginUseCase{
     const accessToken = this._jwtServices.signAccessToken(acessPayload);
     const refreshToken = this._jwtServices.signRefreshToken(refreshPayload);
 
-    return { accessToken, refreshToken, user };
+    const userDto = UserMapper.toAuthUser(user, user.profileImage || null);
+
+    return { accessToken, refreshToken, user: userDto };
   }
 }
