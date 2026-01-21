@@ -74,7 +74,7 @@ const RepDashboard = () => {
     setHasMore(true);
   }, [statusFilter]);
 
-  // Fetch Logic
+
   useEffect(() => {
     if (!id) return;
 
@@ -82,7 +82,7 @@ const RepDashboard = () => {
       setLoading(true);
       try {
         const response = await getPostList(id, statusFilter, page, limit);
-        // response is { data: ProductListDTO[], total: number } or undefined
+      
         const newData = response?.data || [];
 
         setAllPosts((prev) => (page === 1 ? newData : [...prev, ...newData]));
@@ -97,7 +97,6 @@ const RepDashboard = () => {
     fetchPosts();
   }, [id, statusFilter, page]);
 
-  // Load More Trigger
   useEffect(() => {
     if (isIntersecting && hasMore && !loading) {
       setPage((prev) => prev + 1);
@@ -106,12 +105,8 @@ const RepDashboard = () => {
 
   const refreshSingnedUrls = async () => {
     try {
-      // Ideally we should refresh current view. For now, forcing a reload of page 1 might simplest
-      // but might lose scroll position.
-      // Let's just try fetching page 1 again? 
-      // Or simpler, let's keep it simple for now and maybe just log.
-      // The original logic re-fetched everything.
-      setPage(1); // This will trigger re-fetch of page 1 and reset list
+     
+      setPage(1); 
     } catch {
       toast.error("Failed to refresh signed URLs");
     }
