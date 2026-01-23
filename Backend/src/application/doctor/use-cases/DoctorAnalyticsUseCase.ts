@@ -19,19 +19,22 @@ export class DoctorAnalyticsUseCase implements IDoctorAnalyticsUseCase {
     const user = await this._doctorRepository.getDoctorIdByUserId(userId);
     if (!user || !user.doctorId)
       throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
-    const mutualConnections =
-      (await this._conectionRepository.doctorMutualConnections(
-        user.doctorId
-      )) ?? [];
-    const pendingConnections =
-      (await this._conectionRepository.pendingConnectionForDoctor(
-        user.doctorId
-      )) ?? [];
 
-    if (mutualConnections.length === 0 && pendingConnections.length === 0) {
+    const mutualConnections =
+      await this._conectionRepository.doctorMutualConnections(user.doctorId);
+
+    const pendingRequestCount = await this._conectionRepository.countPendingConnectionsForDoctor(
+      user.doctorId
+    );
+
+    const mutualConnectionsCount = await this._conectionRepository.countMutualConnectionsForDoctor(
+      user.doctorId
+    );
+
+    if (mutualConnections.length === 0) {
       return {
-        mutualConnectionsCount: 0,
-        pendingRequestCount: 0,
+        mutualConnectionsCount,
+        pendingRequestCount,
         mutualConnections: [],
       };
     }
@@ -43,8 +46,8 @@ export class DoctorAnalyticsUseCase implements IDoctorAnalyticsUseCase {
     const mappedMutualConnections =
       ConnectionMappers.toDoctorDomainAnalticsList(enrichedConnections);
     return {
-      mutualConnectionsCount: mutualConnections?.length,
-      pendingRequestCount: pendingConnections?.length,
+      mutualConnectionsCount,
+      pendingRequestCount,
       mutualConnections: mappedMutualConnections,
     };
   }

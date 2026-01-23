@@ -21,8 +21,7 @@ export class ConnectionRepository
     Prisma.ConnectionCreateInput,
     "connection"
   >
-  implements IConnectionRepository
-{
+  implements IConnectionRepository {
   constructor() {
     super(prisma.connection, (connect) => ConnectionMappers.toDomain(connect));
   }
@@ -122,7 +121,7 @@ export class ConnectionRepository
       where: { doctorId, status: ConnectionStatus.ACCEPTED },
       select: {
         rep: {
-          include: { 
+          include: {
             user: true,
             department: true,
           },
@@ -174,6 +173,31 @@ export class ConnectionRepository
       where: { doctorId, repId },
     });
 
-    return result ?ConnectionMappers.toDomain(result):null;
+    return result ? ConnectionMappers.toDomain(result) : null;
   }
+
+  async countPendingRequestsForRep(repId: string): Promise<number> {
+    return await prisma.connection.count({
+      where: { repId, status: ConnectionStatus.PENDING },
+    });
+  }
+
+  async countPendingConnectionsForDoctor(doctorId: string): Promise<number> {
+    return await prisma.connection.count({
+      where: { doctorId, status: ConnectionStatus.PENDING },
+    });
+  }
+
+  async countMutualConnectionsForDoctor(doctorId: string): Promise<number> {
+    return await prisma.connection.count({
+      where: { doctorId, status: ConnectionStatus.ACCEPTED },
+    });
+  }
+
+  async countMutualConnectionsForRep(repId: string): Promise<number> {
+    return await prisma.connection.count({
+      where: { repId, status: ConnectionStatus.ACCEPTED },
+    });
+  }
+
 }

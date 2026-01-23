@@ -16,21 +16,25 @@ export class GetRepAnalyticsUseCase implements IGetRepAnalyticsUseCase {
     private _departmentRepository: IDepartmentRepository,
     private _territoryRepository: ITerritoryRepository,
     private _storageService: IStorageService
-  ) {}
+  ) { }
+
   async execute(userId: string): Promise<AnalyticsDTO | null> {
     const user = await this._medicalRepRepository.getRepIdByUserId(userId);
     if (!user || !user.repId)
       throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
-    const mutualConnections =
-      (await this._connectionRepository.repMutualConnections(user.repId)) ?? [];
-    const pendingConnections =
-      (await this._connectionRepository.pendingRequestsForRep(user.repId)) ??
-      [];
 
-    if (mutualConnections.length === 0 && pendingConnections.length === 0) {
+    const mutualConnections =
+      await this._connectionRepository.repMutualConnections(user.repId);
+
+    const pendingRequestCount =
+      await this._connectionRepository.countPendingRequestsForRep(user.repId);
+    const mutualConnectionsCount =
+      await this._connectionRepository.countMutualConnectionsForRep(user.repId);
+
+    if (mutualConnections.length === 0) {
       return {
-        mutualConnectionsCount: 0,
-        pendingRequestCount: 0,
+        mutualConnectionsCount,
+        pendingRequestCount,
         mutualConnections: [],
       };
     }
@@ -42,9 +46,10 @@ export class GetRepAnalyticsUseCase implements IGetRepAnalyticsUseCase {
     );
     const mappedMutualConnections =
       ConnectionMappers.toRepDomainAnalticsList(enrichedConnections);
+
     return {
-      mutualConnectionsCount: mutualConnections.length,
-      pendingRequestCount: pendingConnections.length,
+      mutualConnectionsCount,
+      pendingRequestCount,
       mutualConnections: mappedMutualConnections,
     };
   }

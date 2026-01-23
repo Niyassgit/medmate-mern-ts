@@ -8,19 +8,24 @@ import { UnautharizedError } from "../../errors";
 import { IRepMutualConnectionsUseCase } from "../interfaces/IRepMutualConnectionsUseCase";
 
 export class RepMutualConnectionsUseCase
-  implements IRepMutualConnectionsUseCase
-{
+  implements IRepMutualConnectionsUseCase {
   constructor(
     private _medicalRepRepository: IMedicalRepRepository,
     private _connectionRepository: IConnectionRepository,
     private _storageService: IStorageService
-  ) {}
+  ) { }
+
   async execute(userId: string): Promise<ConnectionsListOnModalDTO[]> {
     const { repId } = await this._medicalRepRepository.getRepIdByUserId(userId);
     if (!repId) throw new UnautharizedError(ErrorMessages.UNAUTHORIZED);
+
     const mutualConnections =
       await this._connectionRepository.repMutualConnections(repId);
-    if (!mutualConnections) return [];
+
+    if (!mutualConnections) {
+      return [];
+    }
+
     return ConnectionMappers.toConnectionListModal(
       mutualConnections,
       this._storageService

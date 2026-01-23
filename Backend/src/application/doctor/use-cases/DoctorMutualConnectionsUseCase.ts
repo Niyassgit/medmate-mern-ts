@@ -8,24 +8,29 @@ import { ConnectionsListOnModalDTO } from "../dto/MutualConnectionListDTO";
 import { IDoctorMutualConnectionsUseCase } from "../interfaces/IDoctorMutualConnectionsUseCase";
 
 export class DoctorMutualConnectionsUseCase
-  implements IDoctorMutualConnectionsUseCase
-{
+  implements IDoctorMutualConnectionsUseCase {
   constructor(
     private _doctorRepository: IDoctorRepository,
     private _connectionRepository: IConnectionRepository,
     private _storageService: IStorageService
-  ) {}
+  ) { }
+
   async execute(userId: string): Promise<ConnectionsListOnModalDTO[]> {
     const { doctorId } = await this._doctorRepository.getDoctorIdByUserId(
       userId
     );
     if (!doctorId)
       throw new UnautharizedError(ErrorMessages.UNAUTHERIZED_SOCKET);
-    const mutualCennectedReps =
+
+    const mutualConnectedReps =
       await this._connectionRepository.doctorMutualConnections(doctorId);
-    if (!mutualCennectedReps) return [];
+
+    if (!mutualConnectedReps) {
+      return [];
+    }
+
     return ConnectionMappers.toConnectionListModal(
-      mutualCennectedReps,
+      mutualConnectedReps,
       this._storageService
     );
   }

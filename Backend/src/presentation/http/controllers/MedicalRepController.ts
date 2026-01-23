@@ -20,7 +20,7 @@ import { IArchivePostUseCase } from "../../../application/productPost/interfaces
 import { IDeletePostUseCase } from "../../../application/productPost/interfaces/IDeletePostUseCase";
 import { IGetDoctorDetailsOnRepSideUseCase } from "../../../application/medicalRep/interfaces/IGetDoctorDetailsOnRepSideUseCase";
 import { GetOptionalUserId } from "../utils/GetOptionalUserId";
-import { safeStringify, safeNumber } from "../utils/QueryParamHandler";
+import { safeStringify, safeNumber, safeStringArray } from "../utils/QueryParamHandler";
 import { IRepMutualConnectionsUseCase } from "../../../application/medicalRep/interfaces/IRepMutualConnectionsUseCase";
 import { IRepPendingConnectionsUseCase } from "../../../application/medicalRep/interfaces/IRepPendingConnectionsUseCase";
 import { IGetRepNotificationsUseCase } from "../../../application/notification/interfaces/IGetRepNotificationsUseCase";

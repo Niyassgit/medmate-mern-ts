@@ -5,24 +5,29 @@ import { ErrorMessages } from "../../../shared/Messages";
 import { ConnectionMappers } from "../../common/mapper/ConnectionMappers";
 import { ConnectionsListOnModalDTO } from "../../doctor/dto/MutualConnectionListDTO";
 import { UnautharizedError } from "../../errors";
-import { IRepMutualConnectionsUseCase } from "../interfaces/IRepMutualConnectionsUseCase";
+import { IRepPendingConnectionsUseCase } from "../interfaces/IRepPendingConnectionsUseCase";
 
 export class RepPendingConnectionsUseCase
-  implements IRepMutualConnectionsUseCase
-{
+  implements IRepPendingConnectionsUseCase {
   constructor(
     private _medicalRepRepositry: IMedicalRepRepository,
     private _connetionRepository: IConnectionRepository,
     private _storageService: IStorageService
-  ) {}
+  ) { }
+
   async execute(userId: string): Promise<ConnectionsListOnModalDTO[]> {
     const { repId } = await this._medicalRepRepositry.getRepIdByUserId(userId);
     if (!repId) throw new UnautharizedError(ErrorMessages.UNAUTHORIZED);
-    const pendingConnetions =
+
+    const pendingConnections =
       await this._connetionRepository.pendingRequestsForRep(repId);
-    if (!pendingConnetions) return [];
+
+    if (!pendingConnections) {
+      return [];
+    }
+
     return ConnectionMappers.toConnectionListModal(
-      pendingConnetions,
+      pendingConnections,
       this._storageService
     );
   }

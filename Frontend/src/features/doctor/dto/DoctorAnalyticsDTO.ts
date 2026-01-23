@@ -5,5 +5,4 @@ export interface DoctorAnalyticsDTO {
   mutualConnectionsCount: number;
   pendingRequestCount: number;
   mutualConnections: RepListOnDoctorAnalyticsDTO[];
-
 }

@@ -41,7 +41,7 @@ const ConnectionTable = ({ data, type }: ConnectionTableProps) => {
           <TableBody>
             <TableRow>
               <TableCell
-                colSpan={type === "doctor" ? 4 : 4}
+                colSpan={4}
                 className="text-center py-6 text-muted-foreground"
               >
                 No {type === "doctor" ? "doctors" : "representatives"} found.
@@ -84,8 +84,8 @@ const ConnectionTable = ({ data, type }: ConnectionTableProps) => {
                 className="font-medium flex items-center gap-3 cursor-pointer"
                 onClick={() =>
                   type === "rep"
-                    ? navigate(`/doctor/rep/details/${(item as RepUser).id}`)
-                    : navigate(`/rep/doctor/details/${(item as DoctorUser).id}`)
+                    ? navigate(`/doctor/rep/details/${item.id}`)
+                    : navigate(`/rep/doctor/details/${item.id}`)
                 }
               >
                 {item.image ? (

@@ -18,7 +18,7 @@ export interface IConnectionRepository {
     repId: string,
     status: ConnectionStatus
   ): Promise<IConnection>;
-  rejectConnectionByDoctorAndRepIds(doctorId:string,repId:string,status:ConnectionStatus):Promise<boolean>;
+  rejectConnectionByDoctorAndRepIds(doctorId: string, repId: string, status: ConnectionStatus): Promise<boolean>;
   deleteByDoctorAndRep(doctorId: string, repId: string): Promise<void>;
   findConnectionsForRep(repId: string): Promise<IConnection[]>;
   findConnectionsForDoctor(doctorId: string): Promise<IConnection[]>;
@@ -27,6 +27,10 @@ export interface IConnectionRepository {
   pendingRequestsForRep(repId: string): Promise<IDoctorListOnRep[]>;
   doctorMutualConnections(doctorId: string): Promise<IMedicalRepListOnDoc[]>;
   pendingConnectionForDoctor(doctorId: string): Promise<IMedicalRepListOnDoc[]>;
-  doctorMutualConnectionRepIds(doctorId:string):Promise<string[]>;
-  findConnectionBetweenDoctorAndRep(doctorId:string,repId:string):Promise<IConnection | null>;
+  doctorMutualConnectionRepIds(doctorId: string): Promise<string[]>;
+  findConnectionBetweenDoctorAndRep(doctorId: string, repId: string): Promise<IConnection | null>;
+  countPendingRequestsForRep(repId: string): Promise<number>;
+  countPendingConnectionsForDoctor(doctorId: string): Promise<number>;
+  countMutualConnectionsForDoctor(doctorId: string): Promise<number>;
+  countMutualConnectionsForRep(repId: string): Promise<number>;
 }
