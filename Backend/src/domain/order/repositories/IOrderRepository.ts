@@ -52,4 +52,15 @@ export interface IOrderRepository {
     endDate?: Date,
     status?: string // Added status
   ): Promise<{ orders: IOrder[]; total: number }>;
+
+  getSalesByCompany(
+    start?: Date,
+    end?: Date
+  ): Promise<{ name: string; value: number }[]>;
+
+  getTopDoctorsBySales(
+    start?: Date,
+    end?: Date,
+    limit?: number
+  ): Promise<{ name: string; value: number }[]>;
 }

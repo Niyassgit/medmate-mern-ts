@@ -10,5 +10,8 @@ export interface OrderAnalyticsResponse {
     revenueOverTime: { date: string; amount: number }[];
     paidVsUnpaid: { paid: number; unpaid: number };
     earningsSplit: { doctor: number; admin: number };
+    salesByCompany: { name: string; value: number }[];
+    topDoctors: { name: string; value: number }[];
   };
+  recentOrders: any[];
 }

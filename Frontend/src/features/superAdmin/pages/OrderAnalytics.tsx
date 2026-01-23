@@ -18,6 +18,10 @@ import {
   Tooltip,
   ResponsiveContainer,
   CartesianGrid,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
 } from "recharts";
 
 import StatsCard from "@/components/shared/StatusCard";
@@ -25,6 +29,23 @@ import { Card } from "@/components/ui/card";
 import { orderAnalytics } from "../api/superAdminApi";
 import { getCurrentMonthRange } from "@/lib/utils";
 import { OrderAnalyticsResponse } from "../dto/OrderAnalyticsResponse";
+
+const COLORS = ["#8B5CF6", "#EC4899", "#3B82F6", "#10B981", "#F59E0B", "#EF4444"];
+
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case "DELIVERED":
+      return "bg-green-100 text-green-700";
+    case "SHIPPED":
+      return "bg-blue-100 text-blue-700";
+    case "PENDING":
+      return "bg-yellow-100 text-yellow-700";
+    case "CANCELLED":
+      return "bg-red-100 text-red-700";
+    default:
+      return "bg-gray-100 text-gray-700";
+  }
+};
 
 const OrderAnalyticsPage = () => {
   const navigate = useNavigate();
@@ -177,8 +198,7 @@ const OrderAnalyticsPage = () => {
         />
       </div>
 
-      <Card className="p-6">
-        <h2 className="text-lg font-semibold mb-2">Revenue Over Time</h2>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="p-6">
           <h2 className="text-lg font-semibold mb-2">Revenue Over Time</h2>
           <p className="text-sm text-muted-foreground mb-4">
@@ -194,12 +214,102 @@ const OrderAnalyticsPage = () => {
                 <Tooltip
                   formatter={(value: number) => [`₹${value}`, "Revenue"]}
                 />
-                <Bar dataKey="amount" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="amount" fill="#8884d8" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </Card>
-      </Card>
+
+        <Card className="p-6">
+          <h2 className="text-lg font-semibold mb-2">Sales per Company</h2>
+          <p className="text-sm text-muted-foreground mb-4">
+            Distribution of sales by medical company
+          </p>
+          <div className="h-[320px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={charts.salesByCompany}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={100}
+                  paddingAngle={5}
+                  dataKey="value"
+                >
+                  {charts.salesByCompany.map((_, index: number) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+                <Tooltip formatter={(value: number) => `₹${value.toLocaleString()}`} />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <Card className="p-6 lg:col-span-2 overflow-hidden">
+          <h2 className="text-lg font-semibold mb-4">Recent 10 Orders</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm text-left">
+              <thead className="bg-muted/50 text-muted-foreground font-medium border-b">
+                <tr>
+                  <th className="px-4 py-3">Order ID</th>
+                  <th className="px-4 py-3">Guest</th>
+                  <th className="px-4 py-3">Doctor</th>
+                  <th className="px-4 py-3">Amount</th>
+                  <th className="px-4 py-3">Status</th>
+                  <th className="px-4 py-3">Date</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y">
+                {data.recentOrders.map((order: any) => (
+                  <tr
+                    key={order.id}
+                    className="hover:bg-muted/30 transition-colors cursor-pointer"
+                    onClick={() => navigate(`/admin/orders/${order.id}`)}
+                  >
+                    <td className="px-4 py-3 font-medium">#{order.id.slice(-6).toUpperCase()}</td>
+                    <td className="px-4 py-3">{order.guest?.name || "N/A"}</td>
+                    <td className="px-4 py-3">{order.prescription?.doctor?.name || "N/A"}</td>
+                    <td className="px-4 py-3">₹{order.totalAmount.toLocaleString()}</td>
+                    <td className="px-4 py-3">
+                      <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${getStatusColor(order.status)}`}>
+                        {order.status}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-muted-foreground">
+                      {new Date(order.createdAt).toLocaleDateString()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+
+        <Card className="p-6">
+          <h2 className="text-lg font-semibold mb-4">Top 5 Doctors</h2>
+          <div className="space-y-4">
+            {charts.topDoctors.map((doc: any, index: number) => (
+              <div key={index} className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-xs font-bold">
+                    {index + 1}
+                  </div>
+                  <span className="text-sm font-medium">{doc.name}</span>
+                </div>
+                <span className="text-sm font-bold">₹{doc.value.toLocaleString()}</span>
+              </div>
+            ))}
+          </div>
+        </Card>
+      </div>
     </div>
   );
 };

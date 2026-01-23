@@ -31,6 +31,9 @@ export class OrderMapper {
           };
         }[];
       } | null;
+      guest?: {
+        name: string;
+      } | null;
     }
   ): IOrder {
     return {
@@ -46,6 +49,7 @@ export class OrderMapper {
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
       doctorName: data.prescription?.doctor?.name,
+      guestName: data.guest?.name,
       hospital: data.prescription?.doctor?.hospital,
       items: data.prescription?.items.map((item) => ({
         productId: item.product.id,

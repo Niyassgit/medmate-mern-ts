@@ -22,5 +22,17 @@ export interface OrderAnalyticsDTO {
       doctor: number;
       admin: number;
     };
+
+    salesByCompany: {
+      name: string;
+      value: number;
+    }[];
+
+    topDoctors: {
+      name: string;
+      value: number;
+    }[];
   };
+
+  recentOrders: any[]; // We can refine this later or use a specific interface
 }

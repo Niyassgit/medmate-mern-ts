@@ -13,7 +13,10 @@ export class OrderAnalyticsMapper {
     doctorEarnings: number,
     unpaidPrescriptions: number,
     adminEarnings: number,
-    revenueTimeline: RevenueTimelineEntry[]
+    revenueTimeline: RevenueTimelineEntry[],
+    salesByCompany: { name: string; value: number }[],
+    topDoctors: { name: string; value: number }[],
+    recentOrders: any[]
   ): OrderAnalyticsDTO {
     return {
       summary: {
@@ -36,7 +39,10 @@ export class OrderAnalyticsMapper {
           doctor: doctorEarnings,
           admin: adminEarnings,
         },
+        salesByCompany,
+        topDoctors,
       },
+      recentOrders: recentOrders.map(order => this.toOrderDetails(order)),
     };
   }
 
@@ -71,7 +77,9 @@ export class OrderAnalyticsMapper {
           phone: order.guest.phone,
           email: order.guest.email,
         }
-        : undefined,
+        : (order as any).guestName
+          ? { name: (order as any).guestName } as any
+          : undefined,
       address: order.address
         ? {
           fullName: order.address.fullName,
@@ -101,7 +109,14 @@ export class OrderAnalyticsMapper {
             },
           })),
         }
-        : undefined,
+        : (order as any).doctorName
+          ? {
+            doctor: {
+              name: (order as any).doctorName,
+              hospital: (order as any).hospital || ""
+            }
+          } as any
+          : undefined,
     };
   }
 }

@@ -15,7 +15,7 @@ export class AdminOrderAnalyticsUseCase implements IAdminOrderAnalyticsUseCase {
   constructor(
     private _orderRepository: IOrderRepository,
     private _prescriptionRepository: IPrescriptionRepository
-  ) {}
+  ) { }
   async execute(
     startDate?: string,
     endDate?: string,
@@ -40,12 +40,18 @@ export class AdminOrderAnalyticsUseCase implements IAdminOrderAnalyticsUseCase {
       doctorEarnings,
       adminEarnings,
       revenueData,
+      salesByCompany,
+      topDoctors,
+      recentOrdersData,
     ] = await Promise.all([
       this._orderRepository.countPaidOrders(startDateObj, endDateObj),
       this._orderRepository.sumGrossAmount(startDateObj, endDateObj),
       this._orderRepository.sumDoctorEarnings(startDateObj, endDateObj),
       this._orderRepository.sumAdminEarnings(startDateObj, endDateObj),
       this._orderRepository.revenueTimeline(startDateObj, endDateObj),
+      this._orderRepository.getSalesByCompany(startDateObj, endDateObj),
+      this._orderRepository.getTopDoctorsBySales(startDateObj, endDateObj, 5),
+      this._orderRepository.getAllOrders(1, 10, startDateObj, endDateObj),
     ]);
 
     const period: CommissionPeriod = CommissionPeriodUtil.determinePeriod(
@@ -72,7 +78,10 @@ export class AdminOrderAnalyticsUseCase implements IAdminOrderAnalyticsUseCase {
       doctorEarnings,
       unpaidPrescriptions,
       adminEarnings,
-      revenueTimeline
+      revenueTimeline,
+      salesByCompany,
+      topDoctors,
+      recentOrdersData.orders
     );
 
     return mappedData;

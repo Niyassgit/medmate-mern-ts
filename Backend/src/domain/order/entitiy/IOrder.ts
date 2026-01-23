@@ -13,6 +13,7 @@ export interface IOrder {
   createdAt: Date;
   updatedAt: Date;
   doctorName?: string;
+  guestName?: string;
   hospital?: string;
   items?: {
     productId?: string;

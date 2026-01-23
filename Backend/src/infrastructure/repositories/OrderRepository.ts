@@ -600,4 +600,123 @@ export class OrderRepository
       total,
     };
   }
+
+  async getSalesByCompany(
+    start?: Date,
+    end?: Date
+  ): Promise<{ name: string; value: number }[]> {
+    const whereClause: Prisma.OrderWhereInput = {
+      paymentStatus: PaymentStatus.SUCCESS,
+    };
+
+    if (start || end) {
+      whereClause.createdAt = {};
+      if (start) whereClause.createdAt.gte = start;
+      if (end) whereClause.createdAt.lte = end;
+    }
+
+    const orders = await prisma.order.findMany({
+      where: whereClause,
+      include: {
+        prescription: {
+          include: {
+            items: {
+              include: {
+                product: {
+                  include: {
+                    rep: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const companySales: Record<string, number> = {};
+
+    orders.forEach((order) => {
+      order.prescription.items.forEach((item) => {
+        const companyName = item.product.rep.companyName || "Unknown";
+
+      });
+    });
+
+    const commissionWhere: Prisma.CommissionWhereInput = {};
+    if (start || end) {
+      commissionWhere.createdAt = {};
+      if (start) commissionWhere.createdAt.gte = start;
+      if (end) commissionWhere.createdAt.lte = end;
+    }
+
+    const commissions = await prisma.commission.findMany({
+      where: commissionWhere,
+      include: {
+        product: {
+          include: {
+            rep: true,
+          },
+        },
+      },
+    });
+
+    commissions.forEach((comm) => {
+      const company = comm.product.rep.companyName || "Unknown";
+      const amount = comm.mrp;
+      companySales[company] = (companySales[company] || 0) + amount;
+    });
+
+    return Object.entries(companySales)
+      .map(([name, value]) => ({ name, value: Number(value.toFixed(2)) }))
+      .sort((a, b) => b.value - a.value);
+  }
+
+  async getTopDoctorsBySales(
+    start?: Date,
+    end?: Date,
+    limit: number = 5
+  ): Promise<{ name: string; value: number }[]> {
+    const whereClause: Prisma.OrderWhereInput = {
+      paymentStatus: PaymentStatus.SUCCESS,
+    };
+
+    if (start || end) {
+      whereClause.createdAt = {};
+      if (start) whereClause.createdAt.gte = start;
+      if (end) whereClause.createdAt.lte = end;
+    }
+
+    const doctorSales = await prisma.order.groupBy({
+      by: ["prescriptionId"],
+      where: whereClause,
+      _sum: {
+        totalAmount: true,
+      },
+    });
+
+    const results = await Promise.all(
+      doctorSales.map(async (ds) => {
+        const prescription = await prisma.prescription.findUnique({
+          where: { id: ds.prescriptionId },
+          include: { doctor: true },
+        });
+        return {
+          name: prescription?.doctor.name || "Unknown",
+          value: ds._sum.totalAmount || 0,
+        };
+      })
+    );
+
+
+    const aggregated: Record<string, number> = {};
+    results.forEach((r) => {
+      aggregated[r.name] = (aggregated[r.name] || 0) + r.value;
+    });
+
+    return Object.entries(aggregated)
+      .map(([name, value]) => ({ name, value: Number(value.toFixed(2)) }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, limit);
+  }
 }
