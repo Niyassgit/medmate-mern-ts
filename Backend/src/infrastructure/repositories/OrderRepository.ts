@@ -719,4 +719,82 @@ export class OrderRepository
       .sort((a, b) => b.value - a.value)
       .slice(0, limit);
   }
+
+  async getOrderTimeline(
+    doctorId: string,
+    start?: Date,
+    end?: Date
+  ): Promise<{ createdAt: Date }[]> {
+    const whereClause: Prisma.OrderWhereInput = {
+      prescription: {
+        doctorId,
+      },
+    };
+
+    if (start || end) {
+      whereClause.createdAt = {};
+      if (start) whereClause.createdAt.gte = start;
+      if (end) whereClause.createdAt.lte = end;
+    }
+
+    return await prisma.order.findMany({
+      where: whereClause,
+      select: {
+        createdAt: true,
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+  }
+
+  async getTopCompaniesForDoctor(
+    doctorId: string,
+    start?: Date,
+    end?: Date
+  ): Promise<{ name: string; value: number }[]> {
+    const whereClause: Prisma.OrderWhereInput = {
+      prescription: {
+        doctorId,
+      },
+      paymentStatus: PaymentStatus.SUCCESS,
+    };
+
+    if (start || end) {
+      whereClause.createdAt = {};
+      if (start) whereClause.createdAt.gte = start;
+      if (end) whereClause.createdAt.lte = end;
+    }
+
+    const orders = await prisma.order.findMany({
+      where: whereClause,
+      include: {
+        prescription: {
+          include: {
+            items: {
+              include: {
+                product: {
+                  include: {
+                    rep: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const companyFreq: Record<string, number> = {};
+    orders.forEach((order) => {
+      order.prescription.items.forEach((item) => {
+        const company = item.product.rep.companyName || "Unknown";
+        companyFreq[company] = (companyFreq[company] || 0) + 1;
+      });
+    });
+
+    return Object.entries(companyFreq)
+      .map(([name, value]) => ({ name, value }))
+      .sort((a, b) => b.value - a.value);
+  }
 }

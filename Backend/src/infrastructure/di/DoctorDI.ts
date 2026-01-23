@@ -62,6 +62,7 @@ import { VideoCallEventPublisher } from "../realtime/publishers/VideoCallEventPu
 import { DoctorCommissionsUseCase } from "../../application/doctor/use-cases/DoctorCommissionsUseCase";
 import { CommissionRepository } from "../repositories/CommissionRepository";
 import { SubscriptionRepository } from "../repositories/SubscriptionRepository";
+import { OrderRepository } from "../repositories/OrderRepository";
 
 const doctorRepository = new DoctorRepository();
 const medicalRepRepository = new MedicalRepRepository();
@@ -85,6 +86,7 @@ const tokenService = new TokenService();
 const videoCallEventPublisher = new VideoCallEventPublisher();
 const commissionRepository = new CommissionRepository();
 const subscriptionRepository = new SubscriptionRepository();
+const orderRepository = new OrderRepository();
 
 const createDoctorUseCase = new CreateDoctorUseCase(
   doctorRepository,
@@ -321,7 +323,8 @@ const makeVideoCallWithRepUseCase = new MakeVideoCallWithRepUseCase(
 const doctorCommissionUseCase = new DoctorCommissionsUseCase(
   doctorRepository,
   commissionRepository,
-  prescriptionRepository
+  prescriptionRepository,
+  orderRepository
 );
 export const doctorController = new DoctorController(
   createDoctorUseCase,

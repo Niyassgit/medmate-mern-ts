@@ -26,4 +26,9 @@ export interface IPrescriptionRepository {
     start?: Date,
     end?: Date
   ): Promise<number>;
+  getPrescriptionTimeline(
+    doctorId: string,
+    start?: Date,
+    end?: Date
+  ): Promise<{ createdAt: Date }[]>;
 }

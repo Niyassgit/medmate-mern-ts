@@ -14,7 +14,7 @@ export class DoctorAnalyticsUseCase implements IDoctorAnalyticsUseCase {
     private _conectionRepository: IConnectionRepository,
     private _departmentRepository: IDepartmentRepository,
     private _storageService: IStorageService
-  ) {}
+  ) { }
   async execute(userId: string): Promise<AnalyticsResponseDTO | null> {
     const user = await this._doctorRepository.getDoctorIdByUserId(userId);
     if (!user || !user.doctorId)

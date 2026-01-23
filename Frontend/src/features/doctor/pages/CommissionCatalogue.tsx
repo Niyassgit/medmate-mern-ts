@@ -13,6 +13,10 @@ import {
   Tooltip,
   ResponsiveContainer,
   CartesianGrid,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
 } from "recharts";
 import StatsCard from "@/components/shared/StatusCard";
 import useFetchItem from "@/hooks/useFetchItem";
@@ -22,6 +26,8 @@ import { DoctorCommissionDashboardDTO } from "../dto/DoctorCommissionDashboardDT
 import { DoctorCommissionItemDTO } from "../dto/DoctorCommissionItemDTO";
 import { Spinner } from "@/components/ui/spinner";
 import toast from "react-hot-toast";
+
+const COLORS = ["#3b82f6", "#10b981", "#8b5cf6", "#f59e0b", "#ef4444", "#ec4899"];
 
 const CommissionCatalogue = () => {
   const [filter, setFilter] = useState<"weekly" | "monthly" | "yearly" | "custom">("monthly");
@@ -258,57 +264,89 @@ const CommissionCatalogue = () => {
         />
       </div>
 
-      {/* ================= CHART ================= */}
-      <div className="bg-white rounded-xl border p-6">
-        <h2 className="text-lg font-semibold mb-4">Earnings Over Time</h2>
-
-        {timeline.length === 0 ? (
-          <div className="h-64 flex items-center justify-center text-muted-foreground">
-            No data available for the selected period
-          </div>
-        ) : (
-          <div className="h-80">
+      {/* ================= DASHBOARD CHARTS ================= */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Top Companies Pie Chart */}
+        <div className="bg-white rounded-xl border p-6">
+          <h2 className="text-lg font-semibold mb-4 text-center lg:text-left">Top Prescription Sources</h2>
+          <div className="h-80 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={timeline}
-                margin={{
-                  top: 20,
-                  right: 30,
-                  left: 20,
-                  bottom: filter === "yearly" ? 40 : filter === "monthly" ? 50 : 60
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis
-                  dataKey="period"
-                  angle={filter === "yearly" ? 0 : filter === "monthly" ? -15 : -45}
-                  textAnchor={filter === "yearly" ? "middle" : "end"}
-                  height={filter === "yearly" ? 40 : filter === "monthly" ? 50 : 80}
-                  interval={filter === "yearly" ? 0 : "preserveStartEnd"}
-                  tick={{ fontSize: 12 }}
-                />
-                <YAxis
-                  tickFormatter={(value) => `₹${value.toFixed(0)}`}
-                  tick={{ fontSize: 12 }}
-                />
+              <PieChart>
+                <Pie
+                  data={data.topCompanies || []}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={80}
+                  paddingAngle={5}
+                  dataKey="value"
+                  label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
+                >
+                  {(data.topCompanies || []).map((_, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
                 <Tooltip
-                  formatter={(value: number) => [`₹${value.toFixed(2)}`, "Earnings"]}
-                  labelStyle={{ color: "#374151" }}
-                  contentStyle={{
-                    backgroundColor: "#fff",
-                    border: "1px solid #e5e7eb",
-                    borderRadius: "8px",
-                  }}
+                  contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                 />
-                <Bar
-                  dataKey="earnings"
-                  fill="#3b82f6"
-                  radius={[6, 6, 0, 0]}
-                />
-              </BarChart>
+                <Legend verticalAlign="bottom" height={36} />
+              </PieChart>
             </ResponsiveContainer>
           </div>
-        )}
+        </div>
+
+        {/* Earnings Over Time Bar Chart */}
+        <div className="bg-white rounded-xl border p-6">
+          <h2 className="text-lg font-semibold mb-4">Earnings Over Time</h2>
+
+          {timeline.length === 0 ? (
+            <div className="h-64 flex items-center justify-center text-muted-foreground">
+              No data available for the selected period
+            </div>
+          ) : (
+            <div className="h-80">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={timeline}
+                  margin={{
+                    top: 20,
+                    right: 30,
+                    left: 20,
+                    bottom: filter === "yearly" ? 40 : filter === "monthly" ? 50 : 60
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                  <XAxis
+                    dataKey="period"
+                    angle={filter === "yearly" ? 0 : filter === "monthly" ? -15 : -45}
+                    textAnchor={filter === "yearly" ? "middle" : "end"}
+                    height={filter === "yearly" ? 40 : filter === "monthly" ? 50 : 80}
+                    interval={filter === "yearly" ? 0 : "preserveStartEnd"}
+                    tick={{ fontSize: 12 }}
+                  />
+                  <YAxis
+                    tickFormatter={(value) => `₹${value.toFixed(0)}`}
+                    tick={{ fontSize: 12 }}
+                  />
+                  <Tooltip
+                    formatter={(value: number) => [`₹${value.toFixed(2)}`, "Earnings"]}
+                    labelStyle={{ color: "#374151" }}
+                    contentStyle={{
+                      backgroundColor: "#fff",
+                      border: "1px solid #e5e7eb",
+                      borderRadius: "8px",
+                    }}
+                  />
+                  <Bar
+                    dataKey="earnings"
+                    fill="#3b82f6"
+                    radius={[6, 6, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* ================= COMMISSION TABLE ================= */}

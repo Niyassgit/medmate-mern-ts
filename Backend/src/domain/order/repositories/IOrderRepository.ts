@@ -63,4 +63,16 @@ export interface IOrderRepository {
     end?: Date,
     limit?: number
   ): Promise<{ name: string; value: number }[]>;
+
+  getOrderTimeline(
+    doctorId: string,
+    start?: Date,
+    end?: Date
+  ): Promise<{ createdAt: Date }[]>;
+
+  getTopCompaniesForDoctor(
+    doctorId: string,
+    start?: Date,
+    end?: Date
+  ): Promise<{ name: string; value: number }[]>;
 }

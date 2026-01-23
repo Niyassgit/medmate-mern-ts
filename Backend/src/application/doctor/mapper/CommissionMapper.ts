@@ -10,7 +10,8 @@ export class CommissionMapper {
     period: CommissionPeriod = "monthly",
     startDate?: Date,
     endDate?: Date,
-    totalPrescriptions: number = 0
+    totalPrescriptions: number = 0,
+    topCompanies: { name: string; value: number }[] = []
   ): DoctorCommissionDashboardDTO {
 
 
@@ -54,6 +55,7 @@ export class CommissionMapper {
       },
       timeline,
       commissions: commissionItems,
+      topCompanies,
     };
   }
 

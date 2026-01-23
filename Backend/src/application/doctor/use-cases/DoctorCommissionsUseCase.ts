@@ -1,5 +1,6 @@
 import { ICommissionRepository } from "../../../domain/commission/repositories/ICommissionRepository";
 import { IPrescriptionRepository } from "../../../domain/prescription/repositories/IPrescriptionRepository";
+import { IOrderRepository } from "../../../domain/order/repositories/IOrderRepository";
 import {
   BadRequestError,
   UnautharizedError,
@@ -15,7 +16,8 @@ export class DoctorCommissionsUseCase implements IDoctorCommissionsUseCase {
   constructor(
     private _doctorRepository: IDoctorRepository,
     private _commissionRepository: ICommissionRepository,
-    private _prescriptionRepository: IPrescriptionRepository
+    private _prescriptionRepository: IPrescriptionRepository,
+    private _orderRepository: IOrderRepository
   ) { }
 
   async execute(
@@ -69,7 +71,16 @@ export class DoctorCommissionsUseCase implements IDoctorCommissionsUseCase {
         end
       );
 
-      const dashboard = CommissionMapper.toDomain(allCommissions, periodType, start, end, totalPrescriptions);
+      const { topCompanies } = await this._getAnalyticsData(doctorId, start, end);
+
+      const dashboard = CommissionMapper.toDomain(
+        allCommissions,
+        periodType,
+        start,
+        end,
+        totalPrescriptions,
+        topCompanies
+      );
 
       const commissionItems = CommissionMapper.mapCommissionsToDTO(
         cursorResult.commissions
@@ -97,6 +108,21 @@ export class DoctorCommissionsUseCase implements IDoctorCommissionsUseCase {
       end
     );
 
-    return CommissionMapper.toDomain(commissions, periodType, start, end, totalPrescriptions);
+    const { topCompanies } = await this._getAnalyticsData(doctorId, start, end);
+
+    return CommissionMapper.toDomain(
+      commissions,
+      periodType,
+      start,
+      end,
+      totalPrescriptions,
+      topCompanies
+    );
+  }
+
+  private async _getAnalyticsData(doctorId: string, start: Date, end: Date) {
+    const topCompanies = await this._orderRepository.getTopCompaniesForDoctor(doctorId, start, end);
+
+    return { topCompanies };
   }
 }

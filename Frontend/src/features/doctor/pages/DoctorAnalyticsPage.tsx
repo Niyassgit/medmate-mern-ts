@@ -13,7 +13,7 @@ import { DoctorAnalyticsDTO } from "../dto/DoctorAnalyticsDTO";
 import { RepListOnDoctorAnalyticsDTO } from "../dto/RepListOnDocAnlyticsDTO";
 import ConnectionTable from "@/components/shared/ConnectionTable";
 import { SpinnerButton } from "@/components/shared/SpinnerButton";
-import { mutualConnections} from "../api";
+import { mutualConnections } from "../api";
 import ConnectionsModal, { ConnectionItem } from "@/components/shared/ConnectionsModal";
 
 const DoctorAnalyticsPage = () => {
@@ -94,7 +94,7 @@ const DoctorAnalyticsPage = () => {
               value={String(analytics?.mutualConnectionsCount ?? 0)}
               description="Total connected representatives"
               iconColor="bg-blue-100 text-blue-600"
-              onClick={() => openModal("Mutual Connections", ()=>mutualConnections(id!))}
+              onClick={() => openModal("Mutual Connections", () => mutualConnections(id!))}
             />
             <StatsCard
               icon={Clock}
@@ -103,17 +103,17 @@ const DoctorAnalyticsPage = () => {
               description="Awaiting approval"
               iconColor="bg-yellow-100 text-yellow-600"
               onClick={() =>
-                openModal("Pending Connections",()=> pendingConnections(id!))
+                openModal("Pending Connections", () => pendingConnections(id!))
               }
             />
-            {isOpen && fetcher &&(
-              <ConnectionsModal 
-               isOpen={isOpen}
-               onClose={()=>setIsOpen(false)}
-               title={modalTitle}
-               fetcher={fetcher}
-              viewerRole="doctor"
-               
+            {isOpen && fetcher && (
+              <ConnectionsModal
+                isOpen={isOpen}
+                onClose={() => setIsOpen(false)}
+                title={modalTitle}
+                fetcher={fetcher}
+                viewerRole="doctor"
+
               />
             )}
 

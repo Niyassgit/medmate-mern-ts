@@ -167,4 +167,30 @@ export class PrescriptionRepository
       where: whereClause,
     });
   }
+
+  async getPrescriptionTimeline(
+    doctorId: string,
+    start?: Date,
+    end?: Date
+  ): Promise<{ createdAt: Date }[]> {
+    const whereClause: Prisma.PrescriptionWhereInput = {
+      doctorId,
+    };
+
+    if (start || end) {
+      whereClause.createdAt = {};
+      if (start) whereClause.createdAt.gte = start;
+      if (end) whereClause.createdAt.lte = end;
+    }
+
+    return await prisma.prescription.findMany({
+      where: whereClause,
+      select: {
+        createdAt: true,
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+  }
 }
