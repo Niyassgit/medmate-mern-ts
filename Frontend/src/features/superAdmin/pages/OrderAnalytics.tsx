@@ -28,24 +28,21 @@ import StatsCard from "@/components/shared/StatusCard";
 import { Card } from "@/components/ui/card";
 import { orderAnalytics } from "../api/superAdminApi";
 import { getCurrentMonthRange } from "@/lib/utils";
-import { OrderAnalyticsResponse } from "../dto/OrderAnalyticsResponse";
+import {
+  OrderAnalyticsResponse,
+  RecentOrder,
+  TopDoctor,
+} from "../dto/OrderAnalyticsResponse";
+import { getStatusColor } from "@/lib/colorStatus";
 
-const COLORS = ["#8B5CF6", "#EC4899", "#3B82F6", "#10B981", "#F59E0B", "#EF4444"];
-
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case "DELIVERED":
-      return "bg-green-100 text-green-700";
-    case "SHIPPED":
-      return "bg-blue-100 text-blue-700";
-    case "PENDING":
-      return "bg-yellow-100 text-yellow-700";
-    case "CANCELLED":
-      return "bg-red-100 text-red-700";
-    default:
-      return "bg-gray-100 text-gray-700";
-  }
-};
+const COLORS = [
+  "#8B5CF6",
+  "#EC4899",
+  "#3B82F6",
+  "#10B981",
+  "#F59E0B",
+  "#EF4444",
+];
 
 const OrderAnalyticsPage = () => {
   const navigate = useNavigate();
@@ -179,7 +176,7 @@ const OrderAnalyticsPage = () => {
           iconColor="bg-emerald-100 text-emerald-700"
           onClick={() =>
             navigate(
-              `/admin/order-analytics/doctor-earnings?startDate=${startDate}&endDate=${endDate}`
+              `/admin/order-analytics/doctor-earnings?startDate=${startDate}&endDate=${endDate}`,
             )
           }
         />
@@ -192,7 +189,7 @@ const OrderAnalyticsPage = () => {
           iconColor="bg-orange-100 text-orange-700"
           onClick={() =>
             navigate(
-              `/admin/order-analytics/admin-earnings?startDate=${startDate}&endDate=${endDate}`
+              `/admin/order-analytics/admin-earnings?startDate=${startDate}&endDate=${endDate}`,
             )
           }
         />
@@ -237,14 +234,16 @@ const OrderAnalyticsPage = () => {
                   paddingAngle={5}
                   dataKey="value"
                 >
-                  {charts.salesByCompany.map((_, index: number) => (
+                  {charts.salesByCompany.map((_: any, index: number) => (
                     <Cell
                       key={`cell-${index}`}
                       fill={COLORS[index % COLORS.length]}
                     />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value: number) => `₹${value.toLocaleString()}`} />
+                <Tooltip
+                  formatter={(value: number) => `₹${value.toLocaleString()}`}
+                />
                 <Legend />
               </PieChart>
             </ResponsiveContainer>
@@ -268,18 +267,26 @@ const OrderAnalyticsPage = () => {
                 </tr>
               </thead>
               <tbody className="divide-y">
-                {data.recentOrders.map((order: any) => (
+                {data.recentOrders.map((order: RecentOrder) => (
                   <tr
                     key={order.id}
                     className="hover:bg-muted/30 transition-colors cursor-pointer"
                     onClick={() => navigate(`/admin/orders/${order.id}`)}
                   >
-                    <td className="px-4 py-3 font-medium">#{order.id.slice(-6).toUpperCase()}</td>
+                    <td className="px-4 py-3 font-medium">
+                      #{order.id.slice(-6).toUpperCase()}
+                    </td>
                     <td className="px-4 py-3">{order.guest?.name || "N/A"}</td>
-                    <td className="px-4 py-3">{order.prescription?.doctor?.name || "N/A"}</td>
-                    <td className="px-4 py-3">₹{order.totalAmount.toLocaleString()}</td>
                     <td className="px-4 py-3">
-                      <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${getStatusColor(order.status)}`}>
+                      {order.prescription?.doctor?.name || "N/A"}
+                    </td>
+                    <td className="px-4 py-3">
+                      ₹{order.totalAmount.toLocaleString()}
+                    </td>
+                    <td className="px-4 py-3">
+                      <span
+                        className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${getStatusColor(order.status)}`}
+                      >
                         {order.status}
                       </span>
                     </td>
@@ -296,7 +303,7 @@ const OrderAnalyticsPage = () => {
         <Card className="p-6">
           <h2 className="text-lg font-semibold mb-4">Top 5 Doctors</h2>
           <div className="space-y-4">
-            {charts.topDoctors.map((doc: any, index: number) => (
+            {charts.topDoctors.map((doc: TopDoctor, index: number) => (
               <div key={index} className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-xs font-bold">
@@ -304,7 +311,9 @@ const OrderAnalyticsPage = () => {
                   </div>
                   <span className="text-sm font-medium">{doc.name}</span>
                 </div>
-                <span className="text-sm font-bold">₹{doc.value.toLocaleString()}</span>
+                <span className="text-sm font-bold">
+                  ₹{doc.value.toLocaleString()}
+                </span>
               </div>
             ))}
           </div>

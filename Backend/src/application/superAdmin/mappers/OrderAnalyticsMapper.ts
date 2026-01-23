@@ -16,7 +16,7 @@ export class OrderAnalyticsMapper {
     revenueTimeline: RevenueTimelineEntry[],
     salesByCompany: { name: string; value: number }[],
     topDoctors: { name: string; value: number }[],
-    recentOrders: any[]
+    recentOrders: (IOrder | IOrderDetail)[]
   ): OrderAnalyticsDTO {
     return {
       summary: {
@@ -56,7 +56,59 @@ export class OrderAnalyticsMapper {
     };
   }
 
-  static toOrderDetails(order: IOrderDetail): OrderDetailsResponseDTO {
+  static toOrderDetails(order: IOrderDetail | IOrder): OrderDetailsResponseDTO {
+    const isDetailedOrder = (obj: unknown): obj is IOrderDetail => {
+      return obj !== null && typeof obj === "object" && "guest" in obj && (obj as Record<string, unknown>).guest !== undefined;
+    };
+
+    const hasGuestName = (obj: unknown): obj is { guestName: string } => {
+      return obj !== null && typeof obj === "object" && "guestName" in obj;
+    };
+
+    const hasDoctorName = (obj: unknown): obj is { doctorName: string; hospital?: string } => {
+      return obj !== null && typeof obj === "object" && "doctorName" in obj;
+    };
+
+    const guestData = isDetailedOrder(order)
+      ? {
+        id: order.guest.id,
+        name: order.guest.name,
+        phone: order.guest.phone,
+        email: order.guest.email,
+      }
+      : hasGuestName(order)
+        ? { id: "", name: order.guestName, phone: "", email: "" }
+        : undefined;
+
+    const prescriptionData = isDetailedOrder(order) && order.prescription
+      ? {
+        id: order.prescription.id,
+        doctor: order.prescription.doctor
+          ? {
+            name: order.prescription.doctor.name,
+            hospital: order.prescription.doctor.hospital || "",
+          }
+          : undefined,
+        items: order.prescription.items?.map((item) => ({
+          id: item.id,
+          quantity: item.quantity,
+          product: {
+            name: item.product.name,
+            brand: item.product.brand,
+            mrp: item.product.mrp,
+          },
+        })),
+      }
+      : hasDoctorName(order)
+        ? {
+          id: "",
+          doctor: {
+            name: order.doctorName,
+            hospital: order.hospital || ""
+          }
+        }
+        : undefined;
+
     return {
       id: order.id,
       orderId: order.id,
@@ -67,20 +119,11 @@ export class OrderAnalyticsMapper {
       status: order.status,
       paymentStatus: order.paymentStatus,
       deliveryAddress: order.deliveryAddress,
-      paymentId: order.paymentId,
+      paymentId: order.paymentId || null,
       createdAt: order.createdAt,
       updatedAt: order.updatedAt,
-      guest: order.guest
-        ? {
-          id: order.guest.id,
-          name: order.guest.name,
-          phone: order.guest.phone,
-          email: order.guest.email,
-        }
-        : (order as any).guestName
-          ? { name: (order as any).guestName } as any
-          : undefined,
-      address: order.address
+      guest: guestData,
+      address: isDetailedOrder(order) && order.address
         ? {
           fullName: order.address.fullName,
           street: order.address.street,
@@ -90,33 +133,7 @@ export class OrderAnalyticsMapper {
           phone: order.address.phone,
         }
         : undefined,
-      prescription: order.prescription
-        ? {
-          id: order.prescription.id,
-          doctor: order.prescription.doctor
-            ? {
-              name: order.prescription.doctor.name,
-              hospital: order.prescription.doctor.hospital || "",
-            }
-            : undefined,
-          items: order.prescription.items?.map((item) => ({
-            id: item.id,
-            quantity: item.quantity,
-            product: {
-              name: item.product.name,
-              brand: item.product.brand,
-              mrp: item.product.mrp,
-            },
-          })),
-        }
-        : (order as any).doctorName
-          ? {
-            doctor: {
-              name: (order as any).doctorName,
-              hospital: (order as any).hospital || ""
-            }
-          } as any
-          : undefined,
+      prescription: prescriptionData,
     };
   }
 }

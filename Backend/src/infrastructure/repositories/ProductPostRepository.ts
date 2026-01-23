@@ -44,8 +44,8 @@ export class ProductPostRepository
   async getProducts(
     repId: string,
     status: ProductPostListStatus,
-    page: number,
-    limit: number
+    page: number = 1,
+    limit: number = 10
   ): Promise<{ data: IProductPostForFeed[]; total: number } | null> {
     const where: Prisma.ProductPostWhereInput = {
       repId,

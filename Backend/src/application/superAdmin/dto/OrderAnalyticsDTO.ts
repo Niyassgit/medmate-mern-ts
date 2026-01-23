@@ -1,3 +1,5 @@
+import { OrderDetailsResponseDTO } from "./OrderDetailsResponseDTO";
+
 export interface OrderAnalyticsDTO {
   summary: {
     totalPrescriptions: number;
@@ -34,5 +36,5 @@ export interface OrderAnalyticsDTO {
     }[];
   };
 
-  recentOrders: any[]; // We can refine this later or use a specific interface
+  recentOrders: OrderDetailsResponseDTO[];
 }

@@ -19,7 +19,7 @@ export class PostDetailsUseCase implements IPostDetailsUseCase {
     private _postRepository: IProductPostRepository,
     private _connectionRepository: IConnectionRepository,
     private _storageService: IStorageService
-  ) {}
+  ) { }
   async execute(
     postId: string,
     userId?: string
@@ -37,14 +37,14 @@ export class PostDetailsUseCase implements IPostDetailsUseCase {
       doctor?.id,
       medicalRep?.id
     );
-    const mappedPost = await ProductPostMapper.toDomain(postDetails,this._storageService);
+    const mappedPost = await ProductPostMapper.toDomain(postDetails, this._storageService);
     const mappedRep = await MedicalRepMapper.toDoctorDomian(
       medicalRep,
       !!repIsConnected,
       this._storageService
     );
-    const allProducts = await this._postRepository.getProducts(medicalRep.id, ProductPostListStatus.PUBLISHED);
-    const relatedProducts = (allProducts ?? []).filter(
+    const result = await this._postRepository.getProducts(medicalRep.id, ProductPostListStatus.PUBLISHED, 1, 10);
+    const relatedProducts = (result?.data ?? []).filter(
       (product) => product.id !== postDetails.id
     );
     const mappedRelatedProducts =
