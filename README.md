@@ -1,24 +1,87 @@
-# MedMate
+# 🩺 MedMate
 
-MedMate is a business-focused social platform that bridges the gap between **medical representatives** and **doctors**.  
-It enables reps to share products, connect with doctors, and manage professional networking — while doctors can discover products, connect with reps, and explore business opportunities.
+> A business-driven healthcare networking platform connecting Doctors and Medical Representatives through a structured prescription and commission-based system.
 
-## 🚀 Tech Stack
-- **Frontend:** React, TypeScript, Redux Toolkit, React Router
-- **Backend:** Node.js, Express, TypeScript, Prisma ORM
-- **Database:** MongoDB
-- **Architecture:** Clean Architecture
-- **Authentication:** JWT
-- **State Management:** Redux Toolkit
-- **Other Tools:** ESLint, Prettier, Husky
+---
 
-## 📌 Features
-- **Authentication:** Secure registration and login for both doctors and reps
-- **Doctor Feed:** View and engage with rep product posts
-- **Profile Management:** Update and manage personal and professional details
-- **Connections:** Connect with reps/doctors and manage requests
-- **Messaging:** Real-time chat between reps and doctors
-- **Notifications:** Stay updated with important events
-- **Admin Panel:** Super admin can validate users, manage territories, and moderate content
+## 🌍 Overview
 
-## 🗂 Project Structure
+MedMate digitizes healthcare business collaboration by enabling transparent, commission-enabled workflows between doctors and medical representatives. Patients participate strictly for prescription-based purchasing — keeping the platform focused and business-ready.
+
+---
+
+## 🔄 How It Works
+
+1. **Doctor–Rep Networking** — Medical Representatives connect with Doctors and showcase their products.
+2. **Prescription Flow** — Doctors create or select patients, generate prescriptions, and attach commission logic.
+3. **Patient Purchase** — Patients receive an app link, register, view their prescription, and complete payment.
+4. **Commission Distribution** — Stripe processes payment and automatically splits commissions between the Doctor and Admin.
+
+---
+
+## 👥 User Roles
+
+| Role | Responsibilities |
+|------|-----------------|
+| 🧑‍⚕️ **Doctor** | Connect with reps, discover products, create prescriptions & patients, earn commissions, view analytics |
+| 💼 **Medical Rep** | Promote products, connect with doctors, track performance, real-time communication |
+| 🧑‍🤝‍🧑 **Patient** | Register via doctor link, purchase prescribed products, track order status |
+| 🛠 **Admin** | Manage operations, monitor commissions, access full analytics, oversee all transactions |
+
+> **Note:** Patients cannot create connections, network with doctors, access analytics, or interact beyond prescription purchases.
+
+---
+
+## 🚀 Core Features
+
+- 🔗 **Professional Networking** — Structured Doctor ↔ Medical Rep connection system
+- 💊 **Prescription-Based Commerce** — Doctor-controlled patient and prescription workflow
+- 💬 **Real-Time Features** — Chat, notifications, and likes via Socket.io
+- 📊 **Role-Based Dashboards** — Revenue tracking, order insights, and performance metrics
+- 🔐 **Auth & Security** — JWT, Google OAuth, role-based authorization, Zod validation, Winston logging
+- 💳 **Payments** — Stripe integration with automated commission distribution
+
+---
+
+## 🏗 Tech Stack
+
+**Frontend**
+`React 19` • `Vite` • `Tailwind CSS 4` • `Redux Toolkit` • `React Router 7` • `Recharts` • `Framer Motion` • `Radix UI`
+
+**Backend**
+`Node.js` • `Express` • `TypeScript` • `MongoDB` • `Prisma ORM` • `Socket.io` • `Zod` • `Winston`
+
+**Cloud & Integrations**
+`AWS S3` • `Cloudinary` • `Google OAuth` • `Stripe`
+
+**Architecture:** Clean Architecture · Feature-based frontend · Modular & scalable
+
+---
+
+## 🧪 Local Development
+
+> Configure `.env` files in both `Backend/` and `Frontend/` before running.
+
+**Backend**
+```bash
+cd Backend
+npm install
+npx prisma generate
+npm run dev
+```
+
+**Frontend**
+```bash
+cd Frontend
+npm install
+npm run dev
+```
+
+---
+
+## 📌 Key Design Principles
+
+- **Patient side is intentionally minimal** — clean business workflow, no noise
+- **Doctor-driven prescription model** — full control over patient and product flow
+- **Transparent commissions** — every transaction is tracked and distributed automatically
+- **Secure by design** — JWT + OAuth + role-based access at every layer

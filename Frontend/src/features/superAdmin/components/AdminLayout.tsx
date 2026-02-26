@@ -55,10 +55,9 @@ const AdminLayout = () => {
               <NavLink
                 to={"dashboard"}
                 className={({ isActive }) =>
-                  `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
-                    isActive
-                      ? "bg-gray-200 text-black font-semibold"
-                      : "text-white hover:bg-[#a81519]"
+                  `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${isActive
+                    ? "bg-gray-200 text-black font-semibold"
+                    : "text-white hover:bg-[#a81519]"
                   }`
                 }
               >
@@ -70,10 +69,9 @@ const AdminLayout = () => {
               <NavLink
                 to={"order-analytics"}
                 className={({ isActive }) =>
-                  `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
-                    isActive
-                      ? "bg-gray-200 text-black font-semibold"
-                      : "text-white hover:bg-[#a81519]"
+                  `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${isActive
+                    ? "bg-gray-200 text-black font-semibold"
+                    : "text-white hover:bg-[#a81519]"
                   }`
                 }
               >
@@ -86,10 +84,9 @@ const AdminLayout = () => {
               <NavLink
                 to={"doctors"}
                 className={({ isActive }) =>
-                  `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
-                    isActive
-                      ? "bg-gray-200 text-black font-semibold"
-                      : "text-white hover:bg-[#a81519]"
+                  `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${isActive
+                    ? "bg-gray-200 text-black font-semibold"
+                    : "text-white hover:bg-[#a81519]"
                   }`
                 }
               >
@@ -102,10 +99,9 @@ const AdminLayout = () => {
               <NavLink
                 to={"reps"}
                 className={({ isActive }) =>
-                  `flex items-center gap-2 px-3 py-2 ${
-                    isActive
-                      ? "bg-gray-200 text-black font-semibold"
-                      : "text-white hover:bg-[#a81519]"
+                  `flex items-center gap-2 px-3 py-2 ${isActive
+                    ? "bg-gray-200 text-black font-semibold"
+                    : "text-white hover:bg-[#a81519]"
                   }`
                 }
               >
@@ -117,10 +113,9 @@ const AdminLayout = () => {
               <NavLink
                 to={"guests"}
                 className={({ isActive }) =>
-                  `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
-                    isActive
-                      ? "bg-gray-200 text-black font-semibold"
-                      : "text-white hover:bg-[#a81519]"
+                  `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${isActive
+                    ? "bg-gray-200 text-black font-semibold"
+                    : "text-white hover:bg-[#a81519]"
                   }`
                 }
               >
@@ -133,10 +128,9 @@ const AdminLayout = () => {
               <NavLink
                 to={"orders"}
                 className={({ isActive }) =>
-                  `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
-                    isActive
-                      ? "bg-gray-200 text-black font-semibold"
-                      : "text-white hover:bg-[#a81519]"
+                  `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${isActive
+                    ? "bg-gray-200 text-black font-semibold"
+                    : "text-white hover:bg-[#a81519]"
                   }`
                 }
               >
@@ -149,11 +143,10 @@ const AdminLayout = () => {
               <NavLink
                 to={"territories"}
                 className={({ isActive }) => `
-               flex items-center gap-2 px-3 py-2 rounded-md ${
-                 isActive
-                   ? "bg-gray-200 text-black font-semibold"
-                   : "text-white hover:bg-[#a81519]"
-               }`}
+               flex items-center gap-2 px-3 py-2 rounded-md ${isActive
+                    ? "bg-gray-200 text-black font-semibold"
+                    : "text-white hover:bg-[#a81519]"
+                  }`}
               >
                 <MapPin className="w-5 h-5" />
                 <span>Territory Management</span>
@@ -164,11 +157,10 @@ const AdminLayout = () => {
               <NavLink
                 to={"departments"}
                 className={({ isActive }) => `
-               flex items-center gap-2 px-3 py-2 rounded-md ${
-                 isActive
-                   ? "bg-gray-200 text-black font-semibold"
-                   : "text-white hover:bg-[#a81519]"
-               }`}
+               flex items-center gap-2 px-3 py-2 rounded-md ${isActive
+                    ? "bg-gray-200 text-black font-semibold"
+                    : "text-white hover:bg-[#a81519]"
+                  }`}
               >
                 <Building2 className="w-5 h-5" />
                 <span>Department </span>
@@ -178,11 +170,10 @@ const AdminLayout = () => {
               <NavLink
                 to={"subscription-management"}
                 className={({ isActive }) => `
-              flex items-center gap-2 px-3 py-2 rounded-md ${
-                isActive
-                  ? "bg-gray-200 text-black font-semibold"
-                  : "text-white hover:bg-[#a81519]"
-              }`}
+              flex items-center gap-2 px-3 py-2 rounded-md ${isActive
+                    ? "bg-gray-200 text-black font-semibold"
+                    : "text-white hover:bg-[#a81519]"
+                  }`}
               >
                 <BanknoteArrowDown className="w-5 h-5" />
                 <span>Subscription Management</span>

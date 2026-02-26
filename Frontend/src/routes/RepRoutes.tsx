@@ -52,7 +52,7 @@ export const RepRoutes = {
     { path: "business/products", element: <Product /> },
     { path: "business/product/upload", element: <ProductAddForm /> },
     { path: "business/product/edit-product", element: <EditProductPage /> },
-    {path :"business/stat",element:<BusinessStat />},
+    { path: "business/stat", element: <BusinessStat /> },
     {
       path: "verify-password",
       element: (
